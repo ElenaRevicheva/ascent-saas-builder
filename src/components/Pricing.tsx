@@ -7,20 +7,35 @@ import PayPalButton from "./PayPalButton";
 const Pricing = () => {
   const plans = [
     {
-      name: "EspaLuz Premium",
-      price: 7.77,
-      description: "Your personal AI Spanish tutor with premium features",
+      name: "Free",
+      price: 0,
+      description: "Start your Spanish learning journey with EspaLuz",
       features: [
-        "Unlimited AI conversations",
-        "Advanced personality modes",
-        "Voice & avatar videos",
-        "Cultural immersion content",
-        "Progress analytics",
-        "Priority support",
-        "All learning levels"
+        "Basic AI conversations",
+        "Telegram integration",
+        "WhatsApp sandbox access",
+        "Beginner lessons",
+        "Community support"
+      ],
+      popular: false,
+      paypal: false
+    },
+    {
+      name: "Premium",
+      price: 7.77,
+      description: "Support EspaLuz development & get early access",
+      features: [
+        "Everything in Free",
+        "Premium features coming soon:",
+        "• Unlimited conversations",
+        "• Advanced personalities",
+        "• Voice & avatar videos",
+        "• Progress analytics",
+        "• Priority support"
       ],
       popular: true,
-      paypal: true
+      paypal: true,
+      comingSoon: true
     }
   ];
 
@@ -38,7 +53,7 @@ const Pricing = () => {
           </p>
         </div>
 
-        <div className="flex justify-center max-w-md mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {plans.map((plan, index) => (
             <Card 
               key={index} 
@@ -67,24 +82,38 @@ const Pricing = () => {
               </CardHeader>
               
               <CardContent className="pt-0">
-                <div className="mb-6">
-                  <PayPalButton 
-                    planType="monthly"
-                    onSuccess={(subscriptionId) => {
-                      console.log('Subscription successful:', subscriptionId);
-                      // Handle successful subscription
-                    }}
-                    onError={(error) => {
-                      console.error('Subscription error:', error);
-                    }}
-                  />
-                </div>
+                {plan.paypal ? (
+                  <div className="mb-6">
+                    <PayPalButton 
+                      planType="monthly"
+                      onSuccess={(subscriptionId) => {
+                        console.log('Subscription successful:', subscriptionId);
+                        // Handle successful subscription
+                      }}
+                      onError={(error) => {
+                        console.error('Subscription error:', error);
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <Link to="/auth" className="block mb-6">
+                    <Button 
+                      variant={plan.popular ? "hero" : "outline"} 
+                      size="lg" 
+                      className="w-full"
+                    >
+                      Get Started Free
+                    </Button>
+                  </Link>
+                )}
                 
                 <ul className="space-y-3">
                   {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-center gap-3">
-                      <Check className="h-5 w-5 text-primary flex-shrink-0" />
-                      <span className="text-muted-foreground">{feature}</span>
+                    <li key={featureIndex} className="flex items-start gap-3">
+                      <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span className={`${feature.startsWith('•') ? 'text-muted-foreground/70 text-sm' : 'text-muted-foreground'}`}>
+                        {feature}
+                      </span>
                     </li>
                   ))}
                 </ul>
