@@ -7,10 +7,12 @@ import PayPalButton from "./PayPalButton";
 const Pricing = () => {
   const plans = [
     {
-      name: "Free",
+      name: "Free Trial",
       price: 0,
-      description: "Start your Spanish learning journey with EspaLuz",
+      duration: "1 week",
+      description: "Try EspaLuz risk-free for one week",
       features: [
+        "7-day free trial",
         "Basic AI conversations",
         "Telegram integration",
         "WhatsApp sandbox access",
@@ -21,20 +23,36 @@ const Pricing = () => {
       paypal: false
     },
     {
-      name: "Premium",
+      name: "Standard",
       price: 7.77,
-      description: "Support EspaLuz development & get early access",
+      description: "Your personal AI Spanish tutor",
       features: [
-        "Everything in Free",
-        "Premium features coming soon:",
-        "• Unlimited conversations",
-        "• Advanced personalities",
-        "• Voice & avatar videos",
-        "• Progress analytics",
-        "• Priority support"
+        "Everything in Free Trial",
+        "Unlimited conversations",
+        "Advanced AI personality",
+        "Voice & avatar videos",
+        "Cultural immersion content",
+        "Progress tracking",
+        "Priority support"
       ],
       popular: true,
-      paypal: true,
+      paypal: true
+    },
+    {
+      name: "Premium",
+      price: "Coming Soon",
+      description: "Advanced features for power users",
+      features: [
+        "Everything in Standard",
+        "Family management (5+ users)",
+        "Custom learning paths",
+        "Advanced analytics",
+        "Educational resources",
+        "Dedicated support",
+        "API access"
+      ],
+      popular: false,
+      paypal: false,
       comingSoon: true
     }
   ];
@@ -53,7 +71,7 @@ const Pricing = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
             <Card 
               key={index} 
@@ -73,8 +91,16 @@ const Pricing = () => {
               <CardHeader className="text-center pb-6">
                 <CardTitle className="text-2xl mb-2">{plan.name}</CardTitle>
                 <div className="mb-4">
-                  <span className="text-4xl font-bold text-foreground">${plan.price}</span>
-                  <span className="text-muted-foreground">/month</span>
+                  {typeof plan.price === 'number' ? (
+                    <>
+                      <span className="text-4xl font-bold text-foreground">${plan.price}</span>
+                      <span className="text-muted-foreground">
+                        {plan.duration ? `/${plan.duration}` : '/month'}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-2xl font-bold text-primary">{plan.price}</span>
+                  )}
                 </div>
                 <CardDescription className="text-muted-foreground">
                   {plan.description}
@@ -95,6 +121,17 @@ const Pricing = () => {
                       }}
                     />
                   </div>
+                ) : plan.comingSoon ? (
+                  <div className="block mb-6">
+                    <Button 
+                      variant="outline" 
+                      size="lg" 
+                      className="w-full"
+                      disabled
+                    >
+                      Coming Soon
+                    </Button>
+                  </div>
                 ) : (
                   <Link to="/auth" className="block mb-6">
                     <Button 
@@ -102,7 +139,7 @@ const Pricing = () => {
                       size="lg" 
                       className="w-full"
                     >
-                      Get Started Free
+                      Start Free Trial
                     </Button>
                   </Link>
                 )}
@@ -111,9 +148,7 @@ const Pricing = () => {
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-start gap-3">
                       <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                      <span className={`${feature.startsWith('•') ? 'text-muted-foreground/70 text-sm' : 'text-muted-foreground'}`}>
-                        {feature}
-                      </span>
+                      <span className="text-muted-foreground">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -124,7 +159,7 @@ const Pricing = () => {
 
         <div className="text-center mt-12">
           <p className="text-muted-foreground mb-4">
-            All plans include a 14-day free trial. No credit card required.
+            Start with a 1-week free trial. No credit card required.
           </p>
           <p className="text-sm text-muted-foreground">
             Need a custom solution? 
