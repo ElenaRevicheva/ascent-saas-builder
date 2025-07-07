@@ -2,51 +2,25 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, Star } from "lucide-react";
 import { Link } from "react-router-dom";
+import PayPalButton from "./PayPalButton";
 
 const Pricing = () => {
   const plans = [
     {
-      name: "Estudiante",
-      price: 9,
-      description: "Perfect for individual learners starting their Spanish journey",
+      name: "EspaLuz Premium",
+      price: 7.77,
+      description: "Your personal AI Spanish tutor with premium features",
       features: [
-        "AI tutor access",
-        "Basic progress tracking",
-        "WhatsApp integration",
-        "Beginner to intermediate content",
-        "Email support"
+        "Unlimited AI conversations",
+        "Advanced personality modes",
+        "Voice & avatar videos",
+        "Cultural immersion content",
+        "Progress analytics",
+        "Priority support",
+        "All learning levels"
       ],
-      popular: false
-    },
-    {
-      name: "Familia",
-      price: 19,
-      description: "Ideal for families learning Spanish together",
-      features: [
-        "Up to 5 family members",
-        "Advanced AI tutor",
-        "WhatsApp + Telegram",
-        "All learning levels",
-        "Family progress dashboard",
-        "Cultural lessons",
-        "Priority support"
-      ],
-      popular: true
-    },
-    {
-      name: "Profesor",
-      price: 39,
-      description: "For educators and large families with custom needs",
-      features: [
-        "Unlimited family members",
-        "Custom learning paths",
-        "Classroom management",
-        "Advanced analytics",
-        "Custom bot integration",
-        "Dedicated tutor support",
-        "Educational resources"
-      ],
-      popular: false
+      popular: true,
+      paypal: true
     }
   ];
 
@@ -64,7 +38,7 @@ const Pricing = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="flex justify-center max-w-md mx-auto">
           {plans.map((plan, index) => (
             <Card 
               key={index} 
@@ -93,15 +67,18 @@ const Pricing = () => {
               </CardHeader>
               
               <CardContent className="pt-0">
-                <Link to="/auth" className="block mb-6">
-                  <Button 
-                    variant={plan.popular ? "hero" : "outline"} 
-                    size="lg" 
-                    className="w-full"
-                  >
-                    Get Started
-                  </Button>
-                </Link>
+                <div className="mb-6">
+                  <PayPalButton 
+                    planType="monthly"
+                    onSuccess={(subscriptionId) => {
+                      console.log('Subscription successful:', subscriptionId);
+                      // Handle successful subscription
+                    }}
+                    onError={(error) => {
+                      console.error('Subscription error:', error);
+                    }}
+                  />
+                </div>
                 
                 <ul className="space-y-3">
                   {plan.features.map((feature, featureIndex) => (
