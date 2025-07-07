@@ -14,6 +14,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [newMessage, setNewMessage] = useState("");
   const [chatMessages, setChatMessages] = useState<any[]>([]);
+  const [telegramCode, setTelegramCode] = useState<string>("");
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -106,6 +107,39 @@ const Dashboard = () => {
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const generateTelegramCode = async () => {
+    if (!user) return;
+
+    try {
+      // Generate connection code
+      const { data: codeData, error } = await supabase
+        .from("bot_connection_codes")
+        .insert({
+          user_id: user.id,
+          platform: "telegram",
+          code: Math.random().toString(36).substring(2, 8).toUpperCase(),
+          expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setTelegramCode(codeData.code);
+      
+      toast({
+        title: "Código Generado",
+        description: `Envía el código ${codeData.code} a @EspaLuzFamily_bot en Telegram`
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "No se pudo generar el código de conexión",
         variant: "destructive"
       });
     }
@@ -270,10 +304,24 @@ const Dashboard = () => {
                   <span className="text-muted-foreground">Próxima Meta</span>
                   <span className="font-medium text-primary">50 palabras nuevas</span>
                 </div>
-                <Button variant="hero" className="w-full">
-                  <MessageSquare className="h-4 w-4 mr-2" />
-                  Conectar WhatsApp
-                </Button>
+                <div className="space-y-2">
+                  <Button 
+                    variant="hero" 
+                    className="w-full"
+                    onClick={generateTelegramCode}
+                  >
+                    <MessageSquare className="h-4 w-4 mr-2" />
+                    Conectar Telegram
+                  </Button>
+                  {telegramCode && (
+                    <div className="text-sm text-center p-2 bg-primary/10 rounded">
+                      <p className="font-medium">Código: {telegramCode}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Envía este código a @EspaLuzFamily_bot
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>
