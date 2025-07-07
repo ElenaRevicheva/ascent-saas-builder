@@ -1,216 +1,287 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Mail, Lock, User } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { Eye, EyeOff, ArrowLeft, Sparkles } from 'lucide-react';
 
 const Auth = () => {
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    fullName: ''
+  });
+  
+  const { signIn, signUp, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user is already logged in
-    const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        navigate("/dashboard");
-      }
-    };
-    checkUser();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        navigate("/dashboard");
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
-
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const redirectUrl = `${window.location.origin}/`;
-      
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: redirectUrl,
-          data: {
-            full_name: fullName
-          }
-        }
-      });
-
-      if (error) {
-        if (error.message.includes("already registered")) {
-          toast({
-            title: "Account exists",
-            description: "This email is already registered. Try signing in instead.",
-            variant: "destructive"
-          });
-        } else {
-          toast({
-            title: "Sign up failed",
-            description: error.message,
-            variant: "destructive"
-          });
-        }
-      } else {
-        toast({
-          title: "Check your email",
-          description: "We've sent you a confirmation link to complete your registration."
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
+    if (user) {
+      navigate('/dashboard');
     }
+  }, [user, navigate]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+    setError('');
   };
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    if (!formData.email || !formData.password) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
+      const { error } = await signIn(formData.email, formData.password);
+      
       if (error) {
+        if (error.message.includes('Invalid login credentials')) {
+          setError('Invalid email or password. Please check your credentials.');
+        } else if (error.message.includes('Email not confirmed')) {
+          setError('Please check your email and click the confirmation link before signing in.');
+        } else {
+          setError(error.message);
+        }
+      } else {
         toast({
-          title: "Sign in failed",
-          description: error.message,
-          variant: "destructive"
+          title: "Welcome back!",
+          description: "You have successfully signed in.",
+        });
+        navigate('/dashboard');
+      }
+    } catch (error) {
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.email || !formData.password || !formData.fullName) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const { error } = await signUp(formData.email, formData.password, formData.fullName);
+      
+      if (error) {
+        if (error.message.includes('User already registered')) {
+          setError('An account with this email already exists. Please sign in instead.');
+        } else {
+          setError(error.message);
+        }
+      } else {
+        toast({
+          title: "Account created!",
+          description: "Please check your email to confirm your account.",
         });
       }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive"
-      });
+      setError('An unexpected error occurred. Please try again.');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="mb-8">
-          <Link to="/" className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to home
+        <div className="mb-8 text-center">
+          <Link to="/" className="inline-flex items-center gap-2 text-primary hover:underline mb-6">
+            <ArrowLeft className="h-4 w-4" />
+            Back to Home
           </Link>
+          
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Sparkles className="h-8 w-8 text-primary" />
+            <h1 className="text-2xl font-bold text-foreground">EspaLuz</h1>
+          </div>
+          <p className="text-muted-foreground">
+            Your AI Spanish tutor awaits
+          </p>
         </div>
 
-        <Card className="shadow-card border-border">
+        <Card className="border-border shadow-card">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold">
-              {isSignUp ? "Create Account" : "Welcome Back"}
-            </CardTitle>
+            <CardTitle>Welcome</CardTitle>
             <CardDescription>
-              {isSignUp 
-                ? "Sign up to start building your SaaS" 
-                : "Sign in to your account to continue"
-              }
+              Sign in to your account or create a new one to start learning Spanish
             </CardDescription>
           </CardHeader>
           
           <CardContent>
-            <form onSubmit={isSignUp ? handleSignUp : handleSignIn} className="space-y-4">
-              {isSignUp && (
-                <div className="space-y-2">
-                  <Label htmlFor="fullName" className="flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    Full Name
-                  </Label>
-                  <Input
-                    id="fullName"
-                    type="text"
-                    placeholder="Enter your full name"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    required={isSignUp}
-                  />
-                </div>
+            <Tabs defaultValue="signin" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsTrigger value="signin">Sign In</TabsTrigger>
+                <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              </TabsList>
+              
+              {error && (
+                <Alert variant="destructive" className="mb-6">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
               )}
-              
-              <div className="space-y-2">
-                <Label htmlFor="email" className="flex items-center gap-2">
-                  <Mail className="h-4 w-4" />
-                  Email
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="password" className="flex items-center gap-2">
-                  <Lock className="h-4 w-4" />
-                  Password
-                </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
 
-              <Button 
-                type="submit" 
-                variant="hero" 
-                size="lg" 
-                className="w-full" 
-                disabled={loading}
-              >
-                {loading ? "Loading..." : (isSignUp ? "Create Account" : "Sign In")}
-              </Button>
-            </form>
+              <TabsContent value="signin">
+                <form onSubmit={handleSignIn} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="signin-email">Email</Label>
+                    <Input
+                      id="signin-email"
+                      name="email"
+                      type="email"
+                      placeholder="your@email.com"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="signin-password">Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="signin-password"
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter your password"
+                        value={formData.password}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <Button 
+                    type="submit" 
+                    className="w-full" 
+                    disabled={isLoading}
+                    variant="hero"
+                  >
+                    {isLoading ? "Signing in..." : "Sign In"}
+                  </Button>
+                </form>
+              </TabsContent>
 
-            <div className="mt-6 text-center">
-              <p className="text-muted-foreground">
-                {isSignUp ? "Already have an account?" : "Don't have an account?"}
-                <button
-                  type="button"
-                  onClick={() => setIsSignUp(!isSignUp)}
-                  className="text-primary hover:underline ml-1 font-medium"
-                >
-                  {isSignUp ? "Sign in" : "Sign up"}
-                </button>
-              </p>
-            </div>
+              <TabsContent value="signup">
+                <form onSubmit={handleSignUp} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-name">Full Name</Label>
+                    <Input
+                      id="signup-name"
+                      name="fullName"
+                      type="text"
+                      placeholder="Your full name"
+                      value={formData.fullName}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-email">Email</Label>
+                    <Input
+                      id="signup-email"
+                      name="email"
+                      type="email"
+                      placeholder="your@email.com"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-password">Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="signup-password"
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Create a password (min. 6 characters)"
+                        value={formData.password}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <Button 
+                    type="submit" 
+                    className="w-full" 
+                    disabled={isLoading}
+                    variant="hero"
+                  >
+                    {isLoading ? "Creating account..." : "Create Account"}
+                  </Button>
+                  
+                  <p className="text-xs text-muted-foreground text-center">
+                    By signing up, you agree to our Terms of Service and Privacy Policy
+                  </p>
+                </form>
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
+        
+        <div className="mt-6 text-center">
+          <p className="text-sm text-muted-foreground">
+            Start with a free 7-day trial • No credit card required
+          </p>
+        </div>
       </div>
     </div>
   );

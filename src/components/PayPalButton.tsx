@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { useSubscription } from "@/hooks/useSubscription";
 
 interface PayPalButtonProps {
   planType: "monthly";
@@ -16,6 +17,7 @@ declare global {
 
 const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
   const { toast } = useToast();
+  const { createSubscription } = useSubscription();
 
   useEffect(() => {
     // Load PayPal SDK
@@ -53,13 +55,16 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
           'plan_id': 'P-7XX77777XX777777X', // This will be your PayPal subscription plan ID
           'subscriber': {
             'name': {
-              'given_name': 'Elena',
-              'surname': 'Revicheva'
+              'given_name': 'New',
+              'surname': 'Subscriber'
             }
           }
         });
       },
       onApprove: function(data: any, actions: any) {
+        // Create subscription in our database
+        createSubscription(data.subscriptionID);
+        
         toast({
           title: "Subscription Activated!",
           description: "Welcome to EspaLuz Premium! Your subscription is now active.",

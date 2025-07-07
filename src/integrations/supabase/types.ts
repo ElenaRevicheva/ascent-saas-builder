@@ -152,6 +152,75 @@ export type Database = {
         }
         Relationships: []
       }
+      usage_tracking: {
+        Row: {
+          created_at: string
+          date: string
+          feature_type: string
+          id: string
+          usage_count: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date?: string
+          feature_type: string
+          id?: string
+          usage_count?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          feature_type?: string
+          id?: string
+          usage_count?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_subscriptions: {
+        Row: {
+          created_at: string
+          current_period_end: string
+          current_period_start: string
+          id: string
+          paypal_subscription_id: string | null
+          plan_type: string
+          status: string
+          subscription_id: string
+          trial_end: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_period_end?: string
+          current_period_start?: string
+          id?: string
+          paypal_subscription_id?: string | null
+          plan_type?: string
+          status?: string
+          subscription_id: string
+          trial_end?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_period_end?: string
+          current_period_start?: string
+          id?: string
+          paypal_subscription_id?: string | null
+          plan_type?: string
+          status?: string
+          subscription_id?: string
+          trial_end?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -160,6 +229,16 @@ export type Database = {
       generate_connection_code: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_user_subscription_status: {
+        Args: { user_uuid: string }
+        Returns: {
+          status: string
+          plan_type: string
+          trial_days_left: number
+          is_trial_active: boolean
+          is_subscription_active: boolean
+        }[]
       }
     }
     Enums: {
