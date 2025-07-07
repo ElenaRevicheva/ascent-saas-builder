@@ -1,62 +1,62 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
-  Rocket, 
+  MessageSquare, 
   Users, 
   BarChart3, 
-  Lock, 
-  Zap, 
+  Bot, 
+  Smartphone, 
   Globe,
-  Smartphone,
-  Cloud,
-  Headphones
+  BookOpen,
+  Trophy,
+  Heart
 } from "lucide-react";
 
 const Features = () => {
   const features = [
     {
-      icon: Rocket,
-      title: "Rapid Deployment",
-      description: "Launch your SaaS in days, not months. Pre-built components and infrastructure ready to go."
+      icon: Bot,
+      title: "AI Spanish Tutor",
+      description: "Personalized AI tutor that adapts to your learning style and pace, available 24/7 for instant help."
+    },
+    {
+      icon: MessageSquare,
+      title: "Multi-Platform Chat",
+      description: "Learn via WhatsApp, Telegram, or web chat. Practice Spanish anywhere, anytime."
     },
     {
       icon: Users,
-      title: "User Management",
-      description: "Complete authentication system with role-based access control and user profiles."
+      title: "Family Learning",
+      description: "Designed for families. Different difficulty levels for kids and adults learning together."
     },
     {
       icon: BarChart3,
-      title: "Analytics Dashboard",
-      description: "Real-time insights and metrics to track your business performance and user engagement."
+      title: "Progress Tracking",
+      description: "Detailed analytics on your Spanish learning journey with vocabulary and grammar progress."
     },
     {
-      icon: Lock,
-      title: "Enterprise Security",
-      description: "Bank-level security with encryption, compliance certifications, and audit logs."
+      icon: BookOpen,
+      title: "Interactive Lessons",
+      description: "Engaging conversations, vocabulary games, and real-world Spanish practice scenarios."
     },
     {
-      icon: Zap,
-      title: "High Performance",
-      description: "Built on modern architecture for lightning-fast load times and smooth user experience."
-    },
-    {
-      icon: Globe,
-      title: "Global Scale",
-      description: "CDN-powered infrastructure that scales automatically to serve users worldwide."
+      icon: Trophy,
+      title: "Achievement System",
+      description: "Earn badges and track milestones as you progress from beginner to fluent Spanish speaker."
     },
     {
       icon: Smartphone,
-      title: "Mobile Responsive",
-      description: "Perfect experience across all devices with progressive web app capabilities."
+      title: "Mobile Learning",
+      description: "Practice Spanish on your phone, tablet, or computer. Sync progress across all devices."
     },
     {
-      icon: Cloud,
-      title: "Cloud Native",
-      description: "Serverless architecture that scales with your business and reduces operational overhead."
+      icon: Globe,
+      title: "Cultural Context",
+      description: "Learn Spanish with cultural insights from Spain and Latin America for authentic communication."
     },
     {
-      icon: Headphones,
-      title: "24/7 Support",
-      description: "Expert support team available around the clock to help you succeed."
+      icon: Heart,
+      title: "Emotional Learning",
+      description: "AI tracks your mood and emotional state to provide encouraging and supportive learning experiences."
     }
   ];
 
@@ -65,12 +65,12 @@ const Features = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Everything You Need to
-            <span className="bg-gradient-primary bg-clip-text text-transparent"> Succeed</span>
+            Why Choose
+            <span className="bg-gradient-primary bg-clip-text text-transparent"> EspaLuz</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Comprehensive features designed to accelerate your SaaS development 
-            and ensure your business scales smoothly.
+            Revolutionary AI-powered Spanish learning designed for modern families. 
+            Learn together, progress faster, and speak Spanish with confidence.
           </p>
         </div>
 

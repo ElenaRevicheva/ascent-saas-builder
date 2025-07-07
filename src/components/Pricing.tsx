@@ -6,44 +6,45 @@ import { Link } from "react-router-dom";
 const Pricing = () => {
   const plans = [
     {
-      name: "Starter",
-      price: 29,
-      description: "Perfect for small teams getting started",
+      name: "Estudiante",
+      price: 9,
+      description: "Perfect for individual learners starting their Spanish journey",
       features: [
-        "Up to 5 team members",
-        "Basic analytics",
-        "Email support",
-        "Core features",
-        "1GB storage"
+        "AI tutor access",
+        "Basic progress tracking",
+        "WhatsApp integration",
+        "Beginner to intermediate content",
+        "Email support"
       ],
       popular: false
     },
     {
-      name: "Professional",
-      price: 79,
-      description: "For growing businesses that need more",
+      name: "Familia",
+      price: 19,
+      description: "Ideal for families learning Spanish together",
       features: [
-        "Up to 25 team members",
-        "Advanced analytics",
-        "Priority support",
-        "All features",
-        "10GB storage",
-        "Custom integrations"
+        "Up to 5 family members",
+        "Advanced AI tutor",
+        "WhatsApp + Telegram",
+        "All learning levels",
+        "Family progress dashboard",
+        "Cultural lessons",
+        "Priority support"
       ],
       popular: true
     },
     {
-      name: "Enterprise",
-      price: 199,
-      description: "For large organizations with custom needs",
+      name: "Profesor",
+      price: 39,
+      description: "For educators and large families with custom needs",
       features: [
-        "Unlimited team members",
-        "Custom analytics",
-        "24/7 dedicated support",
-        "White-label solution",
-        "Unlimited storage",
-        "Custom development",
-        "SLA guarantee"
+        "Unlimited family members",
+        "Custom learning paths",
+        "Classroom management",
+        "Advanced analytics",
+        "Custom bot integration",
+        "Dedicated tutor support",
+        "Educational resources"
       ],
       popular: false
     }
@@ -54,12 +55,12 @@ const Pricing = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Simple, Transparent
-            <span className="bg-gradient-primary bg-clip-text text-transparent"> Pricing</span>
+            Choose Your
+            <span className="bg-gradient-primary bg-clip-text text-transparent"> Learning Plan</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Choose the perfect plan for your business. Scale up or down as needed 
-            with no hidden fees or long-term commitments.
+            Start your Spanish learning journey today. Choose the perfect plan for you and your family. 
+            Cancel anytime, no commitment required.
           </p>
         </div>
 

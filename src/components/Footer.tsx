@@ -6,12 +6,12 @@ const Footer = () => {
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
-            <Link to="/" className="text-2xl font-bold text-foreground mb-4 block">
-              AscentSaaS
+            <Link to="/" className="text-2xl font-bold text-foreground mb-4 block flex items-center gap-2">
+              🇪🇸 EspaLuz
             </Link>
             <p className="text-muted-foreground mb-4 max-w-md">
-              Empowering businesses to build and scale their SaaS applications 
-              with modern tools and best practices.
+              Empowering families to learn Spanish together with AI-powered tutoring 
+              that adapts to every learning style and pace.
             </p>
             <div className="flex space-x-4">
               <Link to="#" className="text-muted-foreground hover:text-primary transition-colors">
@@ -65,7 +65,7 @@ const Footer = () => {
         
         <div className="border-t border-border mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-muted-foreground text-sm">
-            © 2024 AscentSaaS. All rights reserved.
+            © 2024 EspaLuz AI Family Tutor. All rights reserved.
           </p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             <Link to="/privacy" className="text-muted-foreground hover:text-primary transition-colors text-sm">

@@ -1,15 +1,19 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
-import { LogOut, User, Settings, BarChart3, Users, Zap } from "lucide-react";
+import { LogOut, MessageSquare, BarChart3, Users, Trophy, Globe, Bot, BookOpen } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 const Dashboard = () => {
   const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [newMessage, setNewMessage] = useState("");
+  const [chatMessages, setChatMessages] = useState<any[]>([]);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -21,6 +25,28 @@ const Dashboard = () => {
         return;
       }
       setUser(session.user);
+
+      // Get user profile
+      const { data: profileData } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", session.user.id)
+        .single();
+      
+      setProfile(profileData);
+
+      // Get recent learning sessions
+      const { data: sessions } = await supabase
+        .from("learning_sessions")
+        .select("*")
+        .eq("user_id", session.user.id)
+        .order("created_at", { ascending: false })
+        .limit(5);
+
+      if (sessions) {
+        setChatMessages(sessions);
+      }
+      
       setLoading(false);
     };
 
@@ -47,12 +73,50 @@ const Dashboard = () => {
     }
   };
 
+  const sendMessage = async () => {
+    if (!newMessage.trim() || !user) return;
+
+    try {
+      // Create a learning session
+      const { error } = await supabase
+        .from("learning_sessions")
+        .insert({
+          user_id: user.id,
+          session_type: "web_chat",
+          source: "dashboard",
+          content: { message: newMessage, response: "¡Hola! I'm your Spanish tutor. Let's practice!" },
+          progress_data: { vocabulary_count: 1, lesson_type: "conversation" }
+        });
+
+      if (error) throw error;
+
+      // Add to chat display
+      setChatMessages(prev => [{
+        content: { message: newMessage, response: "¡Hola! I'm your Spanish tutor. Let's practice!" },
+        created_at: new Date().toISOString()
+      }, ...prev]);
+
+      setNewMessage("");
+      
+      toast({
+        title: "¡Excelente!",
+        description: "Your message has been sent to your Spanish tutor."
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading...</p>
+          <p className="text-muted-foreground">Cargando tu clase de español...</p>
         </div>
       </div>
     );
@@ -60,25 +124,25 @@ const Dashboard = () => {
 
   const stats = [
     {
-      title: "Active Users",
-      value: "2,543",
-      change: "+12%",
-      icon: Users,
-      color: "text-blue-600"
+      title: "Learning Streak",
+      value: "7 días",
+      change: "+2 days",
+      icon: Trophy,
+      color: "text-yellow-600"
     },
     {
-      title: "Revenue",
-      value: "$24,580",
-      change: "+8%",
-      icon: BarChart3,
+      title: "Vocabulary Learned",
+      value: "142",
+      change: "+12 words",
+      icon: BookOpen,
       color: "text-green-600"
     },
     {
-      title: "Performance",
-      value: "99.9%",
-      change: "+0.1%",
-      icon: Zap,
-      color: "text-purple-600"
+      title: "Conversations",
+      value: "23",
+      change: "+3 today",
+      icon: MessageSquare,
+      color: "text-blue-600"
     }
   ];
 
@@ -87,18 +151,17 @@ const Dashboard = () => {
       {/* Header */}
       <header className="bg-background/80 backdrop-blur-md border-b border-border">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <h1 className="text-xl font-bold text-foreground">Dashboard</h1>
+          <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
+            🇪🇸 Tu Clase de Español
+          </h1>
           
           <div className="flex items-center space-x-4">
             <span className="text-muted-foreground">
-              Welcome, {user?.user_metadata?.full_name || user?.email}
+              ¡Hola, {profile?.full_name || user?.email}!
             </span>
-            <Button variant="ghost" size="icon">
-              <Settings className="h-4 w-4" />
-            </Button>
             <Button variant="ghost" onClick={handleSignOut}>
               <LogOut className="h-4 w-4 mr-2" />
-              Sign Out
+              Salir
             </Button>
           </div>
         </div>
@@ -108,10 +171,10 @@ const Dashboard = () => {
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-foreground mb-2">
-            Welcome to Your SaaS Dashboard
+            ¡Bienvenido a tu Dashboard de Español!
           </h2>
           <p className="text-muted-foreground">
-            Manage your application, monitor performance, and grow your business.
+            Nivel: {profile?.learning_level || "Principiante"} • Continúa tu práctica diaria
           </p>
         </div>
 
@@ -128,37 +191,52 @@ const Dashboard = () => {
               <CardContent>
                 <div className="text-2xl font-bold text-foreground">{stat.value}</div>
                 <p className="text-xs text-muted-foreground">
-                  <span className="text-green-600">{stat.change}</span> from last month
+                  <span className="text-green-600">{stat.change}</span> from yesterday
                 </p>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {/* Quick Actions */}
+        {/* Chat Interface */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card className="border-border shadow-card">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <User className="h-5 w-5" />
-                Profile Settings
+                <Bot className="h-5 w-5" />
+                Chat con tu Tutor AI
               </CardTitle>
               <CardDescription>
-                Manage your account information and preferences
+                Practica español conversando con tu tutor personalizado
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">Email</label>
-                  <p className="text-foreground">{user?.email}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">Account Type</label>
-                  <p className="text-foreground">Professional</p>
-                </div>
-                <Button variant="outline" className="w-full">
-                  Edit Profile
+            <CardContent className="space-y-4">
+              <div className="h-64 overflow-y-auto bg-muted/30 rounded-lg p-4 space-y-3">
+                {chatMessages.map((message, index) => (
+                  <div key={index} className="space-y-2">
+                    <div className="bg-primary text-primary-foreground p-2 rounded-lg ml-auto max-w-xs">
+                      {message.content?.message}
+                    </div>
+                    <div className="bg-secondary text-secondary-foreground p-2 rounded-lg mr-auto max-w-xs">
+                      {message.content?.response}
+                    </div>
+                  </div>
+                ))}
+                {chatMessages.length === 0 && (
+                  <p className="text-muted-foreground text-center">
+                    ¡Escribe tu primer mensaje para empezar a practicar!
+                  </p>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Escribe en español..."
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                />
+                <Button onClick={sendMessage} variant="hero">
+                  Enviar
                 </Button>
               </div>
             </CardContent>
@@ -168,28 +246,33 @@ const Dashboard = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BarChart3 className="h-5 w-5" />
-                Quick Stats
+                Tu Progreso
               </CardTitle>
               <CardDescription>
-                Overview of your application performance
+                Resumen de tu aprendizaje de español
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">API Calls Today</span>
-                  <span className="font-medium">1,234</span>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Nivel Actual</label>
+                  <p className="text-foreground text-lg">{profile?.learning_level || "Principiante"}</p>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Storage Used</span>
-                  <span className="font-medium">2.4 GB</span>
+                  <span className="text-muted-foreground">Lecciones Completadas</span>
+                  <span className="font-medium">{chatMessages.length}/10</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Uptime</span>
-                  <span className="font-medium text-green-600">99.9%</span>
+                  <span className="text-muted-foreground">Tiempo Total</span>
+                  <span className="font-medium">2.5 horas</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Próxima Meta</span>
+                  <span className="font-medium text-primary">50 palabras nuevas</span>
                 </div>
                 <Button variant="hero" className="w-full">
-                  View Analytics
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Conectar WhatsApp
                 </Button>
               </div>
             </CardContent>
