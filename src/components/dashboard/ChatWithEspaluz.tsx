@@ -382,7 +382,14 @@ export const ChatWithEspaluz = () => {
             }
           });
 
-          if (transcriptionError) throw transcriptionError;
+          if (transcriptionError) {
+            console.error('Transcription error:', transcriptionError);
+            throw new Error(`Speech recognition failed: ${transcriptionError.message || 'Unknown error'}`);
+          }
+          
+          if (!transcriptionData || !transcriptionData.text) {
+            throw new Error('No text was transcribed from the audio');
+          }
           
           const transcribedText = transcriptionData.text;
           toast.success(`Transcribed: "${transcribedText.substring(0, 50)}${transcribedText.length > 50 ? '...' : ''}"`);

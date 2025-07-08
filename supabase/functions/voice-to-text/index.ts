@@ -50,13 +50,16 @@ serve(async (req) => {
 
     const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
     if (!openaiApiKey) {
+      console.error('OPENAI_API_KEY not configured');
       throw new Error('OPENAI_API_KEY not configured');
     }
 
     console.log(`Processing voice message in language: ${language || 'auto-detect'}`);
+    console.log(`Audio data length: ${audio.length} characters`);
 
     // Process audio in chunks
     const binaryAudio = processBase64Chunks(audio);
+    console.log(`Processed binary audio length: ${binaryAudio.length} bytes`);
     
     // Prepare form data
     const formData = new FormData();
