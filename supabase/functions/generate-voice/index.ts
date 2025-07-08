@@ -36,9 +36,9 @@ serve(async (req) => {
         text: text,
         model_id: "eleven_multilingual_v2",
         voice_settings: {
-          stability: 0.5,
+          stability: 0.75,
           similarity_boost: 0.8,
-          style: 0.5,
+          style: 0.25,
           use_speaker_boost: true
         }
       }),
