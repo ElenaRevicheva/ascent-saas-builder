@@ -196,11 +196,27 @@ export const ChatWithEspaluz = () => {
     setLoadingMedia(prev => ({ ...prev, [messageId]: 'video' }));
     
     try {
+      console.log('Calling generate-video with script:', videoScript);
+      
       const { data, error } = await supabase.functions.invoke('generate-video', {
         body: { videoScript }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
+
+      if (!data) {
+        throw new Error('No data returned from video generation');
+      }
+
+      if (data.error) {
+        console.error('Edge function returned error:', data.error);
+        throw new Error(data.error);
+      }
+
+      console.log('Video generation successful:', data);
 
       // Create audio blob from base64
       const audioBlob = new Blob([
@@ -232,7 +248,7 @@ export const ChatWithEspaluz = () => {
       toast.success('Video generated successfully!');
     } catch (error) {
       console.error('Error generating video:', error);
-      toast.error('Failed to generate video');
+      toast.error(`Failed to generate video: ${error.message || 'Unknown error'}`);
     } finally {
       setLoadingMedia(prev => ({ ...prev, [messageId]: null }));
     }

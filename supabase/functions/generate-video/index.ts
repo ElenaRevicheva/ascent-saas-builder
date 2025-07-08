@@ -15,11 +15,13 @@ serve(async (req) => {
     const { videoScript, voice = "pFZP5JQG7iQjIQuC4Bku" } = await req.json(); // Default to Lily voice
     
     if (!videoScript) {
+      console.error('No video script provided');
       throw new Error('Video script is required');
     }
 
     const elevenlabsApiKey = Deno.env.get('ELEVENLABS_API_KEY');
     if (!elevenlabsApiKey) {
+      console.error('ElevenLabs API key not found');
       throw new Error('ELEVENLABS_API_KEY not configured');
     }
 
@@ -46,8 +48,13 @@ serve(async (req) => {
 
     if (!ttsResponse.ok) {
       const errorText = await ttsResponse.text();
-      console.error('ElevenLabs TTS API error:', errorText);
-      throw new Error(`ElevenLabs TTS API error: ${ttsResponse.status} ${errorText}`);
+      console.error('ElevenLabs TTS API error:', {
+        status: ttsResponse.status,
+        statusText: ttsResponse.statusText,
+        errorText: errorText,
+        voice: voice
+      });
+      throw new Error(`ElevenLabs TTS API error: ${ttsResponse.status} - ${errorText}`);
     }
 
     // Get audio buffer and convert to base64
@@ -71,9 +78,14 @@ serve(async (req) => {
     });
 
   } catch (error) {
-    console.error('Error in generate-video:', error);
+    console.error('Error in generate-video:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
     return new Response(JSON.stringify({ 
-      error: error.message 
+      error: error.message,
+      details: 'Check edge function logs for more information'
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
