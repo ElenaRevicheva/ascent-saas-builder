@@ -41,7 +41,7 @@ serve(async (req) => {
       });
     }
 
-    console.log(`Generating video for script: ${videoScript.substring(0, 100)}...`);
+    console.log(`Generating gentle video voice for script: ${videoScript.substring(0, 100)}...`);
 
     // Check if user has uploaded their own avatar video
     let userAvatarUrl = null;

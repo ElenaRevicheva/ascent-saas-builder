@@ -23,7 +23,8 @@ serve(async (req) => {
       throw new Error('ELEVENLABS_API_KEY not configured');
     }
 
-    console.log(`Generating voice for text: ${text.substring(0, 100)}...`);
+    console.log(`Generating gentle voice for text: ${text.substring(0, 100)}...`);
+    console.log(`Text length: ${text.length} characters`);
 
     // Call ElevenLabs TTS API
     const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}`, {
