@@ -7,36 +7,67 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Family member profiles from the Telegram bot
-const FAMILY_MEMBERS = {
-  "alisa": {
-    role: "child",
-    age: 4,
-    learning_level: "beginner",
-    interests: ["animals", "colors", "games", "songs"],
-    tone: "playful",
-    language_balance: { spanish: 0.6, english: 0.4 },
-    russian_variants: ["алиса", "алисочка", "алисa"]
-  },
-  "marina": {
-    role: "elder", 
-    age: 65,
-    learning_level: "beginner",
-    interests: ["cooking", "culture", "daily life", "health"],
-    tone: "patient",
-    language_balance: { spanish: 0.7, english: 0.3 },
-    russian_variants: ["марина", "маринa"]
-  },
-  "elena": {
-    role: "parent",
-    age: 39,
-    learning_level: "intermediate", 
-    interests: ["work", "travel", "parenting", "culture"],
-    tone: "conversational",
-    language_balance: { spanish: 0.5, english: 0.5 },
-    russian_variants: ["елена", "еленa", "лена"]
-  }
+// Default family member template for new users
+const DEFAULT_FAMILY_MEMBER = {
+  role: "adult",
+  age: 35,
+  learning_level: "beginner",
+  interests: ["culture", "daily life", "conversation"],
+  tone: "conversational",
+  spanish_preference: 0.5,
+  english_preference: 0.5
 };
+
+async function getFamilyMembers(supabase: any, userId: string) {
+  const { data: familyMembers, error } = await supabase
+    .from('family_members')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('is_active', true);
+
+  if (error) {
+    console.error('Error fetching family members:', error);
+    return [];
+  }
+
+  return familyMembers || [];
+}
+
+async function detectFamilyMember(message: string, familyMembers: any[]): Promise<any> {
+  if (!familyMembers || familyMembers.length === 0) {
+    return {
+      id: 'default',
+      name: 'User',
+      ...DEFAULT_FAMILY_MEMBER
+    };
+  }
+
+  const messageLower = message.toLowerCase();
+  
+  // Try to find family member by name or name variants
+  for (const member of familyMembers) {
+    // Check main name
+    if (messageLower.includes(member.name.toLowerCase())) {
+      return member;
+    }
+    
+    // Check name variants
+    if (member.name_variants && Array.isArray(member.name_variants)) {
+      for (const variant of member.name_variants) {
+        if (messageLower.includes(variant.toLowerCase())) {
+          return member;
+        }
+      }
+    }
+  }
+  
+  // If no specific member detected, return the first active one or default
+  return familyMembers[0] || {
+    id: 'default',
+    name: 'User',
+    ...DEFAULT_FAMILY_MEMBER
+  };
+}
 
 function detectEmotion(text: string) {
   const emotions = {
@@ -65,39 +96,21 @@ function detectEmotion(text: string) {
   return { emotion: dominant[0], confidence: dominant[1], data: detected };
 }
 
-function detectFamilyMember(message: string): string {
-  const messageLower = message.toLowerCase();
-  
-  for (const [name, member] of Object.entries(FAMILY_MEMBERS)) {
-    // Check name variations
-    if (messageLower.includes(name)) return name;
-    
-    // Check Russian variants
-    for (const variant of member.russian_variants) {
-      if (messageLower.includes(variant)) return name;
-    }
-  }
-  
-  return "elena"; // Default to Elena
-}
-
 function extractVideoScript(text: string): string {
   const match = text.match(/\[VIDEO SCRIPT START\](.*?)\[VIDEO SCRIPT END\]/s);
   return match ? match[1].trim() : "";
 }
 
-function formatClaudeRequest(userMessage: string, familyMember: string, emotion: any, conversationHistory: any[]) {
-  const member = FAMILY_MEMBERS[familyMember as keyof typeof FAMILY_MEMBERS];
-  
+function formatClaudeRequest(userMessage: string, familyMember: any, emotion: any, conversationHistory: any[]) {
   const systemPrompt = `You are Espaluz, a bilingual emotionally intelligent Spanish-English language tutor for expat families.
 
 FAMILY MEMBER CONTEXT:
-- You're speaking with: ${member.role} (${familyMember})
-- Age: ${member.age}
-- Learning level: ${member.learning_level}
-- Interests: ${member.interests.join(", ")}
-- Communication tone: ${member.tone}
-- Language balance: ${Math.round(member.language_balance.spanish * 100)}% Spanish, ${Math.round(member.language_balance.english * 100)}% English
+- You're speaking with: ${familyMember.role} (${familyMember.name})
+- Age: ${familyMember.age || 'not specified'}
+- Learning level: ${familyMember.learning_level}
+- Interests: ${familyMember.interests ? familyMember.interests.join(", ") : "general learning"}
+- Communication tone: ${familyMember.tone}
+- Language balance: ${Math.round((familyMember.spanish_preference || 0.5) * 100)}% Spanish, ${Math.round((familyMember.english_preference || 0.5) * 100)}% English
 
 EMOTIONAL CONTEXT:
 - Detected emotion: ${emotion.emotion} (confidence: ${Math.round(emotion.confidence * 100)}%)
@@ -114,13 +127,13 @@ Your response MUST have TWO parts:
 Hello! Let's learn something new together.
 [VIDEO SCRIPT END]
 
-Keep the video script short, warm, and age-appropriate for ${member.role}.
+Keep the video script short, warm, and age-appropriate for ${familyMember.role}.
 
 IMPORTANT:
-- Match the language balance: ${Math.round(member.language_balance.spanish * 100)}% Spanish, ${Math.round(member.language_balance.english * 100)}% English
-- Use ${member.tone} tone throughout
-- Focus on ${member.interests.join(", ")} when possible
-- Adapt complexity to ${member.learning_level} level`;
+- Match the language balance: ${Math.round((familyMember.spanish_preference || 0.5) * 100)}% Spanish, ${Math.round((familyMember.english_preference || 0.5) * 100)}% English
+- Use ${familyMember.tone} tone throughout
+- Focus on ${familyMember.interests ? familyMember.interests.join(", ") : "general topics"} when possible
+- Adapt complexity to ${familyMember.learning_level} level`;
 
   const messages = [
     { role: "system", content: systemPrompt },
@@ -159,11 +172,14 @@ serve(async (req) => {
 
     console.log(`Processing message for user ${userId}: ${message}`);
 
+    // Get family members for this user
+    const familyMembers = await getFamilyMembers(supabase, userId);
+    
     // Detect family member and emotion
-    const familyMember = detectFamilyMember(message);
+    const familyMember = await detectFamilyMember(message, familyMembers);
     const emotion = detectEmotion(message);
     
-    console.log(`Detected family member: ${familyMember}, emotion: ${emotion.emotion}`);
+    console.log(`Detected family member: ${familyMember.name} (${familyMember.role}), emotion: ${emotion.emotion}`);
 
     // Get conversation history from database
     const { data: sessions } = await supabase
@@ -215,14 +231,19 @@ serve(async (req) => {
           user_message: message,
           ai_response: fullResponse,
           video_script: videoScript,
-          family_member: familyMember,
+          family_member: familyMember.name,
+          family_member_id: familyMember.id,
           detected_emotion: emotion
         },
         progress_data: {
-          family_member: familyMember,
+          family_member: familyMember.name,
+          family_member_role: familyMember.role,
           emotion: emotion.emotion,
           confidence: emotion.confidence,
-          language_balance: FAMILY_MEMBERS[familyMember as keyof typeof FAMILY_MEMBERS].language_balance
+          language_balance: {
+            spanish: familyMember.spanish_preference || 0.5,
+            english: familyMember.english_preference || 0.5
+          }
         }
       });
 
@@ -233,7 +254,8 @@ serve(async (req) => {
     return new Response(JSON.stringify({
       response: fullResponse,
       videoScript,
-      familyMember,
+      familyMember: familyMember.name,
+      familyMemberRole: familyMember.role,
       emotion: emotion.emotion,
       confidence: emotion.confidence
     }), {

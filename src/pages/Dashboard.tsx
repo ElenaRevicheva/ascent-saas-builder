@@ -8,6 +8,7 @@ import { QuickActionsCard } from '@/components/dashboard/QuickActionsCard';
 import { LearningProgressCard } from '@/components/dashboard/LearningProgressCard';
 import { FeatureAccessCard } from '@/components/dashboard/FeatureAccessCard';
 import { ChatWithEspaluz } from '@/components/dashboard/ChatWithEspaluz';
+import { FamilyMembersManager } from '@/components/dashboard/FamilyMembersManager';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -62,6 +63,11 @@ const Dashboard = () => {
           <LearningProgressCard hasFeatureAccess={hasFeatureAccess} />
           
           <FeatureAccessCard hasFeatureAccess={hasFeatureAccess} />
+        </div>
+        
+        {/* Family Members Manager */}
+        <div className="mt-8">
+          <FamilyMembersManager />
         </div>
         
         {/* Chat Section - Full Width */}

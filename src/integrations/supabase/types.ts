@@ -86,6 +86,57 @@ export type Database = {
         }
         Relationships: []
       }
+      family_members: {
+        Row: {
+          age: number | null
+          created_at: string
+          english_preference: number | null
+          id: string
+          interests: string[] | null
+          is_active: boolean
+          learning_level: string
+          name: string
+          name_variants: string[] | null
+          role: string
+          spanish_preference: number | null
+          tone: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          age?: number | null
+          created_at?: string
+          english_preference?: number | null
+          id?: string
+          interests?: string[] | null
+          is_active?: boolean
+          learning_level?: string
+          name: string
+          name_variants?: string[] | null
+          role: string
+          spanish_preference?: number | null
+          tone?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          age?: number | null
+          created_at?: string
+          english_preference?: number | null
+          id?: string
+          interests?: string[] | null
+          is_active?: boolean
+          learning_level?: string
+          name?: string
+          name_variants?: string[] | null
+          role?: string
+          spanish_preference?: number | null
+          tone?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       learning_sessions: {
         Row: {
           completed_at: string
