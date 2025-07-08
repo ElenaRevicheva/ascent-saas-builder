@@ -9,6 +9,7 @@ import { LearningProgressCard } from '@/components/dashboard/LearningProgressCar
 import { FeatureAccessCard } from '@/components/dashboard/FeatureAccessCard';
 import { ChatWithEspaluz } from '@/components/dashboard/ChatWithEspaluz';
 import { FamilyMembersManager } from '@/components/dashboard/FamilyMembersManager';
+import { AvatarUpload } from '@/components/dashboard/AvatarUpload';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -65,8 +66,9 @@ const Dashboard = () => {
           <FeatureAccessCard hasFeatureAccess={hasFeatureAccess} />
         </div>
         
-        {/* Family Members Manager */}
-        <div className="mt-8">
+        {/* Avatar Upload and Family Members Manager */}
+        <div className="mt-8 grid gap-6 md:grid-cols-2">
+          <AvatarUpload />
           <FamilyMembersManager />
         </div>
         

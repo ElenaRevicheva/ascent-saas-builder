@@ -1,5 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,7 +18,7 @@ serve(async (req) => {
     const body = await req.json();
     console.log('Request body:', JSON.stringify(body));
     
-    const { videoScript, voice = "pFZP5JQG7iQjIQuC4Bku" } = body; // Default to Lily voice
+    const { videoScript, voice = "pFZP5JQG7iQjIQuC4Bku", userId } = body; // Default to Lily voice
     
     if (!videoScript) {
       console.error('No video script provided');
@@ -42,7 +43,31 @@ serve(async (req) => {
 
     console.log(`Generating video for script: ${videoScript.substring(0, 100)}...`);
 
-    // First, generate TTS audio for the video script
+    // Check if user has uploaded their own avatar video
+    let userAvatarUrl = null;
+    if (userId) {
+      const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+      const supabase = createClient(supabaseUrl, supabaseKey);
+      
+      const fileName = `${userId}/avatar.mp4`;
+      const { data } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(fileName);
+      
+      // Check if file exists
+      try {
+        const headResponse = await fetch(data.publicUrl, { method: 'HEAD' });
+        if (headResponse.ok) {
+          userAvatarUrl = data.publicUrl;
+          console.log(`Found user avatar video: ${userAvatarUrl}`);
+        }
+      } catch (error) {
+        console.log('No user avatar found, will use default');
+      }
+    }
+
+    // Generate TTS audio for the video script
     const ttsResponse = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}`, {
       method: 'POST',
       headers: {
@@ -93,7 +118,10 @@ serve(async (req) => {
       audioContent: base64Audio,
       mimeType: 'audio/mpeg',
       duration: Math.ceil(videoScript.length / 10), // Rough estimate: 10 chars per second
-      message: 'Video generation completed with audio. Avatar video will be overlaid on frontend.'
+      userAvatarUrl: userAvatarUrl,
+      message: userAvatarUrl ? 
+        'Video generation completed with user avatar video and audio.' : 
+        'Video generation completed with audio. Avatar video will be overlaid on frontend.'
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });

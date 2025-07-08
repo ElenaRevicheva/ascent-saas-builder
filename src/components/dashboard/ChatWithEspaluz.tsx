@@ -199,7 +199,10 @@ export const ChatWithEspaluz = () => {
       console.log('Calling generate-video with script:', videoScript);
       
       const { data, error } = await supabase.functions.invoke('generate-video', {
-        body: { videoScript }
+        body: { 
+          videoScript,
+          userId: user?.id 
+        }
       });
 
       if (error) {
@@ -222,28 +225,40 @@ export const ChatWithEspaluz = () => {
       const audioBlob = new Blob([
         new Uint8Array(atob(data.audioContent).split('').map(c => c.charCodeAt(0)))
       ], { type: 'audio/mpeg' });
-      
-      // Create a simple video with the avatar image and audio
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d')!;
-      canvas.width = 400;
-      canvas.height = 400;
-      
-      const img = new Image();
-      img.onload = () => {
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      // Check if user has uploaded their own avatar video
+      if (data.userAvatarUrl) {
+        // User has their own avatar video - use it directly
+        setMessages(prev => prev.map(msg => 
+          msg.id === messageId ? { 
+            ...msg, 
+            videoUrl: data.userAvatarUrl, 
+            audioUrl 
+          } : msg
+        ));
+      } else {
+        // Fallback to static image
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d')!;
+        canvas.width = 400;
+        canvas.height = 400;
         
-        // Convert canvas to video-like format (this is a simplified approach)
-        canvas.toBlob((videoBlob) => {
-          if (videoBlob) {
-            const videoUrl = URL.createObjectURL(videoBlob);
-            setMessages(prev => prev.map(msg => 
-              msg.id === messageId ? { ...msg, videoUrl, audioUrl: URL.createObjectURL(audioBlob) } : msg
-            ));
-          }
-        }, 'image/png');
-      };
-      img.src = avatarImage;
+        const img = new Image();
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          
+          canvas.toBlob((videoBlob) => {
+            if (videoBlob) {
+              const staticVideoUrl = URL.createObjectURL(videoBlob);
+              setMessages(prev => prev.map(msg => 
+                msg.id === messageId ? { ...msg, videoUrl: staticVideoUrl, audioUrl } : msg
+              ));
+            }
+          }, 'image/png');
+        };
+        img.src = avatarImage;
+      }
 
       toast.success('Video generated successfully!');
     } catch (error) {
