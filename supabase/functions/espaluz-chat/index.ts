@@ -226,7 +226,7 @@ serve(async (req) => {
       .insert({
         user_id: userId,
         session_type: 'dashboard_chat',
-        source: 'dashboard',
+        source: 'web', // Changed from 'dashboard' to 'web' to match constraint
         content: {
           user_message: message,
           ai_response: fullResponse,
