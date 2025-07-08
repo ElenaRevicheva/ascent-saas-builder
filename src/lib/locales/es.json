@@ -70,6 +70,15 @@
     "active": "Activo",
     "connected": "Conectado:"
   },
+  "chat": {
+    "title": "Conversa con Espaluz",
+    "welcome": "¡Hola! Soy tu tutora bilingüe de IA",
+    "startConversation": "Inicia una conversación para practicar español e inglés juntos",
+    "placeholder": "Escribe tu mensaje en español, inglés o ruso...",
+    "emotionDetected": "Emoción detectada",
+    "errorSending": "Error al enviar mensaje. Inténtalo de nuevo.",
+    "loading": "Pensando..."
+  },
   "common": {
     "loading": "Cargando...",
     "error": "Error",
