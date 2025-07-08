@@ -15,6 +15,7 @@ import { AvatarUpload } from '@/components/dashboard/AvatarUpload';
 import { LearningModules } from '@/components/dashboard/LearningModules';
 import { LearningAnalytics } from '@/components/dashboard/LearningAnalytics';
 import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
+import { ReferralSystem } from '@/components/ReferralSystem';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -134,6 +135,11 @@ const Dashboard = () => {
             <AvatarUpload />
             <FamilyMembersManager />
           </div>
+        </div>
+
+        {/* Referral System */}
+        <div className="mb-8">
+          <ReferralSystem />
         </div>
         
         {/* Chat Section - Full Width */}

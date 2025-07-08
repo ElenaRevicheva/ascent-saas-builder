@@ -275,6 +275,80 @@ export type Database = {
         }
         Relationships: []
       }
+      referral_rewards: {
+        Row: {
+          created_at: string
+          granted_at: string
+          id: string
+          referral_id: string
+          reward_description: string
+          reward_type: string
+          reward_value: Json | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          granted_at?: string
+          id?: string
+          referral_id: string
+          reward_description: string
+          reward_type: string
+          reward_value?: Json | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          granted_at?: string
+          id?: string
+          referral_id?: string
+          reward_description?: string
+          reward_type?: string
+          reward_value?: Json | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_rewards_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referrals: {
+        Row: {
+          converted_at: string | null
+          created_at: string
+          id: string
+          referral_code: string
+          referred_user_id: string | null
+          referrer_user_id: string
+          reward_granted: boolean
+          updated_at: string
+        }
+        Insert: {
+          converted_at?: string | null
+          created_at?: string
+          id?: string
+          referral_code: string
+          referred_user_id?: string | null
+          referrer_user_id: string
+          reward_granted?: boolean
+          updated_at?: string
+        }
+        Update: {
+          converted_at?: string | null
+          created_at?: string
+          id?: string
+          referral_code?: string
+          referred_user_id?: string | null
+          referrer_user_id?: string
+          reward_granted?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       usage_tracking: {
         Row: {
           created_at: string
@@ -430,6 +504,10 @@ export type Database = {
     }
     Functions: {
       generate_connection_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      generate_referral_code: {
         Args: Record<PropertyKey, never>
         Returns: string
       }

@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
+import { useReferralTracking } from '@/hooks/useReferralTracking';
 import { Eye, EyeOff, ArrowLeft, Sparkles } from 'lucide-react';
 
 const Auth = () => {
@@ -21,6 +22,7 @@ const Auth = () => {
   });
   
   const { signIn, signUp, user } = useAuth();
+  const { processReferralSignup } = useReferralTracking();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -89,7 +91,7 @@ const Auth = () => {
     setError('');
 
     try {
-      const { error } = await signUp(formData.email, formData.password, formData.fullName);
+      const { user, error } = await signUp(formData.email, formData.password, formData.fullName);
       
       if (error) {
         if (error.message.includes('User already registered')) {
@@ -98,6 +100,10 @@ const Auth = () => {
           setError(error.message);
         }
       } else {
+        // Process referral if user came from a referral link
+        if (user) {
+          await processReferralSignup(user.id);
+        }
         toast({
           title: "Account created!",
           description: "Please check your email to confirm your account.",

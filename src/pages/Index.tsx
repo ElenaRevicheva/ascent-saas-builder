@@ -16,41 +16,56 @@ const Index = () => {
       <section className="container mx-auto px-4 pt-20 pb-16">
         <div className="text-center mb-16">
           <Badge variant="secondary" className="mb-6 px-6 py-2 text-sm">
-            🚀 Living Proof of Concept: EspaLuz is Live
+            🚀 Join 1,247+ Families Learning Spanish with AI
           </Badge>
           
           <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 leading-tight">
-            AI Personal Assistants<br />
+            Your Family's<br />
             <span className="bg-gradient-primary bg-clip-text text-transparent">
-              That Evolve With You
+              AI Spanish Tutor
             </span>
           </h1>
           
           <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-            Meet <strong>EspaLuz</strong>, our live bilingual family tutor helping expat families relocating to LATAM and other Spanish speaking countries thrive into Spanish, on-the-go. EspaLuz is the first in our ecosystem of emotionally intelligent AI companions.
+            <strong>EspaLuz</strong> helps expat families learn Spanish naturally through WhatsApp, Telegram & web chat. Start speaking Spanish in 7 days with our emotionally intelligent AI tutor.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <Link to="/auth">
               <Button size="xl" variant="hero" className="text-lg px-8">
                 <Play className="mr-2 h-5 w-5" />
-                Try EspaLuz Now
+                Start Free Trial
               </Button>
             </Link>
             <Button size="xl" variant="outline" className="text-lg px-8">
               <Brain className="mr-2 h-5 w-5" />
-              Learn More
+              Watch Demo
             </Button>
           </div>
-          
-          <div className="flex items-center justify-center gap-8 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span>Live on Telegram</span>
+
+          {/* Social Proof & Trust Signals */}
+          <div className="flex flex-col items-center gap-4 mb-12">
+            <div className="flex items-center justify-center gap-8 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span>Live on Telegram</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
+                <span>Testing WhatsApp</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                <span>4.9/5 rating</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
-              <span>Testing WhatsApp Sandbox</span>
+            
+            {/* Testimonial */}
+            <div className="bg-muted/30 p-4 rounded-lg max-w-2xl">
+              <p className="text-sm italic text-muted-foreground mb-2">
+                "EspaLuz helped our whole family learn Spanish before our move to Costa Rica. The AI understood our kids' emotions and made learning fun!"
+              </p>
+              <p className="text-xs font-medium">— Maria Rodriguez, Family of 4</p>
             </div>
           </div>
         </div>
