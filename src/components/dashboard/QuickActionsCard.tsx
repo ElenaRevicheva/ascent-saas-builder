@@ -3,9 +3,12 @@ import { Button } from '@/components/ui/button';
 import FeatureGate from '@/components/FeatureGate';
 import { Bot, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import familyDinnerSpanish from '@/assets/family-dinner-spanish.jpg';
 
 export const QuickActionsCard = () => {
+  const { t } = useTranslation();
+  
   return (
     <Card className="border-border/50 shadow-magical" style={{ background: 'var(--gradient-card)' }}>
       <CardHeader>
@@ -15,10 +18,10 @@ export const QuickActionsCard = () => {
         />
         <CardTitle className="flex items-center gap-2">
           <Bot className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
-          Start Learning
+          {t('actions.title')}
         </CardTitle>
         <CardDescription>
-          Connect with EspaLuz and practice with your family
+          {t('actions.subtitle')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -29,7 +32,7 @@ export const QuickActionsCard = () => {
         >
           <Link to="/connect-bot">
             <Bot className="h-4 w-4 mr-2" />
-            Connect Telegram Bot
+            {t('actions.connectTelegram')}
           </Link>
         </Button>
         
@@ -39,13 +42,13 @@ export const QuickActionsCard = () => {
           fallback={
             <Button variant="outline" className="w-full justify-start" disabled>
               <MessageSquare className="h-4 w-4 mr-2" />
-              WhatsApp (Premium) 💫
+              {t('actions.whatsappPremium')}
             </Button>
           }
         >
           <Button variant="outline" className="w-full justify-start">
             <MessageSquare className="h-4 w-4 mr-2" />
-            WhatsApp Chat 💬
+            {t('actions.whatsappChat')}
           </Button>
         </FeatureGate>
       </CardContent>
