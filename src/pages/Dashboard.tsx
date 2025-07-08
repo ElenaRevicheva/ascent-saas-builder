@@ -1,5 +1,7 @@
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useSubscription } from '@/hooks/useSubscription';
+import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 import { Clock, Crown } from 'lucide-react';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
@@ -12,6 +14,7 @@ import { FamilyMembersManager } from '@/components/dashboard/FamilyMembersManage
 import { AvatarUpload } from '@/components/dashboard/AvatarUpload';
 import { LearningModules } from '@/components/dashboard/LearningModules';
 import { LearningAnalytics } from '@/components/dashboard/LearningAnalytics';
+import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -23,14 +26,64 @@ const Dashboard = () => {
     hasFeatureAccess,
     loading 
   } = useSubscription();
+  
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [checkingOnboarding, setCheckingOnboarding] = useState(true);
 
-  if (loading) {
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      if (!user) return;
+      
+      try {
+        // Check if user has completed onboarding by looking for family members or learning sessions
+        const [familyResult, sessionsResult] = await Promise.all([
+          supabase
+            .from('family_members')
+            .select('id')
+            .eq('user_id', user.id)
+            .limit(1),
+          supabase
+            .from('learning_sessions')
+            .select('id')
+            .eq('user_id', user.id)
+            .limit(1)
+        ]);
+
+        // Show onboarding if user has no family members and no learning sessions
+        const hasFamily = familyResult.data && familyResult.data.length > 0;
+        const hasSessions = sessionsResult.data && sessionsResult.data.length > 0;
+        
+        if (!hasFamily && !hasSessions) {
+          setShowOnboarding(true);
+        }
+      } catch (error) {
+        console.error('Error checking onboarding status:', error);
+      } finally {
+        setCheckingOnboarding(false);
+      }
+    };
+
+    if (user && !loading) {
+      checkOnboardingStatus();
+    }
+  }, [user, loading]);
+
+  if (loading || checkingOnboarding) {
     return (
       <div className="min-h-screen" style={{ background: 'var(--gradient-magical)' }}>
         <div className="flex items-center justify-center min-h-screen">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[hsl(var(--espaluz-primary))]"></div>
         </div>
       </div>
+    );
+  }
+
+  // Show onboarding flow for new users
+  if (showOnboarding) {
+    return (
+      <OnboardingFlow 
+        onComplete={() => setShowOnboarding(false)}
+      />
     );
   }
 
