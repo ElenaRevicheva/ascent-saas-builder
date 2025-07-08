@@ -480,7 +480,20 @@ export const ChatWithEspaluz = () => {
                           {message.videoUrl.includes('.mp4') || message.videoUrl.includes('video') ? (
                             <video
                               ref={el => {
-                                if (el) videoRefs.current[message.id] = el as any;
+                                if (el) {
+                                  videoRefs.current[message.id] = el as any;
+                                  // Create audio element and sync with video
+                                  const audio = new Audio(message.audioUrl);
+                                  el.addEventListener('play', () => {
+                                    audio.currentTime = 0;
+                                    audio.play();
+                                  });
+                                  el.addEventListener('pause', () => audio.pause());
+                                  el.addEventListener('ended', () => {
+                                    audio.pause();
+                                    setPlayingVideo(null);
+                                  });
+                                }
                               }}
                               src={message.videoUrl}
                               className="w-full h-full object-cover"
@@ -494,17 +507,6 @@ export const ChatWithEspaluz = () => {
                               alt="Avatar"
                               className="w-full h-full object-cover"
                             />
-                          )}
-                          <audio
-                            src={message.audioUrl}
-                            onEnded={() => setPlayingVideo(null)}
-                          />
-                          {playingVideo === message.id && (
-                            <div className="absolute inset-0 bg-[hsl(var(--espaluz-primary))]/20 flex items-center justify-center">
-                              <div className="w-6 h-6 rounded-full bg-[hsl(var(--espaluz-primary))] flex items-center justify-center">
-                                <Volume2 className="h-3 w-3 text-white" />
-                              </div>
-                            </div>
                           )}
                         </div>
                       )}
