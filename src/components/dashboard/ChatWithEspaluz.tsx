@@ -209,7 +209,17 @@ export const ChatWithEspaluz = () => {
       toast.success('Voice generated successfully!');
     } catch (error) {
       console.error('Error generating voice:', error);
-      toast.error('Failed to generate voice');
+      
+      // Handle specific ElevenLabs errors
+      if (error.message === 'RATE_LIMIT_EXCEEDED') {
+        toast.error('ElevenLabs rate limit exceeded. Please wait a moment and try again.');
+      } else if (error.message === 'QUOTA_EXCEEDED') {
+        toast.error('ElevenLabs quota exceeded. Please upgrade your ElevenLabs account.');
+      } else if (error.message === 'INVALID_API_KEY') {
+        toast.error('Invalid ElevenLabs API key. Please check your configuration.');
+      } else {
+        toast.error('Failed to generate voice');
+      }
     } finally {
       setLoadingMedia(prev => ({ ...prev, [messageId]: null }));
     }
@@ -288,7 +298,17 @@ export const ChatWithEspaluz = () => {
       toast.success('Video generated successfully!');
     } catch (error) {
       console.error('Error generating video:', error);
-      toast.error(`Failed to generate video: ${error.message || 'Unknown error'}`);
+      
+      // Handle specific ElevenLabs errors
+      if (error.message === 'RATE_LIMIT_EXCEEDED') {
+        toast.error('ElevenLabs rate limit exceeded. Please wait a moment and try again.');
+      } else if (error.message === 'QUOTA_EXCEEDED') {
+        toast.error('ElevenLabs quota exceeded. Please upgrade your ElevenLabs account.');
+      } else if (error.message === 'INVALID_API_KEY') {
+        toast.error('Invalid ElevenLabs API key. Please check your configuration.');
+      } else {
+        toast.error(`Failed to generate video: ${error.message || 'Unknown error'}`);
+      }
     } finally {
       setLoadingMedia(prev => ({ ...prev, [messageId]: null }));
     }

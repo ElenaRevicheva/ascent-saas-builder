@@ -47,8 +47,22 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('ElevenLabs API error:', errorText);
-      throw new Error(`ElevenLabs API error: ${response.status} ${errorText}`);
+      console.error('ElevenLabs API error:', {
+        status: response.status,
+        statusText: response.statusText,
+        errorText: errorText
+      });
+      
+      // Handle specific ElevenLabs errors
+      if (response.status === 429) {
+        throw new Error('RATE_LIMIT_EXCEEDED');
+      } else if (response.status === 402) {
+        throw new Error('QUOTA_EXCEEDED');
+      } else if (response.status === 401) {
+        throw new Error('INVALID_API_KEY');
+      } else {
+        throw new Error(`ElevenLabs API error: ${response.status} ${errorText}`);
+      }
     }
 
     // Get audio buffer and convert to base64 safely

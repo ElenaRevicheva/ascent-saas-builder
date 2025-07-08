@@ -94,7 +94,17 @@ serve(async (req) => {
         errorText: errorText,
         voice: voice
       });
-      throw new Error(`ElevenLabs TTS API error: ${ttsResponse.status} - ${errorText}`);
+      
+      // Handle specific ElevenLabs errors
+      if (ttsResponse.status === 429) {
+        throw new Error('RATE_LIMIT_EXCEEDED');
+      } else if (ttsResponse.status === 402) {
+        throw new Error('QUOTA_EXCEEDED');
+      } else if (ttsResponse.status === 401) {
+        throw new Error('INVALID_API_KEY');
+      } else {
+        throw new Error(`ElevenLabs TTS API error: ${ttsResponse.status} - ${errorText}`);
+      }
     }
 
     // Get audio buffer and convert to base64 safely
