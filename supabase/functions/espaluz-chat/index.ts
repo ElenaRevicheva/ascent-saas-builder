@@ -121,13 +121,14 @@ Your response MUST have TWO parts:
 
 1️⃣ A full bilingual message with emotional tone and learning content appropriate for the family member's profile.
 
-2️⃣ Then add a short video script section like this:
+2️⃣ Then add a video script section like this:
 [VIDEO SCRIPT START]
-¡Hola! Vamos a aprender algo nuevo juntos.
-Hello! Let's learn something new together.
+¡Hola! Vamos a aprender algo nuevo juntos. Today we'll practice some useful phrases.
+Hello! Let's learn something new together. Hoy vamos a practicar frases útiles.
+Remember, practice makes perfect. ¡La práctica hace al maestro!
 [VIDEO SCRIPT END]
 
-Keep the video script short, warm, and age-appropriate for ${familyMember.role}.
+Make the video script about 30 seconds of speaking time (75-90 words), warm, engaging, and age-appropriate for ${familyMember.role}. Include both Spanish and English content that flows naturally.
 
 IMPORTANT:
 - Match the language balance: ${Math.round((familyMember.spanish_preference || 0.5) * 100)}% Spanish, ${Math.round((familyMember.english_preference || 0.5) * 100)}% English
