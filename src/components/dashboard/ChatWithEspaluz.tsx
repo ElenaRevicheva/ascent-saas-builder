@@ -4,11 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageSquare, Send, Bot, User, Heart, Volume2 } from 'lucide-react';
+import { MessageSquare, Send, Bot, User, Heart, Volume2, Play, Video, Pause } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import avatarImage from '@/assets/avatar-teacher.jpg';
 
 interface ChatMessage {
   id: string;
@@ -19,6 +20,8 @@ interface ChatMessage {
   emotion?: string;
   confidence?: number;
   timestamp: Date;
+  audioUrl?: string;
+  videoUrl?: string;
 }
 
 export const ChatWithEspaluz = () => {
@@ -27,7 +30,12 @@ export const ChatWithEspaluz = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadingMedia, setLoadingMedia] = useState<{[key: string]: 'voice' | 'video' | null}>({});
+  const [playingAudio, setPlayingAudio] = useState<string | null>(null);
+  const [playingVideo, setPlayingVideo] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const audioRefs = useRef<{[key: string]: HTMLAudioElement}>({});
+  const videoRefs = useRef<{[key: string]: HTMLVideoElement}>({});
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -150,6 +158,120 @@ export const ChatWithEspaluz = () => {
     }
   };
 
+  const generateVoice = async (messageId: string, text: string) => {
+    if (loadingMedia[messageId] === 'voice') return;
+    
+    setLoadingMedia(prev => ({ ...prev, [messageId]: 'voice' }));
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-voice', {
+        body: { text }
+      });
+
+      if (error) throw error;
+
+      // Create audio URL from base64
+      const audioBlob = new Blob([
+        new Uint8Array(atob(data.audioContent).split('').map(c => c.charCodeAt(0)))
+      ], { type: 'audio/mpeg' });
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      // Update message with audio URL
+      setMessages(prev => prev.map(msg => 
+        msg.id === messageId ? { ...msg, audioUrl } : msg
+      ));
+
+      toast.success('Voice generated successfully!');
+    } catch (error) {
+      console.error('Error generating voice:', error);
+      toast.error('Failed to generate voice');
+    } finally {
+      setLoadingMedia(prev => ({ ...prev, [messageId]: null }));
+    }
+  };
+
+  const generateVideo = async (messageId: string, videoScript: string) => {
+    if (loadingMedia[messageId] === 'video') return;
+    
+    setLoadingMedia(prev => ({ ...prev, [messageId]: 'video' }));
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-video', {
+        body: { videoScript }
+      });
+
+      if (error) throw error;
+
+      // Create audio blob from base64
+      const audioBlob = new Blob([
+        new Uint8Array(atob(data.audioContent).split('').map(c => c.charCodeAt(0)))
+      ], { type: 'audio/mpeg' });
+      
+      // Create a simple video with the avatar image and audio
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d')!;
+      canvas.width = 400;
+      canvas.height = 400;
+      
+      const img = new Image();
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        
+        // Convert canvas to video-like format (this is a simplified approach)
+        canvas.toBlob((videoBlob) => {
+          if (videoBlob) {
+            const videoUrl = URL.createObjectURL(videoBlob);
+            setMessages(prev => prev.map(msg => 
+              msg.id === messageId ? { ...msg, videoUrl, audioUrl: URL.createObjectURL(audioBlob) } : msg
+            ));
+          }
+        }, 'image/png');
+      };
+      img.src = avatarImage;
+
+      toast.success('Video generated successfully!');
+    } catch (error) {
+      console.error('Error generating video:', error);
+      toast.error('Failed to generate video');
+    } finally {
+      setLoadingMedia(prev => ({ ...prev, [messageId]: null }));
+    }
+  };
+
+  const playAudio = (messageId: string, audioUrl: string) => {
+    // Stop any currently playing audio
+    if (playingAudio && audioRefs.current[playingAudio]) {
+      audioRefs.current[playingAudio].pause();
+    }
+
+    if (playingAudio === messageId) {
+      setPlayingAudio(null);
+      return;
+    }
+
+    if (!audioRefs.current[messageId]) {
+      audioRefs.current[messageId] = new Audio(audioUrl);
+      audioRefs.current[messageId].onended = () => setPlayingAudio(null);
+    }
+
+    audioRefs.current[messageId].play();
+    setPlayingAudio(messageId);
+  };
+
+  const playVideo = (messageId: string) => {
+    if (playingVideo === messageId) {
+      setPlayingVideo(null);
+      if (videoRefs.current[messageId]) {
+        videoRefs.current[messageId].pause();
+      }
+    } else {
+      setPlayingVideo(messageId);
+      if (videoRefs.current[messageId]) {
+        videoRefs.current[messageId].play();
+      }
+    }
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -231,21 +353,119 @@ export const ChatWithEspaluz = () => {
                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                   </div>
                   
-                  {/* AI Message Metadata */}
+                  {/* AI Message Metadata and Controls */}
                   {message.role === 'assistant' && (
-                    <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
-                      {message.emotion && (
-                        <span className="flex items-center gap-1">
-                          {getEmotionIcon(message.emotion)}
-                          {message.emotion}
-                        </span>
-                      )}
-                      {getFamilyMemberBadge(message.familyMember)}
-                      {message.videoScript && (
-                        <Badge variant="outline" className="text-xs">
-                          <Volume2 className="h-3 w-3 mr-1" />
-                          Video
-                        </Badge>
+                    <div className="space-y-2 mt-2">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        {message.emotion && (
+                          <span className="flex items-center gap-1">
+                            {getEmotionIcon(message.emotion)}
+                            {message.emotion}
+                          </span>
+                        )}
+                        {getFamilyMemberBadge(message.familyMember)}
+                        {message.videoScript && (
+                          <Badge variant="outline" className="text-xs">
+                            <Volume2 className="h-3 w-3 mr-1" />
+                            Video Available
+                          </Badge>
+                        )}
+                      </div>
+                      
+                      {/* Media Controls */}
+                      <div className="flex items-center gap-2">
+                        {/* Voice Generation Button */}
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => generateVoice(message.id, message.content)}
+                          disabled={loadingMedia[message.id] === 'voice'}
+                          className="h-7 px-2 text-xs"
+                        >
+                          {loadingMedia[message.id] === 'voice' ? (
+                            <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin mr-1" />
+                          ) : (
+                            <Volume2 className="h-3 w-3 mr-1" />
+                          )}
+                          Voice
+                        </Button>
+
+                        {/* Audio Player */}
+                        {message.audioUrl && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => playAudio(message.id, message.audioUrl!)}
+                            className="h-7 px-2 text-xs"
+                          >
+                            {playingAudio === message.id ? (
+                              <Pause className="h-3 w-3" />
+                            ) : (
+                              <Play className="h-3 w-3" />
+                            )}
+                          </Button>
+                        )}
+
+                        {/* Video Generation Button */}
+                        {message.videoScript && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => generateVideo(message.id, message.videoScript!)}
+                            disabled={loadingMedia[message.id] === 'video'}
+                            className="h-7 px-2 text-xs"
+                          >
+                            {loadingMedia[message.id] === 'video' ? (
+                              <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin mr-1" />
+                            ) : (
+                              <Video className="h-3 w-3 mr-1" />
+                            )}
+                            Video
+                          </Button>
+                        )}
+
+                        {/* Video Player */}
+                        {message.videoUrl && message.audioUrl && (
+                          <div className="flex items-center gap-1">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => playVideo(message.id)}
+                              className="h-7 px-2 text-xs"
+                            >
+                              {playingVideo === message.id ? (
+                                <Pause className="h-3 w-3" />
+                              ) : (
+                                <Play className="h-3 w-3" />
+                              )}
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Video Display */}
+                      {message.videoUrl && message.audioUrl && (
+                        <div className="relative w-32 h-32 rounded-lg overflow-hidden bg-muted">
+                          <img 
+                            src={avatarImage} 
+                            alt="Avatar"
+                            className="w-full h-full object-cover"
+                          />
+                          <audio
+                            ref={el => {
+                              if (el) videoRefs.current[message.id] = el as any;
+                            }}
+                            src={message.audioUrl}
+                            onEnded={() => setPlayingVideo(null)}
+                          />
+                          {playingVideo === message.id && (
+                            <div className="absolute inset-0 bg-[hsl(var(--espaluz-primary))]/20 flex items-center justify-center">
+                              <div className="w-6 h-6 rounded-full bg-[hsl(var(--espaluz-primary))] flex items-center justify-center">
+                                <Volume2 className="h-3 w-3 text-white" />
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       )}
                     </div>
                   )}
