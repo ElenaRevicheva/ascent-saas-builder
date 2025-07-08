@@ -9,6 +9,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import { useLearningProgress } from '@/hooks/useLearningProgress';
 import avatarImage from '@/assets/avatar-teacher.jpg';
 
 interface ChatMessage {
@@ -27,6 +28,7 @@ interface ChatMessage {
 export const ChatWithEspaluz = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { recordChatLearning } = useLearningProgress();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -144,6 +146,13 @@ export const ChatWithEspaluz = () => {
       if (data.confidence > 0.6) {
         toast.success(`${t('chat.emotionDetected')}: ${data.emotion} (${Math.round(data.confidence * 100)}%)`);
       }
+
+      // Extract vocabulary from AI response for learning tracking
+      const vocabularyPattern = /\b[a-záéíóúñü]+\b/gi;
+      const detectedVocabulary = data.response.match(vocabularyPattern)?.slice(0, 5) || [];
+      
+      // Record chat learning session
+      await recordChatLearning(detectedVocabulary, data.confidence, 2);
 
     } catch (error) {
       console.error('Error sending message:', error);
@@ -452,6 +461,13 @@ export const ChatWithEspaluz = () => {
           if (chatData.confidence > 0.6) {
             toast.success(`${t('chat.emotionDetected')}: ${chatData.emotion} (${Math.round(chatData.confidence * 100)}%)`);
           }
+
+          // Extract vocabulary from transcribed text for learning tracking
+          const vocabularyPattern = /\b[a-záéíóúñü]+\b/gi;
+          const detectedVocabulary = transcribedText.match(vocabularyPattern)?.slice(0, 5) || [];
+          
+          // Record voice chat learning session
+          await recordChatLearning(detectedVocabulary, chatData.confidence, 3);
           
         } catch (error) {
           console.error('Error processing voice message:', error);

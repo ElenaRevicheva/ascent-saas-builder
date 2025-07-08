@@ -137,6 +137,48 @@ export type Database = {
         }
         Relationships: []
       }
+      learning_modules: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          difficulty_level: string
+          estimated_duration_minutes: number | null
+          id: string
+          is_active: boolean
+          lesson_content: Json
+          order_index: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          difficulty_level?: string
+          estimated_duration_minutes?: number | null
+          id?: string
+          is_active?: boolean
+          lesson_content?: Json
+          order_index?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          difficulty_level?: string
+          estimated_duration_minutes?: number | null
+          id?: string
+          is_active?: boolean
+          lesson_content?: Json
+          order_index?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       learning_sessions: {
         Row: {
           completed_at: string
@@ -172,6 +214,36 @@ export type Database = {
           progress_data?: Json
           session_type?: string
           source?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      learning_streaks: {
+        Row: {
+          created_at: string
+          current_streak: number
+          id: string
+          last_activity_date: string
+          longest_streak: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_streak?: number
+          id?: string
+          last_activity_date?: string
+          longest_streak?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_streak?: number
+          id?: string
+          last_activity_date?: string
+          longest_streak?: number
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -229,6 +301,86 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_achievements: {
+        Row: {
+          achievement_description: string | null
+          achievement_title: string
+          achievement_type: string
+          badge_icon: string | null
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          achievement_description?: string | null
+          achievement_title: string
+          achievement_type: string
+          badge_icon?: string | null
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          achievement_description?: string | null
+          achievement_title?: string
+          achievement_type?: string
+          badge_icon?: string | null
+          earned_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_module_progress: {
+        Row: {
+          completed_at: string | null
+          confidence_score: number | null
+          created_at: string
+          id: string
+          is_completed: boolean
+          module_id: string
+          progress_percentage: number
+          time_spent_minutes: number | null
+          updated_at: string
+          user_id: string
+          vocabulary_learned: string[] | null
+        }
+        Insert: {
+          completed_at?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          is_completed?: boolean
+          module_id: string
+          progress_percentage?: number
+          time_spent_minutes?: number | null
+          updated_at?: string
+          user_id: string
+          vocabulary_learned?: string[] | null
+        }
+        Update: {
+          completed_at?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          id?: string
+          is_completed?: boolean
+          module_id?: string
+          progress_percentage?: number
+          time_spent_minutes?: number | null
+          updated_at?: string
+          user_id?: string
+          vocabulary_learned?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_module_progress_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "learning_modules"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_subscriptions: {
         Row: {

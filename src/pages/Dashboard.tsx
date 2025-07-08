@@ -10,6 +10,8 @@ import { FeatureAccessCard } from '@/components/dashboard/FeatureAccessCard';
 import { ChatWithEspaluz } from '@/components/dashboard/ChatWithEspaluz';
 import { FamilyMembersManager } from '@/components/dashboard/FamilyMembersManager';
 import { AvatarUpload } from '@/components/dashboard/AvatarUpload';
+import { LearningModules } from '@/components/dashboard/LearningModules';
+import { LearningAnalytics } from '@/components/dashboard/LearningAnalytics';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -51,7 +53,13 @@ const Dashboard = () => {
       />
 
       <div className="container mx-auto px-4 py-8">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {/* Learning Analytics - Top Priority */}
+        <div className="mb-8">
+          <LearningAnalytics />
+        </div>
+
+        {/* Main Dashboard Cards */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
           <AccountStatusCard 
             planType={planType}
             isTrialActive={isTrialActive}
@@ -65,11 +73,14 @@ const Dashboard = () => {
           
           <FeatureAccessCard hasFeatureAccess={hasFeatureAccess} />
         </div>
-        
-        {/* Avatar Upload and Family Members Manager */}
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
-          <AvatarUpload />
-          <FamilyMembersManager />
+
+        {/* Learning Modules and Management */}
+        <div className="grid gap-6 lg:grid-cols-2 mb-8">
+          <LearningModules />
+          <div className="space-y-6">
+            <AvatarUpload />
+            <FamilyMembersManager />
+          </div>
         </div>
         
         {/* Chat Section - Full Width */}
