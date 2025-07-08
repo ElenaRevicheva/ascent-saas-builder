@@ -136,7 +136,6 @@ IMPORTANT:
 - Adapt complexity to ${familyMember.learning_level} level`;
 
   const messages = [
-    { role: "system", content: systemPrompt },
     ...conversationHistory.slice(-8), // Keep last 8 messages for context
     { role: "user", content: userMessage }
   ];
@@ -145,6 +144,7 @@ IMPORTANT:
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 1000,
     temperature: 0.7,
+    system: systemPrompt,
     messages
   };
 }
