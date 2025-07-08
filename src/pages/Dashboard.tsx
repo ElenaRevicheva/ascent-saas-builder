@@ -123,10 +123,10 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent className="space-y-3">
               <Button variant="outline" className="w-full justify-start" asChild>
-                <a href="https://t.me/your_bot" target="_blank" rel="noopener noreferrer">
+                <Link to="/connect-bot">
                   <Bot className="h-4 w-4 mr-2" />
-                  Open Telegram Chat
-                </a>
+                  Connect Telegram Bot
+                </Link>
               </Button>
               
               <FeatureGate 
