@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App.tsx'
 import { AuthProvider } from './hooks/useAuth.tsx'
 import './index.css'
+import './lib/i18n.ts'
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>

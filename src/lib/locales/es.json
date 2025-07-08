@@ -1,0 +1,83 @@
+{
+  "dashboard": {
+    "title": "EspaLuz",
+    "welcome": "¡Bienvenido a Tu Viaje en Español! 🌟",
+    "subtitle": "Conéctate con EspaLuz y comienza a practicar español con tu familia de manera divertida y mágica",
+    "greeting": "¡Hola",
+    "signOut": "Cerrar Sesión"
+  },
+  "account": {
+    "title": "Tu Viaje en Español",
+    "plan": "Plan",
+    "trialDaysLeft": "Días de Prueba Restantes",
+    "status": "Estado",
+    "active": "¡Activo!",
+    "trial": "¡Prueba!",
+    "free": "Gratis",
+    "upgradeNow": "¡Mejorar Ahora! ⭐"
+  },
+  "actions": {
+    "title": "Comenzar a Aprender",
+    "subtitle": "Conéctate con EspaLuz y practica con tu familia",
+    "connectTelegram": "Conectar Bot de Telegram",
+    "whatsappPremium": "WhatsApp (Premium) 💫",
+    "whatsappChat": "Chat de WhatsApp 💬"
+  },
+  "progress": {
+    "title": "Progreso Familiar",
+    "unlock": "Desbloquea analíticas de aprendizaje familiar ✨",
+    "conversations": "Conversaciones",
+    "thisWeek": "esta semana",
+    "learningStreak": "Racha de Aprendizaje",
+    "days": "días 🔥"
+  },
+  "features": {
+    "title": "Características de EspaLuz - Tu Kit de Herramientas de Español 🎯",
+    "subtitle": "Descubre qué características mágicas están disponibles para el viaje de español de tu familia",
+    "basic": "Características Básicas",
+    "advanced": "Características Avanzadas",
+    "premium": "Características Premium",
+    "support": "Soporte Familiar",
+    "telegramIntegration": "Integración con Telegram 📱",
+    "basicConversations": "Conversaciones Básicas 💬",
+    "unlimitedConversations": "Conversaciones Ilimitadas ∞",
+    "avatarVideos": "Videos de Avatar 🎬",
+    "voiceMessages": "Mensajes de Voz 🎤",
+    "progressAnalytics": "Analíticas de Progreso 📊",
+    "prioritySupport": "Soporte Prioritario ⭐",
+    "communitySupport": "Soporte Comunitario 👥"
+  },
+  "connectBot": {
+    "title": "Conecta Tu Bot",
+    "subtitle": "Conecta EspaLuz a tu plataforma de mensajería favorita para comenzar a practicar español",
+    "backToDashboard": "Volver al Panel",
+    "connectedBots": "Bots Conectados",
+    "connectedBotsSubtitle": "Tus plataformas de mensajería actualmente conectadas",
+    "loadingBots": "Cargando bots conectados...",
+    "noBots": "Aún no hay bots conectados",
+    "getStarted": "Genera un código de conexión abajo para comenzar",
+    "connectTelegram": "Conectar Bot de Telegram",
+    "generateCode": "Genera un código de conexión para vincular tu cuenta de Telegram con EspaLuz",
+    "codeExpires": "El código de conexión expira en 10 minutos. ¡Úsalo rápidamente!",
+    "yourCode": "Tu código de conexión:",
+    "expires": "Expira:",
+    "sendToBot": "Envía este código a nuestro bot de Telegram @EspaLuzBot para completar la conexión.",
+    "readyToConnect": "¿Listo para Conectar?",
+    "generateSecure": "Genera un código de conexión seguro para vincular tu cuenta de Telegram con EspaLuz.",
+    "generateConnectionCode": "Generar Código de Conexión",
+    "generating": "Generando...",
+    "generateNew": "Generar Nuevo",
+    "active": "Activo",
+    "connected": "Conectado:"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "close": "Cerrar"
+  }
+}

@@ -1,6 +1,8 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Sparkles } from 'lucide-react';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 import familyLearningSpanish from '@/assets/family-learning-spanish.jpg';
 
 interface DashboardHeaderProps {
@@ -10,6 +12,7 @@ interface DashboardHeaderProps {
 }
 
 export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHeaderProps) => {
+  const { t } = useTranslation();
   return (
     <div className="relative overflow-hidden">
       <div 
@@ -32,16 +35,17 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold bg-gradient-to-r from-[hsl(var(--espaluz-primary))] to-[hsl(var(--espaluz-accent))] bg-clip-text text-transparent">
-                    EspaLuz
+                    {t('dashboard.title')}
                   </h1>
-                  <p className="text-sm text-muted-foreground">¡Hola, {user?.user_metadata?.full_name || user?.email?.split('@')[0]}! ✨</p>
+                  <p className="text-sm text-muted-foreground">{t('dashboard.greeting')}, {user?.user_metadata?.full_name || user?.email?.split('@')[0]}! ✨</p>
                 </div>
               </div>
               
               <div className="flex items-center gap-4">
+                <LanguageSwitcher variant="select" size="sm" />
                 {getStatusBadge()}
                 <Button variant="ghost" size="sm" onClick={signOut}>
-                  Sign Out
+                  {t('dashboard.signOut')}
                 </Button>
               </div>
             </div>
@@ -50,14 +54,14 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
         
         {/* Welcome Hero */}
         <div className="container mx-auto px-4 py-8">
-          <div className="text-center mb-8">
-            <h2 className="text-4xl font-bold text-foreground mb-4">
-              Welcome to Your Spanish Journey! 🌟
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Connect with EspaLuz and start practicing Spanish with your family in a fun, magical way
-            </p>
-          </div>
+            <div className="text-center mb-8">
+              <h2 className="text-4xl font-bold text-foreground mb-4">
+                {t('dashboard.welcome')}
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                {t('dashboard.subtitle')}
+              </p>
+            </div>
         </div>
       </div>
     </div>

@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { 
   Bot, 
   Copy, 
@@ -38,6 +40,7 @@ interface ConnectedBot {
 const ConnectBot = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [connectionCode, setConnectionCode] = useState<ConnectionCode | null>(null);
   const [connectedBots, setConnectedBots] = useState<ConnectedBot[]>([]);
   const [loading, setLoading] = useState(false);
@@ -94,8 +97,8 @@ const ConnectBot = () => {
       
       setConnectionCode(codeData);
       toast({
-        title: "Connection code generated!",
-        description: "Use this code to connect your Telegram bot."
+        title: t('connectBot.title'),
+        description: t('connectBot.generateCode')
       });
     } catch (error) {
       console.error('Error generating connection code:', error);
@@ -131,17 +134,26 @@ const ConnectBot = () => {
 
   return (
     <div className="min-h-screen bg-gradient-hero">
+      {/* Header with Language Switcher */}
+      <header className="border-b border-border bg-background/80 backdrop-blur-sm">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <Link to="/dashboard" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground">
+              <ArrowLeft className="h-4 w-4 mr-1" />
+              {t('connectBot.backToDashboard')}
+            </Link>
+            <LanguageSwitcher variant="select" size="sm" />
+          </div>
+        </div>
+      </header>
+      
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="mb-6">
-            <Link to="/dashboard" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4">
-              <ArrowLeft className="h-4 w-4 mr-1" />
-              Back to Dashboard
-            </Link>
-            <h1 className="text-3xl font-bold text-foreground">Connect Your Bot</h1>
+            <h1 className="text-3xl font-bold text-foreground">{t('connectBot.title')}</h1>
             <p className="text-muted-foreground mt-2">
-              Connect EspaLuz to your favorite messaging platform to start practicing Spanish.
+              {t('connectBot.subtitle')}
             </p>
           </div>
 
@@ -150,17 +162,17 @@ const ConnectBot = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Bot className="h-5 w-5" />
-                Connected Bots
+                {t('connectBot.connectedBots')}
               </CardTitle>
               <CardDescription>
-                Your currently connected messaging platforms
+                {t('connectBot.connectedBotsSubtitle')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               {fetchingBots ? (
                 <div className="flex items-center justify-center py-4">
                   <RefreshCw className="h-4 w-4 animate-spin mr-2" />
-                  Loading connected bots...
+                  {t('connectBot.loadingBots')}
                 </div>
               ) : connectedBots.length > 0 ? (
                 <div className="space-y-3">
@@ -174,13 +186,13 @@ const ConnectBot = () => {
                             <p className="text-sm text-muted-foreground">@{bot.platform_username}</p>
                           )}
                           <p className="text-xs text-muted-foreground">
-                            Connected: {formatDate(bot.connected_at)}
+                            {t('connectBot.connected')} {formatDate(bot.connected_at)}
                           </p>
                         </div>
                       </div>
                       <Badge variant="default" className="bg-green-500">
                         <CheckCircle className="h-3 w-3 mr-1" />
-                        Active
+                        {t('connectBot.active')}
                       </Badge>
                     </div>
                   ))}

@@ -1,0 +1,83 @@
+{
+  "dashboard": {
+    "title": "EspaLuz",
+    "welcome": "Welcome to Your Spanish Journey! 🌟",
+    "subtitle": "Connect with EspaLuz and start practicing Spanish with your family in a fun, magical way",
+    "greeting": "Hello",
+    "signOut": "Sign Out"
+  },
+  "account": {
+    "title": "Your Spanish Journey",
+    "plan": "Plan",
+    "trialDaysLeft": "Trial Days Left",
+    "status": "Status",
+    "active": "Active!",
+    "trial": "Trial!",
+    "free": "Free",
+    "upgradeNow": "Upgrade Now! ⭐"
+  },
+  "actions": {
+    "title": "Start Learning",
+    "subtitle": "Connect with EspaLuz and practice with your family",
+    "connectTelegram": "Connect Telegram Bot",
+    "whatsappPremium": "WhatsApp (Premium) 💫",
+    "whatsappChat": "WhatsApp Chat 💬"
+  },
+  "progress": {
+    "title": "Family Progress",
+    "unlock": "Unlock family learning analytics ✨",
+    "conversations": "Conversations",
+    "thisWeek": "this week",
+    "learningStreak": "Learning Streak",
+    "days": "days 🔥"
+  },
+  "features": {
+    "title": "EspaLuz Features - Your Spanish Learning Toolkit 🎯",
+    "subtitle": "Discover what magical features are available for your family's Spanish journey",
+    "basic": "Basic Features",
+    "advanced": "Advanced Features", 
+    "premium": "Premium Features",
+    "support": "Family Support",
+    "telegramIntegration": "Telegram Integration 📱",
+    "basicConversations": "Basic Conversations 💬",
+    "unlimitedConversations": "Unlimited Conversations ∞",
+    "avatarVideos": "Avatar Videos 🎬",
+    "voiceMessages": "Voice Messages 🎤",
+    "progressAnalytics": "Progress Analytics 📊",
+    "prioritySupport": "Priority Support ⭐",
+    "communitySupport": "Community Support 👥"
+  },
+  "connectBot": {
+    "title": "Connect Your Bot",
+    "subtitle": "Connect EspaLuz to your favorite messaging platform to start practicing Spanish",
+    "backToDashboard": "Back to Dashboard",
+    "connectedBots": "Connected Bots",
+    "connectedBotsSubtitle": "Your currently connected messaging platforms",
+    "loadingBots": "Loading connected bots...",
+    "noBots": "No bots connected yet",
+    "getStarted": "Generate a connection code below to get started",
+    "connectTelegram": "Connect Telegram Bot",
+    "generateCode": "Generate a connection code to link your Telegram account with EspaLuz",
+    "codeExpires": "Connection code expires in 10 minutes. Use it quickly!",
+    "yourCode": "Your connection code:",
+    "expires": "Expires:",
+    "sendToBot": "Send this code to our Telegram bot @EspaLuzBot to complete the connection.",
+    "readyToConnect": "Ready to Connect?",
+    "generateSecure": "Generate a secure connection code to link your Telegram account with EspaLuz.",
+    "generateConnectionCode": "Generate Connection Code",
+    "generating": "Generating...",
+    "generateNew": "Generate New",
+    "active": "Active",
+    "connected": "Connected:"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "close": "Close"
+  }
+}
