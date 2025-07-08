@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageSquare, Send, Bot, User, Heart, Volume2, Play, Video, Pause } from 'lucide-react';
+import { MessageSquare, Send, Bot, User, Heart, Volume2, Play, Video, Pause, Mic, MicOff, Square } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
@@ -33,9 +33,13 @@ export const ChatWithEspaluz = () => {
   const [loadingMedia, setLoadingMedia] = useState<{[key: string]: 'voice' | 'video' | null}>({});
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingLanguage, setRecordingLanguage] = useState<'ru' | 'en' | 'es'>('en');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const audioRefs = useRef<{[key: string]: HTMLAudioElement}>({});
   const videoRefs = useRef<{[key: string]: HTMLVideoElement}>({});
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -324,6 +328,117 @@ export const ChatWithEspaluz = () => {
     }
   };
 
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      audioChunksRef.current = [];
+
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        audioChunksRef.current.push(event.data);
+      };
+
+      mediaRecorderRef.current.onstop = async () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        await processVoiceMessage(audioBlob);
+        
+        // Clean up
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      mediaRecorderRef.current.start();
+      setIsRecording(true);
+      toast.success(`Recording in ${recordingLanguage === 'ru' ? 'Russian' : recordingLanguage === 'es' ? 'Spanish' : 'English'}...`);
+    } catch (error) {
+      console.error('Error starting recording:', error);
+      toast.error('Failed to start recording. Please check microphone permissions.');
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+  };
+
+  const processVoiceMessage = async (audioBlob: Blob) => {
+    try {
+      setLoading(true);
+      
+      // Convert audio to base64
+      const reader = new FileReader();
+      reader.readAsDataURL(audioBlob);
+      
+      reader.onloadend = async () => {
+        const base64Audio = (reader.result as string).split(',')[1];
+        
+        try {
+          // Convert speech to text
+          const { data: transcriptionData, error: transcriptionError } = await supabase.functions.invoke('voice-to-text', {
+            body: { 
+              audio: base64Audio,
+              language: recordingLanguage 
+            }
+          });
+
+          if (transcriptionError) throw transcriptionError;
+          
+          const transcribedText = transcriptionData.text;
+          toast.success(`Transcribed: "${transcribedText.substring(0, 50)}${transcribedText.length > 50 ? '...' : ''}"`);
+          
+          // Add user message with transcribed text
+          const userMessage: ChatMessage = {
+            id: Date.now().toString(),
+            role: 'user',
+            content: transcribedText,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, userMessage]);
+          
+          // Send to Espaluz for bilingual response
+          const { data: chatData, error: chatError } = await supabase.functions.invoke('espaluz-chat', {
+            body: {
+              message: transcribedText,
+              userId: user?.id,
+              isVoiceInput: true,
+              originalLanguage: recordingLanguage
+            }
+          });
+
+          if (chatError) throw chatError;
+
+          const aiMessage: ChatMessage = {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            content: chatData.response,
+            videoScript: chatData.videoScript,
+            familyMember: chatData.familyMember,
+            emotion: chatData.emotion,
+            confidence: chatData.confidence,
+            timestamp: new Date()
+          };
+
+          setMessages(prev => [...prev, aiMessage]);
+          
+          // Show emotion detection if confidence is high
+          if (chatData.confidence > 0.6) {
+            toast.success(`${t('chat.emotionDetected')}: ${chatData.emotion} (${Math.round(chatData.confidence * 100)}%)`);
+          }
+          
+        } catch (error) {
+          console.error('Error processing voice message:', error);
+          toast.error('Failed to process voice message');
+        }
+      };
+    } catch (error) {
+      console.error('Error processing voice message:', error);
+      toast.error('Failed to process voice message');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -566,6 +681,40 @@ export const ChatWithEspaluz = () => {
           </div>
         </ScrollArea>
         
+        {/* Voice Controls */}
+        <div className="flex items-center gap-2 mb-2">
+          <select 
+            value={recordingLanguage} 
+            onChange={(e) => setRecordingLanguage(e.target.value as 'ru' | 'en' | 'es')}
+            className="text-xs px-2 py-1 rounded border bg-background"
+            disabled={isRecording}
+          >
+            <option value="en">🇺🇸 English</option>
+            <option value="es">🇪🇸 Spanish</option>
+            <option value="ru">🇷🇺 Russian</option>
+          </select>
+          
+          <Button
+            onClick={isRecording ? stopRecording : startRecording}
+            disabled={loading}
+            size="sm"
+            variant={isRecording ? "destructive" : "outline"}
+            className="h-8 px-3"
+          >
+            {isRecording ? (
+              <>
+                <Square className="h-3 w-3 mr-1" />
+                Stop
+              </>
+            ) : (
+              <>
+                <Mic className="h-3 w-3 mr-1" />
+                Record
+              </>
+            )}
+          </Button>
+        </div>
+
         {/* Input Area */}
         <div className="flex gap-2">
           <Textarea
@@ -575,11 +724,11 @@ export const ChatWithEspaluz = () => {
             placeholder={t('chat.placeholder')}
             className="resize-none"
             rows={2}
-            disabled={loading}
+            disabled={loading || isRecording}
           />
           <Button
             onClick={sendMessage}
-            disabled={!input.trim() || loading}
+            disabled={!input.trim() || loading || isRecording}
             size="sm"
             className="bg-[hsl(var(--espaluz-primary))] hover:bg-[hsl(var(--espaluz-primary))]/90 self-end"
           >

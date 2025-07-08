@@ -101,7 +101,13 @@ function extractVideoScript(text: string): string {
   return match ? match[1].trim() : "";
 }
 
-function formatClaudeRequest(userMessage: string, familyMember: any, emotion: any, conversationHistory: any[]) {
+function formatClaudeRequest(userMessage: string, familyMember: any, emotion: any, conversationHistory: any[], isVoiceInput?: boolean, originalLanguage?: string) {
+  const voiceInputContext = isVoiceInput ? `\n\nVOICE INPUT CONTEXT:
+- This message was received via voice input
+- Original language: ${originalLanguage === 'ru' ? 'Russian' : originalLanguage === 'es' ? 'Spanish' : 'English'}
+- Please provide a comprehensive bilingual response that acknowledges the voice input and helps with language learning
+- Include translations and explanations as appropriate` : '';
+
   const systemPrompt = `You are Espaluz, a bilingual emotionally intelligent Spanish-English language tutor for expat families.
 
 FAMILY MEMBER CONTEXT:
@@ -114,12 +120,13 @@ FAMILY MEMBER CONTEXT:
 
 EMOTIONAL CONTEXT:
 - Detected emotion: ${emotion.emotion} (confidence: ${Math.round(emotion.confidence * 100)}%)
-- Respond with appropriate emotional intelligence and warmth
+- Respond with appropriate emotional intelligence and warmth${voiceInputContext}
 
 RESPONSE FORMAT:
 Your response MUST have TWO parts:
 
 1️⃣ A full bilingual message with emotional tone and learning content appropriate for the family member's profile.
+${isVoiceInput ? 'Since this was voice input, acknowledge the good pronunciation/effort and provide helpful bilingual translations and explanations.' : ''}
 
 2️⃣ Then add a video script section like this:
 [VIDEO SCRIPT START]
@@ -165,7 +172,7 @@ serve(async (req) => {
       throw new Error('ANTHROPIC_API_KEY not configured');
     }
 
-    const { message, userId } = await req.json();
+    const { message, userId, isVoiceInput, originalLanguage } = await req.json();
     
     if (!message || !userId) {
       throw new Error('Message and userId are required');
@@ -200,7 +207,7 @@ serve(async (req) => {
     }).flat().filter(msg => msg.content) || [];
 
     // Format Claude request
-    const claudeRequest = formatClaudeRequest(message, familyMember, emotion, conversationHistory);
+    const claudeRequest = formatClaudeRequest(message, familyMember, emotion, conversationHistory, isVoiceInput, originalLanguage);
 
     // Call Claude API
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
