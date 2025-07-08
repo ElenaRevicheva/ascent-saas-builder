@@ -163,9 +163,13 @@ export const ChatWithEspaluz = () => {
     
     setLoadingMedia(prev => ({ ...prev, [messageId]: 'voice' }));
     
+    // Extract only the main response text (before video script section)
+    const mainResponse = text.split('[VIDEO SCRIPT START]')[0].trim();
+    const cleanText = mainResponse.replace(/1️⃣ Main Response:\s*\n\n/, '').trim();
+    
     try {
       const { data, error } = await supabase.functions.invoke('generate-voice', {
-        body: { text }
+        body: { text: cleanText }
       });
 
       if (error) throw error;
