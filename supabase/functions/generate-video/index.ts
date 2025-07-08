@@ -8,21 +8,36 @@ const corsHeaders = {
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
-    const { videoScript, voice = "pFZP5JQG7iQjIQuC4Bku" } = await req.json(); // Default to Lily voice
+    console.log('Generate-video function called');
+    
+    const body = await req.json();
+    console.log('Request body:', JSON.stringify(body));
+    
+    const { videoScript, voice = "pFZP5JQG7iQjIQuC4Bku" } = body; // Default to Lily voice
     
     if (!videoScript) {
       console.error('No video script provided');
-      throw new Error('Video script is required');
+      return new Response(JSON.stringify({ 
+        error: 'Video script is required' 
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
     }
 
     const elevenlabsApiKey = Deno.env.get('ELEVENLABS_API_KEY');
     if (!elevenlabsApiKey) {
       console.error('ElevenLabs API key not found');
-      throw new Error('ELEVENLABS_API_KEY not configured');
+      return new Response(JSON.stringify({ 
+        error: 'ELEVENLABS_API_KEY not configured' 
+      }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
     }
 
     console.log(`Generating video for script: ${videoScript.substring(0, 100)}...`);
