@@ -72,16 +72,21 @@ serve(async (req) => {
       throw new Error(`ElevenLabs TTS API error: ${ttsResponse.status} - ${errorText}`);
     }
 
-    // Get audio buffer and convert to base64
+    // Get audio buffer and convert to base64 safely
     const audioArrayBuffer = await ttsResponse.arrayBuffer();
-    const base64Audio = btoa(
-      String.fromCharCode(...new Uint8Array(audioArrayBuffer))
-    );
+    const audioBytes = new Uint8Array(audioArrayBuffer);
+    
+    // Convert to base64 in chunks to avoid stack overflow
+    let base64Audio = '';
+    const chunkSize = 8192; // Process in smaller chunks
+    
+    for (let i = 0; i < audioBytes.length; i += chunkSize) {
+      const chunk = audioBytes.slice(i, i + chunkSize);
+      const chunkString = String.fromCharCode.apply(null, Array.from(chunk));
+      base64Audio += btoa(chunkString);
+    }
 
-    // For now, we'll return the audio with a placeholder for video
-    // In a production setup, you would use FFmpeg to merge audio with a looping avatar video
-    // Since we can't run FFmpeg in Supabase Edge Functions, we'll return the audio
-    // and handle video combination on the frontend or use a different approach
+    console.log(`Generated audio with ${audioBytes.length} bytes, base64 length: ${base64Audio.length}`);
     
     return new Response(JSON.stringify({
       audioContent: base64Audio,
