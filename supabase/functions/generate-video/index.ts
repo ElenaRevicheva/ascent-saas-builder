@@ -67,7 +67,7 @@ serve(async (req) => {
       }
     }
 
-    // Generate TTS audio for the video script
+    // Generate TTS audio for the video script with gentle teacher voice
     const ttsResponse = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}`, {
       method: 'POST',
       headers: {
@@ -78,9 +78,9 @@ serve(async (req) => {
         text: videoScript,
         model_id: "eleven_multilingual_v2",
         voice_settings: {
-          stability: 0.75,
-          similarity_boost: 0.8,
-          style: 0.25,
+          stability: 0.85,
+          similarity_boost: 0.75,
+          style: 0.15,
           use_speaker_boost: true
         }
       }),
