@@ -477,15 +477,25 @@ export const ChatWithEspaluz = () => {
                       {/* Video Display */}
                       {message.videoUrl && message.audioUrl && (
                         <div className="relative w-32 h-32 rounded-lg overflow-hidden bg-muted">
-                          <img 
-                            src={avatarImage} 
-                            alt="Avatar"
-                            className="w-full h-full object-cover"
-                          />
+                          {message.videoUrl.includes('.mp4') || message.videoUrl.includes('video') ? (
+                            <video
+                              ref={el => {
+                                if (el) videoRefs.current[message.id] = el as any;
+                              }}
+                              src={message.videoUrl}
+                              className="w-full h-full object-cover"
+                              loop
+                              muted
+                              onEnded={() => setPlayingVideo(null)}
+                            />
+                          ) : (
+                            <img 
+                              src={message.videoUrl.startsWith('blob:') ? message.videoUrl : avatarImage} 
+                              alt="Avatar"
+                              className="w-full h-full object-cover"
+                            />
+                          )}
                           <audio
-                            ref={el => {
-                              if (el) videoRefs.current[message.id] = el as any;
-                            }}
                             src={message.audioUrl}
                             onEnded={() => setPlayingVideo(null)}
                           />
