@@ -68,10 +68,10 @@ const Footer = () => {
             © 2024 EspaLuz AI Family Tutor. All rights reserved.
           </p>
           <div className="flex space-x-4 mt-4 md:mt-0">
-            <Link to="/privacy" className="text-muted-foreground hover:text-primary transition-colors text-sm">
+            <Link to="/privacy-policy" className="text-muted-foreground hover:text-primary transition-colors text-sm">
               Privacy Policy
             </Link>
-            <Link to="/terms" className="text-muted-foreground hover:text-primary transition-colors text-sm">
+            <Link to="/terms-of-service" className="text-muted-foreground hover:text-primary transition-colors text-sm">
               Terms of Service
             </Link>
           </div>

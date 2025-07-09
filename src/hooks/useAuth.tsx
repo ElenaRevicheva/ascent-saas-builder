@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 interface AuthContextType {
   user: User | null;
@@ -51,6 +52,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
       }
     });
+    
+    // Track signup in analytics (will be tracked when user logs in)
+    if (data?.user && !error) {
+      // The analytics tracking will happen in the auth state change listener
+      setTimeout(() => {
+        // Track signup event after auth state settles
+        const event = new CustomEvent('user-signup', { detail: { method: 'email' } });
+        window.dispatchEvent(event);
+      }, 1000);
+    }
     
     return { error, user: data?.user };
   };

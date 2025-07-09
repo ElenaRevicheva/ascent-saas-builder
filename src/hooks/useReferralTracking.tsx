@@ -1,7 +1,10 @@
 import { useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 export const useReferralTracking = () => {
+  const { trackReferralUsed } = useAnalytics();
+
   useEffect(() => {
     // Check for referral code in URL on app load
     const urlParams = new URLSearchParams(window.location.search);
@@ -18,7 +21,8 @@ export const useReferralTracking = () => {
 
   const trackReferralClick = async (referralCode: string) => {
     try {
-      // This could be expanded to track referral clicks in analytics
+      // Track referral click in analytics
+      await trackReferralUsed(referralCode);
       console.log('Referral click tracked:', referralCode);
     } catch (error) {
       console.error('Error tracking referral click:', error);
