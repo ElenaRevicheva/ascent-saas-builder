@@ -112,7 +112,6 @@ export const OnboardingComplete = ({ onFinish, onPrevious, isLoading }: Onboardi
             <div className="space-y-1">
               <strong>Premium features:</strong>
               <ul className="list-disc list-inside text-muted-foreground space-y-1">
-                <li>WhatsApp integration</li>
                 <li>Advanced analytics</li>
                 <li>Custom lesson plans</li>
               </ul>

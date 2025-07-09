@@ -4,6 +4,7 @@ import { Sparkles } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
 import familyLearningSpanish from '@/assets/family-learning-spanish.jpg';
+import brandAvatar1 from '@/assets/brand-avatar-1.jpg';
 
 interface DashboardHeaderProps {
   user: any;
@@ -18,32 +19,39 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
       <div 
         className="absolute inset-0 opacity-30"
         style={{
-          backgroundImage: `url(${familyLearningSpanish})`,
+          background: 'linear-gradient(120deg, #ffb199 0%, #ff0844 50%, #833ab4 100%)', // orange, rose, purple
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           filter: 'blur(1px)'
         }}
       />
-      <div className="relative z-10 bg-gradient-to-r from-background/90 via-background/70 to-transparent">
+      <div className="relative z-10 bg-gradient-to-r from-[#fff0e6]/90 via-[#fce4ec]/70 to-transparent">
         <header className="border-b border-border/50 bg-background/80 backdrop-blur-sm">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <Sparkles className="h-8 w-8 text-[hsl(var(--espaluz-primary))]" />
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-[hsl(var(--espaluz-secondary))] rounded-full animate-pulse" />
-                </div>
+              <div className="flex items-center gap-4">
+                <img src={brandAvatar1} alt="Brand" className="h-16 w-16 rounded-full border-4 border-orange-300 shadow-lg object-cover bg-white" />
                 <div>
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-[hsl(var(--espaluz-primary))] to-[hsl(var(--espaluz-accent))] bg-clip-text text-transparent">
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-500 via-pink-400 to-purple-600 bg-clip-text text-transparent">
                     {t('dashboard.title')}
                   </h1>
-                  <p className="text-sm text-muted-foreground">{t('dashboard.greeting')}, {user?.user_metadata?.full_name || user?.email?.split('@')[0]}! ✨</p>
+                  <p className="text-sm text-rose-600">{t('dashboard.greeting')}, {user?.user_metadata?.full_name || user?.email?.split('@')[0]}! ✨</p>
                 </div>
               </div>
-              
               <div className="flex items-center gap-4">
                 <LanguageSwitcher variant="select" size="sm" />
                 {getStatusBadge()}
+                <Button
+                  variant="hero"
+                  size="lg"
+                  className="bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg"
+                  onClick={() => {
+                    const qr = document.querySelector('img[alt="EspaLuz QR"]');
+                    if (qr) qr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }}
+                >
+                  🎉 Invite your family!
+                </Button>
                 <Button variant="ghost" size="sm" onClick={signOut}>
                   {t('dashboard.signOut')}
                 </Button>
@@ -51,14 +59,13 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
             </div>
           </div>
         </header>
-        
         {/* Welcome Hero */}
         <div className="container mx-auto px-4 py-8">
             <div className="text-center mb-8">
-              <h2 className="text-4xl font-bold text-foreground mb-4">
+              <h2 className="text-4xl font-bold text-purple-700 mb-4">
                 {t('dashboard.welcome')}
               </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-lg text-orange-700 max-w-2xl mx-auto">
                 {t('dashboard.subtitle')}
               </p>
             </div>

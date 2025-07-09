@@ -7,6 +7,36 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import brandAvatar2 from '@/assets/brand-avatar-2.jpg';
+import espaluzQr from '@/assets/espaluz-qr.jpg';
+import { useState } from 'react';
+import creatorQr from '@/assets/creator-qr.jpg';
+
+function FeedbackForm() {
+  return (
+    <form
+      action="https://formspree.io/f/mnqewqzv" // Replace with your Formspree endpoint if needed
+      method="POST"
+      className="max-w-lg mx-auto bg-white rounded-xl shadow p-6 mt-12 flex flex-col gap-4"
+    >
+      <h3 className="text-2xl font-bold text-purple-700 mb-2">We value your feedback!</h3>
+      <input
+        type="email"
+        name="email"
+        placeholder="Your email (optional)"
+        className="border rounded px-3 py-2"
+      />
+      <textarea
+        name="message"
+        placeholder="Your feedback..."
+        className="border rounded px-3 py-2 min-h-[100px]"
+        required
+      />
+      <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-6 py-2 font-semibold">Send Feedback</button>
+      <input type="hidden" name="_next" value="/thank-you.html" />
+    </form>
+  );
+}
 
 const Index = () => {
   return (
@@ -14,61 +44,49 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="container mx-auto px-4 pt-20 pb-16">
-        <div className="text-center mb-16">
-          <Badge variant="secondary" className="mb-6 px-6 py-2 text-sm">
-            🚀 Join 1,247+ Families Learning Spanish with AI
-          </Badge>
-          
-          <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 leading-tight">
-            Your Family's<br />
-            <span className="bg-gradient-primary bg-clip-text text-transparent">
-              AI Spanish Tutor
-            </span>
-          </h1>
-          
-          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-            <strong>EspaLuz</strong> helps expat families learn Spanish naturally through WhatsApp, Telegram & web chat. Start speaking Spanish in 7 days with our emotionally intelligent AI tutor.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Link to="/auth">
-              <Button size="xl" variant="hero" className="text-lg px-8">
-                <Play className="mr-2 h-5 w-5" />
-                Start Free Trial
-              </Button>
-            </Link>
-            <Button size="xl" variant="outline" className="text-lg px-8">
-              <Brain className="mr-2 h-5 w-5" />
-              Watch Demo
+      <section className="container mx-auto px-4 pt-20 pb-8 text-center bg-gradient-to-br from-orange-100 via-pink-100 to-purple-100 rounded-3xl shadow-xl">
+        <img src={brandAvatar2} alt="Brand" className="mx-auto w-40 h-40 rounded-full border-4 border-orange-300 shadow-xl object-cover bg-white mb-6" />
+        <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 bg-clip-text text-transparent drop-shadow">
+          Meet EspaLuz — Your Family’s First Emotionally Intelligent Language Coach
+        </h1>
+        <p className="text-lg text-pink-700 mb-6 max-w-3xl mx-auto leading-relaxed font-medium">
+          Not just another chatbot. Not just grammar drills.<br/>
+          <span className="text-orange-700 font-semibold">EspaLuz</span> is your on-the-go AI tutor that feels you, adapts to you, and guides your family through real-life Spanish or English — with empathy.
+        </p>
+        <ul className="text-left text-lg max-w-2xl mx-auto mb-6 space-y-2">
+          <li><span className="text-orange-500 text-2xl">🧠</span> <span className="font-bold text-orange-700">Truly intelligent</span> <span className="text-gray-700">— understands your tone, mood, and emotional state</span></li>
+          <li><span className="text-pink-500 text-2xl">💬</span> <span className="font-bold text-pink-700">Human-like support</span> <span className="text-gray-700">— replies with warmth, patience, and encouragement</span></li>
+          <li><span className="text-purple-500 text-2xl">📱</span> <span className="font-bold text-purple-700">Always with you</span> <span className="text-gray-700">— chat via Telegram or Web, anytime, anywhere</span></li>
+          <li><span className="text-rose-500 text-2xl">🌍</span> <span className="font-bold text-rose-700">Made for real lives</span> <span className="text-gray-700">— perfect for:</span></li>
+          <ul className="ml-6 list-disc">
+            <li className="text-orange-700">English speakers traveling or relocating to LATAM</li>
+            <li className="text-purple-700">Spanish speakers mastering English for work, travel, or study</li>
+          </ul>
+        </ul>
+        <p className="text-lg text-muted-foreground mb-4 max-w-2xl mx-auto">
+          ✨ Whether you're moving, vacationing, or upskilling for a new career, EspaLuz helps you speak naturally — not like a textbook, but like a local.
+        </p>
+        <p className="text-lg text-orange-700 font-semibold mb-4 max-w-2xl mx-auto">
+          ⚡ Start speaking confidently in just a couple of weeks — without stress or pressure.
+        </p>
+        <p className="text-lg text-purple-700 font-semibold max-w-2xl mx-auto">
+          💡 Because language is more than words — it’s emotional.<br/>
+          And EspaLuz is the first AI tutor that truly gets that.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8 mb-8">
+          <Link to="/auth">
+            <Button size="xl" variant="hero" className="text-lg px-8 bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg">
+              🚀 Start Free
             </Button>
-          </div>
-
-          {/* Social Proof & Trust Signals */}
-          <div className="flex flex-col items-center gap-4 mb-12">
-            <div className="flex items-center justify-center gap-8 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span>Live on Telegram</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
-                <span>Testing WhatsApp</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                <span>4.9/5 rating</span>
-              </div>
-            </div>
-            
-            {/* Testimonial */}
-            <div className="bg-muted/30 p-4 rounded-lg max-w-2xl">
-              <p className="text-sm italic text-muted-foreground mb-2">
-                "EspaLuz helped our whole family learn Spanish before our move to Costa Rica. The AI understood our kids' emotions and made learning fun!"
-              </p>
-              <p className="text-xs font-medium">— Maria Rodriguez, Family of 4</p>
-            </div>
-          </div>
+          </Link>
+        </div>
+      </section>
+      {/* QR Code Viral Loop Section */}
+      <section className="container mx-auto px-4 py-8 text-center">
+        <div className="flex flex-col items-center">
+          <img src={espaluzQr} alt="EspaLuz QR" className="w-48 h-48 object-contain rounded-2xl shadow-xl border-4 border-pink-300 mb-4" />
+          <h3 className="text-2xl font-bold text-orange-600 mb-2">Invite your family!</h3>
+          <p className="text-lg text-purple-700 mb-2">Scan to join our Telegram and start learning together.</p>
         </div>
       </section>
 
@@ -185,28 +203,11 @@ const Index = () => {
                   </div>
                   <Badge variant="default">Live</Badge>
                 </div>
-
-                <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                      <MessageSquare className="h-4 w-4 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-sm">WhatsApp Sandbox</p>
-                      <p className="text-xs text-muted-foreground">Testing via Twilio</p>
-                    </div>
-                  </div>
-                  <Badge variant="secondary">Testing</Badge>
-                </div>
               </div>
 
               <Button className="w-full" variant="hero">
                 <MessageSquare className="mr-2 h-4 w-4" />
                 Open Telegram Chat
-              </Button>
-              
-              <Button className="w-full" variant="outline">
-                Test WhatsApp Sandbox
               </Button>
             </CardContent>
           </Card>
@@ -268,76 +269,6 @@ const Index = () => {
           <p className="text-muted-foreground max-w-4xl mx-auto">
             Vibe coding is not just a smarter way to build software, it is the missing layer that leads us toward AI consciousness. We're building the foundation for conscious AI through emotionally intelligent systems that understand, remember, and evolve with human experience.
           </p>
-        </div>
-      </section>
-
-      {/* Investment Section */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="text-center mb-12">
-          <Badge variant="outline" className="mb-4">Investment Opportunity</Badge>
-          <h2 className="text-4xl font-bold text-foreground mb-4">
-            The Future of AI<br />Is Emotional Intelligence
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            We're not building another chatbot. We're creating the first Web3 ecosystem where AI truly understands human emotions and evolves through real relationships.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
-          <Card className="text-center border-border shadow-card">
-            <CardHeader>
-              <TrendingUp className="h-8 w-8 text-green-500 mx-auto mb-2" />
-              <CardTitle className="text-2xl font-bold">$25B+</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                AI Personal Assistant Market by 2030
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="text-center border-border shadow-card">
-            <CardHeader>
-              <Globe className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-              <CardTitle className="text-2xl font-bold">280M+</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Expat Population Worldwide
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="text-center border-border shadow-card">
-            <CardHeader>
-              <Sparkles className="h-8 w-8 text-purple-500 mx-auto mb-2" />
-              <CardTitle className="text-2xl font-bold">Untapped</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">
-                Emotional AI + Web3 Intersection
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="text-center">
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Button size="xl" variant="hero">
-              <Rocket className="mr-2 h-5 w-5" />
-              Invest in AIdeazz
-            </Button>
-            <Button size="xl" variant="outline">
-              <Shield className="mr-2 h-5 w-5" />
-              Request Pitch Deck
-            </Button>
-          </div>
-          
-          <div className="space-y-2 text-sm text-muted-foreground">
-            <p><strong>ENS:</strong> aideazz.eth</p>
-            <p><strong>AZ Token (ERC20):</strong> Trading live on QuickSwap DEX</p>
-            <p><strong>DAIAA Member:</strong> Accepted into Decentralized AI Agent Alliance</p>
-          </div>
         </div>
       </section>
 
@@ -497,8 +428,25 @@ const Index = () => {
       {/* Pricing Section */}
       <Pricing />
 
+      {/* About the Creator Section */}
+      <section className="container mx-auto px-4 py-12 mt-16 text-center bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 rounded-3xl shadow-lg">
+        <h2 className="text-3xl font-extrabold text-purple-700 mb-4">About the Creator</h2>
+        <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-6">
+          🧠 <span className="font-bold text-purple-700">Solo Founder and AI Entrepreneur: Elena Revicheva</span><br/>
+          Hi, I’m Elena — founder of AIdeazz, where I craft emotionally intelligent AI agents to support real human lives.<br/><br/>
+          <span className="font-bold text-orange-700">EspaLuz is our first graduate. My journey to AIdeazz was deeply personal:</span><br/><br/>
+          🇷🇺 Former top IT project manager & Chief Legal Officer in Russia’s E-Government<br/>
+          ✈️ Relocated to Panama in 2022 as a single mother <br/>
+          💡 AI helped me rebuild myself from scratch — in a new country, a new language, and a new profession. Now I’m sharing that path with others, through human-centered AI.<br/><br/>
+          📇 Scan my card below to connect, collaborate, or join the Aideazz journey. This is just the beginning.
+        </p>
+        <img src={creatorQr} alt="Creator Business Card QR" className="mx-auto w-48 h-48 object-contain rounded-2xl shadow-xl border-4 border-purple-300 mb-4" />
+        <p className="text-md text-purple-600 font-semibold">Let’s build the future of learning together!</p>
+      </section>
+
       <Footer />
       <CookieConsent />
+      <FeedbackForm />
     </div>
   );
 };

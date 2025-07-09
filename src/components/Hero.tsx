@@ -15,7 +15,7 @@ const Hero = () => {
             </span>
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-            Personalized Spanish lessons for the whole family. Connect via WhatsApp, Telegram, 
+            Personalized Spanish lessons for the whole family. Connect via Telegram, 
             or web chat for interactive learning that adapts to your pace and style.
           </p>
           

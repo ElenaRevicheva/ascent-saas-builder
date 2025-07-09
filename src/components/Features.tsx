@@ -21,7 +21,7 @@ const Features = () => {
     {
       icon: MessageSquare,
       title: "Multi-Platform Chat",
-      description: "Learn via WhatsApp, Telegram, or web chat. Practice Spanish anywhere, anytime."
+      description: "Learn via Telegram or web chat. Practice Spanish anywhere, anytime."
     },
     {
       icon: Users,

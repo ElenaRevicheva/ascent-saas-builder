@@ -15,7 +15,6 @@ const Pricing = () => {
         "7-day free trial",
         "Basic AI conversations",
         "Telegram integration",
-        "WhatsApp sandbox access",
         "Beginner lessons",
         "Community support"
       ],

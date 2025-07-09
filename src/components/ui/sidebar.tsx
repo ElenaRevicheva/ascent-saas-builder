@@ -16,6 +16,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import brandAvatar2 from '@/assets/brand-avatar-2.jpg';
+import espaluzQr from '@/assets/espaluz-qr.jpg';
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -358,7 +360,14 @@ const SidebarHeader = React.forwardRef<
       data-sidebar="header"
       className={cn("flex flex-col gap-2 p-2", className)}
       {...props}
-    />
+    >
+      {/* Brand QR Code */}
+      <div className="flex flex-col items-center my-4">
+        <img src={brandAvatar2} alt="Brand" className="w-20 h-20 rounded-full border-4 border-orange-300 shadow-lg object-cover bg-white mb-4" />
+        <img src={espaluzQr} alt="EspaLuz QR" className="w-40 h-40 object-contain rounded-xl shadow-lg border-4 border-pink-300" />
+        <span className="mt-2 text-sm font-semibold text-orange-600 text-center">Scan to join our Telegram!</span>
+      </div>
+    </div>
   )
 })
 SidebarHeader.displayName = "SidebarHeader"

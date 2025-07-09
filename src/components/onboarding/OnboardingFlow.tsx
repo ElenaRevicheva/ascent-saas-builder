@@ -40,7 +40,7 @@ const STEPS: { id: OnboardingStep; title: string; description: string; icon: any
   {
     id: 'connect',
     title: 'Connect Platform',
-    description: 'Link Telegram/WhatsApp',
+    description: 'Link Telegram',
     icon: MessageSquare
   },
   {

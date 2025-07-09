@@ -35,22 +35,6 @@ export const QuickActionsCard = () => {
             {t('actions.connectTelegram')}
           </Link>
         </Button>
-        
-        <FeatureGate 
-          feature="whatsapp_integration" 
-          showUpgrade={false}
-          fallback={
-            <Button variant="outline" className="w-full justify-start" disabled>
-              <MessageSquare className="h-4 w-4 mr-2" />
-              {t('actions.whatsappPremium')}
-            </Button>
-          }
-        >
-          <Button variant="outline" className="w-full justify-start">
-            <MessageSquare className="h-4 w-4 mr-2" />
-            {t('actions.whatsappChat')}
-          </Button>
-        </FeatureGate>
       </CardContent>
     </Card>
   );

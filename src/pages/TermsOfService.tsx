@@ -18,7 +18,7 @@ const TermsOfService = () => {
 
             <section>
               <h2 className="text-2xl font-semibold text-foreground mb-4">2. Description of Service</h2>
-              <p>EspaLuz is an AI-powered Spanish learning platform that provides personalized language education for families through various communication channels including web, WhatsApp, and Telegram.</p>
+              <p>EspaLuz is an AI-powered Spanish learning platform that provides personalized language education for families through various communication channels including web and Telegram.</p>
             </section>
 
             <section>

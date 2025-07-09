@@ -77,14 +77,6 @@ export const OnboardingConnectBot = ({ onComplete, onNext, onPrevious, onSkip }:
       description: 'Chat with your AI tutor on Telegram',
       benefits: ['Instant notifications', 'Voice messages', 'Group family chats'],
       connected: connectedPlatforms.includes('telegram')
-    },
-    {
-      id: 'whatsapp',
-      name: 'WhatsApp',
-      description: 'Learn Spanish through WhatsApp',
-      benefits: ['Familiar interface', 'Voice notes', 'Easy family sharing'],
-      connected: connectedPlatforms.includes('whatsapp'),
-      premium: true
     }
   ];
 
@@ -127,9 +119,6 @@ export const OnboardingConnectBot = ({ onComplete, onNext, onPrevious, onSkip }:
                   <div>
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold">{platform.name}</h3>
-                      {platform.premium && (
-                        <Badge variant="secondary" className="text-xs">Premium</Badge>
-                      )}
                       {platform.connected && (
                         <Badge variant="default" className="bg-green-500 text-xs">
                           <CheckCircle className="h-3 w-3 mr-1" />
@@ -154,7 +143,7 @@ export const OnboardingConnectBot = ({ onComplete, onNext, onPrevious, onSkip }:
               {!platform.connected && (
                 <Button
                   onClick={() => generateConnectionCode(platform.id)}
-                  disabled={isGenerating || (platform.premium && !connectedPlatforms.includes('telegram'))}
+                  disabled={isGenerating}
                   variant="outline"
                   className="w-full"
                 >

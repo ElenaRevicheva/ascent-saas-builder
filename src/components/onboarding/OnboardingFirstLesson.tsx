@@ -119,7 +119,7 @@ export const OnboardingFirstLesson = ({ onComplete, onNext, onPrevious }: Onboar
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
                 <div className="flex items-center gap-2">
                   <MessageSquare className="h-4 w-4 text-[hsl(var(--espaluz-primary))]" />
-                  <span>Chat via Telegram/WhatsApp</span>
+                  <span>Chat via Telegram</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <BookOpen className="h-4 w-4 text-[hsl(var(--espaluz-primary))]" />
