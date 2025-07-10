@@ -43,14 +43,16 @@ serve(async (req) => {
 
     console.log(`Generating gentle video voice for script: ${videoScript.substring(0, 100)}...`);
 
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
     // Check if user has uploaded their own avatar video
     let userAvatarUrl = null;
     let avatarType = 'default';
     
     if (userId) {
-      const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-      const supabase = createClient(supabaseUrl, supabaseKey);
       
       const fileName = `${userId}/avatar.mp4`;
       const { data } = supabase.storage
