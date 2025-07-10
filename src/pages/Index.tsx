@@ -46,7 +46,7 @@ const Index = () => {
       {/* Hero Section */}
       <section className="container mx-auto px-4 pt-20 pb-8 text-center bg-gradient-to-br from-orange-100 via-pink-100 to-purple-100 rounded-3xl shadow-xl">
         <img src={brandAvatar2} alt="Brand" className="mx-auto w-40 h-40 rounded-full border-4 border-orange-300 shadow-xl object-cover bg-white mb-6" />
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 bg-clip-text text-transparent drop-shadow px-2">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-relaxed bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 bg-clip-text text-transparent drop-shadow px-4 py-2">
           Meet EspaLuz — Your Family’s First Emotionally Intelligent Language Coach
         </h1>
         <p className="text-lg text-pink-700 mb-6 max-w-3xl mx-auto leading-relaxed font-medium">
