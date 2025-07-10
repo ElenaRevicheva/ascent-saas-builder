@@ -229,7 +229,7 @@ const Index = () => {
             EspaLuz - AI Family Tutor
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Your bilingual AI family tutor — emotionally intelligent, culturally aware, and ready to help expat families thrive in Spanish-speaking countries.
+            Your bilingual AI family tutor — emotionally intelligent, culturally aware, and ready to help expat families thrive in Spanish-speaking countries, Spanish speakers upgrading their English, and travelers exploring new cultures.
           </p>
         </div>
 
