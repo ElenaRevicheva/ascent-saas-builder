@@ -71,26 +71,37 @@ serve(async (req) => {
         } else {
           console.log(`User avatar not found at ${fileName}, checking for any user avatar...`);
           
-          // If user-specific path fails, try to find any avatar in the bucket
-          const { data: avatars } = await supabase.storage
+          // If user-specific path fails, list all files in the bucket
+          const { data: allFiles, error: listError } = await supabase.storage
             .from('avatars')
             .list('', {
-              search: 'avatar.mp4'
+              limit: 100
             });
           
-          if (avatars && avatars.length > 0) {
-            // Use the first avatar.mp4 found
-            const foundAvatar = avatars[0];
-            const { data: foundAvatarData } = supabase.storage
-              .from('avatars')
-              .getPublicUrl(foundAvatar.name);
+          console.log('All files in avatars bucket:', allFiles);
+          
+          if (allFiles && allFiles.length > 0) {
+            // Look for any avatar.mp4 file
+            const avatarFile = allFiles.find(file => file.name.includes('avatar.mp4'));
             
-            const checkResponse = await fetch(foundAvatarData.publicUrl, { method: 'HEAD' });
-            if (checkResponse.ok) {
-              userAvatarUrl = foundAvatarData.publicUrl;
-              avatarType = 'user';
-              console.log(`Found existing user avatar: ${userAvatarUrl}`);
+            if (avatarFile) {
+              const { data: avatarData } = supabase.storage
+                .from('avatars')
+                .getPublicUrl(avatarFile.name);
+              
+              console.log(`Checking found avatar file: ${avatarData.publicUrl}`);
+              
+              const checkResponse = await fetch(avatarData.publicUrl, { method: 'HEAD' });
+              if (checkResponse.ok) {
+                userAvatarUrl = avatarData.publicUrl;
+                avatarType = 'user';
+                console.log(`Using found avatar: ${userAvatarUrl}`);
+              }
+            } else {
+              console.log('No avatar.mp4 file found in bucket');
             }
+          } else {
+            console.log('No files found in avatars bucket or error:', listError);
           }
         }
       } catch (error) {
