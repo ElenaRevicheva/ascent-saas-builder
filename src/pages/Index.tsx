@@ -67,16 +67,43 @@ const Index = () => {
           Not just another chatbot. Not just grammar drills.<br/>
           <span className="text-primary font-semibold">EspaLuz</span> is your on-the-go AI tutor that feels you, adapts to you, and guides your family through real-life Spanish or English — with empathy.
         </p>
-        <ul className="text-left text-lg max-w-2xl mx-auto mb-4 space-y-2">
-          <li><span className="text-primary text-2xl">🧠</span> <span className="font-bold text-primary text-lg">Truly intelligent</span> <span className="text-muted-foreground text-lg">— understands your tone, mood, and emotional state</span></li>
-          <li><span className="text-secondary text-2xl">💬</span> <span className="font-bold text-secondary text-lg">Human-like support</span> <span className="text-muted-foreground text-lg">— replies with warmth, patience, and encouragement</span></li>
-          <li><span className="text-accent text-2xl">📱</span> <span className="font-bold text-accent text-lg">Always with you</span> <span className="text-muted-foreground text-lg">— chat via Telegram or Web, anytime, anywhere</span></li>
-          <li><span className="text-destructive text-2xl">🌍</span> <span className="font-bold text-destructive text-lg">Made for real lives</span> <span className="text-muted-foreground text-lg">— perfect for:</span></li>
-          <ul className="ml-6 list-disc text-base space-y-1">
-            <li className="text-primary text-base">English speakers traveling or relocating to LATAM</li>
-            <li className="text-secondary text-base">Spanish speakers mastering English for work, travel, or study</li>
-          </ul>
-        </ul>
+        <div className="max-w-3xl mx-auto mb-6 space-y-4">
+          <div className="flex items-center justify-start text-left">
+            <span className="text-3xl mr-3">🧠</span>
+            <div>
+              <span className="font-bold text-orange-600 text-lg">Truly intelligent</span>
+              <span className="text-muted-foreground text-lg"> — understands your tone, mood, and emotional state</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-start text-left">
+            <span className="text-3xl mr-3">💬</span>
+            <div>
+              <span className="font-bold text-purple-600 text-lg">Human-like support</span>
+              <span className="text-muted-foreground text-lg"> — replies with warmth, patience, and encouragement</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-start text-left">
+            <span className="text-3xl mr-3">📱</span>
+            <div>
+              <span className="font-bold text-blue-600 text-lg">Always with you</span>
+              <span className="text-muted-foreground text-lg"> — chat via Telegram or Web, anytime, anywhere</span>
+            </div>
+          </div>
+          
+          <div className="flex items-start justify-start text-left">
+            <span className="text-3xl mr-3">🌍</span>
+            <div>
+              <span className="font-bold text-green-600 text-lg">Made for real lives</span>
+              <span className="text-muted-foreground text-lg"> — perfect for:</span>
+              <ul className="mt-2 ml-4 space-y-1">
+                <li className="text-orange-600">• English speakers traveling or relocating to LATAM</li>
+                <li className="text-purple-600">• Spanish speakers mastering English for work, travel, or study</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <p className="text-lg text-muted-foreground mb-4 max-w-2xl mx-auto">
           ✨ Whether you're moving, vacationing, or upskilling for a new career, EspaLuz helps you speak naturally — not like a textbook, but like a local.
         </p>
