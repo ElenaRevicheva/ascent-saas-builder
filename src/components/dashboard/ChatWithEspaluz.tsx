@@ -813,12 +813,18 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
                                     audio.pause();
                                     setPlayingVideo(null);
                                   });
+                                  // Auto-play when video is loaded
+                                  el.addEventListener('loadeddata', () => {
+                                    el.play().catch(console.error);
+                                  });
                                 }
                               }}
                               src={message.videoUrl}
                               className="w-full h-full object-cover"
+                              autoPlay
                               loop
                               muted
+                              playsInline
                               onEnded={() => setPlayingVideo(null)}
                             />
                           ) : (
