@@ -408,11 +408,16 @@ const Index = () => {
       {/* Platform Overview */}
       <section className="container mx-auto px-4 py-16">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-foreground mb-4">Platform Overview</h2>
+          <h2 className="text-4xl font-bold text-foreground mb-4">The Birthplace of EspaLuz</h2>
           <h3 className="text-2xl font-semibold text-primary mb-6">What is AIdeazz?</h3>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            A modular decentralized platform for crafting, evolving, and monetizing emotionally intelligent AI Personal Assistants (AIPAs).
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-4">
+            EspaLuz was born from the AIdeazz.xyz ecosystem — a visionary platform being developed for crafting, evolving, and monetizing emotionally intelligent AI Personal Assistants (AIPAs).
           </p>
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 max-w-2xl mx-auto">
+            <p className="text-amber-800 font-medium">
+              🚧 <strong>Currently in Development</strong> — The full AIdeazz ecosystem is being built. EspaLuz is our first graduate, showcasing what's possible with emotionally intelligent AI.
+            </p>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
