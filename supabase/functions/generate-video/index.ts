@@ -72,10 +72,10 @@ serve(async (req) => {
     
     // If no user avatar, use default avatar
     if (!userAvatarUrl) {
-      // You can upload your default avatar video to the avatars bucket as 'default-avatar.mp4'
+      // Use the avatar.mp4 file that's already uploaded to the avatars bucket
       const { data } = supabase.storage
         .from('avatars')
-        .getPublicUrl('default-avatar.mp4');
+        .getPublicUrl('avatar.mp4');
       
       try {
         const headResponse = await fetch(data.publicUrl, { method: 'HEAD' });
