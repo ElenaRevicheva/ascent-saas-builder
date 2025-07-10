@@ -53,11 +53,13 @@ serve(async (req) => {
     let avatarType = 'default';
     
     if (userId) {
-      
+      // First try the user-specific path
       const fileName = `${userId}/avatar.mp4`;
       const { data } = supabase.storage
         .from('avatars')
         .getPublicUrl(fileName);
+      
+      console.log(`Checking user avatar at: ${data.publicUrl}`);
       
       // Check if file exists
       try {
@@ -66,9 +68,33 @@ serve(async (req) => {
           userAvatarUrl = data.publicUrl;
           avatarType = 'user';
           console.log(`Found user avatar video: ${userAvatarUrl}`);
+        } else {
+          console.log(`User avatar not found at ${fileName}, checking for any user avatar...`);
+          
+          // If user-specific path fails, try to find any avatar in the bucket
+          const { data: avatars } = await supabase.storage
+            .from('avatars')
+            .list('', {
+              search: 'avatar.mp4'
+            });
+          
+          if (avatars && avatars.length > 0) {
+            // Use the first avatar.mp4 found
+            const foundAvatar = avatars[0];
+            const { data: foundAvatarData } = supabase.storage
+              .from('avatars')
+              .getPublicUrl(foundAvatar.name);
+            
+            const checkResponse = await fetch(foundAvatarData.publicUrl, { method: 'HEAD' });
+            if (checkResponse.ok) {
+              userAvatarUrl = foundAvatarData.publicUrl;
+              avatarType = 'user';
+              console.log(`Found existing user avatar: ${userAvatarUrl}`);
+            }
+          }
         }
       } catch (error) {
-        console.log('No user avatar found, will use default');
+        console.log('Error checking user avatar:', error.message);
       }
     }
     
