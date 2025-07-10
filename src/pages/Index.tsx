@@ -67,14 +67,14 @@ const Index = () => {
           Not just another chatbot. Not just grammar drills.<br/>
           <span className="text-primary font-semibold">EspaLuz</span> is your on-the-go AI tutor that feels you, adapts to you, and guides your family through real-life Spanish or English — with empathy.
         </p>
-        <ul className="text-left text-sm max-w-2xl mx-auto mb-4 space-y-1">
-          <li><span className="text-primary text-xl">🧠</span> <span className="font-bold text-primary">Truly intelligent</span> <span className="text-muted-foreground">— understands your tone, mood, and emotional state</span></li>
-          <li><span className="text-secondary text-xl">💬</span> <span className="font-bold text-secondary">Human-like support</span> <span className="text-muted-foreground">— replies with warmth, patience, and encouragement</span></li>
-          <li><span className="text-accent text-xl">📱</span> <span className="font-bold text-accent">Always with you</span> <span className="text-muted-foreground">— chat via Telegram or Web, anytime, anywhere</span></li>
-          <li><span className="text-destructive text-xl">🌍</span> <span className="font-bold text-destructive">Made for real lives</span> <span className="text-muted-foreground">— perfect for:</span></li>
-          <ul className="ml-6 list-disc text-xs">
-            <li className="text-primary">English speakers traveling or relocating to LATAM</li>
-            <li className="text-secondary">Spanish speakers mastering English for work, travel, or study</li>
+        <ul className="text-left text-lg max-w-2xl mx-auto mb-4 space-y-2">
+          <li><span className="text-primary text-2xl">🧠</span> <span className="font-bold text-primary text-lg">Truly intelligent</span> <span className="text-muted-foreground text-lg">— understands your tone, mood, and emotional state</span></li>
+          <li><span className="text-secondary text-2xl">💬</span> <span className="font-bold text-secondary text-lg">Human-like support</span> <span className="text-muted-foreground text-lg">— replies with warmth, patience, and encouragement</span></li>
+          <li><span className="text-accent text-2xl">📱</span> <span className="font-bold text-accent text-lg">Always with you</span> <span className="text-muted-foreground text-lg">— chat via Telegram or Web, anytime, anywhere</span></li>
+          <li><span className="text-destructive text-2xl">🌍</span> <span className="font-bold text-destructive text-lg">Made for real lives</span> <span className="text-muted-foreground text-lg">— perfect for:</span></li>
+          <ul className="ml-6 list-disc text-base space-y-1">
+            <li className="text-primary text-base">English speakers traveling or relocating to LATAM</li>
+            <li className="text-secondary text-base">Spanish speakers mastering English for work, travel, or study</li>
           </ul>
         </ul>
         <p className="text-lg text-muted-foreground mb-4 max-w-2xl mx-auto">
