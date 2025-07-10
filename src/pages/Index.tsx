@@ -58,23 +58,23 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="container mx-auto px-4 pt-20 pb-8 text-center bg-gradient-to-br from-orange-100 via-pink-100 to-purple-100 rounded-3xl shadow-xl">
-        <img src={brandAvatar2} alt="Brand" className="mx-auto w-40 h-40 rounded-full border-4 border-orange-300 shadow-xl object-cover bg-white mb-6" />
+      <section className="container mx-auto px-4 pt-12 pb-6 text-center bg-gradient-magical rounded-2xl shadow-vibrant">
+        <img src={brandAvatar2} alt="Brand" className="mx-auto w-32 h-32 rounded-full border-4 border-primary shadow-glow object-cover bg-white mb-4" />
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-relaxed bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 bg-clip-text text-transparent drop-shadow px-4 py-2">
           Meet EspaLuz — Your Family’s First Emotionally Intelligent Language Coach
         </h1>
-        <p className="text-lg text-pink-700 mb-6 max-w-3xl mx-auto leading-relaxed font-medium">
+        <p className="text-base text-foreground mb-4 max-w-3xl mx-auto leading-relaxed font-medium">
           Not just another chatbot. Not just grammar drills.<br/>
-          <span className="text-orange-700 font-semibold">EspaLuz</span> is your on-the-go AI tutor that feels you, adapts to you, and guides your family through real-life Spanish or English — with empathy.
+          <span className="text-primary font-semibold">EspaLuz</span> is your on-the-go AI tutor that feels you, adapts to you, and guides your family through real-life Spanish or English — with empathy.
         </p>
-        <ul className="text-left text-lg max-w-2xl mx-auto mb-6 space-y-2">
-          <li><span className="text-orange-500 text-2xl">🧠</span> <span className="font-bold text-orange-700">Truly intelligent</span> <span className="text-gray-700">— understands your tone, mood, and emotional state</span></li>
-          <li><span className="text-pink-500 text-2xl">💬</span> <span className="font-bold text-pink-700">Human-like support</span> <span className="text-gray-700">— replies with warmth, patience, and encouragement</span></li>
-          <li><span className="text-purple-500 text-2xl">📱</span> <span className="font-bold text-purple-700">Always with you</span> <span className="text-gray-700">— chat via Telegram or Web, anytime, anywhere</span></li>
-          <li><span className="text-rose-500 text-2xl">🌍</span> <span className="font-bold text-rose-700">Made for real lives</span> <span className="text-gray-700">— perfect for:</span></li>
-          <ul className="ml-6 list-disc">
-            <li className="text-orange-700">English speakers traveling or relocating to LATAM</li>
-            <li className="text-purple-700">Spanish speakers mastering English for work, travel, or study</li>
+        <ul className="text-left text-sm max-w-2xl mx-auto mb-4 space-y-1">
+          <li><span className="text-primary text-xl">🧠</span> <span className="font-bold text-primary">Truly intelligent</span> <span className="text-muted-foreground">— understands your tone, mood, and emotional state</span></li>
+          <li><span className="text-secondary text-xl">💬</span> <span className="font-bold text-secondary">Human-like support</span> <span className="text-muted-foreground">— replies with warmth, patience, and encouragement</span></li>
+          <li><span className="text-accent text-xl">📱</span> <span className="font-bold text-accent">Always with you</span> <span className="text-muted-foreground">— chat via Telegram or Web, anytime, anywhere</span></li>
+          <li><span className="text-destructive text-xl">🌍</span> <span className="font-bold text-destructive">Made for real lives</span> <span className="text-muted-foreground">— perfect for:</span></li>
+          <ul className="ml-6 list-disc text-xs">
+            <li className="text-primary">English speakers traveling or relocating to LATAM</li>
+            <li className="text-secondary">Spanish speakers mastering English for work, travel, or study</li>
           </ul>
         </ul>
         <p className="text-lg text-muted-foreground mb-4 max-w-2xl mx-auto">
@@ -87,18 +87,18 @@ const Index = () => {
           💡 Because language is more than words — it’s emotional.<br/>
           And EspaLuz is the first AI tutor that truly gets that.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8 mb-8">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6 mb-4">
           <Button 
             onClick={handleStartDemo}
-            size="xl" 
-            className="text-lg px-8 bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg hover:scale-105 transition-all duration-300"
+            size="lg" 
+            className="text-base px-6 bg-gradient-primary hover:shadow-glow text-white rounded-full shadow-lg hover:scale-105 transition-all duration-300"
           >
-            <MessageSquare className="mr-2 h-5 w-5" />
+            <MessageSquare className="mr-2 h-4 w-4" />
             🎯 Try Demo FREE!
           </Button>
           <Link to="/auth">
-            <Button size="xl" variant="outline" className="text-lg px-8 rounded-full border-2 border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white transition-all duration-300">
-              <Crown className="mr-2 h-5 w-5" />
+            <Button size="lg" variant="outline" className="text-base px-6 rounded-full border-2 border-primary text-primary hover:bg-gradient-primary hover:text-white transition-all duration-300">
+              <Crown className="mr-2 h-4 w-4" />
               🚀 Start Full Version
             </Button>
           </Link>
@@ -106,19 +106,19 @@ const Index = () => {
       </section>
 
       {/* Demo Benefits Section */}
-      <section className="container mx-auto px-4 py-16 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 rounded-3xl shadow-xl mb-8">
-        <div className="text-center mb-12">
-          <Badge className="mb-4 bg-orange-500 text-white">No Signup Required</Badge>
-          <h2 className="text-4xl font-bold mb-4 text-orange-600">
+      <section className="container mx-auto px-4 py-12 bg-gradient-magical rounded-2xl shadow-vibrant mb-6">
+        <div className="text-center mb-8">
+          <Badge className="mb-3 bg-gradient-primary text-white">No Signup Required</Badge>
+          <h2 className="text-3xl font-bold mb-3 text-primary">
             Try EspaLuz Risk-Free!
           </h2>
-          <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-8">
+          <p className="text-base text-foreground max-w-3xl mx-auto mb-6">
             Experience our emotionally intelligent bilingual AI coach with <strong>no signup required</strong>. 
             Chat up to 20 messages to see how EspaLuz helps your family learn naturally.
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-8 items-center max-w-6xl mx-auto">
           <div className="space-y-6">
             <h3 className="text-2xl font-bold text-purple-700 mb-6">Demo Experience</h3>
             <div className="space-y-4">

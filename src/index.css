@@ -17,17 +17,17 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 217 91% 60%;
+    --primary: 14 100% 57%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 217 91% 70%;
+    --primary-glow: 14 100% 67%;
 
-    --secondary: 214 32% 91%;
-    --secondary-foreground: 222.2 84% 4.9%;
+    --secondary: 292 84% 61%;
+    --secondary-foreground: 0 0% 100%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 217 91% 60%;
+    --accent: 45 100% 51%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
@@ -35,24 +35,31 @@ All colors MUST be HSL.
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 217 91% 60%;
+    --ring: 14 100% 57%;
 
-    /* SaaS-specific design tokens */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-hero: linear-gradient(180deg, hsl(217 91% 95%), hsl(259 100% 97%));
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(217 91% 98%));
-    --gradient-magical: linear-gradient(135deg, hsl(259 100% 95%), hsl(217 91% 95%), hsl(45 100% 95%));
-    --shadow-glow: 0 0 40px hsl(var(--primary) / 0.15);
+    /* Juicy gradient system */
+    --gradient-primary: linear-gradient(135deg, hsl(14 100% 57%), hsl(292 84% 61%));
+    --gradient-hero: linear-gradient(135deg, hsl(14 100% 95%), hsl(292 84% 95%), hsl(45 100% 95%));
+    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(14 100% 97%));
+    --gradient-magical: linear-gradient(135deg, hsl(292 84% 85%), hsl(14 100% 85%), hsl(45 100% 85%));
+    --gradient-accent: linear-gradient(90deg, hsl(14 100% 57%), hsl(45 100% 51%));
+    --gradient-rainbow: linear-gradient(90deg, hsl(14 100% 57%), hsl(45 100% 51%), hsl(125 65% 48%), hsl(220 89% 60%), hsl(292 84% 61%));
+    
+    /* Enhanced shadows */
+    --shadow-glow: 0 0 40px hsl(14 100% 57% / 0.25);
     --shadow-card: 0 4px 24px hsl(222.2 84% 4.9% / 0.08);
-    --shadow-magical: 0 8px 32px hsl(259 100% 70% / 0.12);
+    --shadow-magical: 0 8px 32px hsl(292 84% 61% / 0.15);
+    --shadow-vibrant: 0 10px 40px hsl(14 100% 57% / 0.2);
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     
-    /* EspaLuz-specific colors */
-    --espaluz-primary: 259 100% 70%;
-    --espaluz-secondary: 45 100% 70%;
-    --espaluz-accent: 217 91% 60%;
+    /* EspaLuz-specific vibrant colors */
+    --espaluz-orange: 14 100% 57%;
+    --espaluz-purple: 292 84% 61%;
+    --espaluz-yellow: 45 100% 51%;
+    --espaluz-pink: 330 85% 65%;
+    --espaluz-green: 125 65% 48%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
