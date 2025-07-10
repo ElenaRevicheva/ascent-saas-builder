@@ -75,20 +75,23 @@ serve(async (req) => {
     // If no user avatar, use default avatar
     if (!userAvatarUrl) {
       // Use the avatar.mp4 file that's already uploaded to the avatars bucket
-      const { data } = supabase.storage
+      const { data: defaultData } = supabase.storage
         .from('avatars')
         .getPublicUrl('avatar.mp4');
       
+      console.log(`Checking default avatar at: ${defaultData.publicUrl}`);
+      
       try {
-        const headResponse = await fetch(data.publicUrl, { method: 'HEAD' });
+        const headResponse = await fetch(defaultData.publicUrl, { method: 'HEAD' });
+        console.log(`Default avatar check response status: ${headResponse.status}`);
         if (headResponse.ok) {
-          userAvatarUrl = data.publicUrl;
+          userAvatarUrl = defaultData.publicUrl;
           console.log(`Using default avatar video: ${userAvatarUrl}`);
         } else {
-          console.log('Default avatar not found, will proceed with audio only');
+          console.log(`Default avatar not found (status: ${headResponse.status}), will proceed with audio only`);
         }
       } catch (error) {
-        console.log('Default avatar not available, will proceed with audio only');
+        console.log('Default avatar not available, will proceed with audio only:', error.message);
       }
     }
 
