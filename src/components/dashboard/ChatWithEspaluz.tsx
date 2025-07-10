@@ -797,7 +797,7 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
                       {/* Video Display */}
                       {message.videoUrl && message.audioUrl && (
                         <div className="relative w-32 h-32 rounded-lg overflow-hidden bg-muted">
-                          {message.videoUrl.includes('.mp4') || message.videoUrl.includes('video') ? (
+                          {message.videoUrl.includes('.mp4') || message.videoUrl.includes('video') || message.videoUrl.includes('avatar.mp4') ? (
                             <video
                               ref={el => {
                                 if (el) {
