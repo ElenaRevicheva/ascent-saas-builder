@@ -52,8 +52,27 @@ serve(async (req) => {
     let userAvatarUrl = null;
     let avatarType = 'default';
     
-    if (userId) {
-      // First try the user-specific path
+    // First, try to use the known existing avatar file
+    const knownAvatarPath = '5fa36928-3201-4c2f-bc27-c30b7a6d36c6/avatar.mp4';
+    const { data: knownData } = supabase.storage
+      .from('avatars')
+      .getPublicUrl(knownAvatarPath);
+    
+    console.log(`Checking known avatar at: ${knownData.publicUrl}`);
+    
+    try {
+      const headResponse = await fetch(knownData.publicUrl, { method: 'HEAD' });
+      if (headResponse.ok) {
+        userAvatarUrl = knownData.publicUrl;
+        avatarType = 'user';
+        console.log(`Using known avatar video: ${userAvatarUrl}`);
+      }
+    } catch (error) {
+      console.log('Known avatar not accessible:', error.message);
+    }
+    
+    // If known avatar fails and we have a userId, try user-specific path
+    if (!userAvatarUrl && userId) {
       const fileName = `${userId}/avatar.mp4`;
       const { data } = supabase.storage
         .from('avatars')
@@ -61,48 +80,12 @@ serve(async (req) => {
       
       console.log(`Checking user avatar at: ${data.publicUrl}`);
       
-      // Check if file exists
       try {
         const headResponse = await fetch(data.publicUrl, { method: 'HEAD' });
         if (headResponse.ok) {
           userAvatarUrl = data.publicUrl;
           avatarType = 'user';
           console.log(`Found user avatar video: ${userAvatarUrl}`);
-        } else {
-          console.log(`User avatar not found at ${fileName}, checking for any user avatar...`);
-          
-          // If user-specific path fails, list all files in the bucket
-          const { data: allFiles, error: listError } = await supabase.storage
-            .from('avatars')
-            .list('', {
-              limit: 100
-            });
-          
-          console.log('All files in avatars bucket:', allFiles);
-          
-          if (allFiles && allFiles.length > 0) {
-            // Look for any avatar.mp4 file
-            const avatarFile = allFiles.find(file => file.name.includes('avatar.mp4'));
-            
-            if (avatarFile) {
-              const { data: avatarData } = supabase.storage
-                .from('avatars')
-                .getPublicUrl(avatarFile.name);
-              
-              console.log(`Checking found avatar file: ${avatarData.publicUrl}`);
-              
-              const checkResponse = await fetch(avatarData.publicUrl, { method: 'HEAD' });
-              if (checkResponse.ok) {
-                userAvatarUrl = avatarData.publicUrl;
-                avatarType = 'user';
-                console.log(`Using found avatar: ${userAvatarUrl}`);
-              }
-            } else {
-              console.log('No avatar.mp4 file found in bucket');
-            }
-          } else {
-            console.log('No files found in avatars bucket or error:', listError);
-          }
         }
       } catch (error) {
         console.log('Error checking user avatar:', error.message);
