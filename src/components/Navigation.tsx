@@ -10,15 +10,15 @@ const Navigation = () => {
         </Link>
         
         <div className="hidden md:flex items-center space-x-8">
-          <Link to="#features" className="text-muted-foreground hover:text-foreground transition-colors">
+          <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
             Features
-          </Link>
-          <Link to="#pricing" className="text-muted-foreground hover:text-foreground transition-colors">
+          </a>
+          <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors">
             Pricing
-          </Link>
-          <Link to="#about" className="text-muted-foreground hover:text-foreground transition-colors">
+          </a>
+          <a href="#about" className="text-muted-foreground hover:text-foreground transition-colors">
             About
-          </Link>
+          </a>
         </div>
 
         <div className="flex items-center space-x-4">
