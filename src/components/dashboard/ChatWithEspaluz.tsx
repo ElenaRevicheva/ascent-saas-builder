@@ -360,8 +360,11 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
       const audioUrl = URL.createObjectURL(audioBlob);
 
       // Check if user has uploaded their own avatar video
-      if (data.userAvatarUrl) {
+      console.log('userAvatarUrl from response:', data.userAvatarUrl);
+      
+      if (data.userAvatarUrl && data.userAvatarUrl.includes('.mp4')) {
         // User has their own avatar video - use it directly
+        console.log('Using avatar video URL:', data.userAvatarUrl);
         setMessages(prev => prev.map(msg => 
           msg.id === messageId ? { 
             ...msg, 
@@ -371,6 +374,7 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
         ));
       } else {
         // Fallback to static image
+        console.log('Falling back to static image');
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d')!;
         canvas.width = 400;
