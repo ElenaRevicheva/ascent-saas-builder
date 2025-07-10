@@ -45,6 +45,8 @@ serve(async (req) => {
 
     // Check if user has uploaded their own avatar video
     let userAvatarUrl = null;
+    let avatarType = 'default';
+    
     if (userId) {
       const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
       const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -60,10 +62,31 @@ serve(async (req) => {
         const headResponse = await fetch(data.publicUrl, { method: 'HEAD' });
         if (headResponse.ok) {
           userAvatarUrl = data.publicUrl;
+          avatarType = 'user';
           console.log(`Found user avatar video: ${userAvatarUrl}`);
         }
       } catch (error) {
         console.log('No user avatar found, will use default');
+      }
+    }
+    
+    // If no user avatar, use default avatar
+    if (!userAvatarUrl) {
+      // You can upload your default avatar video to the avatars bucket as 'default-avatar.mp4'
+      const { data } = supabase.storage
+        .from('avatars')
+        .getPublicUrl('default-avatar.mp4');
+      
+      try {
+        const headResponse = await fetch(data.publicUrl, { method: 'HEAD' });
+        if (headResponse.ok) {
+          userAvatarUrl = data.publicUrl;
+          console.log(`Using default avatar video: ${userAvatarUrl}`);
+        } else {
+          console.log('Default avatar not found, will proceed with audio only');
+        }
+      } catch (error) {
+        console.log('Default avatar not available, will proceed with audio only');
       }
     }
 
