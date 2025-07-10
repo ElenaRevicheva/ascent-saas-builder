@@ -336,10 +336,12 @@ const Index = () => {
                 </div>
               </div>
 
-              <Button className="w-full" variant="hero">
-                <MessageSquare className="mr-2 h-4 w-4" />
-                Open Telegram Chat
-              </Button>
+              <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer" className="w-full">
+                <Button className="w-full" variant="hero">
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  Open Telegram Chat
+                </Button>
+              </a>
             </CardContent>
           </Card>
         </div>
