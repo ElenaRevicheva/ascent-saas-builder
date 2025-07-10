@@ -1,15 +1,17 @@
+import { useState } from 'react';
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import Pricing from "@/components/Pricing";
 import { CookieConsent } from "@/components/CookieConsent";
+import { ChatWithEspaluz } from "@/components/dashboard/ChatWithEspaluz";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp } from "lucide-react";
+import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import brandAvatar2 from '@/assets/brand-avatar-2.jpg';
 import espaluzQr from '@/assets/espaluz-qr.jpg';
-import { useState } from 'react';
 import creatorQr from '@/assets/creator-qr.jpg';
 
 function FeedbackForm() {
@@ -39,6 +41,18 @@ function FeedbackForm() {
 }
 
 const Index = () => {
+  const [showDemoModal, setShowDemoModal] = useState(false);
+
+  const handleStartDemo = () => {
+    setShowDemoModal(true);
+  };
+
+  const handleUpgradeFromDemo = () => {
+    setShowDemoModal(false);
+    // Scroll to pricing section
+    document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-hero">
       <Navigation />
@@ -74,11 +88,128 @@ const Index = () => {
           And EspaLuz is the first AI tutor that truly gets that.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8 mb-8">
+          <Button 
+            onClick={handleStartDemo}
+            size="xl" 
+            className="text-lg px-8 bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg hover:scale-105 transition-all duration-300"
+          >
+            <MessageSquare className="mr-2 h-5 w-5" />
+            🎯 Try Demo FREE!
+          </Button>
           <Link to="/auth">
-            <Button size="xl" variant="hero" className="text-lg px-8 bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg">
-              🚀 Start Free
+            <Button size="xl" variant="outline" className="text-lg px-8 rounded-full border-2 border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white transition-all duration-300">
+              <Crown className="mr-2 h-5 w-5" />
+              🚀 Start Full Version
             </Button>
           </Link>
+        </div>
+      </section>
+
+      {/* Demo Benefits Section */}
+      <section className="container mx-auto px-4 py-16 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 rounded-3xl shadow-xl mb-8">
+        <div className="text-center mb-12">
+          <Badge className="mb-4 bg-orange-500 text-white">No Signup Required</Badge>
+          <h2 className="text-4xl font-bold mb-4 text-orange-600">
+            Try EspaLuz Risk-Free!
+          </h2>
+          <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-8">
+            Experience our emotionally intelligent bilingual AI coach with <strong>no signup required</strong>. 
+            Chat up to 20 messages to see how EspaLuz helps your family learn naturally.
+          </p>
+        </div>
+        
+        <div className="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold text-purple-700 mb-6">Demo Experience</h3>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                  <span className="text-green-600 font-bold">✓</span>
+                </div>
+                <span className="text-lg">No signup required - start instantly</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                  <span className="text-green-600 font-bold">✓</span>
+                </div>
+                <span className="text-lg">Experience bilingual conversations in Spanish/English</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                  <span className="text-green-600 font-bold">✓</span>
+                </div>
+                <span className="text-lg">See how EspaLuz adapts to your family's needs</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                  <span className="text-green-600 font-bold">✓</span>
+                </div>
+                <span className="text-lg">Up to 20 demo messages to explore</span>
+              </div>
+            </div>
+            
+            <div className="mt-8 p-4 bg-orange-50 rounded-xl border-2 border-orange-200">
+              <div className="flex items-center gap-3 mb-3">
+                <Crown className="h-6 w-6 text-orange-600" />
+                <span className="text-lg font-bold text-orange-700">
+                  Subscribe to Keep Everything Forever!
+                </span>
+              </div>
+              <ul className="text-sm space-y-2 text-gray-700">
+                <li>🔄 <strong>All your demo conversations saved permanently</strong></li>
+                <li>🎯 Unlimited conversations with no message limits</li>
+                <li>🎤 Voice messages and AI voice generation</li>
+                <li>🎬 Personalized avatar videos for kids</li>
+                <li>👨‍👩‍👧‍👦 Family member profiles and progress tracking</li>
+                <li>📊 Learning analytics and personalized lessons</li>
+              </ul>
+            </div>
+          </div>
+          
+          <Card className="bg-white border-2 border-purple-200 shadow-2xl">
+            <CardHeader className="text-center pb-2">
+              <Badge className="mb-3 bg-purple-500 text-white">
+                <Star className="h-3 w-3 mr-1" />
+                Live Preview
+              </Badge>
+              <CardTitle className="text-2xl text-purple-700">What You'll Experience</CardTitle>
+              <CardDescription className="text-gray-600">
+                See EspaLuz in action - emotionally intelligent and bilingual
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
+                  <MessageSquare className="h-5 w-5 text-purple-600" />
+                  <span className="text-sm">Natural bilingual conversations</span>
+                </div>
+                <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+                  <Heart className="h-5 w-5 text-blue-600" />
+                  <span className="text-sm">Emotionally intelligent responses</span>
+                </div>
+                <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+                  <Users className="h-5 w-5 text-green-600" />
+                  <span className="text-sm">Family-friendly coaching style</span>
+                </div>
+                <div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
+                  <Globe className="h-5 w-5 text-orange-600" />
+                  <span className="text-sm">Spanish/English cultural adaptation</span>
+                </div>
+              </div>
+              
+              <Button 
+                onClick={handleStartDemo}
+                className="w-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-semibold py-3"
+              >
+                <Zap className="mr-2 h-4 w-4" />
+                Start Demo Now - It's FREE!
+              </Button>
+              
+              <p className="text-xs text-center text-gray-500 mt-2">
+                No email required • Instant access • 20 messages to explore
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </section>
       {/* QR Code Viral Loop Section */}
@@ -447,6 +578,25 @@ const Index = () => {
       <Footer />
       <CookieConsent />
       <FeedbackForm />
+      
+      {/* Demo Modal */}
+      <Dialog open={showDemoModal} onOpenChange={setShowDemoModal}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-center">
+              <MessageSquare className="h-5 w-5 text-orange-500" />
+              Try EspaLuz Free Demo
+              <Badge variant="outline" className="ml-2">No Signup Required</Badge>
+            </DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            <ChatWithEspaluz 
+              demoMode={true} 
+              onUpgradeClick={handleUpgradeFromDemo}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

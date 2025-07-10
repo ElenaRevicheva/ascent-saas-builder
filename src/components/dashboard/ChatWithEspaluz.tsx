@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageSquare, Send, Bot, User, Heart, Volume2, Play, Video, Pause, Mic, MicOff, Square } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { MessageSquare, Send, Bot, User, Heart, Volume2, Play, Video, Pause, Mic, MicOff, Square, Crown, Info, Star } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
@@ -25,13 +26,19 @@ interface ChatMessage {
   videoUrl?: string;
 }
 
-export const ChatWithEspaluz = () => {
+interface ChatWithEspaluzProps {
+  demoMode?: boolean;
+  onUpgradeClick?: () => void;
+}
+
+export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEspaluzProps) => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { recordChatLearning } = useLearningProgress();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [demoMessageCount, setDemoMessageCount] = useState(0);
   const [loadingMedia, setLoadingMedia] = useState<{[key: string]: 'voice' | 'video' | null}>({});
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
@@ -52,10 +59,28 @@ export const ChatWithEspaluz = () => {
   }, [messages]);
 
   useEffect(() => {
-    if (user) {
+    if (demoMode) {
+      // Load demo messages from localStorage
+      const savedDemoMessages = localStorage.getItem('espaluz-demo-messages');
+      const savedDemoCount = localStorage.getItem('espaluz-demo-count');
+      if (savedDemoMessages) {
+        try {
+          const parsedMessages = JSON.parse(savedDemoMessages).map((msg: any) => ({
+            ...msg,
+            timestamp: new Date(msg.timestamp)
+          }));
+          setMessages(parsedMessages);
+        } catch (error) {
+          console.error('Error parsing demo messages:', error);
+        }
+      }
+      if (savedDemoCount) {
+        setDemoMessageCount(parseInt(savedDemoCount));
+      }
+    } else if (user) {
       loadChatHistory();
     }
-  }, [user]);
+  }, [user, demoMode]);
 
   const loadChatHistory = async () => {
     try {
@@ -106,7 +131,21 @@ export const ChatWithEspaluz = () => {
   };
 
   const sendMessage = async () => {
-    if (!input.trim() || loading || !user) return;
+    if (!input.trim() || loading) return;
+    
+    // Check demo limitations
+    if (demoMode) {
+      if (demoMessageCount >= 20) {
+        toast.error('Demo limit reached! Subscribe to continue unlimited conversations.');
+        onUpgradeClick?.();
+        return;
+      }
+      if (!user) {
+        // Demo mode without authentication
+      }
+    } else if (!user) {
+      return;
+    }
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
@@ -120,39 +159,76 @@ export const ChatWithEspaluz = () => {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke('espaluz-chat', {
-        body: {
-          message: userMessage.content,
-          userId: user.id
+      let aiMessage: ChatMessage;
+      
+      if (demoMode && !user) {
+        // Demo mode - provide a simple bilingual response
+        const demoResponses = [
+          "¡Hola! Hello! I'm EspaLuz, your bilingual language coach. How can I help you practice Spanish and English today? ¿Cómo puedo ayudarte?",
+          "¡Excelente! That's great! I love helping families learn together. What would you like to practice? ¿Qué te gustaría practicar?",
+          "¡Muy bien! Very good! Keep practicing - every conversation helps you improve. Remember, in our full version, I can generate videos, voice, and track your family's progress!",
+          "¡Fantástico! I see you're enjoying our demo! With a subscription, I can create personalized lessons for your whole family and remember everything we learn together.",
+          "That's wonderful practice! In the full version, I create custom content for each family member and track everyone's learning journey. ¿Te gustaría saber más?"
+        ];
+        
+        const randomResponse = demoResponses[Math.floor(Math.random() * demoResponses.length)];
+        
+        aiMessage = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: randomResponse,
+          timestamp: new Date()
+        };
+        
+        // Update demo count
+        const newCount = demoMessageCount + 1;
+        setDemoMessageCount(newCount);
+        localStorage.setItem('espaluz-demo-count', newCount.toString());
+        
+      } else {
+        // Full functionality for authenticated users
+        const { data, error } = await supabase.functions.invoke('espaluz-chat', {
+          body: {
+            message: userMessage.content,
+            userId: user?.id
+          }
+        });
+
+        if (error) throw error;
+
+        aiMessage = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: data.response,
+          videoScript: data.videoScript,
+          familyMember: data.familyMember,
+          emotion: data.emotion,
+          confidence: data.confidence,
+          timestamp: new Date()
+        };
+        
+        // Show emotion detection if confidence is high
+        if (data.confidence > 0.6) {
+          toast.success(`${t('chat.emotionDetected')}: ${data.emotion} (${Math.round(data.confidence * 100)}%)`);
         }
-      });
 
-      if (error) throw error;
-
-      const aiMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: data.response,
-        videoScript: data.videoScript,
-        familyMember: data.familyMember,
-        emotion: data.emotion,
-        confidence: data.confidence,
-        timestamp: new Date()
-      };
+        // Extract vocabulary from AI response for learning tracking
+        const vocabularyPattern = /\b[a-záéíóúñü]+\b/gi;
+        const detectedVocabulary = data.response.match(vocabularyPattern)?.slice(0, 5) || [];
+        
+        // Record chat learning session
+        if (user) {
+          await recordChatLearning(detectedVocabulary, data.confidence, 2);
+        }
+      }
 
       setMessages(prev => [...prev, aiMessage]);
       
-      // Show emotion detection if confidence is high
-      if (data.confidence > 0.6) {
-        toast.success(`${t('chat.emotionDetected')}: ${data.emotion} (${Math.round(data.confidence * 100)}%)`);
+      // Save demo messages to localStorage
+      if (demoMode) {
+        const updatedMessages = [...messages, userMessage, aiMessage];
+        localStorage.setItem('espaluz-demo-messages', JSON.stringify(updatedMessages));
       }
-
-      // Extract vocabulary from AI response for learning tracking
-      const vocabularyPattern = /\b[a-záéíóúñü]+\b/gi;
-      const detectedVocabulary = data.response.match(vocabularyPattern)?.slice(0, 5) || [];
-      
-      // Record chat learning session
-      await recordChatLearning(detectedVocabulary, data.confidence, 2);
 
     } catch (error) {
       console.error('Error sending message:', error);
@@ -173,6 +249,12 @@ export const ChatWithEspaluz = () => {
 
   const generateVoice = async (messageId: string, text: string) => {
     if (loadingMedia[messageId] === 'voice') return;
+    
+    if (demoMode && !user) {
+      toast.info('Voice generation is available with subscription! Subscribe to unlock all features.');
+      onUpgradeClick?.();
+      return;
+    }
     
     setLoadingMedia(prev => ({ ...prev, [messageId]: 'voice' }));
     
@@ -236,6 +318,12 @@ export const ChatWithEspaluz = () => {
 
   const generateVideo = async (messageId: string, videoScript: string) => {
     if (loadingMedia[messageId] === 'video') return;
+    
+    if (demoMode && !user) {
+      toast.info('Video generation is available with subscription! Subscribe to unlock all features.');
+      onUpgradeClick?.();
+      return;
+    }
     
     setLoadingMedia(prev => ({ ...prev, [messageId]: 'video' }));
     
@@ -358,6 +446,12 @@ export const ChatWithEspaluz = () => {
   };
 
   const startRecording = async () => {
+    if (demoMode && !user) {
+      toast.info('Voice recording is available with subscription! Subscribe to unlock all features.');
+      onUpgradeClick?.();
+      return;
+    }
+    
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorderRef.current = new MediaRecorder(stream);
@@ -517,15 +611,62 @@ export const ChatWithEspaluz = () => {
     );
   };
 
+  const remainingDemoMessages = 20 - demoMessageCount;
+  
   return (
-    <Card className="border-border/50 shadow-magical h-96" style={{ background: 'var(--gradient-card)' }}>
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2">
-          <MessageSquare className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
-          {t('chat.title')}
-          <Heart className="h-4 w-4 text-[hsl(var(--espaluz-secondary))]" />
-        </CardTitle>
-      </CardHeader>
+    <div className="space-y-4">
+      {/* Demo Information Banner */}
+      {demoMode && (
+        <Alert className="border-[hsl(var(--espaluz-primary))]/20 bg-gradient-to-r from-orange-50 to-pink-50">
+          <Info className="h-4 w-4" />
+          <AlertDescription className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="font-medium">
+                🎯 Free Demo - {remainingDemoMessages} messages remaining
+              </span>
+              {remainingDemoMessages <= 5 && (
+                <Badge variant="destructive" className="animate-pulse">
+                  <Crown className="h-3 w-3 mr-1" />
+                  Upgrade Soon!
+                </Badge>
+              )}
+            </div>
+            <div className="text-sm space-y-1">
+              <p>✨ <strong>With subscription, you get:</strong></p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-1 text-xs">
+                <span>• Unlimited conversations</span>
+                <span>• Voice & video generation</span>
+                <span>• Family member profiles</span>
+                <span>• Progress tracking</span>
+                <span>• Personalized lessons</span>
+                <span>• All conversations saved forever</span>
+              </div>
+              <Button 
+                size="sm" 
+                className="mt-2 bg-[hsl(var(--espaluz-primary))] hover:bg-[hsl(var(--espaluz-primary))]/90"
+                onClick={onUpgradeClick}
+              >
+                <Star className="h-3 w-3 mr-1" />
+                Subscribe Now - Keep Everything!
+              </Button>
+            </div>
+          </AlertDescription>
+        </Alert>
+      )}
+
+      <Card className="border-border/50 shadow-magical h-96" style={{ background: 'var(--gradient-card)' }}>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2">
+            <MessageSquare className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
+            {demoMode ? 'Demo: Chat with EspaLuz' : t('chat.title')}
+            <Heart className="h-4 w-4 text-[hsl(var(--espaluz-secondary))]" />
+            {demoMode && (
+              <Badge variant="outline" className="text-xs">
+                Demo Mode
+              </Badge>
+            )}
+          </CardTitle>
+        </CardHeader>
       
       <CardContent className="space-y-4 h-full flex flex-col">
         {/* Messages Area */}
@@ -780,5 +921,6 @@ export const ChatWithEspaluz = () => {
         </div>
       </CardContent>
     </Card>
+    </div>
   );
 };
