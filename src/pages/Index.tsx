@@ -495,7 +495,7 @@ const Index = () => {
       </div>
 
       {/* About the Creator Section */}
-      <section id="about" className="container mx-auto px-4 py-8 mt-6 text-center bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 rounded-3xl shadow-lg">
+      <section id="about" className="container mx-auto px-4 py-8 mt-2 text-center bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 rounded-3xl shadow-lg">
         <h2 className="text-3xl font-extrabold text-purple-700 mb-4">About the Creator</h2>
         <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-6">
           🧠 <span className="font-bold text-purple-700">Solo Founder and AI Entrepreneur: Elena Revicheva</span><br/>
