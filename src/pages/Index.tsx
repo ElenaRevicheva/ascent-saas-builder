@@ -124,7 +124,7 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="container mx-auto px-4 pt-12 pb-6 text-center bg-gradient-magical rounded-2xl shadow-vibrant">
+      <section className="container mx-auto px-4 pt-20 pb-6 text-center bg-gradient-magical rounded-2xl shadow-vibrant">
         <div className="mx-auto w-32 h-32 mb-4 flex items-center justify-center">
           <img src={brandAvatar2} alt="EspaLuz Avatar" className="w-full h-full rounded-full border-4 border-primary shadow-glow object-contain bg-white" />
         </div>
