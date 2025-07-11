@@ -130,6 +130,26 @@ const Index = () => {
             </Button>
           </Link>
         </div>
+        
+        {/* WhatsApp Section */}
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 max-w-2xl mx-auto mb-4">
+          <div className="text-center space-y-4">
+            <h3 className="text-xl font-bold text-green-600">📱 Join the Waitlist for EspaLuz WhatsApp Official</h3>
+            <p className="text-muted-foreground">
+              Now you can try WhatsApp testing sandbox for free here (Twilio testing Sandbox)
+            </p>
+            <a 
+              href="https://api.whatsapp.com/send/?phone=14155238886&text=join+pride-liquid" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full">
+                <MessageSquare className="mr-2 h-4 w-4" />
+                Try WhatsApp Sandbox FREE
+              </Button>
+            </a>
+          </div>
+        </div>
       </section>
 
       {/* Demo Benefits Section */}
