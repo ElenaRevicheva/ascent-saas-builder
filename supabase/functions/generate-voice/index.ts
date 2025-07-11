@@ -22,49 +22,49 @@ serve(async (req) => {
     console.log(`Processing TTS request for text: ${text.substring(0, 100)}...`);
     console.log(`Text length: ${text.length} characters`);
 
-    // Split text into smaller chunks to avoid Google's limits
-    const chunks = splitTextIntoChunks(text, 200);
-    console.log(`Split into ${chunks.length} chunks`);
-
-    // Process chunks sequentially to avoid rate limiting
-    const audioChunks = [];
+    // For now, let's try with the first chunk only but make it longer
+    // and see if that fixes the issue
+    const maxSingleChunk = 500; // Increase chunk size
+    let textToProcess = text;
     
-    for (let i = 0; i < chunks.length; i++) {
-      const chunk = chunks[i];
-      if (chunk.trim().length === 0) continue;
+    if (text.length > maxSingleChunk) {
+      // Find a good break point (sentence ending)
+      const sentences = text.split(/[.!?]+/);
+      let processedText = '';
       
-      console.log(`Processing chunk ${i + 1}/${chunks.length}: ${chunk.substring(0, 50)}...`);
-      
-      try {
-        const audioData = await generateChunkAudio(chunk, voice);
-        audioChunks.push(audioData);
-        
-        // Add delay between requests to avoid rate limiting
-        if (i < chunks.length - 1) {
-          await new Promise(resolve => setTimeout(resolve, 500));
+      for (const sentence of sentences) {
+        const testText = processedText + sentence + '.';
+        if (testText.length <= maxSingleChunk) {
+          processedText = testText;
+        } else {
+          break;
         }
-      } catch (chunkError) {
-        console.error(`Failed to process chunk ${i + 1}:`, chunkError);
-        // Continue with other chunks instead of failing completely
+      }
+      
+      if (processedText.length < 50) { // If we got too little, just truncate
+        textToProcess = text.substring(0, maxSingleChunk);
+      } else {
+        textToProcess = processedText;
       }
     }
+    
+    console.log(`Processing single chunk of ${textToProcess.length} chars: ${textToProcess.substring(0, 100)}...`);
 
-    if (audioChunks.length === 0) {
-      throw new Error('Failed to generate any audio chunks');
+    try {
+      const base64Audio = await generateChunkAudio(textToProcess, voice);
+      
+      return new Response(JSON.stringify({
+        audioContent: base64Audio,
+        mimeType: 'audio/mpeg',
+        processedLength: textToProcess.length,
+        originalLength: text.length
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    } catch (error) {
+      console.error('Error generating audio chunk:', error);
+      throw error;
     }
-
-    // For simplicity, return the first successful chunk
-    // In a production environment, you'd concatenate them
-    const base64Audio = audioChunks[0];
-
-    return new Response(JSON.stringify({
-      audioContent: base64Audio,
-      mimeType: 'audio/mpeg',
-      chunksProcessed: audioChunks.length,
-      totalChunks: chunks.length
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-    });
 
   } catch (error) {
     console.error('Error in generate-voice:', error);

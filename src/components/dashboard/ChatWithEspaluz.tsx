@@ -274,7 +274,8 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
         .trim();
     }
     
-    console.log('Text to speak:', textToSpeak.substring(0, 100) + '...');
+    console.log('Text to speak:', textToSpeak.substring(0, 200) + '...');
+    console.log('Full text length:', textToSpeak.length);
     
     try {
       const { data, error } = await supabase.functions.invoke('generate-voice', {
