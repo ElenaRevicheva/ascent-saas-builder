@@ -106,29 +106,17 @@ serve(async (req) => {
       }
     }
 
-    // Generate TTS audio for the video script using improved approach
-    console.log('Attempting to generate audio for video...');
-    
-    // Split video script into smaller chunks
-    const chunks = splitTextIntoChunks(videoScript, 150);
-    console.log(`Video script split into ${chunks.length} chunks`);
+    // Generate TTS audio for the video script using full text
+    console.log('Attempting to generate audio for full video script...');
+    console.log(`Video script length: ${videoScript.length} characters`);
 
     let base64Audio = '';
     
-    // Try to generate audio for the first chunk at least
-    for (let i = 0; i < Math.min(chunks.length, 1); i++) {
-      const chunk = chunks[i];
-      if (chunk.trim().length === 0) continue;
-      
-      console.log(`Processing video chunk: ${chunk.substring(0, 50)}...`);
-      
-      try {
-        const audioData = await generateVideoChunkAudio(chunk, voice);
-        base64Audio = audioData;
-        break; // Use first successful chunk
-      } catch (chunkError) {
-        console.error(`Failed to process video chunk:`, chunkError);
-      }
+    try {
+      console.log(`Processing full video script: ${videoScript.substring(0, 100)}...`);
+      base64Audio = await generateVideoChunkAudio(videoScript, voice);
+    } catch (error) {
+      console.error(`Failed to process full video script:`, error);
     }
 
     if (!base64Audio) {
@@ -203,10 +191,11 @@ function splitTextIntoChunks(text: string, maxLength: number): string[] {
 }
 
 async function generateVideoChunkAudio(text: string, voice: string): Promise<string> {
+  // Use same voice model as voice messages - force 'es' for Spanish
   const params = new URLSearchParams({
     ie: 'UTF-8',
     q: text,
-    tl: voice === 'en' ? 'en' : 'es',
+    tl: 'es', // Always use Spanish voice like voice messages
     client: 'tw-ob'
   });
 

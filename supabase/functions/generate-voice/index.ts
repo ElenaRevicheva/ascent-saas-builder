@@ -22,41 +22,16 @@ serve(async (req) => {
     console.log(`Processing TTS request for text: ${text.substring(0, 100)}...`);
     console.log(`Text length: ${text.length} characters`);
 
-    // For now, let's try with the first chunk only but make it longer
-    // and see if that fixes the issue
-    const maxSingleChunk = 500; // Increase chunk size
-    let textToProcess = text;
-    
-    if (text.length > maxSingleChunk) {
-      // Find a good break point (sentence ending)
-      const sentences = text.split(/[.!?]+/);
-      let processedText = '';
-      
-      for (const sentence of sentences) {
-        const testText = processedText + sentence + '.';
-        if (testText.length <= maxSingleChunk) {
-          processedText = testText;
-        } else {
-          break;
-        }
-      }
-      
-      if (processedText.length < 50) { // If we got too little, just truncate
-        textToProcess = text.substring(0, maxSingleChunk);
-      } else {
-        textToProcess = processedText;
-      }
-    }
-    
-    console.log(`Processing single chunk of ${textToProcess.length} chars: ${textToProcess.substring(0, 100)}...`);
+    // Process the full text without truncation
+    console.log(`Processing full text of ${text.length} chars: ${text.substring(0, 100)}...`);
 
     try {
-      const base64Audio = await generateChunkAudio(textToProcess, voice);
+      const base64Audio = await generateChunkAudio(text, voice);
       
       return new Response(JSON.stringify({
         audioContent: base64Audio,
         mimeType: 'audio/mpeg',
-        processedLength: textToProcess.length,
+        processedLength: text.length,
         originalLength: text.length
       }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
