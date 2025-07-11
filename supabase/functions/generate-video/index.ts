@@ -1,6 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -9,101 +9,74 @@ const corsHeaders = {
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    console.log('Generate-video function called');
-    
-    const body = await req.json();
-    console.log('Request body:', JSON.stringify(body));
-    
-    const { videoScript, voice = "pFZP5JQG7iQjIQuC4Bku", userId } = body; // Default to Lily voice
+    const { videoScript, voice = "es", userId } = await req.json();
     
     if (!videoScript) {
-      console.error('No video script provided');
-      return new Response(JSON.stringify({ 
-        error: 'Video script is required' 
-      }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      });
+      throw new Error('Video script is required');
     }
 
-    console.log('Using Google TTS (gTTS) for voice generation');
-
-    console.log(`Generating gentle video voice for script: ${videoScript.substring(0, 100)}...`);
+    console.log(`🎬 Processing video request for user: ${userId}`);
+    console.log(`📝 Video script length: ${videoScript.length} characters`);
+    console.log(`🎭 Voice model: ${voice}`);
 
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Check if user has uploaded their own avatar video
+    // Try to get user's avatar video from storage
     let userAvatarUrl = null;
-    let avatarType = 'default';
     
-    // First, try to use the known existing avatar file
-    const knownAvatarPath = '5fa36928-3201-4c2f-bc27-c30b7a6d36c6/avatar.mp4';
-    const { data: knownData } = supabase.storage
-      .from('avatars')
-      .getPublicUrl(knownAvatarPath);
-    
-    console.log(`Checking known avatar at: ${knownData.publicUrl}`);
-    
-    try {
-      const headResponse = await fetch(knownData.publicUrl, { method: 'HEAD' });
-      if (headResponse.ok) {
-        userAvatarUrl = knownData.publicUrl;
-        avatarType = 'user';
-        console.log(`Using known avatar video: ${userAvatarUrl}`);
-      }
-    } catch (error) {
-      console.log('Known avatar not accessible:', error.message);
-    }
-    
-    // If known avatar fails and we have a userId, try user-specific path
-    if (!userAvatarUrl && userId) {
-      const fileName = `${userId}/avatar.mp4`;
-      const { data } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(fileName);
-      
-      console.log(`Checking user avatar at: ${data.publicUrl}`);
-      
+    if (userId) {
       try {
-        const headResponse = await fetch(data.publicUrl, { method: 'HEAD' });
-        if (headResponse.ok) {
-          userAvatarUrl = data.publicUrl;
-          avatarType = 'user';
-          console.log(`Found user avatar video: ${userAvatarUrl}`);
+        // First try to find a known avatar
+        const { data: avatarData } = await supabase.storage
+          .from('avatars')
+          .list(`${userId}`, { limit: 10 });
+
+        if (avatarData && avatarData.length > 0) {
+          // Look for avatar.mp4 first
+          const avatarFile = avatarData.find(file => file.name === 'avatar.mp4');
+          if (avatarFile) {
+            const { data: signedUrlData } = await supabase.storage
+              .from('avatars')
+              .createSignedUrl(`${userId}/avatar.mp4`, 3600);
+            
+            if (signedUrlData?.signedUrl) {
+              userAvatarUrl = signedUrlData.signedUrl;
+              console.log('Found user avatar video:', userAvatarUrl);
+            }
+          }
         }
-      } catch (error) {
-        console.log('Error checking user avatar:', error.message);
+        
+        // If no user avatar found, check for default avatar
+        if (!userAvatarUrl) {
+          const { data: publicUrlData } = await supabase.storage
+            .from('avatars')
+            .getPublicUrl(`${userId}/avatar.mp4`);
+          
+          if (publicUrlData?.publicUrl) {
+            userAvatarUrl = publicUrlData.publicUrl;
+            console.log('Using public avatar URL:', userAvatarUrl);
+          }
+        }
+      } catch (storageError) {
+        console.log('Storage access failed, using default:', storageError);
       }
     }
     
-    // If no user avatar, use default avatar
+    // If still no avatar found, use default
     if (!userAvatarUrl) {
-      // Use the avatar.mp4 file that's already uploaded to the avatars bucket
-      const { data: defaultData } = supabase.storage
+      const { data: defaultAvatarData } = await supabase.storage
         .from('avatars')
-        .getPublicUrl('avatar.mp4');
+        .getPublicUrl('default-avatar-teacher.jpg');
       
-      console.log(`Checking default avatar at: ${defaultData.publicUrl}`);
-      
-      try {
-        const headResponse = await fetch(defaultData.publicUrl, { method: 'HEAD' });
-        console.log(`Default avatar check response status: ${headResponse.status}`);
-        if (headResponse.ok) {
-          userAvatarUrl = defaultData.publicUrl;
-          console.log(`Using default avatar video: ${userAvatarUrl}`);
-        } else {
-          console.log(`Default avatar not found (status: ${headResponse.status}), will proceed with audio only`);
-        }
-      } catch (error) {
-        console.log('Default avatar not available, will proceed with audio only:', error.message);
-      }
+      userAvatarUrl = defaultAvatarData?.publicUrl || 'https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/avatars/default-avatar-teacher.jpg';
+      console.log('Using default avatar:', userAvatarUrl);
     }
 
     // Generate TTS audio for video script like Python gTTS
@@ -120,43 +93,28 @@ serve(async (req) => {
       console.error(`❌ Video audio generation failed:`, error);
     }
 
-    if (!base64Audio) {
-      console.log('Audio generation failed, proceeding without audio');
-      // Return success but without audio
-      return new Response(JSON.stringify({
-        audioContent: null,
-        mimeType: 'audio/mpeg',
-        duration: Math.ceil(videoScript.length / 10),
-        userAvatarUrl: userAvatarUrl,
-        message: 'Video generation completed. Audio generation temporarily unavailable.'
-      }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      });
-    }
-    
-    console.log(`Generated audio with length: ${base64Audio.length}`);
-    
-    return new Response(JSON.stringify({
+    // Calculate estimated duration (rough estimate)
+    const estimatedDuration = Math.max(5, Math.floor(videoScript.length / 15));
+
+    const response = {
       audioContent: base64Audio,
       mimeType: 'audio/mpeg',
-      duration: Math.ceil(videoScript.length / 10), // Rough estimate: 10 chars per second
-      userAvatarUrl: userAvatarUrl,
-      message: userAvatarUrl ? 
-        'Video generation completed with user avatar video and audio.' : 
-        'Video generation completed with audio. Avatar video will be overlaid on frontend.'
-    }), {
+      userAvatarUrl,
+      estimatedDuration,
+      processedText: videoScript.length > 0 ? videoScript.substring(0, 100) + '...' : ''
+    };
+
+    console.log('🎬 Video generation completed successfully');
+
+    return new Response(JSON.stringify(response), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
 
   } catch (error) {
-    console.error('Error in generate-video:', {
-      message: error.message,
-      stack: error.stack,
-      name: error.name
-    });
+    console.error('Error in generate-video:', error);
     return new Response(JSON.stringify({ 
       error: error.message,
-      details: 'Check edge function logs for more information'
+      fallback: 'Video generation temporarily unavailable. Please try again later.'
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -192,83 +150,97 @@ function splitTextIntoChunks(text: string, maxLength: number): string[] {
 }
 
 async function generateVideoChunkAudio(text: string, voice: string): Promise<string> {
-  // Split long text into chunks like gTTS does internally (same as voice function)
-  const maxChunkSize = 200; // Google TTS limit per request
-  const chunks = [];
+  // Try to fit as much text as possible in a single request first
+  const maxSingleChunk = 900; // Increase chunk size significantly
   
-  // Split by sentences to maintain natural speech flow
+  console.log(`🎬 Input video script length: ${text.length} chars`);
+  
+  if (text.length <= maxSingleChunk) {
+    // Text fits in single chunk - process it all
+    console.log(`✅ Video script fits in single chunk, processing ${text.length} chars`);
+    return await processVideoSingleChunk(text, voice);
+  }
+  
+  // Text is too long - find the best breaking point
+  console.log(`⚠️ Video script too long (${text.length} chars), finding best break point...`);
+  
+  // Try to break at sentence endings
   const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
-  let currentChunk = '';
+  let processedText = '';
   
   for (const sentence of sentences) {
-    const trimmed = sentence.trim();
-    if (!trimmed) continue;
-    
-    if ((currentChunk + trimmed).length <= maxChunkSize) {
-      currentChunk += (currentChunk ? '. ' : '') + trimmed;
+    const testText = processedText + (processedText ? '. ' : '') + sentence.trim();
+    if (testText.length <= maxSingleChunk) {
+      processedText = testText;
     } else {
-      if (currentChunk) chunks.push(currentChunk + '.');
-      currentChunk = trimmed;
+      break;
     }
   }
-  if (currentChunk) chunks.push(currentChunk + '.');
   
-  console.log(`🎬 Split video script into ${chunks.length} chunks (like gTTS)`);
-  
-  // Process all chunks and concatenate audio
-  const audioChunks = [];
-  
-  for (let i = 0; i < chunks.length; i++) {
-    const chunk = chunks[i];
-    console.log(`🔊 Processing video chunk ${i + 1}/${chunks.length}: ${chunk.substring(0, 50)}...`);
-    
-    const params = new URLSearchParams({
-      ie: 'UTF-8',
-      q: chunk,
-      tl: 'es', // Always Spanish like your Python version
-      client: 'tw-ob'
-    });
-
-    const response = await fetch(`https://translate.google.com/translate_tts?${params}`, {
-      method: 'GET',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Accept': '*/*',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Referer': 'https://translate.google.com/',
+  // If we didn't get enough text, try word boundaries
+  if (processedText.length < 200) {
+    const words = text.split(' ');
+    processedText = '';
+    for (const word of words) {
+      const testText = processedText + (processedText ? ' ' : '') + word;
+      if (testText.length <= maxSingleChunk) {
+        processedText = testText;
+      } else {
+        break;
       }
+    }
+  }
+  
+  // Last resort - just truncate
+  if (processedText.length < 100) {
+    processedText = text.substring(0, maxSingleChunk);
+  }
+  
+  console.log(`📝 Processing ${processedText.length} chars out of ${text.length} total`);
+  console.log(`🔊 Video script preview: ${processedText.substring(0, 100)}...`);
+  
+  return await processVideoSingleChunk(processedText, voice);
+}
+
+async function processVideoSingleChunk(text: string, voice: string): Promise<string> {
+  const params = new URLSearchParams({
+    ie: 'UTF-8',
+    q: text,
+    tl: 'es', // Always Spanish like your Python version
+    client: 'tw-ob'
+  });
+
+  const response = await fetch(`https://translate.google.com/translate_tts?${params}`, {
+    method: 'GET',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      'Accept': '*/*',
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Referer': 'https://translate.google.com/',
+    }
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('❌ Video TTS API error:', {
+      status: response.status,
+      error: errorText.substring(0, 200)
     });
-
-    if (!response.ok) {
-      console.error(`❌ Video chunk ${i + 1} failed:`, response.status);
-      continue; // Skip failed chunks
-    }
-    
-    const arrayBuffer = await response.arrayBuffer();
-    audioChunks.push(new Uint8Array(arrayBuffer));
-    
-    // Small delay between requests
-    if (i < chunks.length - 1) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-    }
+    throw new Error(`Video TTS failed with status ${response.status}`);
   }
-  
-  if (audioChunks.length === 0) {
-    throw new Error('❌ All video audio chunks failed');
-  }
-  
-  // Return first chunk for now (in production, you'd concatenate MP3s properly)
-  const firstChunk = audioChunks[0];
 
+  const arrayBuffer = await response.arrayBuffer();
+  const audioBytes = new Uint8Array(arrayBuffer);
+  
   // Convert to base64 safely
   let binaryString = '';
   const chunkSize = 8192;
   
-  for (let i = 0; i < firstChunk.length; i += chunkSize) {
-    const chunk = firstChunk.slice(i, i + chunkSize);
+  for (let i = 0; i < audioBytes.length; i += chunkSize) {
+    const chunk = audioBytes.slice(i, i + chunkSize);
     binaryString += String.fromCharCode.apply(null, Array.from(chunk));
   }
   
-  console.log(`✅ Generated video audio for ${chunks.length} chunks, returning first chunk`);
+  console.log(`✅ Generated video audio for text chunk`);
   return btoa(binaryString);
 }

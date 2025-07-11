@@ -82,83 +82,97 @@ function splitTextIntoChunks(text: string, maxLength: number): string[] {
 }
 
 async function generateChunkAudio(text: string, voice: string): Promise<string> {
-  // Split long text into chunks like gTTS does internally
-  const maxChunkSize = 200; // Google TTS limit per request
-  const chunks = [];
+  // Try to fit as much text as possible in a single request first
+  const maxSingleChunk = 900; // Increase chunk size significantly
   
-  // Split by sentences to maintain natural speech flow
+  console.log(`🎧 Input text length: ${text.length} chars`);
+  
+  if (text.length <= maxSingleChunk) {
+    // Text fits in single chunk - process it all
+    console.log(`✅ Text fits in single chunk, processing ${text.length} chars`);
+    return await processSingleChunk(text, voice);
+  }
+  
+  // Text is too long - find the best breaking point
+  console.log(`⚠️ Text too long (${text.length} chars), finding best break point...`);
+  
+  // Try to break at sentence endings
   const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
-  let currentChunk = '';
+  let processedText = '';
   
   for (const sentence of sentences) {
-    const trimmed = sentence.trim();
-    if (!trimmed) continue;
-    
-    if ((currentChunk + trimmed).length <= maxChunkSize) {
-      currentChunk += (currentChunk ? '. ' : '') + trimmed;
+    const testText = processedText + (processedText ? '. ' : '') + sentence.trim();
+    if (testText.length <= maxSingleChunk) {
+      processedText = testText;
     } else {
-      if (currentChunk) chunks.push(currentChunk + '.');
-      currentChunk = trimmed;
+      break;
     }
   }
-  if (currentChunk) chunks.push(currentChunk + '.');
   
-  console.log(`📝 Split text into ${chunks.length} chunks (like gTTS)`);
-  
-  // Process all chunks and concatenate audio
-  const audioChunks = [];
-  
-  for (let i = 0; i < chunks.length; i++) {
-    const chunk = chunks[i];
-    console.log(`🔊 Processing chunk ${i + 1}/${chunks.length}: ${chunk.substring(0, 50)}...`);
-    
-    const params = new URLSearchParams({
-      ie: 'UTF-8',
-      q: chunk,
-      tl: 'es', // Always Spanish like your Python version
-      client: 'tw-ob'
-    });
-
-    const response = await fetch(`https://translate.google.com/translate_tts?${params}`, {
-      method: 'GET',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Accept': '*/*',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Referer': 'https://translate.google.com/',
+  // If we didn't get enough text, try word boundaries
+  if (processedText.length < 200) {
+    const words = text.split(' ');
+    processedText = '';
+    for (const word of words) {
+      const testText = processedText + (processedText ? ' ' : '') + word;
+      if (testText.length <= maxSingleChunk) {
+        processedText = testText;
+      } else {
+        break;
       }
+    }
+  }
+  
+  // Last resort - just truncate
+  if (processedText.length < 100) {
+    processedText = text.substring(0, maxSingleChunk);
+  }
+  
+  console.log(`📝 Processing ${processedText.length} chars out of ${text.length} total`);
+  console.log(`🔊 Text preview: ${processedText.substring(0, 100)}...`);
+  
+  return await processSingleChunk(processedText, voice);
+}
+
+async function processSingleChunk(text: string, voice: string): Promise<string> {
+  const params = new URLSearchParams({
+    ie: 'UTF-8',
+    q: text,
+    tl: 'es', // Always Spanish like your Python version
+    client: 'tw-ob'
+  });
+
+  const response = await fetch(`https://translate.google.com/translate_tts?${params}`, {
+    method: 'GET',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      'Accept': '*/*',
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Referer': 'https://translate.google.com/',
+    }
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('❌ TTS API error:', {
+      status: response.status,
+      error: errorText.substring(0, 200)
     });
-
-    if (!response.ok) {
-      console.error(`❌ Chunk ${i + 1} failed:`, response.status);
-      continue; // Skip failed chunks
-    }
-    
-    const arrayBuffer = await response.arrayBuffer();
-    audioChunks.push(new Uint8Array(arrayBuffer));
-    
-    // Small delay between requests
-    if (i < chunks.length - 1) {
-      await new Promise(resolve => setTimeout(resolve, 300));
-    }
+    throw new Error(`TTS failed with status ${response.status}`);
   }
-  
-  if (audioChunks.length === 0) {
-    throw new Error('❌ All audio chunks failed');
-  }
-  
-  // Return first chunk for now (in production, you'd concatenate MP3s properly)
-  const firstChunk = audioChunks[0];
 
+  const arrayBuffer = await response.arrayBuffer();
+  const audioBytes = new Uint8Array(arrayBuffer);
+  
   // Convert to base64 safely
   let binaryString = '';
   const chunkSize = 8192;
   
-  for (let i = 0; i < firstChunk.length; i += chunkSize) {
-    const chunk = firstChunk.slice(i, i + chunkSize);
+  for (let i = 0; i < audioBytes.length; i += chunkSize) {
+    const chunk = audioBytes.slice(i, i + chunkSize);
     binaryString += String.fromCharCode.apply(null, Array.from(chunk));
   }
   
-  console.log(`✅ Generated audio for ${chunks.length} chunks, returning first chunk`);
+  console.log(`✅ Generated audio for text chunk`);
   return btoa(binaryString);
 }
