@@ -191,12 +191,12 @@ const Index = () => {
             <MessageSquare className="mr-2 h-4 w-4" />
             🎯 Try Demo FREE!
           </Button>
-          <Link to="/auth">
+          <a href="https://t.me/espaluz_bot" target="_blank" rel="noopener noreferrer">
             <Button size="lg" variant="outline" className="text-base px-6 rounded-full border-2 border-primary text-primary hover:bg-gradient-primary hover:text-white transition-all duration-300">
               <Crown className="mr-2 h-4 w-4" />
               🚀 Start Full Version
             </Button>
-          </Link>
+          </a>
         </div>
         
         {/* WhatsApp Section */}
