@@ -21,20 +21,21 @@ serve(async (req) => {
     console.log(`Generating voice with gTTS for text: ${text.substring(0, 100)}...`);
     console.log(`Text length: ${text.length} characters`);
 
-    // Use Google Text-to-Speech (gTTS) API
-    const ttsParams = new URLSearchParams({
-      ie: 'UTF-8',
-      q: text,
-      tl: voice === 'es' ? 'es' : 'en', // Default to Spanish for EspaLuz
-      client: 'tw-ob',
-      idx: '0',
-      total: '1',
-      textlen: text.length.toString()
-    });
+    // Use Google Text-to-Speech (gTTS) API with simpler parameters
+    const ttsUrl = new URL('https://translate.google.com/translate_tts');
+    ttsUrl.searchParams.set('ie', 'UTF-8');
+    ttsUrl.searchParams.set('q', text);
+    ttsUrl.searchParams.set('tl', voice === 'en' ? 'en' : 'es'); // Use 'en' or 'es'
+    ttsUrl.searchParams.set('client', 'tw-ob');
 
-    const response = await fetch(`https://translate.google.com/translate_tts?${ttsParams}`, {
+    console.log('Calling Google TTS with URL:', ttsUrl.toString());
+
+    const response = await fetch(ttsUrl.toString(), {
+      method: 'GET',
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'audio/mpeg,*/*',
+        'Accept-Language': 'en-US,en;q=0.9,es;q=0.8',
       }
     });
 

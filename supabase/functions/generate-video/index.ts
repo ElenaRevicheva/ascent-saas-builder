@@ -107,19 +107,20 @@ serve(async (req) => {
     }
 
     // Generate TTS audio for the video script using Google TTS (gTTS)
-    const ttsParams = new URLSearchParams({
-      ie: 'UTF-8',
-      q: videoScript,
-      tl: voice === 'en' ? 'en' : 'es', // Default to Spanish for EspaLuz
-      client: 'tw-ob',
-      idx: '0',
-      total: '1',
-      textlen: videoScript.length.toString()
-    });
+    const ttsUrl = new URL('https://translate.google.com/translate_tts');
+    ttsUrl.searchParams.set('ie', 'UTF-8');
+    ttsUrl.searchParams.set('q', videoScript);
+    ttsUrl.searchParams.set('tl', voice === 'en' ? 'en' : 'es');
+    ttsUrl.searchParams.set('client', 'tw-ob');
 
-    const ttsResponse = await fetch(`https://translate.google.com/translate_tts?${ttsParams}`, {
+    console.log('Calling Google TTS with URL:', ttsUrl.toString());
+
+    const ttsResponse = await fetch(ttsUrl.toString(), {
+      method: 'GET',
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'audio/mpeg,*/*',
+        'Accept-Language': 'en-US,en;q=0.9,es;q=0.8',
       }
     });
 
