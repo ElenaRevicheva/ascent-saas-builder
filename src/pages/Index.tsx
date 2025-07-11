@@ -136,7 +136,7 @@ const Index = () => {
           <div className="text-center space-y-4">
             <h3 className="text-xl font-bold text-green-600">📱 Join the Waitlist for EspaLuz WhatsApp Official</h3>
             <p className="text-muted-foreground">
-              Now you can try WhatsApp testing sandbox for free here (Twilio testing Sandbox)
+              To join the waitlist for EspaLuz WhatsApp Official, write to: aipa@aideazz.xyz
             </p>
             <a 
               href="https://api.whatsapp.com/send/?phone=14155238886&text=join+pride-liquid" 
