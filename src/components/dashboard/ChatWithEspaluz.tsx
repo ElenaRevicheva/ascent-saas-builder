@@ -247,7 +247,7 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
     }
   };
 
-  const generateVoice = async (messageId: string, text: string) => {
+  const generateVoice = async (messageId: string, text: string, isVideoScript = false) => {
     if (loadingMedia[messageId] === 'voice') return;
     
     if (demoMode && !user) {
@@ -258,33 +258,37 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
     
     setLoadingMedia(prev => ({ ...prev, [messageId]: 'voice' }));
     
-    // Extract only the main response text (before video script section)
-    let cleanText = text;
+    let textToSpeak = text;
     
-    // Remove the video script section completely
-    if (text.includes('[VIDEO SCRIPT START]')) {
-      cleanText = text.split('[VIDEO SCRIPT START]')[0];
+    // Only clean text if this is NOT a video script and NOT the full text request
+    if (!isVideoScript) {
+      // For regular text messages, use the FULL text - don't remove video script sections
+      // Users want to hear the complete message when they click voice
+      console.log('Generating voice for full text message');
+      textToSpeak = text.trim();
+    } else {
+      // For video scripts, just clean up formatting
+      textToSpeak = text
+        .replace(/\[VIDEO SCRIPT START\]/g, '')
+        .replace(/\[VIDEO SCRIPT END\]/g, '')
+        .trim();
     }
     
-    // Remove the "2️⃣ Video Script:" section if it exists
-    if (cleanText.includes('2️⃣ Video Script:')) {
-      cleanText = cleanText.split('2️⃣ Video Script:')[0];
-    }
-    
-    // Remove formatting markers
-    cleanText = cleanText
-      .replace(/1️⃣ Main Response:\s*\n\n/, '')
-      .replace(/2️⃣.*$/s, '')
-      .trim();
-    
-    console.log('Cleaned text for voice generation:', cleanText);
+    console.log('Text to speak:', textToSpeak.substring(0, 100) + '...');
     
     try {
       const { data, error } = await supabase.functions.invoke('generate-voice', {
-        body: { text: cleanText }
+        body: { 
+          text: textToSpeak,
+          voice: 'es' // Use Spanish voice consistently for EspaLuz
+        }
       });
 
       if (error) throw error;
+
+      if (!data.audioContent) {
+        throw new Error('No audio content received');
+      }
 
       // Create audio URL from base64
       const audioBlob = new Blob([
@@ -331,6 +335,7 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
       const { data, error } = await supabase.functions.invoke('generate-video', {
         body: { 
           videoScript,
+          voice: 'es', // Use Spanish voice consistently like voice messages
           userId: user?.id 
         }
       });
