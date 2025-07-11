@@ -274,8 +274,10 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
         .trim();
     }
     
-    console.log('Text to speak:', textToSpeak.substring(0, 200) + '...');
-    console.log('Full text length:', textToSpeak.length);
+    console.log('🎧 VOICE DEBUG - Text to speak:', textToSpeak.substring(0, 200) + '...');
+    console.log('🎧 VOICE DEBUG - Full text length:', textToSpeak.length);
+    console.log('🎧 VOICE DEBUG - Original message content length:', text.length);
+    console.log('🎧 VOICE DEBUG - isVideoScript flag:', isVideoScript);
     
     try {
       const { data, error } = await supabase.functions.invoke('generate-voice', {
@@ -331,7 +333,9 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
     setLoadingMedia(prev => ({ ...prev, [messageId]: 'video' }));
     
     try {
-      console.log('Calling generate-video with script:', videoScript);
+      console.log('🎬 VIDEO DEBUG - Calling generate-video with script:', videoScript);
+      console.log('🎬 VIDEO DEBUG - Script length:', videoScript.length);
+      console.log('🎬 VIDEO DEBUG - Script preview:', videoScript.substring(0, 300) + '...');
       
       const { data, error } = await supabase.functions.invoke('generate-video', {
         body: { 
