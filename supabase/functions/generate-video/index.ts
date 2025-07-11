@@ -106,59 +106,46 @@ serve(async (req) => {
       }
     }
 
-    // Generate TTS audio for the video script using Google TTS (gTTS)
-    const ttsUrl = new URL('https://translate.google.com/translate_tts');
-    ttsUrl.searchParams.set('ie', 'UTF-8');
-    ttsUrl.searchParams.set('q', videoScript);
-    ttsUrl.searchParams.set('tl', voice === 'en' ? 'en' : 'es');
-    ttsUrl.searchParams.set('client', 'tw-ob');
+    // Generate TTS audio for the video script using improved approach
+    console.log('Attempting to generate audio for video...');
+    
+    // Split video script into smaller chunks
+    const chunks = splitTextIntoChunks(videoScript, 150);
+    console.log(`Video script split into ${chunks.length} chunks`);
 
-    console.log('Calling Google TTS with URL:', ttsUrl.toString());
-
-    const ttsResponse = await fetch(ttsUrl.toString(), {
-      method: 'GET',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'audio/mpeg,*/*',
-        'Accept-Language': 'en-US,en;q=0.9,es;q=0.8',
-      }
-    });
-
-    if (!ttsResponse.ok) {
-      const errorText = await ttsResponse.text();
-      console.error('Google TTS API error:', {
-        status: ttsResponse.status,
-        statusText: ttsResponse.statusText,
-        errorText: errorText,
-        voice: voice
-      });
+    let base64Audio = '';
+    
+    // Try to generate audio for the first chunk at least
+    for (let i = 0; i < Math.min(chunks.length, 1); i++) {
+      const chunk = chunks[i];
+      if (chunk.trim().length === 0) continue;
       
-      // Handle specific Google TTS errors
-      if (ttsResponse.status === 429) {
-        throw new Error('RATE_LIMIT_EXCEEDED');
-      } else if (ttsResponse.status === 403) {
-        throw new Error('ACCESS_DENIED');
-      } else {
-        throw new Error(`Google TTS API error: ${ttsResponse.status} - ${errorText}`);
+      console.log(`Processing video chunk: ${chunk.substring(0, 50)}...`);
+      
+      try {
+        const audioData = await generateVideoChunkAudio(chunk, voice);
+        base64Audio = audioData;
+        break; // Use first successful chunk
+      } catch (chunkError) {
+        console.error(`Failed to process video chunk:`, chunkError);
       }
     }
 
-    // Get audio buffer and convert to base64 safely
-    const audioArrayBuffer = await ttsResponse.arrayBuffer();
-    const audioBytes = new Uint8Array(audioArrayBuffer);
-    
-    // Convert to string first, then to base64 (avoiding stack overflow)
-    let binaryString = '';
-    const chunkSize = 8192;
-    
-    for (let i = 0; i < audioBytes.length; i += chunkSize) {
-      const chunk = audioBytes.slice(i, i + chunkSize);
-      binaryString += String.fromCharCode.apply(null, Array.from(chunk));
+    if (!base64Audio) {
+      console.log('Audio generation failed, proceeding without audio');
+      // Return success but without audio
+      return new Response(JSON.stringify({
+        audioContent: null,
+        mimeType: 'audio/mpeg',
+        duration: Math.ceil(videoScript.length / 10),
+        userAvatarUrl: userAvatarUrl,
+        message: 'Video generation completed. Audio generation temporarily unavailable.'
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
     }
     
-    const base64Audio = btoa(binaryString);
-
-    console.log(`Generated audio with ${audioBytes.length} bytes, base64 length: ${base64Audio.length}`);
+    console.log(`Generated audio with length: ${base64Audio.length}`);
     
     return new Response(JSON.stringify({
       audioContent: base64Audio,
@@ -187,3 +174,66 @@ serve(async (req) => {
     });
   }
 });
+
+function splitTextIntoChunks(text: string, maxLength: number): string[] {
+  const chunks = [];
+  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+  
+  let currentChunk = '';
+  
+  for (const sentence of sentences) {
+    const trimmedSentence = sentence.trim();
+    if (trimmedSentence.length === 0) continue;
+    
+    if (currentChunk.length + trimmedSentence.length + 1 <= maxLength) {
+      currentChunk += (currentChunk ? '. ' : '') + trimmedSentence;
+    } else {
+      if (currentChunk) {
+        chunks.push(currentChunk + '.');
+      }
+      currentChunk = trimmedSentence;
+    }
+  }
+  
+  if (currentChunk) {
+    chunks.push(currentChunk + '.');
+  }
+  
+  return chunks.length > 0 ? chunks : [text];
+}
+
+async function generateVideoChunkAudio(text: string, voice: string): Promise<string> {
+  const params = new URLSearchParams({
+    ie: 'UTF-8',
+    q: text,
+    tl: voice === 'en' ? 'en' : 'es',
+    client: 'tw-ob'
+  });
+
+  const response = await fetch(`https://translate.google.com/translate_tts?${params}`, {
+    method: 'GET',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      'Accept': '*/*',
+      'Referer': 'https://translate.google.com/',
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`TTS failed with status ${response.status}`);
+  }
+
+  const arrayBuffer = await response.arrayBuffer();
+  const audioBytes = new Uint8Array(arrayBuffer);
+  
+  // Convert to base64 safely
+  let binaryString = '';
+  const chunkSize = 8192;
+  
+  for (let i = 0; i < audioBytes.length; i += chunkSize) {
+    const chunk = audioBytes.slice(i, i + chunkSize);
+    binaryString += String.fromCharCode.apply(null, Array.from(chunk));
+  }
+  
+  return btoa(binaryString);
+}

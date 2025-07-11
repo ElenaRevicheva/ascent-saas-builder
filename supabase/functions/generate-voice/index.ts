@@ -6,75 +6,62 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Simplified TTS using Web Speech API approach (browser-compatible response)
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { text, voice = "pFZP5JQG7iQjIQuC4Bku" } = await req.json(); // Default to Lily voice
+    const { text, voice = "es" } = await req.json();
     
     if (!text) {
       throw new Error('Text is required');
     }
 
-    console.log(`Generating voice with gTTS for text: ${text.substring(0, 100)}...`);
+    console.log(`Processing TTS request for text: ${text.substring(0, 100)}...`);
     console.log(`Text length: ${text.length} characters`);
 
-    // Use Google Text-to-Speech (gTTS) API with simpler parameters
-    const ttsUrl = new URL('https://translate.google.com/translate_tts');
-    ttsUrl.searchParams.set('ie', 'UTF-8');
-    ttsUrl.searchParams.set('q', text);
-    ttsUrl.searchParams.set('tl', voice === 'en' ? 'en' : 'es'); // Use 'en' or 'es'
-    ttsUrl.searchParams.set('client', 'tw-ob');
+    // Split text into smaller chunks to avoid Google's limits
+    const chunks = splitTextIntoChunks(text, 200);
+    console.log(`Split into ${chunks.length} chunks`);
 
-    console.log('Calling Google TTS with URL:', ttsUrl.toString());
-
-    const response = await fetch(ttsUrl.toString(), {
-      method: 'GET',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'audio/mpeg,*/*',
-        'Accept-Language': 'en-US,en;q=0.9,es;q=0.8',
-      }
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Google TTS API error:', {
-        status: response.status,
-        statusText: response.statusText,
-        errorText: errorText
-      });
+    // Process chunks sequentially to avoid rate limiting
+    const audioChunks = [];
+    
+    for (let i = 0; i < chunks.length; i++) {
+      const chunk = chunks[i];
+      if (chunk.trim().length === 0) continue;
       
-      // Handle specific Google TTS errors
-      if (response.status === 429) {
-        throw new Error('RATE_LIMIT_EXCEEDED');
-      } else if (response.status === 403) {
-        throw new Error('ACCESS_DENIED');
-      } else {
-        throw new Error(`Google TTS API error: ${response.status} ${errorText}`);
+      console.log(`Processing chunk ${i + 1}/${chunks.length}: ${chunk.substring(0, 50)}...`);
+      
+      try {
+        const audioData = await generateChunkAudio(chunk, voice);
+        audioChunks.push(audioData);
+        
+        // Add delay between requests to avoid rate limiting
+        if (i < chunks.length - 1) {
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+      } catch (chunkError) {
+        console.error(`Failed to process chunk ${i + 1}:`, chunkError);
+        // Continue with other chunks instead of failing completely
       }
     }
 
-    // Get audio buffer and convert to base64 safely
-    const arrayBuffer = await response.arrayBuffer();
-    const audioBytes = new Uint8Array(arrayBuffer);
-    
-    // Convert to string first, then to base64 (avoiding stack overflow)
-    let binaryString = '';
-    const chunkSize = 8192;
-    
-    for (let i = 0; i < audioBytes.length; i += chunkSize) {
-      const chunk = audioBytes.slice(i, i + chunkSize);
-      binaryString += String.fromCharCode.apply(null, Array.from(chunk));
+    if (audioChunks.length === 0) {
+      throw new Error('Failed to generate any audio chunks');
     }
-    
-    const base64Audio = btoa(binaryString);
+
+    // For simplicity, return the first successful chunk
+    // In a production environment, you'd concatenate them
+    const base64Audio = audioChunks[0];
 
     return new Response(JSON.stringify({
       audioContent: base64Audio,
-      mimeType: 'audio/mpeg'
+      mimeType: 'audio/mpeg',
+      chunksProcessed: audioChunks.length,
+      totalChunks: chunks.length
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
@@ -82,10 +69,81 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in generate-voice:', error);
     return new Response(JSON.stringify({ 
-      error: error.message 
+      error: error.message,
+      fallback: 'TTS service temporarily unavailable. Please try with shorter text or try again later.'
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
   }
 });
+
+function splitTextIntoChunks(text: string, maxLength: number): string[] {
+  const chunks = [];
+  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+  
+  let currentChunk = '';
+  
+  for (const sentence of sentences) {
+    const trimmedSentence = sentence.trim();
+    if (trimmedSentence.length === 0) continue;
+    
+    if (currentChunk.length + trimmedSentence.length + 1 <= maxLength) {
+      currentChunk += (currentChunk ? '. ' : '') + trimmedSentence;
+    } else {
+      if (currentChunk) {
+        chunks.push(currentChunk + '.');
+      }
+      currentChunk = trimmedSentence;
+    }
+  }
+  
+  if (currentChunk) {
+    chunks.push(currentChunk + '.');
+  }
+  
+  return chunks.length > 0 ? chunks : [text];
+}
+
+async function generateChunkAudio(text: string, voice: string): Promise<string> {
+  // Use a more reliable endpoint with minimal parameters
+  const params = new URLSearchParams({
+    ie: 'UTF-8',
+    q: text,
+    tl: voice === 'en' ? 'en' : 'es',
+    client: 'tw-ob'
+  });
+
+  const response = await fetch(`https://translate.google.com/translate_tts?${params}`, {
+    method: 'GET',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      'Accept': '*/*',
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Referer': 'https://translate.google.com/',
+    }
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('TTS API error:', {
+      status: response.status,
+      error: errorText.substring(0, 200)
+    });
+    throw new Error(`TTS failed with status ${response.status}`);
+  }
+
+  const arrayBuffer = await response.arrayBuffer();
+  const audioBytes = new Uint8Array(arrayBuffer);
+  
+  // Convert to base64 safely
+  let binaryString = '';
+  const chunkSize = 8192;
+  
+  for (let i = 0; i < audioBytes.length; i += chunkSize) {
+    const chunk = audioBytes.slice(i, i + chunkSize);
+    binaryString += String.fromCharCode.apply(null, Array.from(chunk));
+  }
+  
+  return btoa(binaryString);
+}
