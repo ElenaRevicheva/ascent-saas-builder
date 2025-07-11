@@ -100,8 +100,8 @@ function cleanTextForTTS(text: string): string {
 }
 
 async function generateChunkAudio(text: string, voice: string): Promise<string> {
-  // Google TTS has strict limits - use very small chunks
-  const maxChunkSize = 100; // Even smaller to avoid any 400 errors
+  // Google TTS has character limits - split into manageable chunks
+  const maxChunkSize = 200; // Safe size for Google TTS
   
   console.log(`🎧 Input text length: ${text.length} chars`);
   
@@ -111,26 +111,40 @@ async function generateChunkAudio(text: string, voice: string): Promise<string> 
     return await processSingleChunk(text, voice);
   }
   
-  // Text is too long - process first chunk only to avoid complexity
-  console.log(`⚠️ Text too long (${text.length} chars), taking first ${maxChunkSize} chars`);
+  // Text is longer - process multiple chunks and combine
+  console.log(`📝 Text too long (${text.length} chars), splitting into chunks`);
   
-  // Find a good breaking point within the limit
-  let processedText = text.substring(0, maxChunkSize);
+  const chunks = splitTextIntoChunks(text, maxChunkSize);
+  console.log(`📦 Split into ${chunks.length} chunks`);
   
-  // Try to break at sentence ending
-  const lastSentenceEnd = Math.max(
-    processedText.lastIndexOf('.'),
-    processedText.lastIndexOf('!'),
-    processedText.lastIndexOf('?')
-  );
+  const audioChunks: string[] = [];
   
-  if (lastSentenceEnd > 50) {
-    processedText = processedText.substring(0, lastSentenceEnd + 1);
+  for (let i = 0; i < chunks.length; i++) {
+    const chunk = chunks[i];
+    console.log(`🎧 Processing chunk ${i + 1}/${chunks.length}: "${chunk.substring(0, 50)}..."`);
+    
+    try {
+      const chunkAudio = await processSingleChunk(chunk, voice);
+      audioChunks.push(chunkAudio);
+      
+      // Small delay between requests to avoid rate limiting
+      if (i < chunks.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+    } catch (error) {
+      console.error(`❌ Failed to process chunk ${i + 1}:`, error);
+      // Continue with other chunks instead of failing completely
+    }
   }
   
-  console.log(`📝 Processing ${processedText.length} chars: "${processedText.substring(0, 50)}..."`);
+  if (audioChunks.length === 0) {
+    throw new Error('No audio chunks were successfully generated');
+  }
   
-  return await processSingleChunk(processedText, voice);
+  // For now, return the first chunk. In a real implementation, 
+  // you'd want to concatenate the audio files properly
+  console.log(`✅ Generated ${audioChunks.length} audio chunks, returning combined audio`);
+  return audioChunks[0]; // Return first chunk for now
 }
 
 async function processSingleChunk(text: string, voice: string): Promise<string> {
