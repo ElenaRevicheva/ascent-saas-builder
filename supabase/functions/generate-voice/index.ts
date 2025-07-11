@@ -19,15 +19,16 @@ serve(async (req) => {
       throw new Error('Text is required');
     }
 
-    console.log(`Processing TTS request for text: ${text.substring(0, 100)}...`);
-    console.log(`Text length: ${text.length} characters`);
+    console.log(`🎧 Processing TTS request for text: ${text.substring(0, 100)}...`);
+    console.log(`📊 Text length: ${text.length} characters`);
 
-    // Process full text like Python gTTS version
-    console.log(`🎧 Processing FULL text like gTTS: ${text.length} chars`);
-    console.log(`Full text preview: ${text.substring(0, 200)}...`);
+    // Clean text to remove problematic characters for Google TTS
+    const cleanedText = cleanTextForTTS(text);
+    console.log(`🧹 Cleaned text length: ${cleanedText.length} characters`);
+    console.log(`🧹 Cleaned text preview: ${cleanedText.substring(0, 100)}...`);
 
     try {
-      const base64Audio = await generateChunkAudio(text, voice);
+      const base64Audio = await generateChunkAudio(cleanedText, voice);
       
       return new Response(JSON.stringify({
         audioContent: base64Audio,
@@ -81,9 +82,26 @@ function splitTextIntoChunks(text: string, maxLength: number): string[] {
   return chunks.length > 0 ? chunks : [text];
 }
 
+function cleanTextForTTS(text: string): string {
+  return text
+    // Remove emojis and special Unicode characters
+    .replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '')
+    // Remove numbered emoji patterns like 1️⃣, 2️⃣
+    .replace(/\d+️⃣/g, '')
+    // Remove video script markers
+    .replace(/\[VIDEO SCRIPT START\]/g, '')
+    .replace(/\[VIDEO SCRIPT END\]/g, '')
+    // Clean up multiple spaces and newlines
+    .replace(/\n\s*\n/g, '. ')
+    .replace(/\s+/g, ' ')
+    // Remove bullet points and dashes that might cause issues
+    .replace(/^[-•]\s+/gm, '')
+    .trim();
+}
+
 async function generateChunkAudio(text: string, voice: string): Promise<string> {
-  // Google TTS has strict limits - use smaller chunks
-  const maxChunkSize = 150; // Much smaller limit to avoid 400 errors
+  // Google TTS has strict limits - use very small chunks
+  const maxChunkSize = 100; // Even smaller to avoid any 400 errors
   
   console.log(`🎧 Input text length: ${text.length} chars`);
   
