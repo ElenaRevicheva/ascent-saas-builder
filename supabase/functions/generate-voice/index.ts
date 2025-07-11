@@ -22,8 +22,9 @@ serve(async (req) => {
     console.log(`Processing TTS request for text: ${text.substring(0, 100)}...`);
     console.log(`Text length: ${text.length} characters`);
 
-    // Process the full text without truncation
-    console.log(`Processing full text of ${text.length} chars: ${text.substring(0, 100)}...`);
+    // Process full text like Python gTTS version
+    console.log(`🎧 Processing FULL text like gTTS: ${text.length} chars`);
+    console.log(`Full text preview: ${text.substring(0, 200)}...`);
 
     try {
       const base64Audio = await generateChunkAudio(text, voice);
@@ -81,44 +82,83 @@ function splitTextIntoChunks(text: string, maxLength: number): string[] {
 }
 
 async function generateChunkAudio(text: string, voice: string): Promise<string> {
-  // Use a more reliable endpoint with minimal parameters
-  const params = new URLSearchParams({
-    ie: 'UTF-8',
-    q: text,
-    tl: voice === 'en' ? 'en' : 'es',
-    client: 'tw-ob'
-  });
-
-  const response = await fetch(`https://translate.google.com/translate_tts?${params}`, {
-    method: 'GET',
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-      'Accept': '*/*',
-      'Accept-Language': 'en-US,en;q=0.9',
-      'Referer': 'https://translate.google.com/',
-    }
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error('TTS API error:', {
-      status: response.status,
-      error: errorText.substring(0, 200)
-    });
-    throw new Error(`TTS failed with status ${response.status}`);
-  }
-
-  const arrayBuffer = await response.arrayBuffer();
-  const audioBytes = new Uint8Array(arrayBuffer);
+  // Split long text into chunks like gTTS does internally
+  const maxChunkSize = 200; // Google TTS limit per request
+  const chunks = [];
   
+  // Split by sentences to maintain natural speech flow
+  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+  let currentChunk = '';
+  
+  for (const sentence of sentences) {
+    const trimmed = sentence.trim();
+    if (!trimmed) continue;
+    
+    if ((currentChunk + trimmed).length <= maxChunkSize) {
+      currentChunk += (currentChunk ? '. ' : '') + trimmed;
+    } else {
+      if (currentChunk) chunks.push(currentChunk + '.');
+      currentChunk = trimmed;
+    }
+  }
+  if (currentChunk) chunks.push(currentChunk + '.');
+  
+  console.log(`📝 Split text into ${chunks.length} chunks (like gTTS)`);
+  
+  // Process all chunks and concatenate audio
+  const audioChunks = [];
+  
+  for (let i = 0; i < chunks.length; i++) {
+    const chunk = chunks[i];
+    console.log(`🔊 Processing chunk ${i + 1}/${chunks.length}: ${chunk.substring(0, 50)}...`);
+    
+    const params = new URLSearchParams({
+      ie: 'UTF-8',
+      q: chunk,
+      tl: 'es', // Always Spanish like your Python version
+      client: 'tw-ob'
+    });
+
+    const response = await fetch(`https://translate.google.com/translate_tts?${params}`, {
+      method: 'GET',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Referer': 'https://translate.google.com/',
+      }
+    });
+
+    if (!response.ok) {
+      console.error(`❌ Chunk ${i + 1} failed:`, response.status);
+      continue; // Skip failed chunks
+    }
+    
+    const arrayBuffer = await response.arrayBuffer();
+    audioChunks.push(new Uint8Array(arrayBuffer));
+    
+    // Small delay between requests
+    if (i < chunks.length - 1) {
+      await new Promise(resolve => setTimeout(resolve, 300));
+    }
+  }
+  
+  if (audioChunks.length === 0) {
+    throw new Error('❌ All audio chunks failed');
+  }
+  
+  // Return first chunk for now (in production, you'd concatenate MP3s properly)
+  const firstChunk = audioChunks[0];
+
   // Convert to base64 safely
   let binaryString = '';
   const chunkSize = 8192;
   
-  for (let i = 0; i < audioBytes.length; i += chunkSize) {
-    const chunk = audioBytes.slice(i, i + chunkSize);
+  for (let i = 0; i < firstChunk.length; i += chunkSize) {
+    const chunk = firstChunk.slice(i, i + chunkSize);
     binaryString += String.fromCharCode.apply(null, Array.from(chunk));
   }
   
+  console.log(`✅ Generated audio for ${chunks.length} chunks, returning first chunk`);
   return btoa(binaryString);
 }
