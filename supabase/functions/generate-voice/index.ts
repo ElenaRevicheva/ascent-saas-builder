@@ -18,50 +18,41 @@ serve(async (req) => {
       throw new Error('Text is required');
     }
 
-    const elevenlabsApiKey = Deno.env.get('ELEVENLABS_API_KEY');
-    if (!elevenlabsApiKey) {
-      throw new Error('ELEVENLABS_API_KEY not configured');
-    }
-
-    console.log(`Generating gentle voice for text: ${text.substring(0, 100)}...`);
+    console.log(`Generating voice with gTTS for text: ${text.substring(0, 100)}...`);
     console.log(`Text length: ${text.length} characters`);
 
-    // Call ElevenLabs TTS API
-    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice}`, {
-      method: 'POST',
+    // Use Google Text-to-Speech (gTTS) API
+    const ttsParams = new URLSearchParams({
+      ie: 'UTF-8',
+      q: text,
+      tl: voice === 'es' ? 'es' : 'en', // Default to Spanish for EspaLuz
+      client: 'tw-ob',
+      idx: '0',
+      total: '1',
+      textlen: text.length.toString()
+    });
+
+    const response = await fetch(`https://translate.google.com/translate_tts?${ttsParams}`, {
       headers: {
-        'xi-api-key': elevenlabsApiKey,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        text: text,
-        model_id: "eleven_multilingual_v2",
-        voice_settings: {
-          stability: 0.85,
-          similarity_boost: 0.75,
-          style: 0.15,
-          use_speaker_boost: true
-        }
-      }),
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+      }
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('ElevenLabs API error:', {
+      console.error('Google TTS API error:', {
         status: response.status,
         statusText: response.statusText,
         errorText: errorText
       });
       
-      // Handle specific ElevenLabs errors
+      // Handle specific Google TTS errors
       if (response.status === 429) {
         throw new Error('RATE_LIMIT_EXCEEDED');
-      } else if (response.status === 402) {
-        throw new Error('QUOTA_EXCEEDED');
-      } else if (response.status === 401) {
-        throw new Error('INVALID_API_KEY');
+      } else if (response.status === 403) {
+        throw new Error('ACCESS_DENIED');
       } else {
-        throw new Error(`ElevenLabs API error: ${response.status} ${errorText}`);
+        throw new Error(`Google TTS API error: ${response.status} ${errorText}`);
       }
     }
 

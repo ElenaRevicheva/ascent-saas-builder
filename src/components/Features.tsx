@@ -20,8 +20,8 @@ const Features = () => {
     },
     {
       icon: MessageSquare,
-      title: "Multi-Platform Chat",
-      description: "Learn via Telegram or web chat. Practice Spanish anywhere, anytime."
+      title: "Voice & Video Learning",
+      description: "AI-generated voice responses using Google TTS and personalized avatar videos for immersive learning."
     },
     {
       icon: Users,

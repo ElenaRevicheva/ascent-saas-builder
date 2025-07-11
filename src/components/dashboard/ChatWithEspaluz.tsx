@@ -301,15 +301,13 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
     } catch (error) {
       console.error('Error generating voice:', error);
       
-      // Handle specific ElevenLabs errors
+      // Handle specific Google TTS errors
       if (error.message === 'RATE_LIMIT_EXCEEDED') {
-        toast.error('ElevenLabs rate limit exceeded. Please wait a moment and try again.');
-      } else if (error.message === 'QUOTA_EXCEEDED') {
-        toast.error('ElevenLabs quota exceeded. Please upgrade your ElevenLabs account.');
-      } else if (error.message === 'INVALID_API_KEY') {
-        toast.error('Invalid ElevenLabs API key. Please check your configuration.');
+        toast.error('Google TTS rate limit exceeded. Please wait a moment and try again.');
+      } else if (error.message === 'ACCESS_DENIED') {
+        toast.error('Access denied to Google TTS. Please try again later.');
       } else {
-        toast.error('Failed to generate voice');
+        toast.error('Failed to generate voice using Google TTS');
       }
     } finally {
       setLoadingMedia(prev => ({ ...prev, [messageId]: null }));
@@ -400,13 +398,11 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
     } catch (error) {
       console.error('Error generating video:', error);
       
-      // Handle specific ElevenLabs errors
+      // Handle specific Google TTS errors
       if (error.message === 'RATE_LIMIT_EXCEEDED') {
-        toast.error('ElevenLabs rate limit exceeded. Please wait a moment and try again.');
-      } else if (error.message === 'QUOTA_EXCEEDED') {
-        toast.error('ElevenLabs quota exceeded. Please upgrade your ElevenLabs account.');
-      } else if (error.message === 'INVALID_API_KEY') {
-        toast.error('Invalid ElevenLabs API key. Please check your configuration.');
+        toast.error('Google TTS rate limit exceeded. Please wait a moment and try again.');
+      } else if (error.message === 'ACCESS_DENIED') {
+        toast.error('Access denied to Google TTS. Please try again later.');
       } else {
         toast.error(`Failed to generate video: ${error.message || 'Unknown error'}`);
       }
