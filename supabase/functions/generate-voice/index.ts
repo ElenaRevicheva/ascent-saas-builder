@@ -82,54 +82,35 @@ function splitTextIntoChunks(text: string, maxLength: number): string[] {
 }
 
 async function generateChunkAudio(text: string, voice: string): Promise<string> {
-  // Try to fit as much text as possible in a single request first
-  const maxSingleChunk = 900; // Increase chunk size significantly
+  // Google TTS has strict limits - use smaller chunks
+  const maxChunkSize = 150; // Much smaller limit to avoid 400 errors
   
   console.log(`🎧 Input text length: ${text.length} chars`);
   
-  if (text.length <= maxSingleChunk) {
+  if (text.length <= maxChunkSize) {
     // Text fits in single chunk - process it all
     console.log(`✅ Text fits in single chunk, processing ${text.length} chars`);
     return await processSingleChunk(text, voice);
   }
   
-  // Text is too long - find the best breaking point
-  console.log(`⚠️ Text too long (${text.length} chars), finding best break point...`);
+  // Text is too long - process first chunk only to avoid complexity
+  console.log(`⚠️ Text too long (${text.length} chars), taking first ${maxChunkSize} chars`);
   
-  // Try to break at sentence endings
-  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
-  let processedText = '';
+  // Find a good breaking point within the limit
+  let processedText = text.substring(0, maxChunkSize);
   
-  for (const sentence of sentences) {
-    const testText = processedText + (processedText ? '. ' : '') + sentence.trim();
-    if (testText.length <= maxSingleChunk) {
-      processedText = testText;
-    } else {
-      break;
-    }
+  // Try to break at sentence ending
+  const lastSentenceEnd = Math.max(
+    processedText.lastIndexOf('.'),
+    processedText.lastIndexOf('!'),
+    processedText.lastIndexOf('?')
+  );
+  
+  if (lastSentenceEnd > 50) {
+    processedText = processedText.substring(0, lastSentenceEnd + 1);
   }
   
-  // If we didn't get enough text, try word boundaries
-  if (processedText.length < 200) {
-    const words = text.split(' ');
-    processedText = '';
-    for (const word of words) {
-      const testText = processedText + (processedText ? ' ' : '') + word;
-      if (testText.length <= maxSingleChunk) {
-        processedText = testText;
-      } else {
-        break;
-      }
-    }
-  }
-  
-  // Last resort - just truncate
-  if (processedText.length < 100) {
-    processedText = text.substring(0, maxSingleChunk);
-  }
-  
-  console.log(`📝 Processing ${processedText.length} chars out of ${text.length} total`);
-  console.log(`🔊 Text preview: ${processedText.substring(0, 100)}...`);
+  console.log(`📝 Processing ${processedText.length} chars: "${processedText.substring(0, 50)}..."`);
   
   return await processSingleChunk(processedText, voice);
 }
