@@ -11,32 +11,91 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import brandAvatar2 from '@/assets/brand-avatar-2.jpg';
 import espaluzQr from '@/assets/espaluz-qr.jpg';
 import creatorQr from '@/assets/creator-qr.jpg';
 
 function FeedbackForm() {
+  const [formData, setFormData] = useState({
+    email: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase
+        .from('feedback')
+        .insert([
+          {
+            email: formData.email || null,
+            message: formData.message
+          }
+        ]);
+
+      if (error) throw error;
+
+      toast({
+        title: "Thank you!",
+        description: "Your feedback has been submitted successfully!",
+      });
+
+      // Reset form
+      setFormData({ email: '', message: '' });
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
   return (
     <form
-      action="https://formspree.io/f/mnqewqzv" // Replace with your Formspree endpoint if needed
-      method="POST"
+      onSubmit={handleSubmit}
       className="max-w-lg mx-auto bg-white rounded-xl shadow p-6 mt-12 flex flex-col gap-4"
     >
       <h3 className="text-2xl font-bold text-purple-700 mb-2">We value your feedback!</h3>
       <input
         type="email"
         name="email"
+        value={formData.email}
+        onChange={handleChange}
         placeholder="Your email (optional)"
         className="border rounded px-3 py-2"
       />
       <textarea
         name="message"
+        value={formData.message}
+        onChange={handleChange}
         placeholder="Your feedback..."
         className="border rounded px-3 py-2 min-h-[100px]"
         required
       />
-      <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-6 py-2 font-semibold">Send Feedback</button>
-      <input type="hidden" name="_next" value="/thank-you.html" />
+      <button 
+        type="submit" 
+        disabled={isSubmitting}
+        className="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-6 py-2 font-semibold disabled:opacity-50"
+      >
+        {isSubmitting ? 'Sending...' : 'Send Feedback'}
+      </button>
     </form>
   );
 }
