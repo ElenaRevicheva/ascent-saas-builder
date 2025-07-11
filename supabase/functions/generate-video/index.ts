@@ -31,7 +31,6 @@ serve(async (req) => {
     }
 
     console.log('Using Google TTS (gTTS) for voice generation');
-    }
 
     console.log(`Generating gentle video voice for script: ${videoScript.substring(0, 100)}...`);
 
