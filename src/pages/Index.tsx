@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+
 import brandAvatar2 from '@/assets/brand-avatar-2.jpg';
 import espaluzQr from '@/assets/espaluz-qr.jpg';
 import creatorQr from '@/assets/creator-qr.jpg';
@@ -23,11 +23,12 @@ function FeedbackForm() {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitStatus('idle');
 
     try {
       const { error } = await supabase
@@ -41,20 +42,12 @@ function FeedbackForm() {
 
       if (error) throw error;
 
-      toast({
-        title: "Thank you!",
-        description: "Your feedback has been submitted successfully!",
-      });
-
+      setSubmitStatus('success');
       // Reset form
       setFormData({ email: '', message: '' });
     } catch (error) {
       console.error('Error submitting feedback:', error);
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
+      setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
     }
@@ -73,6 +66,19 @@ function FeedbackForm() {
       className="max-w-lg mx-auto bg-white rounded-xl shadow p-6 mt-12 flex flex-col gap-4"
     >
       <h3 className="text-2xl font-bold text-purple-700 mb-2">We value your feedback!</h3>
+      
+      {submitStatus === 'success' && (
+        <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+          Thank you! Your feedback has been submitted successfully!
+        </div>
+      )}
+      
+      {submitStatus === 'error' && (
+        <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          Something went wrong. Please try again.
+        </div>
+      )}
+      
       <input
         type="email"
         name="email"
