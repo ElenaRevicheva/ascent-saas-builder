@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import Pricing from "@/components/Pricing";
 import { CookieConsent } from "@/components/CookieConsent";
 import { ChatWithEspaluz } from "@/components/dashboard/ChatWithEspaluz";
+import { WhatsAppWaitlistForm } from "@/components/WhatsAppWaitlistForm";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -135,39 +136,7 @@ const Index = () => {
         <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 max-w-2xl mx-auto mb-4">
           <div className="text-center space-y-4">
             <h3 className="text-xl font-bold text-green-600">📱 Join the Waitlist for EspaLuz WhatsApp Official</h3>
-            <form
-              action="https://formspree.io/f/xpzgkqvw"
-              method="POST"
-              className="space-y-4"
-            >
-              <div className="flex flex-col gap-3">
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Your email address"
-                  required
-                  className="border rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500"
-                />
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Your name"
-                  required
-                  className="border rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500"
-                />
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder="Your WhatsApp number (optional)"
-                  className="border rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500"
-                />
-                <input type="hidden" name="subject" value="WhatsApp Waitlist - EspaLuz" />
-                <Button type="submit" size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full">
-                  <MessageSquare className="mr-2 h-4 w-4" />
-                  Join WhatsApp Waitlist
-                </Button>
-              </div>
-            </form>
+            <WhatsAppWaitlistForm />
             
             <div className="border-t border-white/20 pt-4">
               <p className="text-sm text-muted-foreground mb-3">
