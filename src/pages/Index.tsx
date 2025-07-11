@@ -125,7 +125,9 @@ const Index = () => {
       
       {/* Hero Section */}
       <section className="container mx-auto px-4 pt-12 pb-6 text-center bg-gradient-magical rounded-2xl shadow-vibrant">
-        <img src={brandAvatar2} alt="Brand" className="mx-auto w-32 h-32 rounded-full border-4 border-primary shadow-glow object-cover bg-white mb-4" />
+        <div className="mx-auto w-32 h-32 mb-4 flex items-center justify-center">
+          <img src={brandAvatar2} alt="EspaLuz Avatar" className="w-full h-full rounded-full border-4 border-primary shadow-glow object-cover bg-white" />
+        </div>
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-relaxed bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 bg-clip-text text-transparent drop-shadow px-4 py-2">
           Meet EspaLuz — Your Family’s First Emotionally Intelligent Language Coach
         </h1>
