@@ -136,7 +136,7 @@ const Index = () => {
           <div className="text-center space-y-4">
             <h3 className="text-xl font-bold text-green-600">📱 Join the Waitlist for EspaLuz WhatsApp Official</h3>
             <form
-              action="https://formspree.io/f/mnqewqzv"
+              action="https://formspree.io/f/xpzgkqvw"
               method="POST"
               className="space-y-4"
             >
