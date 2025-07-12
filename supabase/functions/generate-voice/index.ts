@@ -55,48 +55,99 @@ serve(async (req) => {
   }
 });
 
-function splitTextIntoChunks(text: string, maxLength: number): string[] {
-  const chunks = [];
-  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+// Enhanced text chunking based on working Telegram bot logic
+function splitTextIntoChunks(text: string, maxLength: number = 1500): string[] {
+  const chunks: string[] = [];
   
+  // If text is short enough, return as single chunk
+  if (text.length <= maxLength) {
+    return [text];
+  }
+  
+  // Split by paragraphs and combine until we reach chunk size
+  const paragraphs = text.split('\n\n');
   let currentChunk = '';
   
-  for (const sentence of sentences) {
-    const trimmedSentence = sentence.trim();
-    if (trimmedSentence.length === 0) continue;
-    
-    if (currentChunk.length + trimmedSentence.length + 1 <= maxLength) {
-      currentChunk += (currentChunk ? '. ' : '') + trimmedSentence;
+  for (const para of paragraphs) {
+    if (currentChunk.length + para.length + 2 <= maxLength) {
+      if (currentChunk) {
+        currentChunk += '\n\n' + para;
+      } else {
+        currentChunk = para;
+      }
     } else {
       if (currentChunk) {
-        chunks.push(currentChunk + '.');
+        chunks.push(currentChunk);
       }
-      currentChunk = trimmedSentence;
+      
+      // If single paragraph is too long, split by sentences
+      if (para.length > maxLength) {
+        const sentences = para.split(/[.!?]+/).filter(s => s.trim().length > 0);
+        let sentenceChunk = '';
+        
+        for (const sentence of sentences) {
+          const trimmedSentence = sentence.trim();
+          if (sentenceChunk.length + trimmedSentence.length + 1 <= maxLength) {
+            sentenceChunk += (sentenceChunk.length > 0 ? '. ' : '') + trimmedSentence;
+          } else {
+            if (sentenceChunk.length > 0) {
+              chunks.push(sentenceChunk + '.');
+            }
+            sentenceChunk = trimmedSentence;
+          }
+        }
+        if (sentenceChunk.length > 0) {
+          currentChunk = sentenceChunk + '.';
+        } else {
+          currentChunk = '';
+        }
+      } else {
+        currentChunk = para;
+      }
     }
   }
   
   if (currentChunk) {
-    chunks.push(currentChunk + '.');
+    chunks.push(currentChunk);
   }
   
-  return chunks.length > 0 ? chunks : [text];
+  return chunks.length > 0 ? chunks : [text.substring(0, maxLength)];
 }
 
+// Enhanced text cleaning for speech based on working Telegram bot logic
 function cleanTextForTTS(text: string): string {
-  return text
-    // Remove emojis and special Unicode characters
-    .replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '')
-    // Remove numbered emoji patterns like 1️⃣, 2️⃣
-    .replace(/\d+️⃣/g, '')
-    // Remove video script markers
-    .replace(/\[VIDEO SCRIPT START\]/g, '')
-    .replace(/\[VIDEO SCRIPT END\]/g, '')
-    // Clean up multiple spaces and newlines
-    .replace(/\n\s*\n/g, '. ')
-    .replace(/\s+/g, ' ')
-    // Remove bullet points and dashes that might cause issues
-    .replace(/^[-•]\s+/gm, '')
-    .trim();
+  // Remove markdown formatting
+  text = text.replace(/\*+([^*]+)\*+/g, '$1'); // Remove asterisks
+  text = text.replace(/_+([^_]+)_+/g, '$1');   // Remove underscores
+  text = text.replace(/`+([^`]+)`+/g, '$1');   // Remove backticks
+  
+  // Remove quotes but keep the content
+  text = text.replace(/"([^"]+)"/g, '$1');
+  text = text.replace(/'([^']+)'/g, '$1');
+  
+  // Remove numbers in lists (1. 2. etc)
+  text = text.replace(/^\d+\.\s*/gm, '');
+  text = text.replace(/\n\d+\.\s*/g, '\n');
+  
+  // Remove emoji numbers
+  text = text.replace(/[0-9]️⃣/g, '');
+  
+  // Remove other common symbols but keep sentence flow
+  text = text.replace(/[#@\[\](){}<>]/g, '');
+  
+  // Remove emojis and special characters
+  text = text.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '');
+  
+  // Remove video script markers
+  text = text.replace(/\[VIDEO SCRIPT START\][\s\S]*?\[VIDEO SCRIPT END\]/g, '');
+  
+  // Clean up extra whitespace
+  text = text.replace(/\s+/g, ' ').trim();
+  
+  // Remove bullet points
+  text = text.replace(/^[•·\-*]\s*/gm, '');
+  
+  return text;
 }
 
 async function generateChunkAudio(text: string, voice: string): Promise<string> {

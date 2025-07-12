@@ -79,12 +79,17 @@ serve(async (req) => {
       console.log('Using default avatar:', userAvatarUrl);
     }
 
+    // Extract proper video script from the full response (following Telegram bot logic)
+    const extractedScript = extractVideoScript(videoScript);
+    console.log('🎬 Extracted video script:', extractedScript);
+
     // Generate TTS audio for video script - clean text first
     console.log('🎬 Generating video audio...');
     console.log(`📝 Original video script length: ${videoScript.length} characters`);
+    console.log(`📝 Extracted script length: ${extractedScript.length} characters`);
     
     // Clean text to remove problematic characters for Google TTS
-    const cleanedScript = cleanTextForTTS(videoScript);
+    const cleanedScript = cleanTextForTTS(extractedScript);
     console.log(`🧹 Cleaned script length: ${cleanedScript.length} characters`);
     console.log(`📄 Cleaned script preview: ${cleanedScript.substring(0, 100)}...`);
 
@@ -153,21 +158,65 @@ function splitTextIntoChunks(text: string, maxLength: number): string[] {
   return chunks.length > 0 ? chunks : [text];
 }
 
+// Extract video script from Claude's response based on working Telegram bot logic
+function extractVideoScript(fullResponse: string): string {
+  // Look for the video script section
+  if (fullResponse.includes('[VIDEO SCRIPT START]') && fullResponse.includes('[VIDEO SCRIPT END]')) {
+    const startMarker = '[VIDEO SCRIPT START]';
+    const endMarker = '[VIDEO SCRIPT END]';
+    const startIndex = fullResponse.indexOf(startMarker) + startMarker.length;
+    const endIndex = fullResponse.indexOf(endMarker, startIndex);
+
+    if (startIndex < endIndex) {
+      const script = fullResponse.substring(startIndex, endIndex).trim();
+      return script;
+    }
+  }
+
+  // Fallback approach: try to find sections that look like Spanish/English pairs
+  const lines = fullResponse.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (line.includes('Español:') && i + 1 < lines.length && lines[i + 1].includes('English:')) {
+      return `${line}\n${lines[i + 1]}`;
+    }
+  }
+
+  // Default message if all else fails
+  return 'Español: Gracias por practicar conmigo. Me encanta ayudarte con español.\nEnglish: Thank you for practicing with me. I love helping you with Spanish.';
+}
+
+// Enhanced text cleaning for speech based on working Telegram bot logic  
 function cleanTextForTTS(text: string): string {
-  return text
-    // Remove emojis and special Unicode characters
-    .replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F700}-\u{1F77F}]|[\u{1F780}-\u{1F7FF}]|[\u{1F800}-\u{1F8FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '')
-    // Remove numbered emoji patterns like 1️⃣, 2️⃣
-    .replace(/\d+️⃣/g, '')
-    // Remove video script markers
-    .replace(/\[VIDEO SCRIPT START\]/g, '')
-    .replace(/\[VIDEO SCRIPT END\]/g, '')
-    // Clean up multiple spaces and newlines
-    .replace(/\n\s*\n/g, '. ')
-    .replace(/\s+/g, ' ')
-    // Remove bullet points and dashes that might cause issues
-    .replace(/^[-•]\s+/gm, '')
-    .trim();
+  // Remove markdown formatting
+  text = text.replace(/\*+([^*]+)\*+/g, '$1'); // Remove asterisks
+  text = text.replace(/_+([^_]+)_+/g, '$1');   // Remove underscores
+  text = text.replace(/`+([^`]+)`+/g, '$1');   // Remove backticks
+  
+  // Remove quotes but keep the content
+  text = text.replace(/"([^"]+)"/g, '$1');
+  text = text.replace(/'([^']+)'/g, '$1');
+  
+  // Remove numbers in lists (1. 2. etc)
+  text = text.replace(/^\d+\.\s*/gm, '');
+  text = text.replace(/\n\d+\.\s*/g, '\n');
+  
+  // Remove emoji numbers
+  text = text.replace(/[0-9]️⃣/g, '');
+  
+  // Remove other common symbols but keep sentence flow
+  text = text.replace(/[#@\[\](){}<>]/g, '');
+  
+  // Remove emojis and special characters
+  text = text.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '');
+  
+  // Clean up extra whitespace
+  text = text.replace(/\s+/g, ' ').trim();
+  
+  // Remove bullet points
+  text = text.replace(/^[•·\-*]\s*/gm, '');
+  
+  return text;
 }
 
 async function generateVideoChunkAudio(text: string, voice: string): Promise<string> {
