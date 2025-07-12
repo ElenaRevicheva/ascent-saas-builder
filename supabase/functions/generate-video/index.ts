@@ -106,6 +106,7 @@ serve(async (req) => {
     const estimatedDuration = Math.max(5, Math.floor(videoScript.length / 15));
 
     const response = {
+      success: true,
       audioContent: base64Audio,
       mimeType: 'audio/mpeg',
       userAvatarUrl,

@@ -31,10 +31,13 @@ serve(async (req) => {
       const base64Audio = await generateChunkAudio(cleanedText, voice);
       
       return new Response(JSON.stringify({
-        audioContent: base64Audio,
+        success: true,
+        audioBase64: base64Audio,
         mimeType: 'audio/mpeg',
         processedLength: text.length,
-        originalLength: text.length
+        originalLength: text.length,
+        chunks: 1,
+        failedChunks: []
       }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
