@@ -247,6 +247,28 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
     }
   };
 
+  // Enhanced base64 to audio blob conversion
+  const base64ToAudioBlob = (base64Audio: string): Blob => {
+    try {
+      // Remove data URL prefix if present
+      const base64Data = base64Audio.replace(/^data:audio\/[^;]+;base64,/, '');
+      
+      // Convert base64 to binary
+      const binaryString = atob(base64Data);
+      const bytes = new Uint8Array(binaryString.length);
+      
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      
+      // Create blob with proper MIME type
+      return new Blob([bytes], { type: 'audio/mpeg' });
+    } catch (error) {
+      console.error('❌ Error converting base64 to blob:', error);
+      throw new Error('Failed to create audio blob');
+    }
+  };
+
   const generateVoice = async (messageId: string, text: string, isVideoScript = false) => {
     if (loadingMedia[messageId] === 'voice') return;
     
@@ -256,6 +278,7 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
       return;
     }
     
+    console.log('🎧 Generating voice audio for text length:', text.length);
     setLoadingMedia(prev => ({ ...prev, [messageId]: 'voice' }));
     
     let textToSpeak = text;
@@ -287,17 +310,26 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
         }
       });
 
-      if (error) throw error;
-
-      if (!data.audioContent) {
-        throw new Error('No audio content received');
+      if (error) {
+        console.error('❌ Voice generation API error:', error);
+        throw error;
       }
 
-      // Create audio URL from base64
-      const audioBlob = new Blob([
-        new Uint8Array(atob(data.audioContent).split('').map(c => c.charCodeAt(0)))
-      ], { type: 'audio/mpeg' });
+      if (!data.success || !data.audioBase64) {
+        console.error('❌ Voice generation failed:', data);
+        throw new Error(data.error || 'No audio data received');
+      }
+
+      console.log(`✅ Voice generated successfully`);
+      if (data.failedChunks && data.failedChunks.length > 0) {
+        console.warn(`⚠️ Some chunks failed: ${data.failedChunks.join(', ')}`);
+      }
+
+      // Convert base64 to blob URL using enhanced function
+      const audioBlob = base64ToAudioBlob(data.audioBase64);
       const audioUrl = URL.createObjectURL(audioBlob);
+      
+      console.log('✅ Audio blob created and URL generated');
 
       // Update message with audio URL
       setMessages(prev => prev.map(msg => 
@@ -306,7 +338,7 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
 
       toast.success('Voice generated successfully!');
     } catch (error) {
-      console.error('Error generating voice:', error);
+      console.error('❌ Voice generation error:', error);
       
       // Handle specific Google TTS errors
       if (error.message === 'RATE_LIMIT_EXCEEDED') {
