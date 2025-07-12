@@ -393,10 +393,8 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
 
       console.log('Video generation successful:', data);
 
-      // Create audio blob from base64
-      const audioBlob = new Blob([
-        new Uint8Array(atob(data.audioContent).split('').map(c => c.charCodeAt(0)))
-      ], { type: 'audio/mpeg' });
+      // Create audio blob from base64 using enhanced function
+      const audioBlob = base64ToAudioBlob(data.audioContent);
       const audioUrl = URL.createObjectURL(audioBlob);
 
       // Check if user has uploaded their own avatar video
@@ -844,20 +842,48 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
                               ref={el => {
                                 if (el) {
                                   videoRefs.current[message.id] = el as any;
-                                  // Create audio element and sync with video
+                                  console.log('🎬 Video element set up for message:', message.id);
+                                  
+                                  // Set up audio track - try to add audio URL as a source
                                   const audio = new Audio(message.audioUrl);
-                                  el.addEventListener('play', () => {
-                                    audio.currentTime = 0;
-                                    audio.play();
+                                  console.log('🎧 Audio element created for video');
+                                  
+                                  // Better error handling for audio
+                                  audio.addEventListener('error', (e) => {
+                                    console.error('❌ Audio error in video:', e);
+                                    console.error('❌ Audio URL:', message.audioUrl);
                                   });
-                                  el.addEventListener('pause', () => audio.pause());
+                                  
+                                  audio.addEventListener('canplay', () => {
+                                    console.log('✅ Audio ready for video playback');
+                                  });
+                                  
+                                  // Sync video and audio playback
+                                  el.addEventListener('play', () => {
+                                    console.log('▶️ Video playing, starting audio');
+                                    audio.currentTime = el.currentTime;
+                                    audio.play().catch(e => console.error('❌ Audio play failed:', e));
+                                  });
+                                  
+                                  el.addEventListener('pause', () => {
+                                    console.log('⏸️ Video paused, pausing audio');
+                                    audio.pause();
+                                  });
+                                  
                                   el.addEventListener('ended', () => {
+                                    console.log('🏁 Video ended');
                                     audio.pause();
                                     setPlayingVideo(null);
                                   });
-                                  // Auto-play when video is loaded
+                                  
+                                  // Better error handling for video
+                                  el.addEventListener('error', (e) => {
+                                    console.error('❌ Video error:', e);
+                                    console.error('❌ Video URL:', message.videoUrl);
+                                  });
+                                  
                                   el.addEventListener('loadeddata', () => {
-                                    el.play().catch(console.error);
+                                    console.log('✅ Video loaded successfully');
                                   });
                                 }
                               }}
