@@ -261,10 +261,17 @@ async function generateVideoChunkAudio(text: string, voice: string): Promise<str
     throw new Error('No video audio chunks were successfully generated');
   }
   
-  // For now, return the first chunk. In a real implementation, 
-  // you'd want to concatenate the audio files properly
-  console.log(`✅ Generated ${audioChunks.length} video audio chunks, returning combined audio`);
-  return audioChunks[0]; // Return first chunk for now
+  // Combine all audio chunks into a single base64 string
+  console.log(`✅ Generated ${audioChunks.length} video audio chunks, combining them`);
+  
+  if (audioChunks.length === 1) {
+    return audioChunks[0];
+  }
+  
+  // For multiple chunks, we'll concatenate the base64 data
+  // This is a simple concatenation - in production you'd want proper audio merging
+  const combinedChunks = audioChunks.join('');
+  return combinedChunks;
 }
 
 async function processVideoSingleChunk(text: string, voice: string): Promise<string> {
