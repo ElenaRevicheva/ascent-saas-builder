@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Upload, Video, Trash2, Play, Pause, Copy } from 'lucide-react';
@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { copyAvatarToCurrentUser } from '@/utils/copyAvatar';
+import { callCopyAvatar } from '@/utils/callCopyAvatar';
 
 export const AvatarUpload = () => {
   const { user } = useAuth();
@@ -91,7 +92,8 @@ export const AvatarUpload = () => {
     
     setUploading(true);
     try {
-      await copyAvatarToCurrentUser();
+      const result = await callCopyAvatar();
+      console.log('Copy result:', result);
       
       // Refresh the avatar URL
       const fileName = `${user.id}/avatar.mp4`;
@@ -120,8 +122,8 @@ export const AvatarUpload = () => {
     setIsPlaying(!isPlaying);
   };
 
-  // Check for existing avatar on component mount
-  useState(() => {
+  // Check for existing avatar on component mount and auto-copy if needed
+  useEffect(() => {
     if (user) {
       const fileName = `${user.id}/avatar.mp4`;
       const { data } = supabase.storage
@@ -133,13 +135,19 @@ export const AvatarUpload = () => {
         .then(response => {
           if (response.ok) {
             setAvatarUrl(data.publicUrl);
+          } else {
+            // File doesn't exist, try to copy from the old location
+            console.log('Avatar not found, attempting to copy from old location...');
+            handleCopyAvatar();
           }
         })
         .catch(() => {
-          // File doesn't exist, that's fine
+          // File doesn't exist, try to copy from the old location
+          console.log('Avatar not found, attempting to copy from old location...');
+          handleCopyAvatar();
         });
     }
-  });
+  }, [user]);
 
   return (
     <Card className="border-border/50 shadow-magical" style={{ background: 'var(--gradient-card)' }}>
