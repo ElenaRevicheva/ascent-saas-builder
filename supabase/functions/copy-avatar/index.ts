@@ -23,17 +23,22 @@ serve(async (req) => {
       throw new Error('Missing fromUserId or toUserId');
     }
 
+    console.log(`Copying avatar from ${fromUserId} to ${toUserId}`);
+
     // Download the file from the source location
     const { data: downloadData, error: downloadError } = await supabase.storage
       .from('avatars')
       .download(`${fromUserId}/avatar.mp4`);
 
     if (downloadError) {
+      console.error('Download error:', downloadError);
       throw new Error(`Failed to download source file: ${downloadError.message}`);
     }
 
+    console.log('File downloaded successfully, size:', downloadData.size);
+
     // Upload the file to the destination location
-    const { error: uploadError } = await supabase.storage
+    const { data: uploadData, error: uploadError } = await supabase.storage
       .from('avatars')
       .upload(`${toUserId}/avatar.mp4`, downloadData, {
         upsert: true,
@@ -41,12 +46,22 @@ serve(async (req) => {
       });
 
     if (uploadError) {
+      console.error('Upload error:', uploadError);
       throw new Error(`Failed to upload file: ${uploadError.message}`);
     }
 
+    console.log('File uploaded successfully:', uploadData);
+
+    // Get the public URL to verify
+    const { data: publicUrlData } = supabase.storage
+      .from('avatars')
+      .getPublicUrl(`${toUserId}/avatar.mp4`);
+
     return new Response(JSON.stringify({ 
       success: true, 
-      message: `Avatar copied from ${fromUserId} to ${toUserId}` 
+      message: `Avatar copied from ${fromUserId} to ${toUserId}`,
+      publicUrl: publicUrlData.publicUrl,
+      path: uploadData.path
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
