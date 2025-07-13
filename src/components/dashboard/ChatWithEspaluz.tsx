@@ -237,7 +237,13 @@ The video script will be used to generate an avatar video with synchronized audi
         if (error) throw error;
 
         // Extract video script from response
+        console.log('🎬 AI RESPONSE for video script extraction:', data.response);
+        console.log('🎬 Looking for VIDEO SCRIPT START in response...');
+        console.log('🎬 Contains VIDEO SCRIPT START:', data.response.includes('[VIDEO SCRIPT START]'));
+        console.log('🎬 Contains VIDEO SCRIPT END:', data.response.includes('[VIDEO SCRIPT END]'));
+        
         const extractedVideoScript = extractVideoScript(data.response);
+        console.log('🎬 EXTRACTED VIDEO SCRIPT:', extractedVideoScript);
 
         aiMessage = {
           id: (Date.now() + 1).toString(),
@@ -435,6 +441,8 @@ The video script will be used to generate an avatar video with synchronized audi
       console.log('🎬 VIDEO DEBUG - Calling generate-video with script:', videoScript);
       console.log('🎬 VIDEO DEBUG - Script length:', videoScript.length);
       console.log('🎬 VIDEO DEBUG - Script preview:', videoScript.substring(0, 300) + '...');
+      console.log('🎬 VIDEO DEBUG - Script type:', typeof videoScript);
+      console.log('🎬 VIDEO DEBUG - Is videoScript truthy:', !!videoScript);
       
       const { data, error } = await supabase.functions.invoke('generate-video', {
         body: { 

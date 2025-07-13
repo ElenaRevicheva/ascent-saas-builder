@@ -15,7 +15,13 @@ serve(async (req) => {
   try {
     const { videoScript, voice = "es", userId } = await req.json();
     
+    console.log(`🎬 FULL REQUEST BODY:`, JSON.stringify({ videoScript, voice, userId }));
+    console.log(`🎬 VIDEO SCRIPT TYPE:`, typeof videoScript);
+    console.log(`🎬 VIDEO SCRIPT VALUE:`, videoScript);
+    console.log(`🎬 VIDEO SCRIPT LENGTH:`, videoScript ? videoScript.length : 'NULL');
+    
     if (!videoScript) {
+      console.log(`❌ No video script provided!`);
       throw new Error('Video script is required');
     }
 
