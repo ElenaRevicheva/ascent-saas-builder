@@ -469,12 +469,31 @@ The video script will be used to generate an avatar video with synchronized audi
       
       if (data.userAvatarUrl && data.userAvatarUrl.includes('.mp4')) {
         // User has their own avatar video - use it directly
-        console.log('Using avatar video URL:', data.userAvatarUrl);
+        console.log('🎬 Using avatar video URL:', data.userAvatarUrl);
+        console.log('🎬 Video audio content received:', data.audioContent ? 'Yes' : 'No');
+        
+        // Convert base64 audio to blob URL for video script audio
+        let videoAudioUrl = '';
+        if (data.audioContent) {
+          try {
+            const binaryString = atob(data.audioContent);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+              bytes[i] = binaryString.charCodeAt(i);
+            }
+            const audioBlob = new Blob([bytes], { type: data.mimeType || 'audio/mpeg' });
+            videoAudioUrl = URL.createObjectURL(audioBlob);
+            console.log('🎬 Created video audio blob URL:', videoAudioUrl);
+          } catch (error) {
+            console.error('🎬 Failed to create video audio blob:', error);
+          }
+        }
+        
          setMessages(prev => prev.map(msg => 
            msg.id === messageId ? { 
              ...msg, 
              videoUrl: data.userAvatarUrl, 
-             videoAudioUrl: audioUrl // Store video audio separately from voice audio
+             videoAudioUrl: videoAudioUrl // Store video script audio separately from voice audio
            } : msg
          ));
       } else {
@@ -985,24 +1004,33 @@ The video script will be used to generate an avatar video with synchronized audi
                               <div className="flex items-start gap-3">
                                 {/* Video Display */}
                                 <div className="relative w-24 h-24 rounded-lg overflow-hidden bg-purple-100 flex-shrink-0">
-                                   {message.videoUrl.includes('.mp4') || message.videoUrl.includes('video') || message.videoUrl.includes('avatar.mp4') ? (
-                                     <video
-                                       ref={el => {
-                                         if (el) {
-                                           videoRefs.current[message.id] = el as any;
-                                           console.log('🎬 Video element set up for message:', message.id);
-                                         }
-                                       }}
-                                       src={message.videoUrl}
-                                       className="w-full h-full object-cover"
-                                       loop
-                                       playsInline
-                                       controls={false}
-                                       preload="metadata"
-                                       onLoadedData={() => console.log('🎬 Video loaded for message:', message.id)}
-                                       onError={(e) => console.error('🎬 Video error:', e)}
-                                       onEnded={() => setPlayingVideo(null)}
-                                     />
+                                    {message.videoUrl.includes('.mp4') || message.videoUrl.includes('video') || message.videoUrl.includes('avatar.mp4') ? (
+                                      <video
+                                        ref={el => {
+                                          if (el) {
+                                            videoRefs.current[message.id] = el as any;
+                                            console.log('🎬 Video element set up for message:', message.id);
+                                            console.log('🎬 Video src set to:', message.videoUrl);
+                                          }
+                                        }}
+                                        className="w-full h-full object-cover"
+                                        loop
+                                        playsInline
+                                        controls={false}
+                                        preload="metadata"
+                                        onLoadedData={() => {
+                                          console.log('🎬 Video loaded successfully for message:', message.id);
+                                          console.log('🎬 Video duration:', videoRefs.current[message.id]?.duration);
+                                        }}
+                                        onError={(e) => {
+                                          console.error('🎬 Video error for message:', message.id, e);
+                                          console.error('🎬 Video URL causing error:', message.videoUrl);
+                                        }}
+                                        onEnded={() => setPlayingVideo(null)}
+                                      >
+                                        <source src={message.videoUrl} type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                      </video>
                                   ) : (
                                     <img 
                                       src={message.videoUrl.startsWith('blob:') ? message.videoUrl : avatarImage} 
