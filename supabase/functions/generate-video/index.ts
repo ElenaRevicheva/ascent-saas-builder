@@ -136,8 +136,14 @@ function extractVideoScript(fullResponse: string): string {
     }
   }
 
-  // Default message if all else fails
-  return 'Español: Gracias por practicar conmigo. Me encanta ayudarte con español.\nEnglish: Thank you for practicing with me. I love helping you with Spanish.';
+  // If no special markers found, use the actual response text (cleaned up)
+  const cleanedResponse = fullResponse
+    .replace(/\*+/g, '') // Remove asterisks
+    .replace(/#+/g, '') // Remove hashtags
+    .replace(/\[(.*?)\]/g, '') // Remove brackets
+    .trim();
+  
+  return cleanedResponse || 'Español: Gracias por practicar conmigo. Me encanta ayudarte con español.\nEnglish: Thank you for practicing with me. I love helping you with Spanish.';
 }
 
 // Enhanced text cleaning for speech based on working Telegram bot logic  
