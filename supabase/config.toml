@@ -8,3 +8,9 @@ verify_jwt = false
 
 [functions.connect-bot]
 verify_jwt = false
+
+[functions.generate-voice]
+verify_jwt = false
+
+[functions.generate-video]
+verify_jwt = false
