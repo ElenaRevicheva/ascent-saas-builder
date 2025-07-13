@@ -1,6 +1,8 @@
 import { supabase } from '@/integrations/supabase/client';
 
 export const callCopyAvatar = async () => {
+  console.log('🔄 Starting avatar copy process...');
+  
   try {
     const response = await supabase.functions.invoke('copy-avatar', {
       body: {
@@ -9,14 +11,17 @@ export const callCopyAvatar = async () => {
       }
     });
 
+    console.log('📤 Copy avatar response:', response);
+
     if (response.error) {
+      console.error('❌ Copy avatar error:', response.error);
       throw response.error;
     }
 
-    console.log('Copy avatar result:', response.data);
+    console.log('✅ Copy avatar successful:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error calling copy avatar:', error);
+    console.error('💥 Error calling copy avatar:', error);
     throw error;
   }
 };

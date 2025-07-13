@@ -186,7 +186,7 @@ export const AvatarUpload = () => {
                 className="flex-1"
               >
                 <Copy className="h-4 w-4 mr-2" />
-                Copy Existing
+                Copy Avatar
               </Button>
             </div>
             

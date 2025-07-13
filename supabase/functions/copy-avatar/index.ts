@@ -25,6 +25,24 @@ serve(async (req) => {
 
     console.log(`Copying avatar from ${fromUserId} to ${toUserId}`);
 
+    // First, check if the source file exists
+    const { data: sourceList, error: listError } = await supabase.storage
+      .from('avatars')
+      .list(fromUserId, { limit: 10 });
+
+    if (listError) {
+      console.error('Error listing source files:', listError);
+      throw new Error(`Failed to list source files: ${listError.message}`);
+    }
+
+    const sourceFile = sourceList?.find(file => file.name === 'avatar.mp4');
+    if (!sourceFile) {
+      console.error('Source avatar.mp4 not found in:', sourceList);
+      throw new Error('Source avatar.mp4 file not found');
+    }
+
+    console.log('Found source file:', sourceFile);
+
     // Download the file from the source location
     const { data: downloadData, error: downloadError } = await supabase.storage
       .from('avatars')
