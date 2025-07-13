@@ -28,72 +28,9 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Try to get user's avatar video from storage
-    let userAvatarUrl = null;
-    
-    if (userId) {
-      try {
-        // First try to find a known avatar
-        const { data: avatarData } = await supabase.storage
-          .from('avatars')
-          .list(`${userId}`, { limit: 10 });
-
-        if (avatarData && avatarData.length > 0) {
-          // Look for avatar.mp4 first
-          const avatarFile = avatarData.find(file => file.name === 'avatar.mp4');
-          if (avatarFile) {
-            const { data: signedUrlData } = await supabase.storage
-              .from('avatars')
-              .createSignedUrl(`${userId}/avatar.mp4`, 3600);
-            
-            if (signedUrlData?.signedUrl) {
-              userAvatarUrl = signedUrlData.signedUrl;
-              console.log('Found user avatar video:', userAvatarUrl);
-            }
-          }
-        }
-        
-        // If no user avatar found, check for default avatar
-        if (!userAvatarUrl) {
-          const { data: publicUrlData } = await supabase.storage
-            .from('avatars')
-            .getPublicUrl(`${userId}/avatar.mp4`);
-          
-          if (publicUrlData?.publicUrl) {
-            userAvatarUrl = publicUrlData.publicUrl;
-            console.log('Using public avatar URL:', userAvatarUrl);
-          }
-        }
-      } catch (storageError) {
-        console.log('Storage access failed, using default:', storageError);
-      }
-    }
-    
-    // If still no avatar found, try the specific known avatar file first
-    if (!userAvatarUrl) {
-      const knownAvatarUrl = 'https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/avatars/5fa36928-3201-4c2f-bc27-c30b7a6d36c6/avatar.mp4';
-      
-      // Test if the known avatar is accessible
-      try {
-        const testResponse = await fetch(knownAvatarUrl, { method: 'HEAD' });
-        if (testResponse.ok) {
-          userAvatarUrl = knownAvatarUrl;
-          console.log('Using known working avatar video:', userAvatarUrl);
-        }
-      } catch (e) {
-        console.log('Known avatar not accessible, using default');
-      }
-    }
-    
-    // Final fallback to default avatar
-    if (!userAvatarUrl) {
-      const { data: defaultAvatarData } = await supabase.storage
-        .from('avatars')
-        .getPublicUrl('avatar.mp4');
-      
-      userAvatarUrl = defaultAvatarData?.publicUrl || 'https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/avatars/avatar.mp4';
-      console.log('Using default avatar video:', userAvatarUrl);
-    }
+    // Use the known working avatar video directly since file copying doesn't work with actual content
+    const userAvatarUrl = 'https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/avatars/5fa36928-3201-4c2f-bc27-c30b7a6d36c6/avatar.mp4';
+    console.log('🎬 Using known working avatar video:', userAvatarUrl);
 
     // Extract proper video script from the full response (following Telegram bot logic)
     const extractedScript = extractVideoScript(videoScript);
