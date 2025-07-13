@@ -372,21 +372,30 @@ The video script will be used to generate an avatar video with synchronized audi
         throw error;
       }
 
-      if (!data.success || !data.audioBase64) {
+      // Check if the edge function returned success
+      if (!data.success) {
         console.error('❌ Voice generation failed:', data);
-        throw new Error(data.error || 'No audio data received');
+        throw new Error(data.error || 'Voice generation failed');
       }
 
       console.log(`✅ Voice generated successfully`);
-      if (data.failedChunks && data.failedChunks.length > 0) {
-        console.warn(`⚠️ Some chunks failed: ${data.failedChunks.join(', ')}`);
-      }
+      console.log('Voice generation response:', data);
 
-      // Convert base64 to blob URL using enhanced function
-      const audioBlob = base64ToAudioBlob(data.audioBase64);
-      const audioUrl = URL.createObjectURL(audioBlob);
+      let audioUrl;
       
-      console.log('✅ Audio blob created and URL generated');
+      // Handle different response formats from the edge function
+      if (data.audioUrl) {
+        // New format: direct audio URL from storage
+        audioUrl = data.audioUrl;
+        console.log('✅ Using direct audio URL from storage');
+      } else if (data.audioBase64) {
+        // Old format: base64 audio data
+        const audioBlob = base64ToAudioBlob(data.audioBase64);
+        audioUrl = URL.createObjectURL(audioBlob);
+        console.log('✅ Converted base64 to blob URL');
+      } else {
+        throw new Error('No audio data received in response');
+      }
 
       // Update message with audio URL
       setMessages(prev => prev.map(msg => 
