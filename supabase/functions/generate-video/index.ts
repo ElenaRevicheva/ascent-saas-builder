@@ -69,14 +69,14 @@ serve(async (req) => {
       }
     }
     
-    // If still no avatar found, use default
+    // If still no avatar found, use default avatar.mp4
     if (!userAvatarUrl) {
       const { data: defaultAvatarData } = await supabase.storage
         .from('avatars')
-        .getPublicUrl('default-avatar-teacher.jpg');
+        .getPublicUrl('avatar.mp4');
       
-      userAvatarUrl = defaultAvatarData?.publicUrl || 'https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/avatars/default-avatar-teacher.jpg';
-      console.log('Using default avatar:', userAvatarUrl);
+      userAvatarUrl = defaultAvatarData?.publicUrl || 'https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/avatars/avatar.mp4';
+      console.log('Using default avatar video:', userAvatarUrl);
     }
 
     // Extract proper video script from the full response (following Telegram bot logic)
