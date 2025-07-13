@@ -69,7 +69,23 @@ serve(async (req) => {
       }
     }
     
-    // If still no avatar found, use default avatar.mp4
+    // If still no avatar found, try the specific known avatar file first
+    if (!userAvatarUrl) {
+      const knownAvatarUrl = 'https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/avatars/5fa36928-3201-4c2f-bc27-c30b7a6d36c6/avatar.mp4';
+      
+      // Test if the known avatar is accessible
+      try {
+        const testResponse = await fetch(knownAvatarUrl, { method: 'HEAD' });
+        if (testResponse.ok) {
+          userAvatarUrl = knownAvatarUrl;
+          console.log('Using known working avatar video:', userAvatarUrl);
+        }
+      } catch (e) {
+        console.log('Known avatar not accessible, using default');
+      }
+    }
+    
+    // Final fallback to default avatar
     if (!userAvatarUrl) {
       const { data: defaultAvatarData } = await supabase.storage
         .from('avatars')

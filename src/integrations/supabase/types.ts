@@ -558,6 +558,10 @@ export type Database = {
         Args: { from_user_id: string; to_user_id: string }
         Returns: boolean
       }
+      force_copy_avatar_content: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       generate_connection_code: {
         Args: Record<PropertyKey, never>
         Returns: string
