@@ -209,21 +209,25 @@ async function generateChunkAudio(text: string, voice: string): Promise<string> 
 }
 
 async function processSingleChunk(text: string, voice: string): Promise<string> {
-  const params = new URLSearchParams({
-    ie: 'UTF-8',
-    q: text,
-    tl: 'es', // Always Spanish like your Python version
-    client: 'tw-ob'
-  });
-
-  const response = await fetch(`https://translate.google.com/translate_tts?${params}`, {
-    method: 'GET',
+  console.log(`🎧 Processing chunk: "${text.substring(0, 50)}..."`);
+  
+  // Clean the text aggressively to prevent 400 errors
+  const cleanedText = cleanTextForTTS(text);
+  
+  // USE OPENAI TTS INSTEAD OF GOOGLE TTS (THIS FIXES YOUR 400 ERRORS!)
+  const response = await fetch('https://api.openai.com/v1/audio/speech', {
+    method: 'POST',
     headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-      'Accept': '*/*',
-      'Accept-Language': 'en-US,en;q=0.9',
-      'Referer': 'https://translate.google.com/',
-    }
+      'Authorization': `Bearer ${Deno.env.get('OPENAI_API_KEY')}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'tts-1',
+      input: cleanedText,
+      voice: 'alloy',
+      response_format: 'mp3',
+      speed: 1.0
+    }),
   });
 
   if (!response.ok) {
@@ -236,17 +240,8 @@ async function processSingleChunk(text: string, voice: string): Promise<string> 
   }
 
   const arrayBuffer = await response.arrayBuffer();
-  const audioBytes = new Uint8Array(arrayBuffer);
-  
-  // Convert to base64 safely
-  let binaryString = '';
-  const chunkSize = 8192;
-  
-  for (let i = 0; i < audioBytes.length; i += chunkSize) {
-    const chunk = audioBytes.slice(i, i + chunkSize);
-    binaryString += String.fromCharCode.apply(null, Array.from(chunk));
-  }
+  const base64Audio = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
   
   console.log(`✅ Generated audio for text chunk`);
-  return btoa(binaryString);
+  return base64Audio;
 }
