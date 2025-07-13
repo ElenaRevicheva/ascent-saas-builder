@@ -467,15 +467,31 @@ The video script will be used to generate an avatar video with synchronized audi
       // Check if user has uploaded their own avatar video
       console.log('userAvatarUrl from response:', data.userAvatarUrl);
       
+      console.log('🎬 Generate video response data:', data);
+      
       if (data.userAvatarUrl && data.userAvatarUrl.includes('.mp4')) {
-        // User has their own avatar video - use it directly
-        console.log('🎬 Using avatar video URL:', data.userAvatarUrl);
-        console.log('🎬 Video audio content received:', data.audioContent ? 'Yes' : 'No');
+        // Check if avatar video is accessible before proceeding
+        console.log('🎬 Checking avatar video URL:', data.userAvatarUrl);
         
+        try {
+          const videoResponse = await fetch(data.userAvatarUrl, { method: 'HEAD' });
+          if (!videoResponse.ok) {
+            console.error('🎬 Avatar video not accessible:', videoResponse.status, videoResponse.statusText);
+            toast.error('Avatar video not found. Please upload a valid avatar video.');
+            return;
+          }
+          console.log('🎬 Avatar video is accessible');
+        } catch (error) {
+          console.error('🎬 Failed to check avatar video:', error);
+          toast.error('Cannot access avatar video. Please check your network connection.');
+          return;
+        }
+
         // Convert base64 audio to blob URL for video script audio
         let videoAudioUrl = '';
         if (data.audioContent) {
           try {
+            console.log('🎬 Converting audio content to blob URL...');
             const binaryString = atob(data.audioContent);
             const bytes = new Uint8Array(binaryString.length);
             for (let i = 0; i < binaryString.length; i++) {
@@ -486,7 +502,13 @@ The video script will be used to generate an avatar video with synchronized audi
             console.log('🎬 Created video audio blob URL:', videoAudioUrl);
           } catch (error) {
             console.error('🎬 Failed to create video audio blob:', error);
+            toast.error('Failed to process video audio.');
+            return;
           }
+        } else {
+          console.error('🎬 No audio content in response');
+          toast.error('No audio content received for video.');
+          return;
         }
         
          setMessages(prev => prev.map(msg => 
