@@ -363,7 +363,7 @@ The video script will be used to generate an avatar video with synchronized audi
       const { data, error } = await supabase.functions.invoke('generate-voice', {
         body: { 
           text: textToSpeak,
-          voice: 'es' // Use Spanish voice consistently for EspaLuz
+          voice: 'nova' // Use Nova voice for EspaLuz (natural and clear)
         }
       });
 
@@ -429,7 +429,7 @@ The video script will be used to generate an avatar video with synchronized audi
       const { data, error } = await supabase.functions.invoke('generate-video', {
         body: { 
           videoScript,
-          voice: 'es', // Use Spanish voice consistently like voice messages
+          voice: 'nova', // Use Nova voice consistently like voice messages
           userId: user?.id 
         }
       });
