@@ -22,8 +22,9 @@ interface ChatMessage {
   emotion?: string;
   confidence?: number;
   timestamp: Date;
-  audioUrl?: string;
-  videoUrl?: string;
+  audioUrl?: string; // For voice of full message
+  videoUrl?: string; // For avatar video file
+  videoAudioUrl?: string; // For video script audio (separate from voice)
 }
 
 interface ChatWithEspaluzProps {
@@ -469,13 +470,13 @@ The video script will be used to generate an avatar video with synchronized audi
       if (data.userAvatarUrl && data.userAvatarUrl.includes('.mp4')) {
         // User has their own avatar video - use it directly
         console.log('Using avatar video URL:', data.userAvatarUrl);
-        setMessages(prev => prev.map(msg => 
-          msg.id === messageId ? { 
-            ...msg, 
-            videoUrl: data.userAvatarUrl, 
-            audioUrl 
-          } : msg
-        ));
+         setMessages(prev => prev.map(msg => 
+           msg.id === messageId ? { 
+             ...msg, 
+             videoUrl: data.userAvatarUrl, 
+             videoAudioUrl: audioUrl // Store video audio separately from voice audio
+           } : msg
+         ));
       } else {
         // Fallback to static image
         console.log('Falling back to static image');
@@ -539,8 +540,10 @@ The video script will be used to generate an avatar video with synchronized audi
 
   const playVideo = (messageId: string) => {
     const message = messages.find(msg => msg.id === messageId);
-    if (!message || !message.audioUrl) {
-      console.error('🎬 No audio URL found for video playback');
+    if (!message || !message.videoAudioUrl) {
+      console.error('🎬 No video audio URL found for video playback');
+      console.log('🎬 Message:', message);
+      toast.error('Video audio not available. Please regenerate the video.');
       return;
     }
 
@@ -549,31 +552,40 @@ The video script will be used to generate an avatar video with synchronized audi
       setPlayingVideo(null);
       if (videoRefs.current[messageId]) {
         videoRefs.current[messageId].pause();
+        videoRefs.current[messageId].currentTime = 0;
       }
-      if (audioRefs.current[messageId]) {
-        audioRefs.current[messageId].pause();
+      if (audioRefs.current[`${messageId}-video`]) {
+        audioRefs.current[`${messageId}-video`].pause();
+        audioRefs.current[`${messageId}-video`].currentTime = 0;
       }
     } else {
       // Start video and audio synchronized
       setPlayingVideo(messageId);
       
-      // Create audio if it doesn't exist
-      if (!audioRefs.current[messageId]) {
-        audioRefs.current[messageId] = new Audio(message.audioUrl);
-        audioRefs.current[messageId].onended = () => {
+      // Create audio if it doesn't exist - use separate key for video audio
+      const videoAudioKey = `${messageId}-video`;
+      if (!audioRefs.current[videoAudioKey]) {
+        audioRefs.current[videoAudioKey] = new Audio(message.videoAudioUrl);
+        audioRefs.current[videoAudioKey].onended = () => {
+          console.log('🎬 Video audio ended');
           setPlayingVideo(null);
           if (videoRefs.current[messageId]) {
             videoRefs.current[messageId].pause();
+            videoRefs.current[messageId].currentTime = 0;
           }
         };
+        // Video should loop, but audio should not
+        audioRefs.current[videoAudioKey].loop = false;
       }
       
       // Synchronize audio and video playback
       const video = videoRefs.current[messageId];
-      const audio = audioRefs.current[messageId];
+      const audio = audioRefs.current[videoAudioKey];
       
       if (video && audio) {
         console.log('🎬 Starting synchronized video and audio playback');
+        console.log('🎬 Video URL:', message.videoUrl);
+        console.log('🎬 Audio URL:', message.videoAudioUrl);
         
         // Reset both to start
         video.currentTime = 0;
@@ -968,7 +980,7 @@ The video script will be used to generate an avatar video with synchronized audi
                           )}
 
                           {/* Video Player */}
-                          {message.videoUrl && message.audioUrl && (
+                          {message.videoUrl && message.videoAudioUrl && (
                             <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-3">
                               <div className="flex items-start gap-3">
                                 {/* Video Display */}
