@@ -538,15 +538,58 @@ The video script will be used to generate an avatar video with synchronized audi
   };
 
   const playVideo = (messageId: string) => {
+    const message = messages.find(msg => msg.id === messageId);
+    if (!message || !message.audioUrl) {
+      console.error('🎬 No audio URL found for video playback');
+      return;
+    }
+
     if (playingVideo === messageId) {
+      // Stop video and audio
       setPlayingVideo(null);
       if (videoRefs.current[messageId]) {
         videoRefs.current[messageId].pause();
       }
+      if (audioRefs.current[messageId]) {
+        audioRefs.current[messageId].pause();
+      }
     } else {
+      // Start video and audio synchronized
       setPlayingVideo(messageId);
-      if (videoRefs.current[messageId]) {
-        videoRefs.current[messageId].play();
+      
+      // Create audio if it doesn't exist
+      if (!audioRefs.current[messageId]) {
+        audioRefs.current[messageId] = new Audio(message.audioUrl);
+        audioRefs.current[messageId].onended = () => {
+          setPlayingVideo(null);
+          if (videoRefs.current[messageId]) {
+            videoRefs.current[messageId].pause();
+          }
+        };
+      }
+      
+      // Synchronize audio and video playback
+      const video = videoRefs.current[messageId];
+      const audio = audioRefs.current[messageId];
+      
+      if (video && audio) {
+        console.log('🎬 Starting synchronized video and audio playback');
+        
+        // Reset both to start
+        video.currentTime = 0;
+        audio.currentTime = 0;
+        
+        // Play both simultaneously
+        Promise.all([
+          video.play().catch(e => console.error('🎬 Video play failed:', e)),
+          audio.play().catch(e => console.error('🎧 Audio play failed:', e))
+        ]).then(() => {
+          console.log('🎬 Video and audio started successfully');
+        }).catch(e => {
+          console.error('🎬 Failed to start synchronized playback:', e);
+          toast.error('Failed to play video with audio');
+          setPlayingVideo(null);
+        });
       }
     }
   };
@@ -930,39 +973,24 @@ The video script will be used to generate an avatar video with synchronized audi
                               <div className="flex items-start gap-3">
                                 {/* Video Display */}
                                 <div className="relative w-24 h-24 rounded-lg overflow-hidden bg-purple-100 flex-shrink-0">
-                                  {message.videoUrl.includes('.mp4') || message.videoUrl.includes('video') || message.videoUrl.includes('avatar.mp4') ? (
-                                    <video
-                                      ref={el => {
-                                        if (el) {
-                                          videoRefs.current[message.id] = el as any;
-                                          
-                                          // Set up audio synchronization
-                                          const audio = new Audio(message.audioUrl);
-                                          
-                                          // Sync video and audio playback
-                                          el.addEventListener('play', () => {
-                                            audio.currentTime = el.currentTime;
-                                            audio.play().catch(e => console.error('❌ Audio play failed:', e));
-                                          });
-                                          
-                                          el.addEventListener('pause', () => {
-                                            audio.pause();
-                                          });
-                                          
-                                          el.addEventListener('ended', () => {
-                                            audio.pause();
-                                            setPlayingVideo(null);
-                                          });
-                                        }
-                                      }}
-                                      src={message.videoUrl}
-                                      className="w-full h-full object-cover"
-                                      autoPlay
-                                      loop
-                                      muted
-                                      playsInline
-                                      onEnded={() => setPlayingVideo(null)}
-                                    />
+                                   {message.videoUrl.includes('.mp4') || message.videoUrl.includes('video') || message.videoUrl.includes('avatar.mp4') ? (
+                                     <video
+                                       ref={el => {
+                                         if (el) {
+                                           videoRefs.current[message.id] = el as any;
+                                           console.log('🎬 Video element set up for message:', message.id);
+                                         }
+                                       }}
+                                       src={message.videoUrl}
+                                       className="w-full h-full object-cover"
+                                       loop
+                                       playsInline
+                                       controls={false}
+                                       preload="metadata"
+                                       onLoadedData={() => console.log('🎬 Video loaded for message:', message.id)}
+                                       onError={(e) => console.error('🎬 Video error:', e)}
+                                       onEnded={() => setPlayingVideo(null)}
+                                     />
                                   ) : (
                                     <img 
                                       src={message.videoUrl.startsWith('blob:') ? message.videoUrl : avatarImage} 
