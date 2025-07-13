@@ -554,6 +554,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      copy_avatar_file: {
+        Args: { from_user_id: string; to_user_id: string }
+        Returns: boolean
+      }
       generate_connection_code: {
         Args: Record<PropertyKey, never>
         Returns: string
