@@ -33,18 +33,18 @@ serve(async (req) => {
     console.log('🎬 Using known working avatar video:', userAvatarUrl);
 
     // Extract proper video script from the full response (following Telegram bot logic)
-    const extractedScript = extractVideoScript(videoScript);
-    console.log('🎬 Extracted video script:', extractedScript);
-
-    // Generate TTS audio for video script - clean text first
-    console.log('🎬 Generating video audio...');
-    console.log(`📝 Original video script length: ${videoScript.length} characters`);
-    console.log(`📝 Extracted script length: ${extractedScript.length} characters`);
+    console.log('🎬 Received video script:', videoScript);
+    console.log('🎬 Video script length:', videoScript.length);
     
-    // Clean text to remove problematic characters for Google TTS
-    const cleanedScript = cleanTextForTTS(extractedScript);
-    console.log(`🧹 Cleaned script length: ${cleanedScript.length} characters`);
-    console.log(`📄 Cleaned script preview: ${cleanedScript.substring(0, 100)}...`);
+    // Use the video script directly (it's already been processed by the frontend)
+    const scriptToUse = videoScript && videoScript.trim().length > 0 ? videoScript : 
+      'Español: Gracias por practicar conmigo. Me encanta ayudarte con español.\nEnglish: Thank you for practicing with me. I love helping you with Spanish.';
+    
+    console.log('🎬 Using script:', scriptToUse);
+
+    // Clean text for TTS
+    const cleanedScript = cleanTextForTTS(scriptToUse);
+    console.log(`🧹 Cleaned script for TTS: ${cleanedScript}`);
 
     let base64Audio = '';
     
@@ -56,7 +56,7 @@ serve(async (req) => {
     }
 
     // Calculate estimated duration (rough estimate)
-    const estimatedDuration = Math.max(5, Math.floor(videoScript.length / 15));
+    const estimatedDuration = Math.max(5, Math.floor(scriptToUse.length / 15));
 
     const response = {
       success: true,
@@ -64,7 +64,7 @@ serve(async (req) => {
       mimeType: 'audio/mpeg',
       userAvatarUrl,
       estimatedDuration,
-      processedText: videoScript.length > 0 ? videoScript.substring(0, 100) + '...' : ''
+      processedText: scriptToUse.length > 0 ? scriptToUse.substring(0, 100) + '...' : ''
     };
 
     console.log('🎬 Video generation completed successfully');
@@ -112,41 +112,7 @@ function splitTextIntoChunks(text: string, maxLength: number): string[] {
   return chunks.length > 0 ? chunks : [text];
 }
 
-// Extract video script from Claude's response based on working Telegram bot logic
-function extractVideoScript(fullResponse: string): string {
-  // Look for the video script section
-  if (fullResponse.includes('[VIDEO SCRIPT START]') && fullResponse.includes('[VIDEO SCRIPT END]')) {
-    const startMarker = '[VIDEO SCRIPT START]';
-    const endMarker = '[VIDEO SCRIPT END]';
-    const startIndex = fullResponse.indexOf(startMarker) + startMarker.length;
-    const endIndex = fullResponse.indexOf(endMarker, startIndex);
-
-    if (startIndex < endIndex) {
-      const script = fullResponse.substring(startIndex, endIndex).trim();
-      return script;
-    }
-  }
-
-  // Fallback approach: try to find sections that look like Spanish/English pairs
-  const lines = fullResponse.split('\n');
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    if (line.includes('Español:') && i + 1 < lines.length && lines[i + 1].includes('English:')) {
-      return `${line}\n${lines[i + 1]}`;
-    }
-  }
-
-  // If no special markers found, use the actual response text (cleaned up)
-  const cleanedResponse = fullResponse
-    .replace(/\*+/g, '') // Remove asterisks
-    .replace(/#+/g, '') // Remove hashtags
-    .replace(/\[(.*?)\]/g, '') // Remove brackets
-    .trim();
-  
-  return cleanedResponse || 'Español: Gracias por practicar conmigo. Me encanta ayudarte con español.\nEnglish: Thank you for practicing with me. I love helping you with Spanish.';
-}
-
-// Enhanced text cleaning for speech based on working Telegram bot logic  
+// Enhanced text cleaning for speech based on working Telegram bot logic
 function cleanTextForTTS(text: string): string {
   // Remove markdown formatting
   text = text.replace(/\*+([^*]+)\*+/g, '$1'); // Remove asterisks
