@@ -819,7 +819,43 @@ The video script will be used to generate an avatar video with synchronized audi
                           </Badge>
                         )}
                       </div>
-                      
+                       
+                      {/* Manual Control Buttons */}
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {/* Voice Generation Button */}
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => generateVoice(message.id, message.content)}
+                          disabled={loadingMedia[message.id] === 'voice'}
+                          className="h-7 px-2 text-xs hover:bg-blue-50"
+                        >
+                          {loadingMedia[message.id] === 'voice' ? (
+                            <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin mr-1" />
+                          ) : (
+                            <Volume2 className="h-3 w-3 mr-1" />
+                          )}
+                          {message.audioUrl ? 'Regenerate Voice' : 'Generate Voice'}
+                        </Button>
+
+                        {/* Video Generation Button */}
+                        {message.videoScript && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => generateVideo(message.id, message.videoScript!)}
+                            disabled={loadingMedia[message.id] === 'video'}
+                            className="h-7 px-2 text-xs hover:bg-purple-50"
+                          >
+                            {loadingMedia[message.id] === 'video' ? (
+                              <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin mr-1" />
+                            ) : (
+                              <Video className="h-3 w-3 mr-1" />
+                            )}
+                            {message.videoUrl ? 'Regenerate Video' : 'Generate Video'}
+                          </Button>
+                        )}
+                      </div>
                       {/* Multimedia Generation Status */}
                       {(loadingMedia[message.id] === 'voice' || loadingMedia[message.id] === 'video') && (
                         <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-200 rounded-lg p-3 mt-2">
