@@ -281,10 +281,8 @@ The video script will be used to generate an avatar video with synchronized audi
           // Generate voice for full response
           generateVoice(aiMessage.id, aiMessage.content, false);
           
-          // Generate video if we have a video script
-          if (aiMessage.videoScript) {
-            generateVideo(aiMessage.id, aiMessage.videoScript);
-          }
+          // Generate video using the AI response content directly
+          generateVideo(aiMessage.id, aiMessage.content);
         }, 500); // Small delay to let the message render first
       }
       
@@ -951,23 +949,21 @@ The video script will be used to generate an avatar video with synchronized audi
                           {message.audioUrl ? 'Regenerate Voice' : 'Generate Voice'}
                         </Button>
 
-                        {/* Video Generation Button */}
-                        {message.videoScript && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => generateVideo(message.id, message.videoScript!)}
-                            disabled={loadingMedia[message.id] === 'video'}
-                            className="h-7 px-2 text-xs hover:bg-purple-50"
-                          >
-                            {loadingMedia[message.id] === 'video' ? (
-                              <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin mr-1" />
-                            ) : (
-                              <Video className="h-3 w-3 mr-1" />
-                            )}
-                            {message.videoUrl ? 'Regenerate Video' : 'Generate Video'}
-                          </Button>
-                        )}
+                         {/* Video Generation Button */}
+                         <Button
+                           size="sm"
+                           variant="outline"
+                           onClick={() => generateVideo(message.id, message.content)}
+                           disabled={loadingMedia[message.id] === 'video'}
+                           className="h-7 px-2 text-xs hover:bg-purple-50"
+                         >
+                           {loadingMedia[message.id] === 'video' ? (
+                             <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin mr-1" />
+                           ) : (
+                             <Video className="h-3 w-3 mr-1" />
+                           )}
+                           {message.videoUrl ? 'Regenerate Video' : 'Generate Video'}
+                         </Button>
                       </div>
                       {/* Multimedia Generation Status */}
                       {(loadingMedia[message.id] === 'voice' || loadingMedia[message.id] === 'video') && (
