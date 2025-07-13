@@ -130,6 +130,19 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
     }
   };
 
+  const extractVideoScript = (text: string): string | null => {
+    const startTag = '[VIDEO SCRIPT START]';
+    const endTag = '[VIDEO SCRIPT END]';
+    const startIndex = text.indexOf(startTag);
+    const endIndex = text.indexOf(endTag);
+    
+    if (startIndex === -1 || endIndex === -1 || endIndex <= startIndex) {
+      return null;
+    }
+    
+    return text.substring(startIndex + startTag.length, endIndex).trim();
+  };
+
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
     
@@ -162,21 +175,29 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
       let aiMessage: ChatMessage;
       
       if (demoMode && !user) {
-        // Demo mode - provide a simple bilingual response
+        // Demo mode - provide a simple bilingual response with video script
         const demoResponses = [
-          "¡Hola! Hello! I'm EspaLuz, your bilingual language coach. How can I help you practice Spanish and English today? ¿Cómo puedo ayudarte?",
-          "¡Excelente! That's great! I love helping families learn together. What would you like to practice? ¿Qué te gustaría practicar?",
-          "¡Muy bien! Very good! Keep practicing - every conversation helps you improve. Remember, in our full version, I can generate videos, voice, and track your family's progress!",
-          "¡Fantástico! I see you're enjoying our demo! With a subscription, I can create personalized lessons for your whole family and remember everything we learn together.",
-          "That's wonderful practice! In the full version, I create custom content for each family member and track everyone's learning journey. ¿Te gustaría saber más?"
+          {
+            response: "¡Hola! Hello! I'm EspaLuz, your bilingual language coach. How can I help you practice Spanish and English today? ¿Cómo puedo ayudarte?\n\n[VIDEO SCRIPT START]\n¡Hola! Soy EspaLuz, tu tutora de español. Hello! I'm EspaLuz, your Spanish tutor.\n[VIDEO SCRIPT END]",
+            videoScript: "¡Hola! Soy EspaLuz, tu tutora de español. Hello! I'm EspaLuz, your Spanish tutor."
+          },
+          {
+            response: "¡Excelente! That's great! I love helping families learn together. What would you like to practice? ¿Qué te gustaría practicar?\n\n[VIDEO SCRIPT START]\n¡Excelente trabajo! Excellent work! Let's practice together. ¡Vamos a practicar juntos!\n[VIDEO SCRIPT END]",
+            videoScript: "¡Excelente trabajo! Excellent work! Let's practice together. ¡Vamos a practicar juntos!"
+          },
+          {
+            response: "¡Muy bien! Very good! Keep practicing - every conversation helps you improve. Remember, in our full version, I can generate videos, voice, and track your family's progress!\n\n[VIDEO SCRIPT START]\n¡Muy bien! Very good! Practice makes perfect. La práctica hace la perfección.\n[VIDEO SCRIPT END]",
+            videoScript: "¡Muy bien! Very good! Practice makes perfect. La práctica hace la perfección."
+          }
         ];
         
-        const randomResponse = demoResponses[Math.floor(Math.random() * demoResponses.length)];
+        const randomDemo = demoResponses[Math.floor(Math.random() * demoResponses.length)];
         
         aiMessage = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: randomResponse,
+          content: randomDemo.response,
+          videoScript: randomDemo.videoScript,
           timestamp: new Date()
         };
         
@@ -186,21 +207,42 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
         localStorage.setItem('espaluz-demo-count', newCount.toString());
         
       } else {
-        // Full functionality for authenticated users
+        // Full functionality for authenticated users with multimedia system prompt
         const { data, error } = await supabase.functions.invoke('espaluz-chat', {
           body: {
             message: userMessage.content,
-            userId: user?.id
+            userId: user?.id,
+            systemPrompt: `You are EspaLuz, a bilingual Spanish-English AI tutor. Your responses should be warm, encouraging, and educational.
+
+CRITICAL: Your answer MUST have TWO PARTS:
+1️⃣ A full, thoughtful bilingual response that helps the user learn
+2️⃣ A short video script block inside [VIDEO SCRIPT START] and [VIDEO SCRIPT END] tags:
+   - Must fit within 30 seconds of speech (approximately 75-90 words MAX)
+   - Use both Spanish and English naturally
+   - Keep it concise since the avatar video is exactly 30 seconds long
+   - Focus on the key learning point
+
+Example format:
+[Your full response here...]
+
+[VIDEO SCRIPT START]
+¡Hola! Soy EspaLuz, tu tutora de español. Hello! I'm EspaLuz, your Spanish tutor. Today we're learning colors. Hoy aprendemos los colores.
+[VIDEO SCRIPT END]
+
+The video script will be used to generate an avatar video with synchronized audio.`
           }
         });
 
         if (error) throw error;
 
+        // Extract video script from response
+        const extractedVideoScript = extractVideoScript(data.response);
+
         aiMessage = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
           content: data.response,
-          videoScript: data.videoScript,
+          videoScript: extractedVideoScript || data.videoScript,
           familyMember: data.familyMember,
           emotion: data.emotion,
           confidence: data.confidence,
@@ -222,7 +264,22 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
         }
       }
 
+      // Add AI message immediately
       setMessages(prev => [...prev, aiMessage]);
+      
+      // Automatically generate multimedia for authenticated users
+      if (!demoMode && user && aiMessage) {
+        // Generate voice and video in parallel
+        setTimeout(() => {
+          // Generate voice for full response
+          generateVoice(aiMessage.id, aiMessage.content, false);
+          
+          // Generate video if we have a video script
+          if (aiMessage.videoScript) {
+            generateVideo(aiMessage.id, aiMessage.videoScript);
+          }
+        }, 500); // Small delay to let the message render first
+      }
       
       // Save demo messages to localStorage
       if (demoMode) {
@@ -763,144 +820,151 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
                         )}
                       </div>
                       
-                      {/* Media Controls */}
-                      <div className="flex items-center gap-2">
-                        {/* Voice Generation Button */}
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => generateVoice(message.id, message.content)}
-                          disabled={loadingMedia[message.id] === 'voice'}
-                          className="h-7 px-2 text-xs"
-                        >
-                          {loadingMedia[message.id] === 'voice' ? (
-                            <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin mr-1" />
-                          ) : (
-                            <Volume2 className="h-3 w-3 mr-1" />
-                          )}
-                          Voice
-                        </Button>
-
-                        {/* Audio Player */}
-                        {message.audioUrl && (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => playAudio(message.id, message.audioUrl!)}
-                            className="h-7 px-2 text-xs"
-                          >
-                            {playingAudio === message.id ? (
-                              <Pause className="h-3 w-3" />
-                            ) : (
-                              <Play className="h-3 w-3" />
-                            )}
-                          </Button>
-                        )}
-
-                        {/* Video Generation Button */}
-                        {message.videoScript && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => generateVideo(message.id, message.videoScript!)}
-                            disabled={loadingMedia[message.id] === 'video'}
-                            className="h-7 px-2 text-xs"
-                          >
-                            {loadingMedia[message.id] === 'video' ? (
-                              <div className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin mr-1" />
-                            ) : (
-                              <Video className="h-3 w-3 mr-1" />
-                            )}
-                            Video
-                          </Button>
-                        )}
-
-                        {/* Video Player */}
-                        {message.videoUrl && message.audioUrl && (
-                          <div className="flex items-center gap-1">
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => playVideo(message.id)}
-                              className="h-7 px-2 text-xs"
-                            >
-                              {playingVideo === message.id ? (
-                                <Pause className="h-3 w-3" />
-                              ) : (
-                                <Play className="h-3 w-3" />
-                              )}
-                            </Button>
+                      {/* Multimedia Generation Status */}
+                      {(loadingMedia[message.id] === 'voice' || loadingMedia[message.id] === 'video') && (
+                        <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-200 rounded-lg p-3 mt-2">
+                          <div className="flex items-center gap-2 text-sm text-purple-700">
+                            <div className="w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
+                            <span>
+                              {loadingMedia[message.id] === 'voice' ? '🎧 Generating voice audio...' : '🎬 Creating avatar video...'}
+                            </span>
                           </div>
-                        )}
-                      </div>
+                          <div className="text-xs text-purple-600 mt-1">
+                            {loadingMedia[message.id] === 'voice' 
+                              ? 'Converting text to natural speech using Nova voice'
+                              : 'Syncing audio with avatar video (30 seconds)'
+                            }
+                          </div>
+                        </div>
+                      )}
 
-                      {/* Video Display */}
-                      {message.videoUrl && message.audioUrl && (
-                        <div className="relative w-32 h-32 rounded-lg overflow-hidden bg-muted">
-                          {message.videoUrl.includes('.mp4') || message.videoUrl.includes('video') || message.videoUrl.includes('avatar.mp4') ? (
-                            <video
-                              ref={el => {
-                                if (el) {
-                                  videoRefs.current[message.id] = el as any;
-                                  console.log('🎬 Video element set up for message:', message.id);
+                      {/* Enhanced Multimedia Players */}
+                      {(message.audioUrl || message.videoUrl) && (
+                        <div className="mt-3 space-y-3">
+                          {/* Audio Player */}
+                          {message.audioUrl && (
+                            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-3">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => playAudio(message.id, message.audioUrl!)}
+                                    className="h-8 w-8 p-0 bg-blue-500 hover:bg-blue-600 text-white rounded-full"
+                                  >
+                                    {playingAudio === message.id ? (
+                                      <Pause className="h-4 w-4" />
+                                    ) : (
+                                      <Play className="h-4 w-4" />
+                                    )}
+                                  </Button>
+                                  <div className="text-sm font-medium text-blue-700">Voice Audio</div>
+                                </div>
+                                <a
+                                  href={message.audioUrl}
+                                  download={`espaluz-voice-${message.id}.mp3`}
+                                  className="text-xs text-blue-600 hover:text-blue-800 underline"
+                                >
+                                  Download
+                                </a>
+                              </div>
+                              {playingAudio === message.id && (
+                                <div className="mt-2 flex items-center gap-2">
+                                  <div className="flex-1 h-1 bg-blue-200 rounded">
+                                    <div className="h-1 bg-blue-500 rounded animate-pulse w-1/3"></div>
+                                  </div>
+                                  <span className="text-xs text-blue-600">Playing...</span>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Video Player */}
+                          {message.videoUrl && message.audioUrl && (
+                            <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-3">
+                              <div className="flex items-start gap-3">
+                                {/* Video Display */}
+                                <div className="relative w-24 h-24 rounded-lg overflow-hidden bg-purple-100 flex-shrink-0">
+                                  {message.videoUrl.includes('.mp4') || message.videoUrl.includes('video') || message.videoUrl.includes('avatar.mp4') ? (
+                                    <video
+                                      ref={el => {
+                                        if (el) {
+                                          videoRefs.current[message.id] = el as any;
+                                          
+                                          // Set up audio synchronization
+                                          const audio = new Audio(message.audioUrl);
+                                          
+                                          // Sync video and audio playback
+                                          el.addEventListener('play', () => {
+                                            audio.currentTime = el.currentTime;
+                                            audio.play().catch(e => console.error('❌ Audio play failed:', e));
+                                          });
+                                          
+                                          el.addEventListener('pause', () => {
+                                            audio.pause();
+                                          });
+                                          
+                                          el.addEventListener('ended', () => {
+                                            audio.pause();
+                                            setPlayingVideo(null);
+                                          });
+                                        }
+                                      }}
+                                      src={message.videoUrl}
+                                      className="w-full h-full object-cover"
+                                      autoPlay
+                                      loop
+                                      muted
+                                      playsInline
+                                      onEnded={() => setPlayingVideo(null)}
+                                    />
+                                  ) : (
+                                    <img 
+                                      src={message.videoUrl.startsWith('blob:') ? message.videoUrl : avatarImage} 
+                                      alt="EspaLuz Avatar"
+                                      className="w-full h-full object-cover"
+                                    />
+                                  )}
                                   
-                                  // Set up audio track - try to add audio URL as a source
-                                  const audio = new Audio(message.audioUrl);
-                                  console.log('🎧 Audio element created for video');
-                                  
-                                  // Better error handling for audio
-                                  audio.addEventListener('error', (e) => {
-                                    console.error('❌ Audio error in video:', e);
-                                    console.error('❌ Audio URL:', message.audioUrl);
-                                  });
-                                  
-                                  audio.addEventListener('canplay', () => {
-                                    console.log('✅ Audio ready for video playback');
-                                  });
-                                  
-                                  // Sync video and audio playback
-                                  el.addEventListener('play', () => {
-                                    console.log('▶️ Video playing, starting audio');
-                                    audio.currentTime = el.currentTime;
-                                    audio.play().catch(e => console.error('❌ Audio play failed:', e));
-                                  });
-                                  
-                                  el.addEventListener('pause', () => {
-                                    console.log('⏸️ Video paused, pausing audio');
-                                    audio.pause();
-                                  });
-                                  
-                                  el.addEventListener('ended', () => {
-                                    console.log('🏁 Video ended');
-                                    audio.pause();
-                                    setPlayingVideo(null);
-                                  });
-                                  
-                                  // Better error handling for video
-                                  el.addEventListener('error', (e) => {
-                                    console.error('❌ Video error:', e);
-                                    console.error('❌ Video URL:', message.videoUrl);
-                                  });
-                                  
-                                  el.addEventListener('loadeddata', () => {
-                                    console.log('✅ Video loaded successfully');
-                                  });
-                                }
-                              }}
-                              src={message.videoUrl}
-                              className="w-full h-full object-cover"
-                              autoPlay
-                              loop
-                              muted
-                              playsInline
-                              onEnded={() => setPlayingVideo(null)}
-                            />
-                          ) : (
-                            <img 
-                              src={message.videoUrl.startsWith('blob:') ? message.videoUrl : avatarImage} 
-                              alt="Avatar"
-                              className="w-full h-full object-cover"
-                            />
+                                  {/* Play Overlay */}
+                                  <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => playVideo(message.id)}
+                                      className="h-8 w-8 p-0 bg-white/20 hover:bg-white/30 text-white rounded-full backdrop-blur-sm"
+                                    >
+                                      {playingVideo === message.id ? (
+                                        <Pause className="h-4 w-4" />
+                                      ) : (
+                                        <Play className="h-4 w-4" />
+                                      )}
+                                    </Button>
+                                  </div>
+                                </div>
+
+                                {/* Video Info */}
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center justify-between">
+                                    <div className="text-sm font-medium text-purple-700">Avatar Video</div>
+                                    <Badge variant="outline" className="text-xs bg-purple-100 text-purple-700">
+                                      30s
+                                    </Badge>
+                                  </div>
+                                  <div className="text-xs text-purple-600 mt-1">
+                                    EspaLuz speaking with synchronized audio
+                                  </div>
+                                  {playingVideo === message.id && (
+                                    <div className="mt-2 flex items-center gap-2">
+                                      <div className="flex-1 h-1 bg-purple-200 rounded">
+                                        <div className="h-1 bg-purple-500 rounded animate-pulse w-2/3"></div>
+                                      </div>
+                                      <span className="text-xs text-purple-600">Playing</span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
                           )}
                         </div>
                       )}
