@@ -115,75 +115,36 @@ function cleanTextForTTS(text: string): string {
 }
 
 async function generateAudio(text: string, voice: string): Promise<ArrayBuffer> {
-  console.log(`🎧 Generating audio with Google TTS (lang=es)`);
+  console.log(`🎧 Generating audio with Google TTS (lang=es) - using EXACT video generation method`);
   
-  try {
-    const params = new URLSearchParams({
-      ie: 'UTF-8',
-      q: text,
-      tl: 'es', // Spanish language
-      client: 'tw-ob'
-    });
+  // Use the exact same method as working video generation
+  const params = new URLSearchParams({
+    ie: 'UTF-8',
+    q: text,
+    tl: 'es', // Always Spanish like video generation
+    client: 'tw-ob'
+  });
 
-    const response = await fetch(`https://translate.google.com/translate_tts?${params}`, {
-      method: 'GET',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Accept': '*/*',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Referer': 'https://translate.google.com/',
-      }
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('❌ Google TTS API error:', {
-        status: response.status,
-        error: errorText.substring(0, 200)
-      });
-      
-      // If Google TTS fails, fallback to OpenAI TTS
-      console.log('🔄 Falling back to OpenAI TTS...');
-      return await generateAudioWithOpenAI(text, voice);
-    }
-
-    console.log(`✅ Audio generated successfully with Google TTS`);
-    return await response.arrayBuffer();
-  } catch (error) {
-    console.error('❌ Google TTS failed:', error);
-    console.log('🔄 Falling back to OpenAI TTS...');
-    return await generateAudioWithOpenAI(text, voice);
-  }
-}
-
-async function generateAudioWithOpenAI(text: string, voice: string): Promise<ArrayBuffer> {
-  console.log(`🎧 Generating audio with OpenAI TTS as fallback`);
-  
-  const response = await fetch('https://api.openai.com/v1/audio/speech', {
-    method: 'POST',
+  const response = await fetch(`https://translate.google.com/translate_tts?${params}`, {
+    method: 'GET',
     headers: {
-      'Authorization': `Bearer ${Deno.env.get('OPENAI_API_KEY')}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'tts-1',
-      input: text,
-      voice: 'nova', // Use Nova for Spanish-friendly pronunciation
-      response_format: 'mp3',
-      speed: 1.0
-    }),
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      'Accept': '*/*',
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Referer': 'https://translate.google.com/',
+    }
   });
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error('❌ OpenAI TTS API error:', {
+    console.error('❌ Voice TTS API error:', {
       status: response.status,
       error: errorText.substring(0, 200)
     });
-    throw new Error(`Both TTS services failed. Google TTS and OpenAI TTS are unavailable.`);
+    throw new Error(`Voice TTS failed with status ${response.status}`);
   }
 
-  console.log(`✅ Audio generated successfully with OpenAI TTS fallback`);
+  console.log(`✅ Voice audio generated successfully with Google TTS`);
   return await response.arrayBuffer();
 }
 
