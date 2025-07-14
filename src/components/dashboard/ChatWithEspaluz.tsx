@@ -281,7 +281,7 @@ The video script will be used to generate an avatar video with synchronized audi
           // Generate voice for full response
           generateVoice(aiMessage.id, aiMessage.content, false);
           
-          // Generate video using the AI response content directly
+          // Generate video using the AI response content (contains video script markers)
           generateVideo(aiMessage.id, aiMessage.content);
         }, 500); // Small delay to let the message render first
       }
@@ -368,7 +368,7 @@ The video script will be used to generate an avatar video with synchronized audi
       const { data, error } = await supabase.functions.invoke('generate-voice', {
         body: { 
           text: textToSpeak,
-          voice: 'nova' // Use Nova voice for EspaLuz (natural and clear)
+          voice: 'es' // Use Spanish Google TTS for consistent pronunciation
         }
       });
 
@@ -442,10 +442,10 @@ The video script will be used to generate an avatar video with synchronized audi
       console.log('🎬 VIDEO DEBUG - Script type:', typeof videoScript);
       console.log('🎬 VIDEO DEBUG - Is videoScript truthy:', !!videoScript);
       
-      const { data, error } = await supabase.functions.invoke('generate-video', {
+        const { data, error } = await supabase.functions.invoke('generate-video', {
         body: { 
           videoScript,
-          voice: 'nova', // Use Nova voice consistently like voice messages
+          voice: 'es', // Use Spanish Google TTS like voice messages
           userId: user?.id 
         }
       });
@@ -1065,34 +1065,33 @@ The video script will be used to generate an avatar video with synchronized audi
                                     />
                                   )}
                                   
-                                  {/* Play Overlay */}
-                                  <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                                    <Button
-                                      size="sm"
-                                      variant="ghost"
-                                      onClick={() => playVideo(message.id)}
-                                      className="h-8 w-8 p-0 bg-white/20 hover:bg-white/30 text-white rounded-full backdrop-blur-sm"
-                                    >
-                                      {playingVideo === message.id ? (
-                                        <Pause className="h-4 w-4" />
-                                      ) : (
-                                        <Play className="h-4 w-4" />
-                                      )}
-                                    </Button>
-                                  </div>
                                 </div>
 
-                                {/* Video Info */}
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center justify-between">
-                                    <div className="text-sm font-medium text-purple-700">Avatar Video</div>
-                                    <Badge variant="outline" className="text-xs bg-purple-100 text-purple-700">
-                                      30s
-                                    </Badge>
-                                  </div>
-                                  <div className="text-xs text-purple-600 mt-1">
-                                    EspaLuz speaking with synchronized audio
-                                  </div>
+                                 {/* Video Info and Controls */}
+                                 <div className="flex-1 min-w-0">
+                                   <div className="flex items-center justify-between">
+                                     <div className="text-sm font-medium text-purple-700">Avatar Video</div>
+                                     <div className="flex items-center gap-2">
+                                       <Badge variant="outline" className="text-xs bg-purple-100 text-purple-700">
+                                         30s
+                                       </Badge>
+                                       <Button
+                                         size="sm"
+                                         variant="ghost"
+                                         onClick={() => playVideo(message.id)}
+                                         className="h-6 w-6 p-0 bg-purple-500 hover:bg-purple-600 text-white rounded-full"
+                                       >
+                                         {playingVideo === message.id ? (
+                                           <Pause className="h-3 w-3" />
+                                         ) : (
+                                           <Play className="h-3 w-3" />
+                                         )}
+                                       </Button>
+                                     </div>
+                                   </div>
+                                   <div className="text-xs text-purple-600 mt-1">
+                                     EspaLuz speaking with synchronized audio
+                                   </div>
                                   {playingVideo === message.id && (
                                     <div className="mt-2 flex items-center gap-2">
                                       <div className="flex-1 h-1 bg-purple-200 rounded">

@@ -115,33 +115,35 @@ function cleanTextForTTS(text: string): string {
 }
 
 async function generateAudio(text: string, voice: string): Promise<ArrayBuffer> {
-  console.log(`🎧 Generating audio with OpenAI TTS`);
+  console.log(`🎧 Generating audio with Google TTS (lang=es)`);
   
-  const response = await fetch('https://api.openai.com/v1/audio/speech', {
-    method: 'POST',
+  const params = new URLSearchParams({
+    ie: 'UTF-8',
+    q: text,
+    tl: 'es', // Spanish language
+    client: 'tw-ob'
+  });
+
+  const response = await fetch(`https://translate.google.com/translate_tts?${params}`, {
+    method: 'GET',
     headers: {
-      'Authorization': `Bearer ${Deno.env.get('OPENAI_API_KEY')}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'tts-1',
-      input: text,
-      voice: voice,
-      response_format: 'mp3',
-      speed: 1.0
-    }),
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      'Accept': '*/*',
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Referer': 'https://translate.google.com/',
+    }
   });
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error('❌ OpenAI TTS API error:', {
+    console.error('❌ Google TTS API error:', {
       status: response.status,
       error: errorText.substring(0, 200)
     });
     throw new Error(`TTS failed with status ${response.status}: ${errorText}`);
   }
 
-  console.log(`✅ Audio generated successfully`);
+  console.log(`✅ Audio generated successfully with Google TTS`);
   return await response.arrayBuffer();
 }
 

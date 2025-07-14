@@ -38,13 +38,26 @@ serve(async (req) => {
     const userAvatarUrl = 'https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/avatars/5fa36928-3201-4c2f-bc27-c30b7a6d36c6/avatar.mp4';
     console.log('🎬 Using known working avatar video:', userAvatarUrl);
 
-    // Extract proper video script from the full response (following Telegram bot logic)
-    console.log('🎬 Received video script:', videoScript);
-    console.log('🎬 Video script length:', videoScript.length);
+    // Extract video script from markers (following Telegram bot logic)
+    console.log('🎬 Received full content:', videoScript);
+    console.log('🎬 Full content length:', videoScript.length);
     
-    // Use the video script directly (it's already been processed by the frontend)
-    const scriptToUse = videoScript && videoScript.trim().length > 0 ? videoScript : 
-      'Español: Gracias por practicar conmigo. Me encanta ayudarte con español.\nEnglish: Thank you for practicing with me. I love helping you with Spanish.';
+    // Extract ONLY the text between [VIDEO SCRIPT START] and [VIDEO SCRIPT END] markers
+    let scriptToUse = '';
+    const videoStartMarker = '[VIDEO SCRIPT START]';
+    const videoEndMarker = '[VIDEO SCRIPT END]';
+    
+    const startIndex = videoScript.indexOf(videoStartMarker);
+    const endIndex = videoScript.indexOf(videoEndMarker);
+    
+    if (startIndex !== -1 && endIndex !== -1 && endIndex > startIndex) {
+      scriptToUse = videoScript.substring(startIndex + videoStartMarker.length, endIndex).trim();
+      console.log('🎬 Extracted video script from markers:', scriptToUse);
+    } else {
+      // Fallback if no markers found
+      console.log('🎬 No video script markers found, using default');
+      scriptToUse = 'Español: Gracias por practicar conmigo. Me encanta ayudarte con español.\nEnglish: Thank you for practicing with me. I love helping you with Spanish.';
+    }
     
     console.log('🎬 Using script:', scriptToUse);
 
