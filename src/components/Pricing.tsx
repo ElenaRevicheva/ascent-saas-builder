@@ -25,31 +25,35 @@ const Pricing = () => {
     {
       name: "Standard",
       price: 7.77,
-      description: "Your personal AI Spanish tutor",
+      duration: "month",
+      description: "WhatsApp AI Tutor - Spanish&English in your pocket!",
       features: [
-        "Everything in Free Trial",
-        "Unlimited conversations",
-        "Advanced AI personality",
-        "Voice & avatar videos",
-        "Cultural immersion content",
-        "Progress tracking",
-        "Priority support"
+        "✨ Everything in Free Trial PLUS WhatsApp AI Tutor",
+        "🚀 Bilingual Chat without limits - practice anytime, anywhere",
+        "🧠 AI that adapts to YOU - your tutor gets YOUR style",
+        "🎬 Avatar video replies - kids do enjoy",
+        "🌎 Real LATAM and Spanish native countries culture",
+        "📈 Track your wins - celebrate every breakthrough",
+        "⚡ VIP support - get help instantly"
       ],
       popular: true,
-      paypal: true
+      paypal: true,
+      comingSoon: true,
+      merchantId: "P8TXABNT28ZXG"
     },
     {
       name: "Premium",
       price: "Coming Soon",
-      description: "Advanced features for power users",
+      description: "",
       features: [
-        "Everything in Standard",
-        "Family management (5+ users)",
-        "Custom learning paths",
-        "Advanced analytics",
-        "Educational resources",
-        "Dedicated support",
-        "API access"
+        "✨ Everything in Standard SUPERCHARGED:",
+        "👨‍👩‍👧‍👦 Family squad (5+ users) - Spanish for the whole crew!",
+        "🎯 AI-crafted learning paths - built just for YOU",
+        "📊 Pro analytics dashboard - watch your Spanish explode",
+        "📚 Exclusive content vault - premium resources only",
+        "💎 White-glove support - we've got your back 24/7",
+        "⚙️ Developer API access - Spanish learning, your way",
+        { label: "🔥 CAN'T WAIT FOR STANDARD/PREMIUM??", labelClass: "text-red-600 font-bold", link: "https://t.me/EspaLuzFamily_bot", linkText: "Try Telegram AI Tutor NOW!", linkClass: "text-blue-600 font-bold hover:underline" }
       ],
       popular: false,
       paypal: false,
@@ -88,8 +92,19 @@ const Pricing = () => {
                 </div>
               )}
               
+              {/* Remove Most Popular badge */}
+              {plan.name === "Standard" && plan.comingSoon && (
+                <div className="mb-2">
+                  <span className="inline-block bg-gradient-to-r from-orange-400 to-yellow-400 to-lime-400 text-white px-3 py-1 rounded-full text-xs font-bold">Coming soon</span>
+                </div>
+              )}
               <CardHeader className="text-center pb-6">
-                <CardTitle className="text-2xl mb-2">{plan.name}</CardTitle>
+                {plan.name === "Premium" && plan.comingSoon && (
+                  <div className="mb-2">
+                    <span className="inline-block bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold">Coming Soon</span>
+                  </div>
+                )}
+                <CardTitle className="text-2xl mb-2">{plan.name === "Premium" ? "🚀 Premium" : plan.name}</CardTitle>
                 <div className="mb-4">
                   {typeof plan.price === 'number' ? (
                     <>
@@ -97,29 +112,35 @@ const Pricing = () => {
                       <span className="text-muted-foreground">
                         {plan.duration ? `/${plan.duration}` : '/month'}
                       </span>
+                      <div className="text-xs text-muted-foreground mt-2">Secure payment powered by PayPal</div>
+                      <div className="text-xs text-muted-foreground">Merchant ID: {plan.merchantId}</div>
                     </>
                   ) : (
                     <span className="text-2xl font-bold text-primary">{plan.price}</span>
                   )}
                 </div>
-                <CardDescription className="text-muted-foreground">
-                  {plan.description}
+                <CardDescription>
+                  {plan.name === "Standard" ? (
+                    <span className="font-bold bg-gradient-to-r from-green-400 via-emerald-500 to-lime-400 bg-clip-text text-transparent text-lg drop-shadow-sm">
+                      {plan.description}
+                    </span>
+                  ) : (
+                    <span className="text-muted-foreground">{plan.description}</span>
+                  )}
                 </CardDescription>
               </CardHeader>
               
               <CardContent className="pt-0">
                 {plan.paypal ? (
                   <div className="mb-6">
-                    <PayPalButton 
-                      planType="monthly"
-                      onSuccess={(subscriptionId) => {
-                        console.log('Subscription successful:', subscriptionId);
-                        // Handle successful subscription
-                      }}
-                      onError={(error) => {
-                        console.error('Subscription error:', error);
-                      }}
-                    />
+                    <Button 
+                      variant="outline" 
+                      size="lg" 
+                      className="w-full"
+                      disabled={plan.comingSoon}
+                    >
+                      {plan.popular && plan.comingSoon ? 'Most Popular' : plan.comingSoon ? '' : 'Subscribe with PayPal'}
+                    </Button>
                   </div>
                 ) : plan.comingSoon ? (
                   <div className="block mb-6">
@@ -129,7 +150,7 @@ const Pricing = () => {
                       className="w-full"
                       disabled
                     >
-                      Coming Soon
+                      {plan.popular && plan.comingSoon ? 'Most Popular' : ''}
                     </Button>
                   </div>
                 ) : (
@@ -154,8 +175,9 @@ const Pricing = () => {
                     ) : (
                       <li key={featureIndex} className="flex items-start gap-3">
                         <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                        <a href={feature.link} className="text-primary font-semibold hover:underline focus:outline-none focus:ring-2 focus:ring-primary/50 rounded transition-colors">
-                          {feature.label}
+                        <span className={feature.labelClass || "text-muted-foreground"}>{feature.label}</span>
+                        <a href={feature.link} className={feature.linkClass || "text-primary font-semibold hover:underline focus:outline-none focus:ring-2 focus:ring-primary/50 rounded transition-colors"} target="_blank" rel="noopener noreferrer">
+                          {feature.linkText || feature.label}
                         </a>
                       </li>
                     )
