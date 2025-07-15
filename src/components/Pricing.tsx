@@ -13,10 +13,11 @@ const Pricing = () => {
       description: "Try EspaLuz risk-free for one week",
       features: [
         "7-day free trial",
-        "Basic AI conversations",
-        "Telegram integration",
-        "Beginner lessons",
-        "Community support"
+        { label: "¡Conversemos! Chat with EspaLuz right here!", link: "/dashboard#chat" },
+        "✨ Chat in any language - English, Spanish, or Russian",
+        "🌍 Instant translation magic - every word teaches you",
+        "🧠 Smart AI that gets you - context-aware replies",
+        "🗣️ Natural pronunciation - AI voices in Spanish & English"
       ],
       popular: false,
       paypal: false
@@ -132,7 +133,7 @@ const Pricing = () => {
                     </Button>
                   </div>
                 ) : (
-                  <Link to="/auth" className="block mb-6">
+                  <a href="/dashboard#chat" className="block mb-6">
                     <Button 
                       variant={plan.popular ? "hero" : "outline"} 
                       size="lg" 
@@ -140,15 +141,24 @@ const Pricing = () => {
                     >
                       Start Free Trial
                     </Button>
-                  </Link>
+                  </a>
                 )}
                 
                 <ul className="space-y-3">
                   {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-start gap-3">
-                      <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                      <span className="text-muted-foreground">{feature}</span>
-                    </li>
+                    typeof feature === 'string' ? (
+                      <li key={featureIndex} className="flex items-start gap-3">
+                        <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                        <span className="text-muted-foreground">{feature}</span>
+                      </li>
+                    ) : (
+                      <li key={featureIndex} className="flex items-start gap-3">
+                        <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                        <a href={feature.link} className="text-primary font-semibold hover:underline focus:outline-none focus:ring-2 focus:ring-primary/50 rounded transition-colors">
+                          {feature.label}
+                        </a>
+                      </li>
+                    )
                   ))}
                 </ul>
               </CardContent>
@@ -162,9 +172,9 @@ const Pricing = () => {
           </p>
           <p className="text-sm text-muted-foreground">
             Need a custom solution? 
-            <Link to="/contact" className="text-primary hover:underline ml-1">
+            <a href="mailto:aipa@aideazz.xyz" className="text-primary hover:underline ml-1">
               Contact our sales team
-            </Link>
+            </a>
           </p>
         </div>
       </div>

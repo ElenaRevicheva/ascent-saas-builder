@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useSubscription } from '@/hooks/useSubscription';
 import { supabase } from '@/integrations/supabase/client';
@@ -30,6 +30,7 @@ const Dashboard = () => {
   
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [checkingOnboarding, setCheckingOnboarding] = useState(true);
+  const chatRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkOnboardingStatus = async () => {
@@ -68,6 +69,26 @@ const Dashboard = () => {
       checkOnboardingStatus();
     }
   }, [user, loading]);
+
+  useEffect(() => {
+    const scrollToChat = () => {
+      if (window.location.hash === '#chat' && chatRef.current) {
+        setTimeout(() => {
+          chatRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(() => {
+            const rect = chatRef.current.getBoundingClientRect();
+            if (rect) {
+              const scrollY = window.scrollY + rect.top - window.innerHeight / 4;
+              window.scrollTo({ top: scrollY, behavior: 'smooth' });
+            }
+          }, 400);
+        }, 100);
+      }
+    };
+    scrollToChat();
+    window.addEventListener('hashchange', scrollToChat);
+    return () => window.removeEventListener('hashchange', scrollToChat);
+  }, []);
 
   if (loading || checkingOnboarding) {
     return (
@@ -143,7 +164,7 @@ const Dashboard = () => {
         </div>
         
         {/* Chat Section - Full Width */}
-        <div className="mt-8">
+        <div className="mt-8" id="chat" ref={chatRef}>
           <ChatWithEspaluz />
         </div>
       </div>
