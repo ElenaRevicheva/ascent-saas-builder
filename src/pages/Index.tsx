@@ -623,7 +623,7 @@ const Index = () => {
           🇷🇺 Former top IT project manager & Chief Legal Officer in Russia’s E-Government<br/>
           ✈️ Relocated to Panama in 2022 as a single mother <br/>
           💡 AI helped me rebuild myself from scratch — in a new country, a new language, and a new profession. Now I’m sharing that path with others, through human-centered AI.<br/><br/>
-          📇 Scan my card below to connect, collaborate, or join the Aideazz journey. This is just the beginning.
+          📇 Scan my card below to connect, collaborate, or join the AIdeazz journey. This is just the beginning.
         </p>
         <img src={creatorQr} alt="Creator Business Card QR" className="mx-auto w-48 h-48 object-contain rounded-2xl shadow-xl border-4 border-purple-300 mb-4" />
         <p className="text-md text-purple-600 font-semibold">Let’s build the future of learning together!</p>
