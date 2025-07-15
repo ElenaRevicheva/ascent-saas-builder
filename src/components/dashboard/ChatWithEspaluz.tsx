@@ -393,12 +393,14 @@ The video script will be used to generate an avatar video with synchronized audi
         // New format: direct audio URL from storage
         audioUrl = data.audioUrl;
         console.log('✅ Using direct audio URL from storage');
-      } else if (data.audioBase64) {
-        // Old format: base64 audio data
-        const audioBlob = base64ToAudioBlob(data.audioBase64);
+      } else if (data.audioContent || data.audioBase64) {
+        // OpenAI format: audioContent or old format: base64 audio data
+        const base64Data = data.audioContent || data.audioBase64;
+        const audioBlob = base64ToAudioBlob(base64Data);
         audioUrl = URL.createObjectURL(audioBlob);
         console.log('✅ Converted base64 to blob URL');
       } else {
+        console.error('❌ No audio data received. Response:', data);
         throw new Error('No audio data received in response');
       }
 
@@ -411,13 +413,13 @@ The video script will be used to generate an avatar video with synchronized audi
     } catch (error) {
       console.error('❌ Voice generation error:', error);
       
-      // Handle specific Google TTS errors
+      // Handle voice generation errors
       if (error.message === 'RATE_LIMIT_EXCEEDED') {
-        toast.error('Google TTS rate limit exceeded. Please wait a moment and try again.');
+        toast.error('Voice generation rate limit exceeded. Please wait a moment and try again.');
       } else if (error.message === 'ACCESS_DENIED') {
-        toast.error('Access denied to Google TTS. Please try again later.');
+        toast.error('Access denied to voice service. Please try again later.');
       } else {
-        toast.error('Failed to generate voice using Google TTS');
+        toast.error('Failed to generate voice using OpenAI TTS');
       }
     } finally {
       setLoadingMedia(prev => ({ ...prev, [messageId]: null }));
