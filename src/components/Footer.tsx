@@ -14,51 +14,27 @@ const Footer = () => {
               that adapts to every learning style and pace.
             </p>
             <div className="flex space-x-4">
-              <Link to="#" className="text-muted-foreground hover:text-primary transition-colors">
-                Twitter
-              </Link>
-              <Link to="#" className="text-muted-foreground hover:text-primary transition-colors">
-                LinkedIn
-              </Link>
-              <Link to="#" className="text-muted-foreground hover:text-primary transition-colors">
-                GitHub
-              </Link>
+              <a href="https://www.youtube.com/@AIdeazz" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                YouTube
+              </a>
+              <a href="https://t.me/EspaLuz" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                Telegram
+              </a>
             </div>
           </div>
           
-          <div>
-            <h3 className="font-semibold text-foreground mb-4">Product</h3>
-            <div className="space-y-2">
-              <Link to="#features" className="block text-muted-foreground hover:text-primary transition-colors">
-                Features
-              </Link>
-              <Link to="#pricing" className="block text-muted-foreground hover:text-primary transition-colors">
-                Pricing
-              </Link>
-              <Link to="/docs" className="block text-muted-foreground hover:text-primary transition-colors">
-                Documentation
-              </Link>
-              <Link to="/api" className="block text-muted-foreground hover:text-primary transition-colors">
-                API Reference
-              </Link>
-            </div>
-          </div>
+          {/* Product column hidden for MVP */}
           
           <div>
-            <h3 className="font-semibold text-foreground mb-4">Company</h3>
+            <h3 className="font-semibold text-foreground mb-4">Contact & Info</h3>
             <div className="space-y-2">
-              <Link to="/about" className="block text-muted-foreground hover:text-primary transition-colors">
-                About
-              </Link>
-              <Link to="/blog" className="block text-muted-foreground hover:text-primary transition-colors">
-                Blog
-              </Link>
-              <Link to="/careers" className="block text-muted-foreground hover:text-primary transition-colors">
-                Careers
-              </Link>
-              <Link to="/contact" className="block text-muted-foreground hover:text-primary transition-colors">
-                Contact
-              </Link>
+              <span className="block text-muted-foreground">EspaLuz is part of the AIdeazz ecosystem. Find more info and contact options below:</span>
+              <a href="https://www.aideazz.xyz" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary transition-colors">
+                AIdeazz Ecosystem
+              </a>
+              <a href="https://lit.link/en/aideazz" target="_blank" rel="noopener noreferrer" className="block text-muted-foreground hover:text-primary transition-colors">
+                Founder: Elena Revicheva (Business Card)
+              </a>
             </div>
           </div>
         </div>
