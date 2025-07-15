@@ -1,6 +1,5 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -19,18 +18,14 @@ serve(async (req) => {
       throw new Error('Text is required');
     }
 
-    // Clean text for TTS (identical to video)
+    // Clean text for TTS
     const cleanedText = cleanTextForTTS(text);
     
-    let base64Audio = '';
-    try {
-      base64Audio = await generateVoiceChunkAudio(cleanedText, voice);
-    } catch (error) {
-      console.error(`❌ Voice audio generation failed:`, error);
-    }
+    console.log('🎵 Generating voice for text:', cleanedText);
+    
+    // Generate audio using OpenAI TTS with Nova voice
+    const base64Audio = await generateOpenAIVoice(cleanedText);
 
-    // Optionally upload to Supabase storage (if you want to match video exactly, you can skip this and just return base64)
-    // For now, return base64 directly for simplicity
     const response = {
       success: true,
       audioContent: base64Audio,
@@ -54,32 +49,47 @@ serve(async (req) => {
   }
 });
 
-// --- COPY FROM VIDEO GENERATION ---
-function splitTextIntoChunks(text: string, maxLength: number): string[] {
-  const chunks = [];
-  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+// Generate voice using OpenAI TTS
+async function generateOpenAIVoice(text: string): Promise<string> {
+  const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
+  if (!openaiApiKey) {
+    throw new Error('OpenAI API key not configured');
+  }
+
+  const response = await fetch('https://api.openai.com/v1/audio/speech', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${openaiApiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'tts-1',
+      input: text,
+      voice: 'nova', // Female, soft, clear voice
+      response_format: 'mp3',
+      speed: 0.9 // Slightly slower for better clarity
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('OpenAI TTS error:', errorText);
+    throw new Error(`OpenAI TTS failed: ${response.status}`);
+  }
+
+  const arrayBuffer = await response.arrayBuffer();
+  const audioBytes = new Uint8Array(arrayBuffer);
   
-  let currentChunk = '';
+  // Convert to base64
+  let binaryString = '';
+  const chunkSize = 8192;
   
-  for (const sentence of sentences) {
-    const trimmedSentence = sentence.trim();
-    if (trimmedSentence.length === 0) continue;
-    
-    if (currentChunk.length + trimmedSentence.length + 1 <= maxLength) {
-      currentChunk += (currentChunk ? '. ' : '') + trimmedSentence;
-    } else {
-      if (currentChunk) {
-        chunks.push(currentChunk + '.');
-      }
-      currentChunk = trimmedSentence;
-    }
+  for (let i = 0; i < audioBytes.length; i += chunkSize) {
+    const chunk = audioBytes.slice(i, i + chunkSize);
+    binaryString += String.fromCharCode.apply(null, Array.from(chunk));
   }
   
-  if (currentChunk) {
-    chunks.push(currentChunk + '.');
-  }
-  
-  return chunks.length > 0 ? chunks : [text];
+  return btoa(binaryString);
 }
 
 function cleanTextForTTS(text: string): string {
@@ -96,83 +106,5 @@ function cleanTextForTTS(text: string): string {
   text = text.replace(/\s+/g, ' ').trim();
   text = text.replace(/^[•·\-*]\s*/gm, '');
   return text;
-}
-
-async function generateVoiceChunkAudio(text: string, voice: string): Promise<string> {
-  // Google TTS has character limits - split into manageable chunks
-  const maxChunkSize = 200; // Safe size for Google TTS
-  
-  if (text.length <= maxChunkSize) {
-    // Text fits in single chunk - process it all
-    return await processVoiceSingleChunk(text, voice);
-  }
-  
-  // Text is longer - process multiple chunks and combine
-  const chunks = splitTextIntoChunks(text, maxChunkSize);
-  const audioChunks: string[] = [];
-  
-  for (let i = 0; i < chunks.length; i++) {
-    const chunk = chunks[i];
-    try {
-      const chunkAudio = await processVoiceSingleChunk(chunk, voice);
-      audioChunks.push(chunkAudio);
-      // Small delay between requests to avoid rate limiting
-      if (i < chunks.length - 1) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
-    } catch (error) {
-      // Continue with other chunks instead of failing completely
-    }
-  }
-  
-  if (audioChunks.length === 0) {
-    throw new Error('No voice audio chunks were successfully generated');
-  }
-  
-  // Combine all audio chunks into a single base64 string
-  if (audioChunks.length === 1) {
-    return audioChunks[0];
-  }
-  // For multiple chunks, we'll concatenate the base64 data
-  // This is a simple concatenation - in production you'd want proper audio merging
-  const combinedChunks = audioChunks.join('');
-  return combinedChunks;
-}
-
-async function processVoiceSingleChunk(text: string, voice: string): Promise<string> {
-  const params = new URLSearchParams({
-    ie: 'UTF-8',
-    q: text,
-    tl: 'es', // Always Spanish like your Python version
-    client: 'tw-ob'
-  });
-
-  const response = await fetch(`https://translate.google.com/translate_tts?${params}`, {
-    method: 'GET',
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-      'Accept': '*/*',
-      'Accept-Language': 'en-US,en;q=0.9',
-      'Referer': 'https://translate.google.com/',
-    }
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Voice TTS failed with status ${response.status}`);
-  }
-
-  const arrayBuffer = await response.arrayBuffer();
-  const audioBytes = new Uint8Array(arrayBuffer);
-  
-  // Convert to base64 safely
-  let binaryString = '';
-  const chunkSize = 8192;
-  
-  for (let i = 0; i < audioBytes.length; i += chunkSize) {
-    const chunk = audioBytes.slice(i, i + chunkSize);
-    binaryString += String.fromCharCode.apply(null, Array.from(chunk));
-  }
-  return btoa(binaryString);
 }
 
