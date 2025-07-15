@@ -868,7 +868,7 @@ The video script will be used to generate an avatar video with synchronized audi
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
-            {demoMode ? 'Demo: Chat with EspaLuz' : t('chat.title')}
+            {demoMode ? 'Demo: Chat with EspaLuz' : 'Chat with EspaLuz'}
             <Heart className="h-4 w-4 text-[hsl(var(--espaluz-secondary))]" />
             {demoMode && (
               <Badge variant="outline" className="text-xs">
