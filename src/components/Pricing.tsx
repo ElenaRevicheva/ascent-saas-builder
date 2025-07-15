@@ -175,10 +175,17 @@ const Pricing = () => {
                     ) : (
                       <li key={featureIndex} className="flex items-start gap-3">
                         <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                        <span className={feature.labelClass || "text-muted-foreground"}>{feature.label}</span>
-                        <a href={feature.link} className={feature.linkClass || "text-primary font-semibold hover:underline focus:outline-none focus:ring-2 focus:ring-primary/50 rounded transition-colors"} target="_blank" rel="noopener noreferrer">
-                          {feature.linkText || feature.label}
-                        </a>
+                        {feature.label === "¡Conversemos! Chat with EspaLuz right here!" ? (
+                          <a href={feature.link} className="w-full" style={{ textDecoration: 'none' }}>
+                            <Button variant="hero" size="lg" className="w-full">
+                              {feature.label}
+                            </Button>
+                          </a>
+                        ) : (
+                          <a href={feature.link} className={feature.linkClass || "text-primary font-semibold hover:underline focus:outline-none focus:ring-2 focus:ring-primary/50 rounded transition-colors"} target="_blank" rel="noopener noreferrer">
+                            {feature.linkText || feature.label}
+                          </a>
+                        )}
                       </li>
                     )
                   ))}
@@ -189,15 +196,19 @@ const Pricing = () => {
         </div>
 
         <div className="text-center mt-12">
-          <p className="text-muted-foreground mb-4">
-            Start with a 1-week free trial. No credit card required.
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Need a custom solution? 
-            <a href="mailto:aipa@aideazz.xyz" className="text-primary hover:underline ml-1">
-              Contact our sales team
+          <div className="mt-8 flex flex-col items-center gap-4">
+            <h4 className="text-xl font-bold bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 bg-clip-text text-transparent">Invest & Partner</h4>
+            <p className="text-md text-muted-foreground">Join us in building the future of emotional AI</p>
+            <a
+              href="https://aideazz.xyz/pitch.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full inline-block px-8 py-3 text-lg font-bold rounded bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 text-white text-center shadow-lg hover:opacity-90 transition z-[9999]"
+              style={{ pointerEvents: 'auto', position: 'relative', zIndex: 9999 }}
+            >
+              Learn More
             </a>
-          </p>
+          </div>
         </div>
       </div>
     </section>

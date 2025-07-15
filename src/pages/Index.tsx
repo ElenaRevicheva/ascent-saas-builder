@@ -224,6 +224,28 @@ const Index = () => {
         </div>
       </section>
 
+      {/* CTA Section */}
+      <section className="container mx-auto px-4 py-16">
+        <div className="text-center">
+          <h2 className="text-4xl font-bold text-foreground mb-4">Join the Revolution</h2>
+          <div className="grid md:grid-cols-1 gap-6 max-w-2xl mx-auto">
+            <Card className="border-border shadow-card">
+              <CardHeader>
+                <CardTitle>Experience <span className="text-3xl font-extrabold bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 bg-clip-text text-transparent">AIevolution</span></CardTitle>
+                <CardDescription>Try our live AIPA and see emotional AI in action</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Link to="/auth">
+                  <Button className="w-full" variant="hero">
+                    Chat Now
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* Demo Benefits Section */}
       <section className="container mx-auto px-4 py-12 bg-gradient-magical rounded-2xl shadow-vibrant mb-6">
         <div className="text-center mb-8">
@@ -546,65 +568,6 @@ const Index = () => {
           <p className="text-muted-foreground max-w-3xl mx-auto">
             AIdeazz empowers human potential through AI that truly understands, adapts, and grows with you. This is AI for human flourishing.
           </p>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="text-center">
-          <h2 className="text-4xl font-bold text-foreground mb-4">Join the Revolution</h2>
-          <p className="text-lg text-muted-foreground mb-8 max-w-3xl mx-auto">
-            Be part of the future where AI truly understands and grows with you. Whether you're a family, investor, developer, or visionary — there's a place for you in the AIdeazz ecosystem.
-          </p>
-
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <Card className="border-border shadow-card">
-              <CardHeader>
-                <CardTitle>Experience EspaLuz</CardTitle>
-                <CardDescription>Try our live AIPA and see emotional AI in action</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Link to="/auth">
-                  <Button className="w-full" variant="hero">
-                    Chat Now
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border shadow-card">
-              <CardHeader>
-                <CardTitle>Invest & Partner</CardTitle>
-                <CardDescription>Join us in building the future of emotional AI</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button className="w-full" variant="default">
-                  Learn More
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border shadow-card">
-              <CardHeader>
-                <CardTitle>Join Community</CardTitle>
-                <CardDescription>Connect with early adopters and contributors</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button className="w-full" variant="outline">
-                  Join Us
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="mt-12 text-center">
-            <p className="text-sm text-muted-foreground mb-4">
-              <strong>Contact:</strong> aipa@aideazz.xyz
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Built by Humans, for Humans • AIdeazz.xyz • Emotional AI • Web3 Native • Human-Centered
-            </p>
-          </div>
         </div>
       </section>
 
