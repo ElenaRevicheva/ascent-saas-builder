@@ -368,7 +368,7 @@ The video script will be used to generate an avatar video with synchronized audi
       const { data, error } = await supabase.functions.invoke('generate-voice', {
         body: { 
           text: textToSpeak,
-          voice: 'es' // Use Spanish Google TTS for consistent pronunciation
+          voice: 'nova' // Use OpenAI Nova voice for better multilingual support
         }
       });
 
