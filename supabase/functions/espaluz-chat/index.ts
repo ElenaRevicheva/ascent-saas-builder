@@ -229,34 +229,39 @@ serve(async (req) => {
     const videoScript = extractVideoScript(fullResponse);
 
     // Save to learning sessions
-    const { error: sessionError } = await supabase
-      .from('learning_sessions')
-      .insert({
-        user_id: userId,
-        session_type: 'dashboard_chat',
-        source: 'web', // Changed from 'dashboard' to 'web' to match constraint
-        content: {
-          user_message: message,
-          ai_response: fullResponse,
-          video_script: videoScript,
-          family_member: familyMember.name,
-          family_member_id: familyMember.id,
-          detected_emotion: emotion
-        },
-        progress_data: {
-          family_member: familyMember.name,
-          family_member_role: familyMember.role,
-          emotion: emotion.emotion,
-          confidence: emotion.confidence,
-          language_balance: {
-            spanish: familyMember.spanish_preference || 0.5,
-            english: familyMember.english_preference || 0.5
+    try {
+      const { error: sessionError } = await supabase
+        .from('learning_sessions')
+        .insert({
+          user_id: userId,
+          session_type: 'chat', // Simplified session type
+          source: 'web',
+          content: {
+            user_message: message,
+            ai_response: fullResponse,
+            video_script: videoScript,
+            family_member: familyMember.name,
+            family_member_id: familyMember.id,
+            detected_emotion: emotion
+          },
+          progress_data: {
+            family_member: familyMember.name,
+            family_member_role: familyMember.role,
+            emotion: emotion.emotion,
+            confidence: emotion.confidence,
+            language_balance: {
+              spanish: familyMember.spanish_preference || 0.5,
+              english: familyMember.english_preference || 0.5
+            }
           }
-        }
-      });
+        });
 
-    if (sessionError) {
-      console.error('Error saving session:', sessionError);
+      if (sessionError) {
+        console.error('Error saving session:', sessionError);
+        console.error('Session error details:', JSON.stringify(sessionError));
+      }
+    } catch (sessionSaveError) {
+      console.error('Session save exception:', sessionSaveError);
     }
 
     return new Response(JSON.stringify({
