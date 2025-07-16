@@ -135,8 +135,6 @@ export const LearningModules = () => {
     );
   }
 
-  console.log('LearningModules rendered, modules:', modules.length, 'loading:', loading);
-
   return (
     <Card className="border-border/50 shadow-magical" style={{ background: 'var(--gradient-card)' }}>
       <CardHeader className="pb-3">
