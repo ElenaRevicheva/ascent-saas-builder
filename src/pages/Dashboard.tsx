@@ -81,6 +81,11 @@ const Dashboard = () => {
                                  (location.state as any)?.scrollToChat;
                                  
       if (shouldScrollToChat && chatRef.current) {
+        // Clear the hash to prevent repeated scrolling
+        if (window.location.hash === '#chat') {
+          window.history.replaceState(null, '', window.location.pathname);
+        }
+        
         setTimeout(() => {
           // Get the exact position of the chat element
           const chatElement = chatRef.current;
@@ -93,14 +98,13 @@ const Dashboard = () => {
               behavior: 'smooth'
             });
           }
-        }, 600); // Increased delay to ensure all components are fully rendered
+        }, 600);
       }
     };
     
+    // Only run once when component mounts or when location.state changes
     scrollToChat();
-    window.addEventListener('hashchange', scrollToChat);
-    return () => window.removeEventListener('hashchange', scrollToChat);
-  }, [location.state]);
+  }, [location.state]); // Removed window.addEventListener to prevent continuous triggering
 
   if (loading || checkingOnboarding) {
     return (
