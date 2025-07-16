@@ -40,7 +40,9 @@ const Dashboard = () => {
     const checkOnboardingStatus = async () => {
       if (!user) return;
       
+      console.log('Checking onboarding status for user:', user.id);
       try {
+        console.log('Starting Promise.all for family and sessions check');
         // Check if user has completed onboarding by looking for family members or learning sessions
         const [familyResult, sessionsResult] = await Promise.all([
           supabase
@@ -54,22 +56,28 @@ const Dashboard = () => {
             .eq('user_id', user.id)
             .limit(1)
         ]);
+        console.log('Promise.all completed. Family result:', familyResult, 'Sessions result:', sessionsResult);
 
         // Show onboarding if user has no family members and no learning sessions
         const hasFamily = familyResult.data && familyResult.data.length > 0;
         const hasSessions = sessionsResult.data && sessionsResult.data.length > 0;
         
+        console.log('hasFamily:', hasFamily, 'hasSessions:', hasSessions);
+        
         if (!hasFamily && !hasSessions) {
+          console.log('Setting showOnboarding to true');
           setShowOnboarding(true);
         }
       } catch (error) {
         console.error('Error checking onboarding status:', error);
       } finally {
+        console.log('Setting checkingOnboarding to false');
         setCheckingOnboarding(false);
       }
     };
 
     if (user && !loading) {
+      console.log('User and loading conditions met, calling checkOnboardingStatus');
       checkOnboardingStatus();
     }
   }, [user, loading]);
