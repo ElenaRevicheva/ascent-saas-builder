@@ -80,7 +80,7 @@ export const useAnalytics = () => {
       const currentPage = window.location.pathname;
       trackPageView(currentPage);
     }
-  }, [user]); // Removed window.location.pathname to prevent infinite re-renders
+  }, [user, window.location.pathname]);
 
   return {
     trackEvent,

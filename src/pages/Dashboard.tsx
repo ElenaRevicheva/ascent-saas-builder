@@ -81,11 +81,6 @@ const Dashboard = () => {
                                  (location.state as any)?.scrollToChat;
                                  
       if (shouldScrollToChat && chatRef.current) {
-        // Clear the hash to prevent repeated scrolling
-        if (window.location.hash === '#chat') {
-          window.history.replaceState(null, '', window.location.pathname);
-        }
-        
         setTimeout(() => {
           // Get the exact position of the chat element
           const chatElement = chatRef.current;
@@ -98,15 +93,16 @@ const Dashboard = () => {
               behavior: 'smooth'
             });
           }
-        }, 600);
+        }, 600); // Increased delay to ensure all components are fully rendered
       }
     };
     
-    // Only run once when component mounts or when location.state changes
     scrollToChat();
-  }, [location.state]); // Removed window.addEventListener to prevent continuous triggering
+    window.addEventListener('hashchange', scrollToChat);
+    return () => window.removeEventListener('hashchange', scrollToChat);
+  }, [location.state]);
 
-  if (checkingOnboarding) {
+  if (loading || checkingOnboarding) {
     return (
       <div className="min-h-screen" style={{ background: 'var(--gradient-magical)' }}>
         <div className="flex items-center justify-center min-h-screen">
@@ -115,9 +111,6 @@ const Dashboard = () => {
       </div>
     );
   }
-
-  // Don't block on subscription loading - let the dashboard render
-  // The individual components will handle their own loading states
 
   // Show onboarding flow for new users
   if (showOnboarding) {
