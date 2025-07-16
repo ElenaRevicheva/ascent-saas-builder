@@ -104,7 +104,12 @@ const Auth = () => {
     setError('');
 
     try {
-      const { user, error } = await signUp(formData.email, formData.password, formData.fullName);
+      const { user, error } = await signUp(
+        formData.email, 
+        formData.password, 
+        formData.fullName,
+        formData.referralCode || undefined
+      );
       
       if (error) {
         if (error.message.includes('User already registered')) {
@@ -113,10 +118,6 @@ const Auth = () => {
           setError(error.message);
         }
       } else {
-        // Process referral if user came from a referral link or entered a code
-        if (user) {
-          await processReferralSignup(user.id, formData.referralCode || undefined);
-        }
         toast({
           title: "Account created!",
           description: "Please check your email to confirm your account.",
