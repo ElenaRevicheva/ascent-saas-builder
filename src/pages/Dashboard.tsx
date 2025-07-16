@@ -82,18 +82,12 @@ const Dashboard = () => {
                                  
       if (shouldScrollToChat && chatRef.current) {
         setTimeout(() => {
-          // Get the exact position of the chat element
-          const chatElement = chatRef.current;
-          if (chatElement) {
-            const rect = chatElement.getBoundingClientRect();
-            const scrollTop = window.pageYOffset + rect.top - 80; // 80px offset for header
-            
-            window.scrollTo({
-              top: scrollTop,
-              behavior: 'smooth'
-            });
-          }
-        }, 600); // Increased delay to ensure all components are fully rendered
+          // Scroll directly to the chat section with better positioning
+          chatRef.current?.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' // Change to 'start' to position chat at top
+          });
+        }, 500); // Increased delay to ensure all components are loaded
       }
     };
     
