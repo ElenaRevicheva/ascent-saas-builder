@@ -78,12 +78,16 @@ export const LearningOptions = () => {
   const handleOptionAction = (option: LearningOption) => {
     if (option.actionType === 'scroll') {
       setOpen(false);
+      // Give more time for dialog to close and ensure DOM is ready
       setTimeout(() => {
         const chatSection = document.querySelector('#chat');
         if (chatSection) {
           chatSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          // Fallback: try to scroll to bottom of page if chat section not found
+          window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
-      }, 100);
+      }, 300);
     } else if (option.actionLink) {
       setOpen(false);
     }
