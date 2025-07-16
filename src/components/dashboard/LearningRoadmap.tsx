@@ -35,6 +35,13 @@ export const LearningRoadmap = () => {
           const familySection = document.querySelector('[data-family-members]');
           if (familySection) {
             familySection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Automatically open the add member dialog
+            setTimeout(() => {
+              const addMemberButton = familySection.querySelector('button');
+              if (addMemberButton && addMemberButton.textContent?.includes('Add Member')) {
+                addMemberButton.click();
+              }
+            }, 500);
           }
         }, 100);
       }
