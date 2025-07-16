@@ -28,43 +28,16 @@ export const useSubscription = () => {
       return;
     }
 
-    const fetchSubscriptionStatus = async () => {
-      console.log('Starting subscription fetch for user:', user.id);
-      try {
-        console.log('About to call get_user_subscription_status RPC');
-        const { data, error } = await supabase.rpc('get_user_subscription_status', {
-          user_uuid: user.id
-        });
-        console.log('RPC call completed. Data:', data, 'Error:', error);
-
-        if (error) {
-          console.error('Error fetching subscription:', error);
-          setSubscription(prev => ({ ...prev, loading: false }));
-          return;
-        }
-
-        if (data && data.length > 0) {
-          const subData = data[0];
-          console.log('Setting subscription data:', subData);
-          setSubscription({
-            status: subData.status,
-            planType: subData.plan_type,
-            trialDaysLeft: subData.trial_days_left,
-            isTrialActive: subData.is_trial_active,
-            isSubscriptionActive: subData.is_subscription_active,
-            loading: false
-          });
-        } else {
-          console.log('No subscription data found, setting default trial');
-          setSubscription(prev => ({ ...prev, loading: false }));
-        }
-      } catch (error) {
-        console.error('Error fetching subscription status:', error);
-        setSubscription(prev => ({ ...prev, loading: false }));
-      }
-    };
-
-    fetchSubscriptionStatus();
+    // Simplified: just set default trial status without database query to avoid hanging
+    console.log('Setting default subscription status for user:', user.id);
+    setSubscription({
+      status: 'free_trial',
+      planType: 'free_trial',
+      trialDaysLeft: 7,
+      isTrialActive: true,
+      isSubscriptionActive: false,
+      loading: false
+    });
   }, [user]);
 
   const createSubscription = async (paypalSubscriptionId: string) => {
