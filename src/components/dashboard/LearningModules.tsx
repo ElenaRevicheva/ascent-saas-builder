@@ -67,7 +67,7 @@ export const LearningModules = () => {
 
       if (modulesError) throw modulesError;
 
-      // Load user progress
+      // Load user module progress
       const { data: progressData, error: progressError } = await supabase
         .from('user_module_progress')
         .select('*')
@@ -75,13 +75,100 @@ export const LearningModules = () => {
 
       if (progressError) throw progressError;
 
+      // Load learning sessions to calculate additional progress
+      const { data: sessionsData, error: sessionsError } = await supabase
+        .from('learning_sessions')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false });
+
+      if (sessionsError) throw sessionsError;
+
       setModules(modulesData || []);
       
-      // Convert progress array to object for easy lookup
+      // Convert progress array to object and enhance with session data
       const progressMap: {[key: string]: ModuleProgress} = {};
+      
+      // First, add existing module progress
       progressData?.forEach(progress => {
         progressMap[progress.module_id] = progress;
       });
+
+      // Then, calculate progress from learning sessions for each module
+      modulesData?.forEach(module => {
+        const moduleVocabulary = (module.lesson_content as any)?.vocabulary || [];
+        const relatedSessions = sessionsData?.filter(session => {
+          const sessionContent = session.content as any;
+          const sessionVocab = (session.progress_data as any)?.vocabulary_learned || [];
+          
+          // Check if session vocabulary matches module vocabulary
+          const vocabMatch = sessionVocab.some((word: string) => 
+            moduleVocabulary.some((moduleWord: string) => 
+              moduleWord.toLowerCase().includes(word.toLowerCase()) ||
+              word.toLowerCase().includes(moduleWord.toLowerCase())
+            )
+          );
+          
+          // Check if session content mentions module topics
+          const contentMatch = sessionContent?.message && 
+            moduleVocabulary.some((word: string) => 
+              sessionContent.message.toLowerCase().includes(word.toLowerCase())
+            );
+          
+          return vocabMatch || contentMatch;
+        }) || [];
+
+        if (relatedSessions.length > 0) {
+          const existingProgress = progressMap[module.id];
+          const sessionVocabulary = relatedSessions.flatMap(session => 
+            (session.progress_data as any)?.vocabulary_learned || []
+          );
+          const sessionTimeSpent = relatedSessions.reduce((total, session) => 
+            total + (session.duration_minutes || 0), 0
+          );
+          
+          // Calculate progress based on vocabulary learned from sessions
+          const uniqueSessionVocab = [...new Set(sessionVocabulary)];
+          const moduleVocabCount = moduleVocabulary.length;
+          const sessionProgressPercentage = Math.min(
+            Math.round((uniqueSessionVocab.length / Math.max(moduleVocabCount, 1)) * 100), 
+            100
+          );
+
+          if (!existingProgress) {
+            // Create new progress entry based on sessions
+            progressMap[module.id] = {
+              module_id: module.id,
+              progress_percentage: sessionProgressPercentage,
+              is_completed: sessionProgressPercentage >= 80, // 80% threshold for completion
+              time_spent_minutes: sessionTimeSpent,
+              vocabulary_learned: uniqueSessionVocab,
+              confidence_score: 0.7 // Default confidence from chat sessions
+            };
+          } else {
+            // Merge session progress with existing module progress
+            const combinedVocab = [...new Set([
+              ...(existingProgress.vocabulary_learned || []),
+              ...uniqueSessionVocab
+            ])];
+            const combinedTime = (existingProgress.time_spent_minutes || 0) + sessionTimeSpent;
+            const combinedProgress = Math.max(
+              existingProgress.progress_percentage,
+              sessionProgressPercentage
+            );
+
+            progressMap[module.id] = {
+              ...existingProgress,
+              progress_percentage: combinedProgress,
+              is_completed: combinedProgress >= 80 || existingProgress.is_completed,
+              time_spent_minutes: combinedTime,
+              vocabulary_learned: combinedVocab,
+              confidence_score: Math.max(existingProgress.confidence_score || 0, 0.7)
+            };
+          }
+        }
+      });
+
       setUserProgress(progressMap);
 
     } catch (error) {

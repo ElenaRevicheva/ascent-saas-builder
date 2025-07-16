@@ -76,11 +76,65 @@ export default function LearningModulePage() {
         .eq('module_id', moduleId)
         .maybeSingle();
 
+      // Load related learning sessions to calculate existing progress
+      const { data: sessionsData, error: sessionsError } = await supabase
+        .from('learning_sessions')
+        .select('*')
+        .eq('user_id', user?.id);
+
+      if (sessionsError) throw sessionsError;
+
       setModule(moduleData);
-      setProgress(progressData);
+
+      // Calculate progress from sessions if no formal progress exists
+      const moduleVocabulary = (moduleData.lesson_content as any)?.vocabulary || [];
+      const relatedSessions = sessionsData?.filter(session => {
+        const sessionContent = session.content as any;
+        const sessionVocab = (session.progress_data as any)?.vocabulary_learned || [];
+        
+        // Check if session vocabulary matches module vocabulary
+        const vocabMatch = sessionVocab.some((word: string) => 
+          moduleVocabulary.some((moduleWord: string) => 
+            moduleWord.toLowerCase().includes(word.toLowerCase()) ||
+            word.toLowerCase().includes(moduleWord.toLowerCase())
+          )
+        );
+        
+        return vocabMatch;
+      }) || [];
+
+      if (!progressData && relatedSessions.length > 0) {
+        // Create initial progress based on existing sessions
+        const sessionVocabulary = relatedSessions.flatMap(session => 
+          (session.progress_data as any)?.vocabulary_learned || []
+        );
+        const sessionTimeSpent = relatedSessions.reduce((total, session) => 
+          total + (session.duration_minutes || 0), 0
+        );
+        
+        const uniqueSessionVocab = [...new Set(sessionVocabulary)];
+        const sessionProgressPercentage = Math.min(
+          Math.round((uniqueSessionVocab.length / Math.max(moduleVocabulary.length, 1)) * 100), 
+          100
+        );
+
+        const calculatedProgress = {
+          module_id: moduleId as string,
+          progress_percentage: sessionProgressPercentage,
+          is_completed: sessionProgressPercentage >= 80,
+          time_spent_minutes: sessionTimeSpent,
+          vocabulary_learned: uniqueSessionVocab,
+          confidence_score: 0.7
+        };
+
+        setProgress(calculatedProgress);
+        setCurrentStep(Math.floor((sessionProgressPercentage / 100) * 3)); // Assume 3 steps per module
+      } else {
+        setProgress(progressData);
+      }
       
-      // If no progress exists, create initial progress
-      if (!progressData) {
+      // If no progress exists at all, create initial progress
+      if (!progressData && relatedSessions.length === 0) {
         const { error: createError } = await supabase
           .from('user_module_progress')
           .insert({
