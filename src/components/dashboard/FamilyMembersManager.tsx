@@ -95,6 +95,7 @@ export const FamilyMembersManager = () => {
   };
 
   const saveFamilyMember = async () => {
+    console.log('Attempting to save family member:', formData);
     if (!formData.name?.trim()) {
       toast.error('Name is required');
       return;

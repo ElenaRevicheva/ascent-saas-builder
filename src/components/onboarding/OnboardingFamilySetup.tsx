@@ -47,7 +47,9 @@ export const OnboardingFamilySetup = ({ onComplete, onNext, onPrevious }: Onboar
   const [isLoading, setIsLoading] = useState(false);
 
   const addMember = () => {
+    console.log('Adding family member...');
     setFamilyMembers(prev => [...prev, { name: '', role: 'child', learning_level: 'beginner', age: undefined }]);
+    console.log('Family members after add:', familyMembers);
   };
 
   const removeMember = (index: number) => {
