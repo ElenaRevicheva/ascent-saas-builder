@@ -109,11 +109,12 @@ export const LearningRoadmap = () => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button 
-          variant="outline" 
-          className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm"
+          variant="default" 
+          size="lg"
+          className="bg-green-600 hover:bg-green-700 text-white shadow-lg px-8 py-3 text-lg font-semibold"
         >
-          <Map className="h-4 w-4 mr-2" />
-          Your Learning Journey
+          <Map className="h-5 w-5 mr-2" />
+          Your Learning Roadmap
         </Button>
       </DialogTrigger>
       
