@@ -55,14 +55,58 @@ export const TelegramProgress = () => {
   const getTotalStats = () => {
     const totalSessions = sessions.length;
     const totalMinutes = sessions.reduce((sum, s) => sum + (s.duration_minutes || 0), 0);
+    
+    // Extract both vocabulary and phrases
     const allVocabulary = sessions.flatMap(s => s.progress_data?.vocabulary_learned || []);
     const uniqueVocabulary = [...new Set(allVocabulary)];
+    
+    // Extract Spanish phrases from bot responses
+    const spanishPhrases: string[] = [];
+    sessions.forEach(session => {
+      const botResponse = session.content?.bot_response || '';
+      
+      // Extract phrases in **bold** (Spanish phrases)
+      const boldMatches = botResponse.match(/\*\*([^*]+)\*\*/g);
+      if (boldMatches) {
+        boldMatches.forEach((match: string) => {
+          const phrase = match.replace(/\*\*/g, '').trim();
+          if (phrase.length > 3 && !phrase.includes('(') && !phrase.includes(':')) {
+            spanishPhrases.push(phrase);
+          }
+        });
+      }
+      
+      // Extract phrases with quotes
+      const quoteMatches = botResponse.match(/"([^"]+)"/g);
+      if (quoteMatches) {
+        quoteMatches.forEach((match: string) => {
+          const phrase = match.replace(/"/g, '').trim();
+          if (phrase.length > 3 && phrase.split(' ').length <= 6) {
+            spanishPhrases.push(phrase);
+          }
+        });
+      }
+      
+      // Extract bullet point phrases (starting with -)
+      const bulletMatches = botResponse.match(/- ([^\n]+)/g);
+      if (bulletMatches) {
+        bulletMatches.forEach((match: string) => {
+          const phrase = match.replace(/^- /, '').trim();
+          if (phrase.length > 3 && phrase.split(' ').length <= 5) {
+            spanishPhrases.push(phrase);
+          }
+        });
+      }
+    });
+    
+    const uniquePhrases = [...new Set(spanishPhrases)].slice(0, 10); // Limit to 10 phrases
     
     return {
       totalSessions,
       totalMinutes,
       vocabularyCount: uniqueVocabulary.length,
-      uniqueVocabulary
+      uniqueVocabulary,
+      phrases: uniquePhrases
     };
   };
 
@@ -102,9 +146,9 @@ export const TelegramProgress = () => {
           
           <div className="text-center p-4 bg-background/50 rounded-lg">
             <div className="text-2xl font-bold text-[hsl(var(--espaluz-primary))]">
-              {stats.vocabularyCount}
+              {stats.phrases.length + stats.vocabularyCount}
             </div>
-            <div className="text-sm text-muted-foreground">Words Learned</div>
+            <div className="text-sm text-muted-foreground">Phrases & Words</div>
           </div>
           
           <div className="text-center p-4 bg-background/50 rounded-lg">
@@ -115,16 +159,38 @@ export const TelegramProgress = () => {
           </div>
         </div>
 
-        {/* Vocabulary Learned */}
+        {/* Core Spanish Phrases */}
+        {stats.phrases.length > 0 && (
+          <div>
+            <h4 className="font-medium mb-4 flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
+              Core Spanish Phrases from Your Chats
+            </h4>
+            <div className="grid gap-3 md:grid-cols-2">
+              {stats.phrases.map((phrase, index) => (
+                <div 
+                  key={index} 
+                  className="p-3 bg-[hsl(var(--espaluz-primary))]/10 border border-[hsl(var(--espaluz-primary))]/20 rounded-lg hover-scale"
+                >
+                  <span className="text-base font-medium text-[hsl(var(--espaluz-primary))]">
+                    {phrase}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Individual Vocabulary Words */}
         {stats.uniqueVocabulary.length > 0 && (
           <div>
             <h4 className="font-medium mb-3 flex items-center gap-2">
-              <BookOpen className="h-4 w-4" />
-              Vocabulary from Telegram Chats
+              <Trophy className="h-4 w-4 text-yellow-500" />
+              Individual Words Learned
             </h4>
             <div className="flex flex-wrap gap-2">
               {stats.uniqueVocabulary.map((word, index) => (
-                <Badge key={index} variant="secondary" className="text-sm">
+                <Badge key={index} variant="secondary" className="text-sm px-3 py-1">
                   {word}
                 </Badge>
               ))}
