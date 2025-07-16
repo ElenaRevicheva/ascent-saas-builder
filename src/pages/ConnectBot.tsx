@@ -96,9 +96,14 @@ const ConnectBot = () => {
       if (insertError) throw insertError;
       
       setConnectionCode(codeData);
+      
+      // Send the code to Telegram bot
+      const telegramUrl = `https://t.me/EspaLuzFamily_bot?start=${generatedCode}`;
+      window.open(telegramUrl, '_blank');
+      
       toast({
         title: t('connectBot.title'),
-        description: t('connectBot.generateCode')
+        description: "Connection code generated and sent to Telegram bot!"
       });
     } catch (error) {
       console.error('Error generating connection code:', error);
@@ -247,7 +252,7 @@ const ConnectBot = () => {
                   <Alert>
                     <MessageSquare className="h-4 w-4" />
                     <AlertDescription>
-                      Send this code to our Telegram bot <strong>@EspaLuzBot</strong> to complete the connection.
+                      Your connection code has been sent to our Telegram bot <strong>@EspaLuzFamily_bot</strong>. Check your Telegram for further instructions.
                     </AlertDescription>
                   </Alert>
                 </div>
