@@ -352,7 +352,7 @@ export const TelegramProgress = () => {
                     <Badge 
                       key={index} 
                       variant="secondary" 
-                      className="text-sm px-3 py-1.5 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-yellow-500/30 text-yellow-700 dark:text-yellow-300 hover-scale"
+                      className="text-sm px-3 py-1.5 bg-gradient-to-r from-rose-100/60 to-pink-100/60 border-rose-200/40 text-rose-700 dark:text-rose-300 dark:from-rose-900/30 dark:to-pink-900/30 dark:border-rose-800/30 hover-scale"
                     >
                       {word}
                     </Badge>
