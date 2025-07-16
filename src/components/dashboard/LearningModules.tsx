@@ -108,26 +108,29 @@ export const LearningModules = () => {
       // Then, calculate progress from learning sessions for each module
       modulesData?.forEach(module => {
         const moduleVocabulary = (module.lesson_content as any)?.vocabulary || [];
+        console.log(`Module ${module.title} vocabulary:`, moduleVocabulary);
+        
         const relatedSessions = sessionsData?.filter(session => {
-          const sessionContent = session.content as any;
           const sessionVocab = (session.progress_data as any)?.vocabulary_learned || [];
+          console.log(`Session ${session.id} vocabulary:`, sessionVocab);
           
-          // Check if session vocabulary matches module vocabulary
-          const vocabMatch = sessionVocab.some((word: string) => 
-            moduleVocabulary.some((moduleWord: string) => 
-              moduleWord.toLowerCase().includes(word.toLowerCase()) ||
-              word.toLowerCase().includes(moduleWord.toLowerCase())
-            )
+          // Check if any session vocabulary matches any module vocabulary
+          const vocabMatch = sessionVocab.some((sessionWord: string) => 
+            moduleVocabulary.some((moduleWord: string) => {
+              const match = moduleWord.toLowerCase() === sessionWord.toLowerCase() ||
+                           moduleWord.toLowerCase().includes(sessionWord.toLowerCase()) ||
+                           sessionWord.toLowerCase().includes(moduleWord.toLowerCase());
+              if (match) {
+                console.log(`Vocabulary match found: "${sessionWord}" matches "${moduleWord}"`);
+              }
+              return match;
+            })
           );
           
-          // Check if session content mentions module topics
-          const contentMatch = sessionContent?.message && 
-            moduleVocabulary.some((word: string) => 
-              sessionContent.message.toLowerCase().includes(word.toLowerCase())
-            );
-          
-          return vocabMatch || contentMatch;
+          return vocabMatch;
         }) || [];
+
+        console.log(`Module ${module.title} has ${relatedSessions.length} related sessions`);
 
         if (relatedSessions.length > 0) {
           const existingProgress = progressMap[module.id];
@@ -141,26 +144,53 @@ export const LearningModules = () => {
           // Calculate progress based on vocabulary learned from sessions
           const uniqueSessionVocab = [...new Set(sessionVocabulary)];
           const moduleVocabCount = moduleVocabulary.length;
+          const matchedVocabCount = uniqueSessionVocab.filter(sessionWord =>
+            moduleVocabulary.some(moduleWord => 
+              moduleWord.toLowerCase() === sessionWord.toLowerCase() ||
+              moduleWord.toLowerCase().includes(sessionWord.toLowerCase()) ||
+              sessionWord.toLowerCase().includes(moduleWord.toLowerCase())
+            )
+          ).length;
+          
           const sessionProgressPercentage = Math.min(
-            Math.round((uniqueSessionVocab.length / Math.max(moduleVocabCount, 1)) * 100), 
+            Math.round((matchedVocabCount / Math.max(moduleVocabCount, 1)) * 100), 
             100
           );
+
+          console.log(`Module ${module.title} progress calculation:`, {
+            matchedVocabCount,
+            moduleVocabCount,
+            sessionProgressPercentage,
+            uniqueSessionVocab
+          });
 
           if (!existingProgress) {
             // Create new progress entry based on sessions
             progressMap[module.id] = {
               module_id: module.id,
               progress_percentage: sessionProgressPercentage,
-              is_completed: sessionProgressPercentage >= 80, // 80% threshold for completion
+              is_completed: sessionProgressPercentage >= 80,
               time_spent_minutes: sessionTimeSpent,
-              vocabulary_learned: uniqueSessionVocab,
-              confidence_score: 0.7 // Default confidence from chat sessions
+              vocabulary_learned: uniqueSessionVocab.filter(sessionWord =>
+                moduleVocabulary.some(moduleWord => 
+                  moduleWord.toLowerCase() === sessionWord.toLowerCase() ||
+                  moduleWord.toLowerCase().includes(sessionWord.toLowerCase()) ||
+                  sessionWord.toLowerCase().includes(moduleWord.toLowerCase())
+                )
+              ),
+              confidence_score: 0.7
             };
           } else {
             // Merge session progress with existing module progress
             const combinedVocab = [...new Set([
               ...(existingProgress.vocabulary_learned || []),
-              ...uniqueSessionVocab
+              ...uniqueSessionVocab.filter(sessionWord =>
+                moduleVocabulary.some(moduleWord => 
+                  moduleWord.toLowerCase() === sessionWord.toLowerCase() ||
+                  moduleWord.toLowerCase().includes(sessionWord.toLowerCase()) ||
+                  sessionWord.toLowerCase().includes(moduleWord.toLowerCase())
+                )
+              )
             ])];
             const combinedTime = (existingProgress.time_spent_minutes || 0) + sessionTimeSpent;
             const combinedProgress = Math.max(
@@ -177,6 +207,8 @@ export const LearningModules = () => {
               confidence_score: Math.max(existingProgress.confidence_score || 0, 0.7)
             };
           }
+
+          console.log(`Final progress for ${module.title}:`, progressMap[module.id]);
         }
       });
 
