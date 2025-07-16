@@ -129,18 +129,20 @@ const Dashboard = () => {
 
       <div className="container mx-auto px-4 py-8">
         {/* Learning Analytics - Top Priority */}
-        <div className="mb-8">
+        <div className="mb-8" data-learning-analytics>
           <LearningAnalytics />
         </div>
 
         {/* Main Dashboard Cards */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
-          <AccountStatusCard 
-            planType={planType}
-            isTrialActive={isTrialActive}
-            trialDaysLeft={trialDaysLeft}
-            isSubscriptionActive={isSubscriptionActive}
-          />
+          <div data-account-status>
+            <AccountStatusCard 
+              planType={planType}
+              isTrialActive={isTrialActive}
+              trialDaysLeft={trialDaysLeft}
+              isSubscriptionActive={isSubscriptionActive}
+            />
+          </div>
           
           <QuickActionsCard />
           
@@ -154,7 +156,9 @@ const Dashboard = () => {
           <LearningModules />
           <div className="space-y-6">
             <AvatarUpload />
-            <FamilyMembersManager />
+            <div data-family-members>
+              <FamilyMembersManager />
+            </div>
           </div>
         </div>
 

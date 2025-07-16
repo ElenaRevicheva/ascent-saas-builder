@@ -5,6 +5,7 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
 import familyLearningSpanish from '@/assets/family-learning-spanish.jpg';
 import brandAvatar1 from '@/assets/brand-avatar-1.jpg';
+import { LearningRoadmap } from './LearningRoadmap';
 
 interface DashboardHeaderProps {
   user: any;
@@ -65,9 +66,10 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
               <h2 className="text-4xl font-bold text-purple-700 mb-4">
                 {t('dashboard.welcome')}
               </h2>
-              <p className="text-lg text-orange-700 max-w-2xl mx-auto">
+              <p className="text-lg text-orange-700 max-w-2xl mx-auto mb-6">
                 {t('dashboard.subtitle')}
               </p>
+              <LearningRoadmap />
             </div>
         </div>
       </div>
