@@ -12,7 +12,8 @@ import {
   Brain,
   Calendar,
   Award,
-  BookOpen
+  BookOpen,
+  MessageSquare
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -52,6 +53,7 @@ export const LearningAnalytics = () => {
     weeklyProgress: [0, 0, 0, 0, 0, 0, 0]
   });
   const [loading, setLoading] = useState(true);
+  const [allSessionsData, setAllSessionsData] = useState<any[]>([]);
 
   useEffect(() => {
     if (user) {
@@ -144,6 +146,9 @@ export const LearningAnalytics = () => {
         recentAchievements: achievementsData || [],
         weeklyProgress
       });
+
+      // Set sessions data for detailed view
+      setAllSessionsData(allSessionsData || []);
 
     } catch (error) {
       console.error('Error loading learning stats:', error);
@@ -336,36 +341,81 @@ export const LearningAnalytics = () => {
         </Card>
       </div>
 
-      {/* Additional Stats */}
+      {/* Recent Learning Sessions */}
       <Card className="border-border/50 shadow-magical" style={{ background: 'var(--gradient-card)' }}>
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2">
-            <Clock className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
-            Learning Summary
+            <MessageSquare className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
+            Recent Learning Sessions
+            <Badge variant="secondary" className="ml-auto">
+              {allSessionsData?.length || 0} total
+            </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="text-center">
-              <p className="text-2xl font-bold text-[hsl(var(--espaluz-primary))]">
-                {Math.floor(stats.totalTimeSpent / 60)}h {stats.totalTimeSpent % 60}m
+          <div className="space-y-4">
+            {allSessionsData && allSessionsData.length > 0 ? (
+              allSessionsData.slice(0, 5).map((session) => {
+                const progressData = session.progress_data as any;
+                const vocabularyLearned = progressData?.vocabulary_learned || [];
+                const content = session.content as any;
+                
+                return (
+                  <div key={session.id} className="border rounded-lg p-4 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        {session.source === 'telegram' ? (
+                          <MessageSquare className="h-4 w-4 text-blue-500" />
+                        ) : (
+                          <BookOpen className="h-4 w-4 text-green-500" />
+                        )}
+                        <span className="font-medium text-sm">
+                          {session.source === 'telegram' ? 'Telegram Chat' : 'Learning Module'}
+                        </span>
+                        <Badge variant="outline" className="text-xs">
+                          {session.session_type}
+                        </Badge>
+                      </div>
+                      <span className="text-xs text-muted-foreground">
+                        {new Date(session.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                    
+                    {vocabularyLearned.length > 0 && (
+                      <div>
+                        <p className="text-sm text-muted-foreground mb-1">Vocabulary learned:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {vocabularyLearned.map((word: string, index: number) => (
+                            <Badge key={index} variant="secondary" className="text-xs">
+                              {word}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {content?.message && (
+                      <div className="text-sm text-muted-foreground italic">
+                        "{content.message.substring(0, 100)}{content.message.length > 100 ? '...' : ''}"
+                      </div>
+                    )}
+                    
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                      {session.duration_minutes && (
+                        <span>Duration: {session.duration_minutes} min</span>
+                      )}
+                      {progressData?.spanish_words_total && (
+                        <span>Spanish words: {progressData.spanish_words_total}</span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <p className="text-center text-muted-foreground py-4">
+                No learning sessions found. Start chatting with your Telegram bot!
               </p>
-              <p className="text-sm text-muted-foreground">Total Time Studied</p>
-            </div>
-            
-            <div className="text-center">
-              <p className="text-2xl font-bold text-[hsl(var(--espaluz-primary))]">
-                {stats.longestStreak}
-              </p>
-              <p className="text-sm text-muted-foreground">Longest Streak</p>
-            </div>
-            
-            <div className="text-center">
-              <p className="text-2xl font-bold text-[hsl(var(--espaluz-primary))]">
-                {stats.totalTimeSpent > 0 ? Math.round(stats.vocabularyLearned / (stats.totalTimeSpent / 60)) : 0}
-              </p>
-              <p className="text-sm text-muted-foreground">Words per Hour</p>
-            </div>
+            )}
           </div>
         </CardContent>
       </Card>
