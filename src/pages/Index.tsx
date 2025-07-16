@@ -155,20 +155,20 @@ const Index = () => {
           <div className="flex items-center justify-start text-left">
             <span className="text-3xl mr-3">📱</span>
             <div>
-              <span className="font-bold text-blue-600 text-lg">Always with you</span>
-              <span className="text-muted-foreground text-lg"> — chat via Telegram or Web, anytime, anywhere</span>
+              <span className="font-bold text-blue-600 text-lg">Your Spanish companion everywhere</span>
+              <span className="text-muted-foreground text-lg"> — Web, Telegram, WhatsApp, 24/7</span>
             </div>
           </div>
           
           <div className="flex items-start justify-start text-left">
             <span className="text-3xl mr-3">🌍</span>
             <div>
-              <span className="font-bold text-green-600 text-lg">Made for real lives</span>
+              <span className="font-bold text-green-600 text-lg">Built for real adventures</span>
               <span className="text-muted-foreground text-lg"> — perfect for:</span>
-              <ul className="mt-2 ml-4 space-y-1">
-                <li className="text-orange-600">• English speakers traveling or relocating to LATAM</li>
-                <li className="text-purple-600">• Spanish speakers mastering English for work, travel, or study</li>
-              </ul>
+              <div className="mt-2 ml-4">
+                <p className="text-orange-600 leading-relaxed">English speakers heading to LATAM - Whether you're moving to Panama, exploring Mexico, working in Costa Rica, discovering El Salvador, or calling Colombia home, we've got you covered! Learn the Spanish AND the culture of your exact destination.</p>
+                <p className="text-purple-600 mt-2">Spanish speakers mastering English for work, travel, or study</p>
+              </div>
             </div>
           </div>
         </div>
