@@ -82,12 +82,15 @@ const Dashboard = () => {
                                  
       if (shouldScrollToChat && chatRef.current) {
         setTimeout(() => {
-          // Scroll directly to the chat section with better positioning
-          chatRef.current?.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start' // Change to 'start' to position chat at top
-          });
-        }, 500); // Increased delay to ensure all components are loaded
+          chatRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(() => {
+            const rect = chatRef.current?.getBoundingClientRect();
+            if (rect) {
+              const scrollY = window.scrollY + rect.top - window.innerHeight / 4;
+              window.scrollTo({ top: scrollY, behavior: 'smooth' });
+            }
+          }, 400);
+        }, 300); // Increased delay to ensure page is fully loaded
       }
     };
     
