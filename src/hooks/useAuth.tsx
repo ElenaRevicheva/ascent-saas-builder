@@ -20,19 +20,52 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const cleanupAuthState = () => {
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+          try {
+            const value = localStorage.getItem(key);
+            if (value && value.includes('refresh_token')) {
+              localStorage.removeItem(key);
+            }
+          } catch (e) {
+            // Ignore cleanup errors
+          }
+        }
+      });
+    };
+
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        if (event === 'TOKEN_REFRESHED' && !session) {
+          // Token refresh failed, clean up invalid tokens
+          cleanupAuthState();
+        }
+        
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
       }
     );
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    // THEN check for existing session with error handling
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error && error.message.includes('refresh_token')) {
+        console.log('Cleaning up invalid session tokens');
+        cleanupAuthState();
+        setSession(null);
+        setUser(null);
+      } else {
+        setSession(session);
+        setUser(session?.user ?? null);
+      }
+      setLoading(false);
+    }).catch((error) => {
+      console.error('Session error:', error);
+      cleanupAuthState();
+      setSession(null);
+      setUser(null);
       setLoading(false);
     });
 
