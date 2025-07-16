@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -43,6 +44,7 @@ interface ModuleProgress {
 export const LearningModules = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [modules, setModules] = useState<LearningModule[]>([]);
   const [userProgress, setUserProgress] = useState<{[key: string]: ModuleProgress}>({});
   const [loading, setLoading] = useState(true);
@@ -91,25 +93,8 @@ export const LearningModules = () => {
   };
 
   const startModule = async (module: LearningModule) => {
-    setSelectedModule(module);
-    
-    // Create or update progress entry
-    try {
-      const { error } = await supabase
-        .from('user_module_progress')
-        .upsert({
-          user_id: user?.id,
-          module_id: module.id,
-          progress_percentage: userProgress[module.id]?.progress_percentage || 0
-        });
-
-      if (error) throw error;
-      
-      toast.success(`Started learning: ${module.title}`);
-    } catch (error) {
-      console.error('Error starting module:', error);
-      toast.error('Failed to start module');
-    }
+    // Navigate to the learning module page
+    navigate(`/learning/${module.id}`);
   };
 
   const getDifficultyColor = (level: string) => {
