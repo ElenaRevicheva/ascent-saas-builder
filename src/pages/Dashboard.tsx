@@ -16,6 +16,7 @@ import { LearningModules } from '@/components/dashboard/LearningModules';
 import { LearningAnalytics } from '@/components/dashboard/LearningAnalytics';
 import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
 import { ReferralSystem } from '@/components/ReferralSystem';
+import { TelegramProgress } from '@/components/dashboard/TelegramProgress';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -149,6 +150,11 @@ const Dashboard = () => {
           <LearningProgressCard hasFeatureAccess={hasFeatureAccess} />
           
           <FeatureAccessCard hasFeatureAccess={hasFeatureAccess} />
+        </div>
+
+        {/* Telegram Progress - High Priority */}
+        <div className="mb-8">
+          <TelegramProgress />
         </div>
 
         {/* Learning Modules and Management */}
