@@ -228,7 +228,6 @@ export const LearningModules = () => {
                   className={`p-4 rounded-lg border transition-all hover:shadow-md ${
                     isUnlocked ? 'bg-background/50 border-border cursor-pointer' : 'bg-muted/30 border-muted'
                   }`}
-                  onClick={() => isUnlocked && startModule(module)}
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-2">
