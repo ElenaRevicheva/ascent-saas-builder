@@ -81,16 +81,10 @@ const Dashboard = () => {
                                  (location.state as any)?.scrollToChat;
                                  
       if (shouldScrollToChat && chatRef.current) {
+        // Simple scroll with a single timeout
         setTimeout(() => {
-          chatRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          setTimeout(() => {
-            const rect = chatRef.current?.getBoundingClientRect();
-            if (rect) {
-              const scrollY = window.scrollY + rect.top - window.innerHeight / 4;
-              window.scrollTo({ top: scrollY, behavior: 'smooth' });
-            }
-          }, 400);
-        }, 300); // Increased delay to ensure page is fully loaded
+          chatRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 500);
       }
     };
     
