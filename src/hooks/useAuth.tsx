@@ -2,13 +2,12 @@ import { useState, useEffect, createContext, useContext } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useAnalytics } from '@/hooks/useAnalytics';
-import { useReferralTracking } from '@/hooks/useReferralTracking';
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string, fullName?: string, referralCode?: string) => Promise<{ error: any; user?: User | null }>;
+  signUp: (email: string, password: string, fullName?: string) => Promise<{ error: any; user?: User | null }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
 }
@@ -19,7 +18,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const { processReferralSignup } = useReferralTracking();
 
   useEffect(() => {
     const cleanupAuthState = () => {
@@ -74,7 +72,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, fullName?: string, referralCode?: string) => {
+  const signUp = async (email: string, password: string, fullName?: string) => {
     const redirectUrl = `${window.location.origin}/`;
     
     const { data, error } = await supabase.auth.signUp({
@@ -87,18 +85,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
       }
     });
-    
-    // Process referral if user signed up successfully and referral code provided
-    if (data?.user && !error && referralCode) {
-      setTimeout(async () => {
-        try {
-          await processReferralSignup(data.user.id, referralCode);
-          console.log('Referral processed for user:', data.user.id, 'with code:', referralCode);
-        } catch (err) {
-          console.error('Error processing referral:', err);
-        }
-      }, 2000); // Wait a bit longer for user creation to complete
-    }
     
     // Track signup in analytics (will be tracked when user logs in)
     if (data?.user && !error) {

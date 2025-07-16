@@ -107,8 +107,7 @@ const Auth = () => {
       const { user, error } = await signUp(
         formData.email, 
         formData.password, 
-        formData.fullName,
-        formData.referralCode || undefined
+        formData.fullName
       );
       
       if (error) {
@@ -118,6 +117,10 @@ const Auth = () => {
           setError(error.message);
         }
       } else {
+        // Process referral if user came from a referral link or entered a code
+        if (user && formData.referralCode) {
+          await processReferralSignup(user.id, formData.referralCode);
+        }
         toast({
           title: "Account created!",
           description: "Please check your email to confirm your account.",
