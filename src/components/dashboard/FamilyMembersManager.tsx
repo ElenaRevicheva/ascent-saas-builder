@@ -18,11 +18,11 @@ interface FamilyMember {
   role: string;
   age?: number;
   learning_level: string;
-  interests: string[];
+  interests: string[] | string; // Allow both array and string for form editing
   tone: string;
   spanish_preference: number;
   english_preference: number;
-  name_variants: string[];
+  name_variants: string[] | string; // Allow both array and string for form editing
   is_active: boolean;
   created_at?: string;
   updated_at?: string;
@@ -64,11 +64,11 @@ export const FamilyMembersManager = () => {
     role: 'adult',
     age: undefined,
     learning_level: 'beginner',
-    interests: [],
+    interests: '',  // Start with empty string for easier editing
     tone: 'conversational',
     spanish_preference: 0.5,
     english_preference: 0.5,
-    name_variants: [],
+    name_variants: '',  // Start with empty string for easier editing
     is_active: true
   });
 
@@ -108,13 +108,15 @@ export const FamilyMembersManager = () => {
         role: formData.role || 'adult',
         age: formData.age,
         learning_level: formData.learning_level || 'beginner',
-        interests: Array.isArray(formData.interests) ? formData.interests : 
-          formData.interests ? [formData.interests as any] : [],
+        interests: typeof formData.interests === 'string' 
+          ? formData.interests.split(',').map(s => s.trim()).filter(s => s)
+          : Array.isArray(formData.interests) ? formData.interests : [],
         tone: formData.tone || 'conversational',
         spanish_preference: formData.spanish_preference || 0.5,
         english_preference: formData.english_preference || 0.5,
-        name_variants: Array.isArray(formData.name_variants) ? formData.name_variants :
-          formData.name_variants ? [formData.name_variants as any] : [],
+        name_variants: typeof formData.name_variants === 'string'
+          ? formData.name_variants.split(',').map(s => s.trim()).filter(s => s)
+          : Array.isArray(formData.name_variants) ? formData.name_variants : [],
         is_active: formData.is_active !== undefined ? formData.is_active : true,
         user_id: user?.id!
       };
@@ -169,18 +171,22 @@ export const FamilyMembersManager = () => {
       role: 'adult',
       age: undefined,
       learning_level: 'beginner',
-      interests: [],
+      interests: '',  // Reset to empty string
       tone: 'conversational',
       spanish_preference: 0.5,
       english_preference: 0.5,
-      name_variants: [],
+      name_variants: '',  // Reset to empty string
       is_active: true
     });
     setEditingMember(null);
   };
 
   const openEditDialog = (member: FamilyMember) => {
-    setFormData({ ...member });
+    setFormData({ 
+      ...member,
+      interests: Array.isArray(member.interests) ? member.interests.join(', ') : member.interests,
+      name_variants: Array.isArray(member.name_variants) ? member.name_variants.join(', ') : member.name_variants
+    });
     setEditingMember(member);
     setIsDialogOpen(true);
   };
@@ -191,13 +197,13 @@ export const FamilyMembersManager = () => {
   };
 
   const handleInterestsChange = (value: string) => {
-    const interests = value.split(',').map(s => s.trim()).filter(s => s);
-    setFormData(prev => ({ ...prev, interests }));
+    // Store the raw string value to allow proper typing
+    setFormData(prev => ({ ...prev, interests: value }));
   };
 
   const handleVariantsChange = (value: string) => {
-    const variants = value.split(',').map(s => s.trim()).filter(s => s);
-    setFormData(prev => ({ ...prev, name_variants: variants }));
+    // Store the raw string value to allow proper typing
+    setFormData(prev => ({ ...prev, name_variants: value }));
   };
 
   return (
@@ -327,22 +333,22 @@ export const FamilyMembersManager = () => {
                 
                 <div>
                   <Label htmlFor="interests">Interests (comma-separated)</Label>
-                  <Input
-                    id="interests"
-                    value={Array.isArray(formData.interests) ? formData.interests.join(', ') : ''}
-                    onChange={(e) => handleInterestsChange(e.target.value)}
-                    placeholder="e.g. cooking, travel, music, sports"
-                  />
+                   <Input
+                     id="interests"
+                     value={typeof formData.interests === 'string' ? formData.interests : (Array.isArray(formData.interests) ? formData.interests.join(', ') : '')}
+                     onChange={(e) => handleInterestsChange(e.target.value)}
+                     placeholder="e.g. cooking, travel, music, sports"
+                   />
                 </div>
                 
                 <div>
                   <Label htmlFor="variants">Name Variants (comma-separated)</Label>
-                  <Input
-                    id="variants"
-                    value={Array.isArray(formData.name_variants) ? formData.name_variants.join(', ') : ''}
-                    onChange={(e) => handleVariantsChange(e.target.value)}
-                    placeholder="e.g. Elena, Лена, Lenka"
-                  />
+                   <Input
+                     id="variants"
+                     value={typeof formData.name_variants === 'string' ? formData.name_variants : (Array.isArray(formData.name_variants) ? formData.name_variants.join(', ') : '')}
+                     onChange={(e) => handleVariantsChange(e.target.value)}
+                     placeholder="e.g. Elena, Лена, Lenka"
+                   />
                 </div>
               </div>
               
@@ -387,11 +393,11 @@ export const FamilyMembersManager = () => {
                     <span className="mx-2">•</span>
                     <span>Spanish: {Math.round(member.spanish_preference * 100)}%</span>
                   </div>
-                  {member.interests && member.interests.length > 0 && (
-                    <div className="text-xs text-muted-foreground mt-1">
-                      Interests: {member.interests.join(', ')}
-                    </div>
-                  )}
+                   {member.interests && (Array.isArray(member.interests) ? member.interests.length > 0 : member.interests.length > 0) && (
+                     <div className="text-xs text-muted-foreground mt-1">
+                       Interests: {Array.isArray(member.interests) ? member.interests.join(', ') : member.interests}
+                     </div>
+                   )}
                 </div>
                 
                 <div className="flex items-center gap-2">
