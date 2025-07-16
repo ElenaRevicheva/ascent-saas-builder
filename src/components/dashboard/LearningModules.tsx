@@ -56,6 +56,17 @@ export const LearningModules = () => {
     }
   }, [user]);
 
+  // Auto-refresh every 30 seconds to pick up new Telegram sessions
+  useEffect(() => {
+    if (user) {
+      const interval = setInterval(() => {
+        loadModulesAndProgress();
+      }, 30000); // Refresh every 30 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
   const loadModulesAndProgress = async () => {
     try {
       // Load learning modules
