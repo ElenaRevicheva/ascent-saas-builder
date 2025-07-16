@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { CheckCircle, Circle, Users, MessageSquare, BookOpen, BarChart3, Crown, ArrowRight, Map } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { LearningOptions } from './LearningOptions';
 
 interface RoadmapStep {
   id: string;
@@ -57,15 +58,16 @@ export const LearningRoadmap = () => {
     {
       id: 'first-lesson',
       title: 'Start Your First Lesson',
-      description: 'Begin with basic Spanish conversations tailored to your family\'s interests.',
+      description: 'Choose between Telegram bot chat or dashboard web chat for your Spanish learning experience.',
       icon: BookOpen,
-      action: 'Start Learning',
+      action: 'Choose Learning Method',
       onClick: () => {
         setOpen(false);
+        // Trigger the LearningOptions dialog
         setTimeout(() => {
-          const chatSection = document.querySelector('#chat');
-          if (chatSection) {
-            chatSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          const learningOptionsButton = document.querySelector('[data-learning-options-trigger]');
+          if (learningOptionsButton) {
+            (learningOptionsButton as HTMLButtonElement).click();
           }
         }, 100);
       }

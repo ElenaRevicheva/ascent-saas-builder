@@ -17,6 +17,7 @@ import { LearningAnalytics } from '@/components/dashboard/LearningAnalytics';
 import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
 import { ReferralSystem } from '@/components/ReferralSystem';
 import { TelegramProgress } from '@/components/dashboard/TelegramProgress';
+import { LearningOptions } from '@/components/dashboard/LearningOptions';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
