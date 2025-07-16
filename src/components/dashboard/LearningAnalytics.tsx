@@ -69,6 +69,15 @@ export const LearningAnalytics = () => {
 
       if (progressError) throw progressError;
 
+      // Load learning sessions (including Telegram conversations)
+      const { data: allSessionsData, error: allSessionsError } = await supabase
+        .from('learning_sessions')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false });
+
+      if (allSessionsError) throw allSessionsError;
+
       // Load learning streaks
       const { data: streakData, error: streakError } = await supabase
         .from('learning_streaks')
@@ -94,11 +103,21 @@ export const LearningAnalytics = () => {
         .eq('user_id', user?.id)
         .gte('created_at', oneWeekAgo.toISOString());
 
-      // Calculate stats
+      // Calculate stats including learning sessions
       const completedModules = progressData?.filter(p => p.is_completed)?.length || 0;
-      const totalTimeSpent = progressData?.reduce((sum, p) => sum + (p.time_spent_minutes || 0), 0) || 0;
-      const allVocabulary = progressData?.flatMap(p => p.vocabulary_learned || []) || [];
+      const moduleTimeSpent = progressData?.reduce((sum, p) => sum + (p.time_spent_minutes || 0), 0) || 0;
+      const sessionTimeSpent = allSessionsData?.reduce((sum, s) => sum + (s.duration_minutes || 0), 0) || 0;
+      const totalTimeSpent = moduleTimeSpent + sessionTimeSpent;
+
+      // Combine vocabulary from modules and sessions
+      const moduleVocabulary = progressData?.flatMap(p => p.vocabulary_learned || []) || [];
+      const sessionVocabulary = allSessionsData?.flatMap(s => {
+        const progressData = s.progress_data as any;
+        return progressData?.vocabulary_learned || [];
+      }) || [];
+      const allVocabulary = [...moduleVocabulary, ...sessionVocabulary];
       const uniqueVocabulary = [...new Set(allVocabulary)].length;
+
       const avgConfidence = progressData?.length 
         ? progressData.reduce((sum, p) => sum + (p.confidence_score || 0), 0) / progressData.length 
         : 0;
