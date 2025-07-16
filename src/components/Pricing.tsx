@@ -154,7 +154,7 @@ const Pricing = () => {
                     </Button>
                   </div>
                 ) : (
-                  <a href="/dashboard#chat" className="block mb-6">
+                  <Link to="/dashboard" state={{ scrollToChat: true }} className="block mb-6">
                     <Button 
                       variant={plan.popular ? "hero" : "outline"} 
                       size="lg" 
@@ -162,7 +162,7 @@ const Pricing = () => {
                     >
                       Start Free Trial
                     </Button>
-                  </a>
+                  </Link>
                 )}
                 
                 <ul className="space-y-3">
@@ -172,20 +172,20 @@ const Pricing = () => {
                         <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                         <span className="text-muted-foreground">{feature}</span>
                       </li>
-                    ) : (
-                      <li key={featureIndex} className="flex items-start gap-3">
-                        <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                        {feature.label === "¡Conversemos! Chat with EspaLuz right here!" ? (
-                          <a href={feature.link} className="w-full" style={{ textDecoration: 'none' }}>
-                            <Button variant="hero" size="lg" className="w-full">
-                              {feature.label}
-                            </Button>
-                          </a>
-                        ) : (
-                          <a href={feature.link} className={feature.linkClass || "text-primary font-semibold hover:underline focus:outline-none focus:ring-2 focus:ring-primary/50 rounded transition-colors"} target="_blank" rel="noopener noreferrer">
-                            {feature.linkText || feature.label}
-                          </a>
-                        )}
+                     ) : (
+                       <li key={featureIndex} className="flex items-start gap-3">
+                         <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                         {feature.label === "¡Conversemos! Chat with EspaLuz right here!" ? (
+                           <Link to="/dashboard" state={{ scrollToChat: true }} className="w-full" style={{ textDecoration: 'none' }}>
+                             <Button variant="hero" size="lg" className="w-full">
+                               {feature.label}
+                             </Button>
+                           </Link>
+                         ) : (
+                           <a href={feature.link} className={feature.linkClass || "text-primary font-semibold hover:underline focus:outline-none focus:ring-2 focus:ring-primary/50 rounded transition-colors"} target="_blank" rel="noopener noreferrer">
+                             {feature.linkText || feature.label}
+                           </a>
+                         )}
                       </li>
                     )
                   ))}

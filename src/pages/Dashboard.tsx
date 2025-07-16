@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useLocation } from 'react-router-dom';
 import { useSubscription } from '@/hooks/useSubscription';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
@@ -33,6 +34,7 @@ const Dashboard = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [checkingOnboarding, setCheckingOnboarding] = useState(true);
   const chatRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
 
   useEffect(() => {
     const checkOnboardingStatus = async () => {
@@ -74,23 +76,28 @@ const Dashboard = () => {
 
   useEffect(() => {
     const scrollToChat = () => {
-      if (window.location.hash === '#chat' && chatRef.current) {
+      // Check if we should scroll to chat via hash or location state
+      const shouldScrollToChat = window.location.hash === '#chat' || 
+                                 (location.state as any)?.scrollToChat;
+                                 
+      if (shouldScrollToChat && chatRef.current) {
         setTimeout(() => {
-          chatRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          chatRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
           setTimeout(() => {
-            const rect = chatRef.current.getBoundingClientRect();
+            const rect = chatRef.current?.getBoundingClientRect();
             if (rect) {
               const scrollY = window.scrollY + rect.top - window.innerHeight / 4;
               window.scrollTo({ top: scrollY, behavior: 'smooth' });
             }
           }, 400);
-        }, 100);
+        }, 300); // Increased delay to ensure page is fully loaded
       }
     };
+    
     scrollToChat();
     window.addEventListener('hashchange', scrollToChat);
     return () => window.removeEventListener('hashchange', scrollToChat);
-  }, []);
+  }, [location.state]);
 
   if (loading || checkingOnboarding) {
     return (
