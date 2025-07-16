@@ -105,32 +105,21 @@ export const LearningModules = () => {
         progressMap[progress.module_id] = progress;
       });
 
-      // Then, calculate progress from learning sessions for each module
+      // Calculate progress from learning sessions for each module
       modulesData?.forEach(module => {
         const moduleVocabulary = (module.lesson_content as any)?.vocabulary || [];
-        console.log(`Module ${module.title} vocabulary:`, moduleVocabulary);
         
         const relatedSessions = sessionsData?.filter(session => {
+          if (session.source !== 'telegram') return false;
           const sessionVocab = (session.progress_data as any)?.vocabulary_learned || [];
-          console.log(`Session ${session.id} vocabulary:`, sessionVocab);
           
-          // Check if any session vocabulary matches any module vocabulary
-          const vocabMatch = sessionVocab.some((sessionWord: string) => 
-            moduleVocabulary.some((moduleWord: string) => {
-              const match = moduleWord.toLowerCase() === sessionWord.toLowerCase() ||
-                           moduleWord.toLowerCase().includes(sessionWord.toLowerCase()) ||
-                           sessionWord.toLowerCase().includes(moduleWord.toLowerCase());
-              if (match) {
-                console.log(`Vocabulary match found: "${sessionWord}" matches "${moduleWord}"`);
-              }
-              return match;
-            })
+          // Direct vocabulary match
+          return sessionVocab.some((sessionWord: string) => 
+            moduleVocabulary.some((moduleWord: string) => 
+              sessionWord.toLowerCase() === moduleWord.toLowerCase()
+            )
           );
-          
-          return vocabMatch;
         }) || [];
-
-        console.log(`Module ${module.title} has ${relatedSessions.length} related sessions`);
 
         if (relatedSessions.length > 0) {
           const existingProgress = progressMap[module.id];
@@ -141,74 +130,46 @@ export const LearningModules = () => {
             total + (session.duration_minutes || 0), 0
           );
           
-          // Calculate progress based on vocabulary learned from sessions
-          const uniqueSessionVocab = [...new Set(sessionVocabulary)];
-          const moduleVocabCount = moduleVocabulary.length;
-          const matchedVocabCount = uniqueSessionVocab.filter(sessionWord =>
+          // Count matched vocabulary
+          const matchedWords = sessionVocabulary.filter(sessionWord =>
             moduleVocabulary.some(moduleWord => 
-              moduleWord.toLowerCase() === sessionWord.toLowerCase() ||
-              moduleWord.toLowerCase().includes(sessionWord.toLowerCase()) ||
-              sessionWord.toLowerCase().includes(moduleWord.toLowerCase())
+              sessionWord.toLowerCase() === moduleWord.toLowerCase()
             )
-          ).length;
+          );
           
-          const sessionProgressPercentage = Math.min(
-            Math.round((matchedVocabCount / Math.max(moduleVocabCount, 1)) * 100), 
+          const uniqueMatchedWords = [...new Set(matchedWords)];
+          const moduleVocabCount = moduleVocabulary.length;
+          const progressPercentage = Math.min(
+            Math.round((uniqueMatchedWords.length / moduleVocabCount) * 100), 
             100
           );
 
-          console.log(`Module ${module.title} progress calculation:`, {
-            matchedVocabCount,
-            moduleVocabCount,
-            sessionProgressPercentage,
-            uniqueSessionVocab
-          });
-
           if (!existingProgress) {
-            // Create new progress entry based on sessions
             progressMap[module.id] = {
               module_id: module.id,
-              progress_percentage: sessionProgressPercentage,
-              is_completed: sessionProgressPercentage >= 80,
+              progress_percentage: progressPercentage,
+              is_completed: progressPercentage >= 80,
               time_spent_minutes: sessionTimeSpent,
-              vocabulary_learned: uniqueSessionVocab.filter(sessionWord =>
-                moduleVocabulary.some(moduleWord => 
-                  moduleWord.toLowerCase() === sessionWord.toLowerCase() ||
-                  moduleWord.toLowerCase().includes(sessionWord.toLowerCase()) ||
-                  sessionWord.toLowerCase().includes(moduleWord.toLowerCase())
-                )
-              ),
+              vocabulary_learned: uniqueMatchedWords,
               confidence_score: 0.7
             };
           } else {
-            // Merge session progress with existing module progress
             const combinedVocab = [...new Set([
               ...(existingProgress.vocabulary_learned || []),
-              ...uniqueSessionVocab.filter(sessionWord =>
-                moduleVocabulary.some(moduleWord => 
-                  moduleWord.toLowerCase() === sessionWord.toLowerCase() ||
-                  moduleWord.toLowerCase().includes(sessionWord.toLowerCase()) ||
-                  sessionWord.toLowerCase().includes(moduleWord.toLowerCase())
-                )
-              )
+              ...uniqueMatchedWords
             ])];
             const combinedTime = (existingProgress.time_spent_minutes || 0) + sessionTimeSpent;
-            const combinedProgress = Math.max(
-              existingProgress.progress_percentage,
-              sessionProgressPercentage
-            );
+            const newProgress = Math.max(existingProgress.progress_percentage, progressPercentage);
 
             progressMap[module.id] = {
               ...existingProgress,
-              progress_percentage: combinedProgress,
-              is_completed: combinedProgress >= 80 || existingProgress.is_completed,
+              progress_percentage: newProgress,
+              is_completed: newProgress >= 80 || existingProgress.is_completed,
               time_spent_minutes: combinedTime,
               vocabulary_learned: combinedVocab,
               confidence_score: Math.max(existingProgress.confidence_score || 0, 0.7)
             };
           }
-
-          console.log(`Final progress for ${module.title}:`, progressMap[module.id]);
         }
       });
 
