@@ -106,7 +106,7 @@ const Dashboard = () => {
     scrollToChat();
   }, [location.state]); // Removed window.addEventListener to prevent continuous triggering
 
-  if (loading || checkingOnboarding) {
+  if (checkingOnboarding) {
     return (
       <div className="min-h-screen" style={{ background: 'var(--gradient-magical)' }}>
         <div className="flex items-center justify-center min-h-screen">
@@ -115,6 +115,9 @@ const Dashboard = () => {
       </div>
     );
   }
+
+  // Don't block on subscription loading - let the dashboard render
+  // The individual components will handle their own loading states
 
   // Show onboarding flow for new users
   if (showOnboarding) {
