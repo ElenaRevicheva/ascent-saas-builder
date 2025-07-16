@@ -18,7 +18,8 @@ const Auth = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    fullName: ''
+    fullName: '',
+    referralCode: ''
   });
   
   const { signIn, signUp, user } = useAuth();
@@ -31,6 +32,18 @@ const Auth = () => {
       navigate('/dashboard');
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    // Check for referral code in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const referralCode = urlParams.get('ref');
+    if (referralCode) {
+      setFormData(prev => ({
+        ...prev,
+        referralCode: referralCode
+      }));
+    }
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
@@ -100,9 +113,9 @@ const Auth = () => {
           setError(error.message);
         }
       } else {
-        // Process referral if user came from a referral link
+        // Process referral if user came from a referral link or entered a code
         if (user) {
-          await processReferralSignup(user.id);
+          await processReferralSignup(user.id, formData.referralCode || undefined);
         }
         toast({
           title: "Account created!",
@@ -263,6 +276,18 @@ const Auth = () => {
                         )}
                       </Button>
                     </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-referral">Referral Code (Optional)</Label>
+                    <Input
+                      id="signup-referral"
+                      name="referralCode"
+                      type="text"
+                      placeholder="Enter referral code"
+                      value={formData.referralCode}
+                      onChange={handleInputChange}
+                    />
                   </div>
                   
                   <Button 

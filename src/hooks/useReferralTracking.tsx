@@ -29,9 +29,9 @@ export const useReferralTracking = () => {
     }
   };
 
-  const processReferralSignup = async (newUserId: string) => {
+  const processReferralSignup = async (newUserId: string, manualReferralCode?: string) => {
     try {
-      const referralCode = localStorage.getItem('referralCode');
+      const referralCode = manualReferralCode || localStorage.getItem('referralCode');
       if (!referralCode) return;
 
       // Update the referral record to mark conversion
