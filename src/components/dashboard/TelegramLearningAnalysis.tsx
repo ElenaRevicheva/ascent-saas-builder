@@ -50,7 +50,11 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
       sessionLength: session.duration_minutes || 0,
       learningLevel: 'beginner' as 'beginner' | 'intermediate' | 'advanced',
       conversationComplexity: 0,
-      grammarPoints: 0
+      grammarPoints: 0,
+      conversationTopic: '',
+      userLanguage: '',
+      spanishContent: '',
+      practicalContext: ''
     };
 
     // Extract vocabulary from progress_data
@@ -78,9 +82,20 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
       analysis.grammarPoints = session.progress_data.grammar_points_total;
     }
 
-    // Analyze conversation content
+    // Analyze conversation content for practical insights
     if (session.content?.user_message && session.content?.bot_response) {
       analysis.totalMessages = session.content?.message_count || 1;
+      
+      const userMessage = session.content.user_message;
+      const botResponse = session.content.bot_response;
+      
+      // Detect conversation topic and context
+      if (userMessage && botResponse) {
+        analysis.conversationTopic = detectTopicFromConversation(userMessage, botResponse);
+        analysis.userLanguage = detectUserLanguage(userMessage);
+        analysis.spanishContent = extractSpanishContent(botResponse);
+        analysis.practicalContext = extractPracticalContext(userMessage, botResponse);
+      }
       
       // Count Spanish words in responses
       if (session.progress_data?.spanish_words_total) {
@@ -88,7 +103,6 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
       }
 
       // Determine conversation complexity
-      const userMessage = session.content.user_message;
       if (typeof userMessage === 'string') {
         analysis.conversationComplexity = userMessage.split(' ').length;
       }
@@ -102,67 +116,147 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
     return generateInsights(analysis, session);
   };
 
+  const detectTopicFromConversation = (userMessage: string, botResponse: string): string => {
+    const message = userMessage.toLowerCase();
+    const response = botResponse.toLowerCase();
+    
+    if (message.includes('попугая') || message.includes('парrot') || response.includes('loro') || response.includes('parrot')) {
+      return 'pet_care';
+    }
+    if (message.includes('еда') || message.includes('food') || response.includes('comida') || response.includes('alimentar')) {
+      return 'food_nutrition';
+    }
+    if (message.includes('семья') || message.includes('family') || response.includes('familia')) {
+      return 'family';
+    }
+    if (message.includes('путешествие') || message.includes('travel') || response.includes('viaje')) {
+      return 'travel';
+    }
+    return 'general_conversation';
+  };
+
+  const detectUserLanguage = (userMessage: string): string => {
+    // Simple language detection based on Cyrillic characters
+    if (/[а-яё]/i.test(userMessage)) return 'russian';
+    if (/[a-z]/i.test(userMessage)) return 'english';
+    return 'unknown';
+  };
+
+  const extractSpanishContent = (botResponse: string): string => {
+    // Extract Spanish phrases in quotes or specific patterns
+    const spanishMatches = botResponse.match(/"([^"]*[ñáéíóúü][^"]*)"/g);
+    return spanishMatches ? spanishMatches.join(', ') : '';
+  };
+
+  const extractPracticalContext = (userMessage: string, botResponse: string): string => {
+    if (userMessage.includes('попугая') && botResponse.includes('alimentar')) {
+      return 'pet_nutrition_advice';
+    }
+    return 'general_conversation';
+  };
+
   const generateInsights = (analysis: any, sessionData: TelegramSession) => {
     const insights = [];
     const recommendations = [];
     const strengths = [];
+    const practicalExercises = [];
+    const contextualLearning = [];
 
-    // Vocabulary analysis
-    const vocabSize = analysis.vocabularyWords.size;
-    if (vocabSize >= 10) {
-      strengths.push(`Great vocabulary session - ${vocabSize} words learned!`);
-    } else if (vocabSize >= 5) {
-      strengths.push(`Good vocabulary building - ${vocabSize} words learned`);
-      recommendations.push('Try to use new vocabulary in different contexts to reinforce learning');
-    } else if (vocabSize > 0) {
-      recommendations.push('Focus on learning 3-5 new words per conversation');
-      recommendations.push('Ask the bot to explain new Spanish words you encounter');
+    // Topic-specific practical advice
+    const generateTopicSpecificAdvice = () => {
+      switch (analysis.conversationTopic) {
+        case 'pet_care':
+          practicalExercises.push({
+            title: '🐦 Pet Care Vocabulary Practice',
+            content: 'Practice: "Mi loro come semillas" (My parrot eats seeds). Try describing your pet\'s daily routine in Spanish.',
+            action: 'Create 3 sentences about pet care using: alimentar, cuidar, mascota'
+          });
+          contextualLearning.push('Next time, ask about "¿Cómo entrenar a mi mascota?" (How to train my pet?)');
+          break;
+        case 'food_nutrition':
+          practicalExercises.push({
+            title: '🥬 Nutrition Vocabulary Builder',
+            content: 'Practice food groups: "Las verduras son nutritivas" (Vegetables are nutritious)',
+            action: 'Name 5 foods in Spanish and describe their benefits: "El brócoli tiene vitaminas"'
+          });
+          contextualLearning.push('Explore: "¿Qué comida es saludable?" (What food is healthy?)');
+          break;
+        default:
+          practicalExercises.push({
+            title: '💬 Conversation Skills',
+            content: 'Practice asking follow-up questions in Spanish',
+            action: 'Learn question words: ¿Qué?, ¿Cómo?, ¿Por qué?, ¿Cuándo?'
+          });
+      }
+    };
+
+    generateTopicSpecificAdvice();
+
+    // Vocabulary-specific practice
+    if (analysis.vocabularyWords.size > 0) {
+      const words = Array.from(analysis.vocabularyWords);
+      practicalExercises.push({
+        title: '📚 Today\'s Vocabulary Challenge',
+        content: `Use these words in new sentences: ${words.slice(0, 3).join(', ')}`,
+        action: `Try: "Hoy aprendí sobre ${words[0]}" (Today I learned about ${words[0]})`
+      });
+
+      strengths.push(`Excellent! You learned ${words.length} new words: ${words.join(', ')}`);
     }
 
-    // Session length analysis
+    // Language mixing insights
+    if (analysis.userLanguage === 'russian') {
+      insights.push('🌍 You\'re thinking in Russian - try to form thoughts directly in Spanish for faster fluency');
+      recommendations.push('Challenge: Ask your next question directly in Spanish instead of Russian');
+    }
+
+    // Grammar contextual advice
+    if (analysis.spanishContent) {
+      insights.push(`💡 Spanish phrases you encountered: ${analysis.spanishContent.substring(0, 100)}...`);
+      practicalExercises.push({
+        title: '🎯 Grammar in Context',
+        content: 'Practice the verb patterns you just learned',
+        action: 'Create your own sentence using the same verb structure'
+      });
+    }
+
+    // Session length analysis with practical advice
     if (analysis.sessionLength >= 6) {
       strengths.push('Great conversation endurance - you engage in meaningful chats');
+      recommendations.push('Perfect length! Try to summarize what you learned: "Hoy aprendí que..."');
     } else if (analysis.sessionLength >= 3) {
-      recommendations.push('Try extending conversations to 5-7 minutes for deeper learning');
+      recommendations.push('Extend conversations by asking "¿Puedes explicar más?" (Can you explain more?)');
     } else {
-      recommendations.push('Aim for longer conversations - ask follow-up questions!');
+      recommendations.push('Aim for longer chats - ask "¿Qué más?" (What else?) to continue topics');
     }
 
-    // Conversation complexity
-    if (analysis.conversationComplexity >= 8) {
-      strengths.push('Advanced conversation skills - you use complex sentences!');
-    } else if (analysis.conversationComplexity >= 5) {
-      recommendations.push('Challenge yourself with longer, more detailed responses');
+    // Learning level insights with next steps
+    if (analysis.learningLevel === 'intermediate') {
+      insights.push('📈 Intermediate level! Ready for complex topics like culture and opinions');
+      contextualLearning.push('Try discussing: "¿Cuál es tu opinión sobre...?" (What\'s your opinion about...?)');
     } else {
-      recommendations.push('Try to elaborate more in your responses - explain your thoughts in detail');
-    }
-
-    // Learning level insights
-    if (analysis.learningLevel === 'advanced') {
-      insights.push('🎓 You\'re at an advanced level! Focus on nuanced expressions and cultural topics');
-      recommendations.push('Practice subjunctive mood and complex grammatical structures');
-    } else if (analysis.learningLevel === 'intermediate') {
-      insights.push('📈 You\'re progressing to intermediate level! Keep building vocabulary');
-      recommendations.push('Start using more complex tenses like past perfect and future conditional');
-    } else {
-      insights.push('🌱 You\'re building a strong foundation! Focus on basic conversations');
-      recommendations.push('Practice present tense verbs and common everyday phrases');
+      insights.push('🌱 Building foundation! Focus on daily situations and basic needs');
+      contextualLearning.push('Practice everyday scenarios: ordering food, asking directions');
     }
 
     // Session quality insights
     if (analysis.totalWords >= 50) {
-      insights.push('🔥 Rich Spanish conversation - lots of vocabulary practice!');
-    } else if (analysis.totalWords >= 20) {
-      insights.push('👍 Good Spanish usage in this session!');
+      insights.push('🔥 Rich vocabulary session! You\'re absorbing lots of Spanish naturally');
+      recommendations.push('Review and use these words in your next conversation');
     }
 
     if (analysis.grammarPoints >= 3) {
-      strengths.push(`Strong grammar practice - ${analysis.grammarPoints} grammar points covered`);
+      strengths.push(`Strong grammar focus - ${analysis.grammarPoints} structures practiced`);
+      practicalExercises.push({
+        title: '📝 Grammar Reinforcement',
+        content: 'Practice the grammar patterns you just used',
+        action: 'Write 2 sentences using the same grammar structure'
+      });
     }
 
-    // Calculate score based on session metrics
+    // Calculate score
     const score = Math.min(100, Math.round(
-      (vocabSize * 4) + 
+      (analysis.vocabularyWords.size * 4) + 
       (analysis.sessionLength * 3) + 
       (analysis.totalWords * 0.5) + 
       (analysis.grammarPoints * 5) +
@@ -172,17 +266,20 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
     return {
       level: analysis.learningLevel,
       strengths,
-      recommendations: recommendations.slice(0, 4), // Limit to 4 recommendations
+      recommendations: recommendations.slice(0, 3),
       score,
       insights,
       vocabularyWords: Array.from(analysis.vocabularyWords),
+      practicalExercises,
+      contextualLearning,
+      conversationTopic: analysis.conversationTopic,
       metrics: {
-        vocabularySize: vocabSize,
+        vocabularySize: analysis.vocabularyWords.size,
         topicDiversity: analysis.topics.size,
-        consistency: Math.round(analysis.sessionLength / 7 * 100), // Simple session quality metric
+        consistency: Math.round(analysis.sessionLength / 7 * 100),
         engagement: analysis.sessionLength >= 5 ? 'high' : analysis.sessionLength >= 3 ? 'medium' : 'low',
         avgSessionLength: Math.round(analysis.sessionLength),
-        totalSessions: 1 // This is for a single session
+        totalSessions: 1
       }
     };
   };
@@ -337,31 +434,69 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
         </Card>
       )}
 
-      {/* Personalized Recommendations */}
+      {/* Practical Exercises */}
+      {learningData.practicalExercises && learningData.practicalExercises.length > 0 && (
+        <Card className="border-border/50 shadow-magical">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              <Target className="h-5 w-5 text-indigo-500" />
+              <span>Practice Exercises</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {learningData.practicalExercises.map((exercise: any, index: number) => (
+                <div key={index} className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+                  <h4 className="font-semibold text-indigo-700 mb-2">{exercise.title}</h4>
+                  <p className="text-sm text-indigo-600 mb-3">{exercise.content}</p>
+                  <div className="p-3 bg-indigo-100 rounded border border-indigo-300">
+                    <p className="text-xs font-medium text-indigo-800">Try this: {exercise.action}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Next Learning Steps */}
+      {learningData.contextualLearning && learningData.contextualLearning.length > 0 && (
+        <Card className="border-border/50 shadow-magical">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              <ArrowRight className="h-5 w-5 text-purple-500" />
+              <span>Next Learning Steps</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {learningData.contextualLearning.map((step: string, index: number) => (
+                <div key={index} className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg border border-purple-200">
+                  <MessageCircle className="h-5 w-5 text-purple-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-sm text-purple-700">{step}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Quick Recommendations */}
       <Card className="border-border/50 shadow-magical">
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
             <Lightbulb className="h-5 w-5 text-amber-500" />
-            <span>Personalized Recommendations</span>
+            <span>Quick Tips</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {learningData.recommendations.map((recommendation, index) => (
-              <div key={index} className="flex items-start gap-3 p-4 bg-amber-50 rounded-lg border border-amber-200 hover:bg-amber-100 transition-colors">
-                <ArrowRight className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
-                <div className="flex-1">
-                  <span className="text-sm text-amber-700">{recommendation}</span>
-                </div>
+            {learningData.recommendations.map((recommendation: string, index: number) => (
+              <div key={index} className="flex items-start gap-3 p-3 bg-amber-50 rounded-lg border border-amber-200">
+                <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-amber-700">{recommendation}</span>
               </div>
             ))}
-            
-            {learningData.recommendations.length === 0 && (
-              <div className="text-center py-6 text-muted-foreground">
-                <MessageCircle className="h-8 w-8 mx-auto mb-3 opacity-50" />
-                <p>Start more conversations to get personalized recommendations!</p>
-              </div>
-            )}
           </div>
           
           {session && (
