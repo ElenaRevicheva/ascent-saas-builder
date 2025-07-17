@@ -244,6 +244,17 @@ export const TelegramLearningAnalysis = ({ sessions }: LearningAnalysisProps) =>
   };
 
   const learningData = analyzeLearningProgress();
+  
+  console.log('📊 Final learning analysis results:', {
+    vocabularySize: learningData.metrics.vocabularySize,
+    score: learningData.score,
+    level: learningData.level,
+    consistency: learningData.metrics.consistency,
+    avgSessionLength: learningData.metrics.avgSessionLength,
+    topicDiversity: learningData.metrics.topicDiversity,
+    strengths: learningData.strengths,
+    recommendations: learningData.recommendations.slice(0, 3)
+  });
 
   const getLevelColor = (level: string) => {
     switch (level) {
