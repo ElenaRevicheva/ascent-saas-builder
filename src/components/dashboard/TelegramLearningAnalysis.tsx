@@ -65,8 +65,15 @@ export const TelegramLearningAnalysis = ({ sessions }: LearningAnalysisProps) =>
 
     // Analyze each session
     sessions.forEach(session => {
+      console.log('🔍 Analyzing session:', {
+        id: session.id.substring(0, 8),
+        progress_data: session.progress_data,
+        content: session.content
+      });
+
       // Extract vocabulary from progress_data
       if (session.progress_data?.vocabulary_learned) {
+        console.log('📚 Found vocabulary:', session.progress_data.vocabulary_learned);
         session.progress_data.vocabulary_learned.forEach((word: string) => {
           analysis.vocabularyWords.add(word.toLowerCase());
         });
