@@ -63,6 +63,12 @@ serve(async (req) => {
     const content = requestData.content || {}
     const progressData = requestData.progress_data || {}
     
+    // Convert duration to integer if provided
+    let durationMinutes = null
+    if (requestData.duration_minutes) {
+      durationMinutes = Math.round(parseFloat(requestData.duration_minutes))
+    }
+    
     // Insert learning session - ensure source is valid
     const { data, error } = await supabase
       .from('learning_sessions')
@@ -73,7 +79,7 @@ serve(async (req) => {
         content: content,
         progress_data: progressData,
         emotional_tone: requestData.emotional_tone || 'neutral',
-        duration_minutes: requestData.duration_minutes || null,
+        duration_minutes: durationMinutes,
         completed_at: new Date().toISOString()
       })
 
