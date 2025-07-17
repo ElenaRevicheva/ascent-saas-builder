@@ -23,14 +23,13 @@ serve(async (req) => {
 
     console.log('🔄 Raw activity data:', JSON.stringify(requestData, null, 2))
 
-    // Support multiple data formats from bot integration
-    const userId = requestData.user_id || requestData.userId || requestData.telegram_user_id
-    const platformUserId = requestData.platform_user_id || requestData.platformUserId || requestData.telegram_user_id
-
-    if (!userId) {
-      console.error('❌ Missing user_id field:', Object.keys(requestData))
+    // Get platform_user_id to lookup the actual user_id
+    const platformUserId = requestData.platform_user_id || requestData.platformUserId
+    
+    if (!platformUserId) {
+      console.error('❌ Missing platform_user_id field:', Object.keys(requestData))
       return new Response(
-        JSON.stringify({ error: 'Missing user_id field. Available fields: ' + Object.keys(requestData).join(', ') }),
+        JSON.stringify({ error: 'Missing platform_user_id field. Available fields: ' + Object.keys(requestData).join(', ') }),
         { 
           status: 400, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -38,16 +37,16 @@ serve(async (req) => {
       )
     }
 
-    // Update connected bot activity
+    // Update connected bot activity - use platform_user_id directly
     const { data, error } = await supabase
       .from('connected_bots')
       .update({ 
         last_activity: new Date().toISOString(),
         updated_at: new Date().toISOString()
       })
-      .eq('user_id', userId)
-      .eq('platform_user_id', platformUserId || userId)
+      .eq('platform_user_id', platformUserId)
       .eq('platform', 'telegram')
+      .eq('is_active', true)
 
     if (error) {
       console.error('❌ Database error:', error)

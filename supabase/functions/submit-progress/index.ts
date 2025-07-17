@@ -23,23 +23,13 @@ serve(async (req) => {
 
     console.log('📊 Raw request data:', JSON.stringify(requestData, null, 2))
 
-    // Support multiple data formats from bot integration
-    const userId = requestData.user_id || requestData.userId || requestData.telegram_user_id
-    const userMessage = requestData.user_message || requestData.userMessage || requestData.message
-    const botResponse = requestData.bot_response || requestData.botResponse || requestData.response
-    const familyRole = requestData.family_role || requestData.familyRole || 'family_member'
-    const emotionalState = requestData.emotional_state || requestData.emotionalState || 'neutral'
-    const vocabularyLearned = requestData.vocabulary_learned || requestData.vocabularyLearned || []
-    const learningLevel = requestData.learning_level || requestData.learningLevel || 'beginner'
-    const sessionEmotions = requestData.session_emotions || requestData.sessionEmotions || []
-    const spanishWordsTotal = requestData.spanish_words_total || requestData.spanishWordsTotal || 0
-    const grammarPointsTotal = requestData.grammar_points_total || requestData.grammarPointsTotal || 0
-    const messageCount = requestData.message_count || requestData.messageCount || 1
-
-    if (!userId) {
-      console.error('❌ Missing user_id field:', Object.keys(requestData))
+    // Get platform_user_id to lookup the actual user_id
+    const platformUserId = requestData.platform_user_id || requestData.platformUserId
+    
+    if (!platformUserId) {
+      console.error('❌ Missing platform_user_id field:', Object.keys(requestData))
       return new Response(
-        JSON.stringify({ error: 'Missing user_id field. Available fields: ' + Object.keys(requestData).join(', ') }),
+        JSON.stringify({ error: 'Missing platform_user_id field. Available fields: ' + Object.keys(requestData).join(', ') }),
         { 
           status: 400, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -47,28 +37,43 @@ serve(async (req) => {
       )
     }
 
+    // Look up the user_id from connected_bots table
+    const { data: connectedBot, error: lookupError } = await supabase
+      .from('connected_bots')
+      .select('user_id')
+      .eq('platform_user_id', platformUserId)
+      .eq('platform', 'telegram')
+      .eq('is_active', true)
+      .single()
+
+    if (lookupError || !connectedBot) {
+      console.error('❌ Could not find user for platform_user_id:', platformUserId, lookupError)
+      return new Response(
+        JSON.stringify({ error: 'Could not find connected user for platform_user_id: ' + platformUserId }),
+        { 
+          status: 404, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      )
+    }
+
+    const userId = connectedBot.user_id
+
+    // Extract data from the request
+    const content = requestData.content || {}
+    const progressData = requestData.progress_data || {}
+    
     // Insert learning session
     const { data, error } = await supabase
       .from('learning_sessions')
       .insert({
         user_id: userId,
-        session_type: 'conversation',
-        source: 'telegram',
-        content: {
-          user_message: userMessage || 'No message content',
-          bot_response: botResponse || 'No response content',
-          family_role: familyRole,
-          emotional_state: emotionalState,
-          message_count: messageCount
-        },
-        progress_data: {
-          vocabulary_learned: vocabularyLearned,
-          learning_level: learningLevel,
-          session_emotions: sessionEmotions,
-          spanish_words_total: spanishWordsTotal,
-          grammar_points_total: grammarPointsTotal
-        },
-        emotional_tone: emotionalState,
+        session_type: requestData.session_type || 'conversation',
+        source: requestData.source || 'telegram',
+        content: content,
+        progress_data: progressData,
+        emotional_tone: requestData.emotional_tone || 'neutral',
+        duration_minutes: requestData.duration_minutes || null,
         completed_at: new Date().toISOString()
       })
 
