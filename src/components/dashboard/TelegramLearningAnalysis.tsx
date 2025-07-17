@@ -27,137 +27,91 @@ interface TelegramSession {
 }
 
 interface LearningAnalysisProps {
-  sessions: TelegramSession[];
+  session: TelegramSession;
 }
 
-export const TelegramLearningAnalysis = ({ sessions }: LearningAnalysisProps) => {
-  console.log('🎯 TelegramLearningAnalysis received sessions:', {
-    count: sessions.length,
-    sessionIds: sessions.map(s => s.id.substring(0, 8)),
-    firstSession: sessions[0] ? {
-      id: sessions[0].id.substring(0, 8),
-      vocabulary: sessions[0].progress_data?.vocabulary_learned?.length || 0,
-      spanish_words: sessions[0].progress_data?.spanish_words_total || 0
-    } : null
+export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => {
+  console.log('🎯 TelegramLearningAnalysis received session:', {
+    id: session.id.substring(0, 8),
+    vocabulary: session.progress_data?.vocabulary_learned?.length || 0,
+    spanish_words: session.progress_data?.spanish_words_total || 0,
+    duration: session.duration_minutes,
+    progress_data: session.progress_data,
+    content: session.content
   });
 
   const analyzeLearningProgress = () => {
-    if (sessions.length === 0) {
-      return {
-        level: 'beginner',
-        strengths: [],
-        recommendations: ['Start your first conversation with the Telegram bot to begin learning!'],
-        score: 0,
-        insights: [],
-        metrics: {
-          vocabularySize: 0,
-          topicDiversity: 0,
-          consistency: 0,
-          engagement: 'low' as 'low' | 'medium' | 'high',
-          avgSessionLength: 0,
-          totalSessions: 0
-        }
-      };
-    }
-
     const analysis = {
       vocabularyWords: new Set<string>(),
       topics: new Set<string>(),
       emotions: new Set<string>(),
       totalWords: 0,
       totalMessages: 0,
-      avgSessionLength: 0,
-      consistencyScore: 0,
-      engagementLevel: 'low' as 'low' | 'medium' | 'high',
+      sessionLength: session.duration_minutes || 0,
       learningLevel: 'beginner' as 'beginner' | 'intermediate' | 'advanced',
-      conversationComplexity: 0
+      conversationComplexity: 0,
+      grammarPoints: 0
     };
 
-    // Analyze each session
-    sessions.forEach(session => {
-      console.log('🔍 Analyzing session:', {
-        id: session.id.substring(0, 8),
-        progress_data: session.progress_data,
-        content: session.content
+    // Extract vocabulary from progress_data
+    if (session.progress_data?.vocabulary_learned) {
+      console.log('📚 Found vocabulary:', session.progress_data.vocabulary_learned);
+      session.progress_data.vocabulary_learned.forEach((word: string) => {
+        analysis.vocabularyWords.add(word.toLowerCase());
       });
-
-      // Extract vocabulary from progress_data
-      if (session.progress_data?.vocabulary_learned) {
-        console.log('📚 Found vocabulary:', session.progress_data.vocabulary_learned);
-        session.progress_data.vocabulary_learned.forEach((word: string) => {
-          analysis.vocabularyWords.add(word.toLowerCase());
-        });
-      }
-
-      // Extract topics and emotions
-      if (session.progress_data?.session_emotions) {
-        session.progress_data.session_emotions.forEach((emotion: string) => {
-          analysis.emotions.add(emotion);
-        });
-      }
-
-      // Analyze conversation content
-      if (session.content?.user_message && session.content?.bot_response) {
-        analysis.totalMessages++;
-        
-        // Count Spanish words in responses
-        if (session.progress_data?.spanish_words_total) {
-          analysis.totalWords += session.progress_data.spanish_words_total;
-        }
-
-        // Determine conversation complexity
-        const userMessage = session.content.user_message;
-        if (typeof userMessage === 'string') {
-          const wordCount = userMessage.split(' ').length;
-          analysis.conversationComplexity += wordCount;
-        }
-      }
-
-      // Extract topics from content
-      if (session.content?.family_role) {
-        analysis.topics.add(session.content.family_role);
-      }
-    });
-
-    // Calculate metrics
-    analysis.avgSessionLength = sessions.reduce((sum, s) => sum + (s.duration_minutes || 0), 0) / sessions.length;
-    analysis.conversationComplexity = analysis.conversationComplexity / sessions.length;
-
-    // Determine learning level
-    const vocabSize = analysis.vocabularyWords.size;
-    const avgComplexity = analysis.conversationComplexity;
-    
-    if (vocabSize >= 50 && avgComplexity >= 8) {
-      analysis.learningLevel = 'advanced';
-    } else if (vocabSize >= 20 && avgComplexity >= 5) {
-      analysis.learningLevel = 'intermediate';
     }
 
-    // Determine engagement level
-    if (analysis.avgSessionLength >= 5 && sessions.length >= 5) {
-      analysis.engagementLevel = 'high';
-    } else if (analysis.avgSessionLength >= 3 && sessions.length >= 3) {
-      analysis.engagementLevel = 'medium';
+    // Extract topics and emotions
+    if (session.progress_data?.session_emotions) {
+      session.progress_data.session_emotions.forEach((emotion: string) => {
+        analysis.emotions.add(emotion);
+      });
     }
 
-    // Calculate consistency (sessions in last week)
-    const lastWeek = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    const recentSessions = sessions.filter(s => new Date(s.created_at) >= lastWeek).length;
-    analysis.consistencyScore = Math.min(100, (recentSessions / 7) * 100);
+    // Extract learning level from session
+    if (session.progress_data?.learning_level) {
+      analysis.learningLevel = session.progress_data.learning_level;
+    }
 
-    return generateInsights(analysis, sessions);
+    // Extract grammar points
+    if (session.progress_data?.grammar_points_total) {
+      analysis.grammarPoints = session.progress_data.grammar_points_total;
+    }
+
+    // Analyze conversation content
+    if (session.content?.user_message && session.content?.bot_response) {
+      analysis.totalMessages = session.content?.message_count || 1;
+      
+      // Count Spanish words in responses
+      if (session.progress_data?.spanish_words_total) {
+        analysis.totalWords = session.progress_data.spanish_words_total;
+      }
+
+      // Determine conversation complexity
+      const userMessage = session.content.user_message;
+      if (typeof userMessage === 'string') {
+        analysis.conversationComplexity = userMessage.split(' ').length;
+      }
+    }
+
+    // Extract topics from content
+    if (session.content?.family_role) {
+      analysis.topics.add(session.content.family_role);
+    }
+
+    return generateInsights(analysis, session);
   };
 
-  const generateInsights = (analysis: any, sessions: TelegramSession[]) => {
+  const generateInsights = (analysis: any, sessionData: TelegramSession) => {
     const insights = [];
     const recommendations = [];
     const strengths = [];
 
     // Vocabulary analysis
     const vocabSize = analysis.vocabularyWords.size;
-    if (vocabSize >= 30) {
-      strengths.push(`Excellent vocabulary growth - ${vocabSize} words learned!`);
-    } else if (vocabSize >= 15) {
+    if (vocabSize >= 10) {
+      strengths.push(`Great vocabulary session - ${vocabSize} words learned!`);
+    } else if (vocabSize >= 5) {
       strengths.push(`Good vocabulary building - ${vocabSize} words learned`);
       recommendations.push('Try to use new vocabulary in different contexts to reinforce learning');
     } else if (vocabSize > 0) {
@@ -165,32 +119,13 @@ export const TelegramLearningAnalysis = ({ sessions }: LearningAnalysisProps) =>
       recommendations.push('Ask the bot to explain new Spanish words you encounter');
     }
 
-    // Session frequency analysis
-    if (analysis.consistencyScore >= 70) {
-      strengths.push('Excellent learning consistency - you practice regularly!');
-    } else if (analysis.consistencyScore >= 40) {
-      recommendations.push('Try to have 1-2 conversations per day for better retention');
-    } else {
-      recommendations.push('Regular practice is key - aim for daily 3-5 minute conversations');
-    }
-
     // Session length analysis
-    if (analysis.avgSessionLength >= 6) {
+    if (analysis.sessionLength >= 6) {
       strengths.push('Great conversation endurance - you engage in meaningful chats');
-    } else if (analysis.avgSessionLength >= 3) {
+    } else if (analysis.sessionLength >= 3) {
       recommendations.push('Try extending conversations to 5-7 minutes for deeper learning');
     } else {
       recommendations.push('Aim for longer conversations - ask follow-up questions!');
-    }
-
-    // Topic diversity
-    const topicCount = analysis.topics.size;
-    if (topicCount >= 5) {
-      strengths.push('Excellent topic diversity - you explore various conversation themes');
-    } else if (topicCount >= 3) {
-      recommendations.push('Try discussing different topics to expand your vocabulary range');
-    } else {
-      recommendations.push('Explore new conversation topics: family, hobbies, food, travel');
     }
 
     // Conversation complexity
@@ -214,26 +149,24 @@ export const TelegramLearningAnalysis = ({ sessions }: LearningAnalysisProps) =>
       recommendations.push('Practice present tense verbs and common everyday phrases');
     }
 
-    // Recent activity insights
-    const todaySessions = sessions.filter(s => {
-      const sessionDate = new Date(s.created_at).toDateString();
-      const today = new Date().toDateString();
-      return sessionDate === today;
-    }).length;
-
-    if (todaySessions >= 2) {
-      insights.push('🔥 You\'re on fire today! Multiple learning sessions completed');
-    } else if (todaySessions === 1) {
-      insights.push('👍 Great job practicing today! Keep the momentum going');
+    // Session quality insights
+    if (analysis.totalWords >= 50) {
+      insights.push('🔥 Rich Spanish conversation - lots of vocabulary practice!');
+    } else if (analysis.totalWords >= 20) {
+      insights.push('👍 Good Spanish usage in this session!');
     }
 
-    // Calculate overall score
+    if (analysis.grammarPoints >= 3) {
+      strengths.push(`Strong grammar practice - ${analysis.grammarPoints} grammar points covered`);
+    }
+
+    // Calculate score based on session metrics
     const score = Math.min(100, Math.round(
-      (vocabSize * 2) + 
-      (analysis.consistencyScore * 0.3) + 
-      (analysis.avgSessionLength * 4) + 
-      (topicCount * 5) + 
-      (sessions.length * 2)
+      (vocabSize * 4) + 
+      (analysis.sessionLength * 3) + 
+      (analysis.totalWords * 0.5) + 
+      (analysis.grammarPoints * 5) +
+      (analysis.conversationComplexity * 2)
     ));
 
     return {
@@ -244,11 +177,11 @@ export const TelegramLearningAnalysis = ({ sessions }: LearningAnalysisProps) =>
       insights,
       metrics: {
         vocabularySize: vocabSize,
-        topicDiversity: topicCount,
-        consistency: Math.round(analysis.consistencyScore),
-        engagement: analysis.engagementLevel,
-        avgSessionLength: Math.round(analysis.avgSessionLength),
-        totalSessions: sessions.length
+        topicDiversity: analysis.topics.size,
+        consistency: Math.round(analysis.sessionLength / 7 * 100), // Simple session quality metric
+        engagement: analysis.sessionLength >= 5 ? 'high' : analysis.sessionLength >= 3 ? 'medium' : 'low',
+        avgSessionLength: Math.round(analysis.sessionLength),
+        totalSessions: 1 // This is for a single session
       }
     };
   };
@@ -413,7 +346,7 @@ export const TelegramLearningAnalysis = ({ sessions }: LearningAnalysisProps) =>
             )}
           </div>
           
-          {sessions.length > 0 && (
+          {session && (
             <div className="mt-6 p-4 bg-gradient-to-r from-[hsl(var(--espaluz-primary))]/10 to-purple-500/10 rounded-lg border border-[hsl(var(--espaluz-primary))]/20">
               <div className="flex items-center justify-between">
                 <div>

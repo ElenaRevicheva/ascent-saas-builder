@@ -560,7 +560,7 @@ export const TelegramProgress = () => {
                     
                     <CollapsibleContent>
                       <div className="px-4 pb-4 border-t border-border/30">
-                        <TelegramLearningAnalysis sessions={[session]} />
+                        <TelegramLearningAnalysis session={session} />
                         
                         {/* Debug section for developers */}
                         <details className="mt-4">
