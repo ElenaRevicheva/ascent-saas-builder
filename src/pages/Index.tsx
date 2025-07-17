@@ -134,8 +134,8 @@ const Index = () => {
           Meet EspaLuz — Your Family’s First Emotionally Intelligent Language Coach
         </h1>
         <p className="text-base text-foreground mb-4 max-w-3xl mx-auto leading-relaxed font-medium">
-          Not just another chatbot. Not just grammar drills.<br/>
-          <span className="text-primary font-semibold">EspaLuz</span> is your on-the-go AI tutor that feels you, adapts to you, and guides your family through real-life Spanish or English — with empathy.
+          {t("hero.subtitle")}<br/>
+          <span className="text-primary font-semibold">EspaLuz</span> {t("hero.description")}
         </p>
         <div className="max-w-3xl mx-auto mb-6 space-y-4">
           <div className="flex items-center justify-start text-left">
@@ -175,10 +175,10 @@ const Index = () => {
           </div>
         </div>
         <p className="text-lg text-muted-foreground mb-4 max-w-2xl mx-auto">
-          ✨ Whether you're moving, vacationing, or upskilling for a new career, EspaLuz helps you speak naturally — not like a textbook, but like a local.
+          ✨ {t("hero.speakNaturally")}
         </p>
         <p className="text-lg text-orange-700 font-semibold mb-4 max-w-2xl mx-auto">
-          ⚡ Start speaking confidently in just a couple of weeks — without stress or pressure.
+          ⚡ {t("hero.startSpeaking")}
         </p>
         <p className="text-lg text-purple-700 font-semibold max-w-2xl mx-auto">
           💡 Because language is more than words — it’s emotional.<br/>
