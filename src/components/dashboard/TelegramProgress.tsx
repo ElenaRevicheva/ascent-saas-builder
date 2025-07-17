@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { MessageSquare, BookOpen, Clock, Trophy, TrendingUp, Star, Brain, Zap, RefreshCw, AlertCircle } from 'lucide-react';
+import { MessageSquare, BookOpen, Clock, Trophy, TrendingUp, Star, Brain, Zap, RefreshCw, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { TelegramLearningAnalysis } from './TelegramLearningAnalysis';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface TelegramSession {
   id: string;
@@ -24,6 +25,7 @@ export const TelegramProgress = () => {
   const [loading, setLoading] = useState(true);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
   const [debugInfo, setDebugInfo] = useState<any>(null);
+  const [expandedSessions, setExpandedSessions] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (user) {
@@ -491,62 +493,94 @@ export const TelegramProgress = () => {
         </Card>
       )}
 
-      {/* Enhanced Learning Analysis */}
-      <TelegramLearningAnalysis sessions={sessions} />
-
-      {/* Recent Conversations Debug Section (collapsible) */}
+      {/* Telegram Sessions */}
       {sessions.length > 0 && (
         <Card className="border-border/50 shadow-magical">
-          <CardContent className="p-4">
-            <details>
-              <summary className="cursor-pointer font-medium text-muted-foreground text-sm mb-4">
-                🔍 Debug: Recent Conversations ({sessions.length}) - Click to expand
-              </summary>
-              <div className="space-y-3">
-                {sessions.slice(0, 5).map((session) => (
-                  <div key={session.id} className="p-3 bg-muted/20 border border-border/30 rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <span className="text-sm font-medium">
-                          {new Date(session.created_at).toLocaleDateString('en-US', { 
-                            month: 'short', 
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                        </span>
-                        <Badge variant="outline" className="text-xs">
-                          {session.source}
-                        </Badge>
-                      </div>
-                      <Badge variant="outline" className="text-xs">
-                        {session.duration_minutes || 2}min
-                      </Badge>
-                    </div>
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2">
+              <MessageSquare className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
+              Telegram Sessions ({sessions.length})
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">Click on any session to see your learning insights</p>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {sessions.slice(0, 10).map((session) => {
+              const isExpanded = expandedSessions.has(session.id);
+              const toggleExpansion = () => {
+                const newExpanded = new Set(expandedSessions);
+                if (isExpanded) {
+                  newExpanded.delete(session.id);
+                } else {
+                  newExpanded.add(session.id);
+                }
+                setExpandedSessions(newExpanded);
+              };
+
+              return (
+                <Collapsible key={session.id} open={isExpanded} onOpenChange={toggleExpansion}>
+                  <Card className="border border-border/30 hover:border-[hsl(var(--espaluz-primary))]/40 transition-colors">
+                    <CollapsibleTrigger asChild>
+                      <CardContent className="p-4 cursor-pointer">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <div>
+                              <div className="text-sm font-medium">
+                                {new Date(session.created_at).toLocaleDateString('en-US', { 
+                                  month: 'short', 
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                {session.duration_minutes || 6}min chat
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="text-xs">
+                              {session.source}
+                            </Badge>
+                            {isExpanded ? (
+                              <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                            ) : (
+                              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                            )}
+                          </div>
+                        </div>
+                        
+                        {session.content?.user_message && !isExpanded && (
+                          <div className="mt-2 text-xs text-muted-foreground p-2 bg-muted/30 rounded border-l-2 border-[hsl(var(--espaluz-primary))]/30">
+                            "You: {typeof session.content.user_message === 'string' ? session.content.user_message.substring(0, 80) : 'Message'}{typeof session.content.user_message === 'string' && session.content.user_message.length > 80 ? '...' : ''}"
+                          </div>
+                        )}
+                      </CardContent>
+                    </CollapsibleTrigger>
                     
-                    {session.content?.user_message && (
-                      <div className="text-xs text-muted-foreground mb-2 p-2 bg-background/50 rounded border-l-2 border-[hsl(var(--espaluz-primary))]/30">
-                        "You: {typeof session.content.user_message === 'string' ? session.content.user_message.substring(0, 100) : 'Message'}{typeof session.content.user_message === 'string' && session.content.user_message.length > 100 ? '...' : ''}"
+                    <CollapsibleContent>
+                      <div className="px-4 pb-4 border-t border-border/30">
+                        <TelegramLearningAnalysis sessions={[session]} />
+                        
+                        {/* Debug section for developers */}
+                        <details className="mt-4">
+                          <summary className="text-xs text-muted-foreground cursor-pointer">Debug Session Data</summary>
+                          <pre className="text-xs mt-1 p-2 bg-muted/20 rounded overflow-auto max-h-32">
+                            {JSON.stringify({
+                              id: session.id.substring(0, 8),
+                              content_keys: Object.keys(session.content || {}),
+                              progress_data_keys: Object.keys(session.progress_data || {}),
+                              vocabulary_count: session.progress_data?.vocabulary_learned?.length || 0,
+                              has_bot_response: !!(session.content?.bot_response)
+                            }, null, 2)}
+                          </pre>
+                        </details>
                       </div>
-                    )}
-                    
-                    <details>
-                      <summary className="text-xs text-muted-foreground cursor-pointer">Session Debug Data</summary>
-                      <pre className="text-xs mt-1 p-2 bg-background/30 rounded overflow-auto max-h-32">
-                        {JSON.stringify({
-                          id: session.id.substring(0, 8),
-                          content_keys: Object.keys(session.content || {}),
-                          progress_data_keys: Object.keys(session.progress_data || {}),
-                          vocabulary_count: session.progress_data?.vocabulary_learned?.length || 0,
-                          has_bot_response: !!(session.content?.bot_response)
-                        }, null, 2)}
-                      </pre>
-                    </details>
-                  </div>
-                ))}
-              </div>
-            </details>
+                    </CollapsibleContent>
+                  </Card>
+                </Collapsible>
+              );
+            })}
           </CardContent>
         </Card>
       )}
