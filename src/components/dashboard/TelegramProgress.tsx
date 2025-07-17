@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -29,12 +28,12 @@ export const TelegramProgress = () => {
     }
   }, [user]);
 
-  // Auto-refresh every 30 seconds
+  // Auto-refresh every 10 seconds for better responsiveness
   useEffect(() => {
     if (user) {
       const interval = setInterval(() => {
         loadTelegramProgress(false); // Silent refresh
-      }, 30000);
+      }, 10000);
       return () => clearInterval(interval);
     }
   }, [user]);
@@ -54,7 +53,7 @@ export const TelegramProgress = () => {
           filter: `user_id=eq.${user.id}`
         },
         (payload) => {
-          console.log('New learning session:', payload);
+          console.log('New learning session detected:', payload);
           if (payload.new.source === 'telegram') {
             loadTelegramProgress(false);
             toast.success('New Telegram conversation recorded! 🎉');
@@ -87,7 +86,7 @@ export const TelegramProgress = () => {
         throw error;
       }
 
-      console.log('Loaded Telegram sessions:', telegramSessions?.length || 0);
+      console.log('Loaded Telegram sessions:', telegramSessions?.length || 0, telegramSessions);
       setSessions(telegramSessions || []);
       setLastRefresh(new Date());
       
@@ -101,7 +100,7 @@ export const TelegramProgress = () => {
 
   const handleManualRefresh = () => {
     loadTelegramProgress(true);
-    toast.success('Refreshing your Telegram progress...');
+    toast.info('Refreshing your Telegram progress...');
   };
 
   const getEnhancedStats = () => {
@@ -209,7 +208,7 @@ export const TelegramProgress = () => {
             </div>
           </div>
           <div className="text-xs text-muted-foreground mt-2">
-            Last updated: {lastRefresh.toLocaleTimeString()}
+            Last updated: {lastRefresh.toLocaleTimeString()} | Found {sessions.length} conversations
           </div>
         </CardHeader>
         

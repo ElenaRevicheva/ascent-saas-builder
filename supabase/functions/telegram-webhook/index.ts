@@ -25,6 +25,7 @@ serve(async (req) => {
     // Extract message data
     const message = telegramUpdate.message;
     if (!message) {
+      console.log('No message found in update');
       return new Response('No message found', { status: 200 });
     }
 
@@ -33,16 +34,20 @@ serve(async (req) => {
     const username = message.from.username || message.from.first_name;
     const text = message.text;
 
-    console.log(`Message from ${username} (${userId}): ${text}`);
+    console.log(`Processing message from ${username} (${userId}): ${text}`);
 
     // Check if bot is connected for this user
-    const { data: connectedBot } = await supabase
+    const { data: connectedBot, error: botError } = await supabase
       .from('connected_bots')
       .select('*')
       .eq('platform', 'telegram')
       .eq('platform_user_id', userId.toString())
       .eq('is_active', true)
       .single();
+
+    if (botError) {
+      console.error('Error checking connected bot:', botError);
+    }
 
     if (!connectedBot) {
       console.log('Bot not connected for user:', userId);
@@ -52,62 +57,88 @@ serve(async (req) => {
       });
     }
 
+    console.log('Found connected bot for user:', connectedBot.user_id);
+
     // Generate AI response for Spanish learning
     const botResponse = generateSpanishLearningResponse(text, username);
     
     // Extract learning insights from the conversation
     const learningInsights = extractLearningInsights(text, botResponse);
 
+    console.log('Generated learning insights:', learningInsights);
+
     // Create learning session with enhanced progress data
-    const { error: sessionError } = await supabase
+    const sessionData = {
+      user_id: connectedBot.user_id,
+      session_type: 'telegram_chat',
+      source: 'telegram',
+      duration_minutes: 2,
+      content: {
+        user_message: text,
+        bot_response: botResponse,
+        telegram_user_id: userId,
+        telegram_username: username,
+        chat_id: chatId
+      },
+      progress_data: {
+        platform: 'telegram',
+        message_type: 'text',
+        vocabulary_learned: learningInsights.vocabulary,
+        phrases_practiced: learningInsights.phrases,
+        topics_discussed: learningInsights.topics,
+        learning_level: learningInsights.level,
+        conversation_quality: learningInsights.quality
+      }
+    };
+
+    console.log('Inserting learning session:', JSON.stringify(sessionData, null, 2));
+
+    const { data: sessionResult, error: sessionError } = await supabase
       .from('learning_sessions')
-      .insert({
-        user_id: connectedBot.user_id,
-        session_type: 'telegram_chat',
-        source: 'telegram',
-        duration_minutes: 2, // Estimate conversation length
-        content: {
-          user_message: text,
-          bot_response: botResponse,
-          telegram_user_id: userId,
-          telegram_username: username,
-          chat_id: chatId
-        },
-        progress_data: {
-          platform: 'telegram',
-          message_type: 'text',
-          vocabulary_learned: learningInsights.vocabulary,
-          phrases_practiced: learningInsights.phrases,
-          topics_discussed: learningInsights.topics,
-          learning_level: learningInsights.level,
-          conversation_quality: learningInsights.quality
-        }
-      });
+      .insert(sessionData)
+      .select();
 
     if (sessionError) {
       console.error('Error creating learning session:', sessionError);
+      console.error('Session data that failed:', JSON.stringify(sessionData, null, 2));
     } else {
-      console.log('Learning session created successfully with insights:', learningInsights);
+      console.log('Learning session created successfully:', sessionResult);
     }
 
     // Update last activity for connected bot
-    await supabase
+    const { error: updateError } = await supabase
       .from('connected_bots')
       .update({ last_activity: new Date().toISOString() })
       .eq('id', connectedBot.id);
 
+    if (updateError) {
+      console.error('Error updating bot activity:', updateError);
+    }
+
     // Send response back to Telegram
     const botToken = Deno.env.get('TELEGRAM_BOT_TOKEN');
     if (botToken) {
-      await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: botResponse,
-          parse_mode: 'Markdown'
-        }),
-      });
+      try {
+        const telegramResponse = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: botResponse,
+            parse_mode: 'Markdown'
+          }),
+        });
+
+        if (!telegramResponse.ok) {
+          console.error('Failed to send Telegram message:', await telegramResponse.text());
+        } else {
+          console.log('Successfully sent response to Telegram');
+        }
+      } catch (telegramError) {
+        console.error('Error sending Telegram message:', telegramError);
+      }
+    } else {
+      console.log('No Telegram bot token found');
     }
 
     return new Response('OK', {
@@ -200,7 +231,7 @@ function extractLearningInsights(userMessage: string, botResponse: string) {
   }
   
   return {
-    vocabulary: vocabulary.slice(0, 8), // Limit to relevant words
+    vocabulary: vocabulary.slice(0, 8),
     phrases: phrases.slice(0, 5),
     topics: topics.slice(0, 3),
     level,
