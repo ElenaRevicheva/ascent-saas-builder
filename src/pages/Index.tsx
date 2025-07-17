@@ -353,6 +353,7 @@ const Index = () => {
           </Card>
         </div>
       </section>
+
       {/* QR Code Viral Loop Section */}
       <section className="container mx-auto px-4 py-8 text-center">
         <div className="flex flex-col items-center">
@@ -581,15 +582,15 @@ const Index = () => {
         <h2 className="text-3xl font-extrabold text-purple-700 mb-4">About the Creator</h2>
         <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-6">
           🧠 <span className="font-bold text-purple-700">Solo Founder and AI Entrepreneur: Elena Revicheva</span><br/>
-          Hi, I’m Elena — founder of AIdeazz, where I craft emotionally intelligent AI agents to support real human lives.<br/><br/>
+          Hi, I'm Elena — founder of AIdeazz, where I craft emotionally intelligent AI agents to support real human lives.<br/><br/>
           <span className="font-bold text-orange-700">EspaLuz is our first graduate. My journey to AIdeazz was deeply personal:</span><br/><br/>
-          🇷🇺 Former top IT project manager & Chief Legal Officer in Russia’s E-Government<br/>
-          ✈️ Relocated to Panama in 2022 as a single mother <br/>
-          💡 AI helped me rebuild myself from scratch — in a new country, a new language, and a new profession. Now I’m sharing that path with others, through human-centered AI.<br/><br/>
-          📇 Scan my card below to connect, collaborate, or join the AIdeazz journey. This is just the beginning.
+          🇷🇺 Former IT exec & CLO in Russia's E-Government.<br/>
+          ✈️ Relocated to Panama in 2022 as a single mother with my 1-year-old daughter and elderly parents (ages 62 & 70) — my mom spoke Russian-English, my dad only English. This wasn't an adventure, it was a great challenge for all my family.<br/>
+          💡 Started with zero: no profession left, no Spanish, no network. Traditional language apps felt cold, robotic — nothing like the warm teacher my three-generation family needed and can not help on the go, right here, right now. AI helped me to create EspaLuz AI Family Tutor on the go. AI helped me to rebuild myself from scratch. Now I'm sharing that path through AIdeazz ecosystem for all generations.<br/><br/>
+          📇 Scan my card below to connect, collaborate, or join the AIdeazz journey. Have any AIdeazz? Get on the ledger.
         </p>
         <img src={creatorQr} alt="Creator Business Card QR" className="mx-auto w-48 h-48 object-contain rounded-2xl shadow-xl border-4 border-purple-300 mb-4" />
-        <p className="text-md text-purple-600 font-semibold">Let’s build the future of learning together!</p>
+        <p className="text-md text-purple-600 font-semibold">Let's build the future of learning together!</p>
       </section>
 
       <Footer />
