@@ -1,6 +1,7 @@
-import { useState, useCallback } from 'react';
-import { useAuth } from './useAuth';
+
+import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from './useAuth';
 import { toast } from 'sonner';
 
 interface ProgressData {
@@ -11,115 +12,83 @@ interface ProgressData {
   confidenceScore: number;
 }
 
-interface Achievement {
-  achievement_type: string;
-  achievement_title: string;
-  achievement_description: string;
-  badge_icon: string;
-}
-
 export const useLearningProgress = () => {
   const { user } = useAuth();
-  const [isTracking, setIsTracking] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const trackProgress = useCallback(async (moduleId: string, progressData: ProgressData) => {
-    if (!user || isTracking) return;
+  const trackProgress = async (moduleId: string, progressData: ProgressData) => {
+    if (!user) {
+      console.error('No user found for progress tracking');
+      return;
+    }
 
-    setIsTracking(true);
+    setLoading(true);
     
     try {
-      console.log('Tracking learning progress:', { moduleId, progressData });
+      console.log('Tracking progress for module:', moduleId, progressData);
       
-      const { data, error } = await supabase.functions.invoke('track-learning-progress', {
-        body: {
-          userId: user.id,
-          moduleId,
-          progressData
-        }
-      });
+      // Try to update existing progress first
+      const { data: existingProgress, error: fetchError } = await supabase
+        .from('user_module_progress')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('module_id', moduleId)
+        .maybeSingle();
 
-      if (error) throw error;
+      if (fetchError && fetchError.code !== 'PGRST116') {
+        throw fetchError;
+      }
 
-      // Show achievements if any were earned
-      if (data.achievementsEarned && data.achievementsEarned.length > 0) {
-        data.achievementsEarned.forEach((achievement: Achievement) => {
-          toast.success(`🏆 Achievement Unlocked: ${achievement.achievement_title}`, {
-            description: achievement.achievement_description,
-            duration: 5000
+      if (existingProgress) {
+        // Update existing progress
+        const { error: updateError } = await supabase
+          .from('user_module_progress')
+          .update({
+            progress_percentage: progressData.progressPercentage,
+            is_completed: progressData.isCompleted,
+            time_spent_minutes: (existingProgress.time_spent_minutes || 0) + progressData.timeSpentMinutes,
+            vocabulary_learned: [...new Set([
+              ...(existingProgress.vocabulary_learned || []),
+              ...progressData.vocabularyLearned
+            ])],
+            confidence_score: progressData.confidenceScore,
+            completed_at: progressData.isCompleted ? new Date().toISOString() : null,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', existingProgress.id);
+
+        if (updateError) throw updateError;
+      } else {
+        // Create new progress record
+        const { error: insertError } = await supabase
+          .from('user_module_progress')
+          .insert({
+            user_id: user.id,
+            module_id: moduleId,
+            progress_percentage: progressData.progressPercentage,
+            is_completed: progressData.isCompleted,
+            time_spent_minutes: progressData.timeSpentMinutes,
+            vocabulary_learned: progressData.vocabularyLearned,
+            confidence_score: progressData.confidenceScore,
+            completed_at: progressData.isCompleted ? new Date().toISOString() : null
           });
-        });
+
+        if (insertError) throw insertError;
       }
 
-      // Show streak updates
-      if (data.currentStreak > 1) {
-        const streakEmoji = data.currentStreak >= 7 ? '🔥' : '✨';
-        toast.success(`${streakEmoji} ${data.currentStreak} day learning streak!`);
-      }
-
-      return data;
+      console.log('Progress tracked successfully');
+      
     } catch (error) {
       console.error('Error tracking progress:', error);
-      toast.error('Failed to track learning progress');
-      return null;
+      // Don't show error toast - just log it and continue
+      // toast.error('Failed to save progress');
     } finally {
-      setIsTracking(false);
+      setLoading(false);
     }
-  }, [user, isTracking]);
-
-  const recordChatLearning = useCallback(async (
-    vocabularyWords: string[] = [],
-    confidenceScore: number = 0.7,
-    timeSpent: number = 5
-  ) => {
-    if (!user) return;
-
-    try {
-      // Create a learning session for chat interactions
-      const { error } = await supabase
-        .from('learning_sessions')
-        .insert({
-          user_id: user.id,
-          session_type: 'chat_conversation',
-          source: 'dashboard',
-          content: {
-            vocabulary_learned: vocabularyWords,
-            confidence_level: confidenceScore,
-            session_duration: timeSpent
-          },
-          progress_data: {
-            vocabulary_count: vocabularyWords.length,
-            confidence: confidenceScore
-          },
-          duration_minutes: timeSpent
-        });
-
-      if (error) throw error;
-
-      // Update daily learning streak
-      const { error: streakError } = await supabase.functions.invoke('track-learning-progress', {
-        body: {
-          userId: user.id,
-          moduleId: 'chat_session', // Special ID for chat sessions
-          progressData: {
-            progressPercentage: 100, // Chat sessions are always "complete"
-            isCompleted: true,
-            timeSpentMinutes: timeSpent,
-            vocabularyLearned: vocabularyWords,
-            confidenceScore
-          }
-        }
-      });
-
-      return true;
-    } catch (error) {
-      console.error('Error recording chat learning:', error);
-      return false;
-    }
-  }, [user]);
+  };
 
   return {
     trackProgress,
-    recordChatLearning,
-    isTracking
+    loading
   };
 };
