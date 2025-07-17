@@ -31,6 +31,16 @@ interface LearningAnalysisProps {
 }
 
 export const TelegramLearningAnalysis = ({ sessions }: LearningAnalysisProps) => {
+  console.log('🎯 TelegramLearningAnalysis received sessions:', {
+    count: sessions.length,
+    sessionIds: sessions.map(s => s.id.substring(0, 8)),
+    firstSession: sessions[0] ? {
+      id: sessions[0].id.substring(0, 8),
+      vocabulary: sessions[0].progress_data?.vocabulary_learned?.length || 0,
+      spanish_words: sessions[0].progress_data?.spanish_words_total || 0
+    } : null
+  });
+
   const analyzeLearningProgress = () => {
     if (sessions.length === 0) {
       return {
