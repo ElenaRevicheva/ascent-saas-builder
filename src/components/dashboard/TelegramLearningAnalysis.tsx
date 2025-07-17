@@ -175,6 +175,7 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
       recommendations: recommendations.slice(0, 4), // Limit to 4 recommendations
       score,
       insights,
+      vocabularyWords: Array.from(analysis.vocabularyWords),
       metrics: {
         vocabularySize: vocabSize,
         topicDiversity: analysis.topics.size,
@@ -246,13 +247,30 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
             </div>
           </div>
 
-          {/* Key Metrics */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-gradient-to-br from-blue-500/10 to-blue-600/5 rounded-xl border border-blue-500/20">
-              <BookOpen className="h-5 w-5 text-blue-500 mx-auto mb-2" />
-              <div className="text-xl font-bold text-blue-600">{learningData.metrics.vocabularySize}</div>
-              <div className="text-xs text-muted-foreground">Words Learned</div>
-            </div>
+      {/* Vocabulary Words */}
+      {learningData.vocabularyWords && learningData.vocabularyWords.length > 0 && (
+        <div className="p-4 bg-gradient-to-br from-green-500/10 to-green-600/5 rounded-xl border border-green-500/20">
+          <div className="flex items-center gap-2 mb-3">
+            <BookOpen className="h-5 w-5 text-green-500" />
+            <h4 className="font-semibold text-green-700">Vocabulary Learned ({learningData.vocabularyWords.length} words)</h4>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {learningData.vocabularyWords.map((word: string, index: number) => (
+              <Badge key={index} variant="secondary" className="bg-green-100 text-green-700 border-green-300">
+                {String(word)}
+              </Badge>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Key Metrics */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="text-center p-4 bg-gradient-to-br from-blue-500/10 to-blue-600/5 rounded-xl border border-blue-500/20">
+          <BookOpen className="h-5 w-5 text-blue-500 mx-auto mb-2" />
+          <div className="text-xl font-bold text-blue-600">{learningData.metrics.vocabularySize}</div>
+          <div className="text-xs text-muted-foreground">Words Learned</div>
+        </div>
             
             <div className="text-center p-4 bg-gradient-to-br from-green-500/10 to-green-600/5 rounded-xl border border-green-500/20">
               <Target className="h-5 w-5 text-green-500 mx-auto mb-2" />
