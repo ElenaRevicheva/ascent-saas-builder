@@ -14,6 +14,7 @@ interface TelegramSession {
   duration_minutes: number;
   content: any;
   progress_data: any;
+  source: string;
 }
 
 export const TelegramProgress = () => {
