@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -105,8 +106,8 @@ export const TelegramProgress = () => {
           source: session.source,
           content_keys: Object.keys(session.content || {}),
           progress_data_keys: Object.keys(session.progress_data || {}),
-          has_user_message: !!session.content?.user_message,
-          has_bot_response: !!session.content?.bot_response
+          has_user_message: !!(session.content && typeof session.content === 'object' && 'user_message' in session.content),
+          has_bot_response: !!(session.content && typeof session.content === 'object' && 'bot_response' in session.content)
         });
       });
 
@@ -199,14 +200,16 @@ export const TelegramProgress = () => {
       }
       
       // Legacy support for old structure
-      if (session.content?.bot_response) {
+      if (session.content && typeof session.content === 'object' && 'bot_response' in session.content) {
         const botResponse = session.content.bot_response;
-        const vocabMatches = botResponse.match(/\*\*([^*]+)\*\*/g);
-        if (vocabMatches) {
-          vocabMatches.forEach((match: string) => {
-            const word = match.replace(/\*\*/g, '').trim();
-            if (word.length > 1) allVocabulary.push(word);
-          });
+        if (typeof botResponse === 'string') {
+          const vocabMatches = botResponse.match(/\*\*([^*]+)\*\*/g);
+          if (vocabMatches) {
+            vocabMatches.forEach((match: string) => {
+              const word = match.replace(/\*\*/g, '').trim();
+              if (word.length > 1) allVocabulary.push(word);
+            });
+          }
         }
       }
     });
@@ -445,9 +448,9 @@ export const TelegramProgress = () => {
                     </Badge>
                   </div>
                   
-                  {session.content?.user_message && (
+                  {session.content && typeof session.content === 'object' && 'user_message' in session.content && (
                     <div className="text-sm text-muted-foreground mb-3 p-2 bg-muted/30 rounded-md italic border-l-2 border-[hsl(var(--espaluz-primary))]/30">
-                      "You: {session.content.user_message.substring(0, 150)}{session.content.user_message.length > 150 ? '...' : ''}"
+                      "You: {typeof session.content.user_message === 'string' ? session.content.user_message.substring(0, 150) : 'Message content'}{typeof session.content.user_message === 'string' && session.content.user_message.length > 150 ? '...' : ''}"
                     </div>
                   )}
                   
