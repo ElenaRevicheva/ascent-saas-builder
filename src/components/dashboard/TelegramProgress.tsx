@@ -30,12 +30,12 @@ export const TelegramProgress = () => {
     }
   }, [user]);
 
-  // Auto-refresh every 10 seconds instead of 5 to reduce load
+  // Auto-refresh every 5 seconds for immediate updates
   useEffect(() => {
     if (user) {
       const interval = setInterval(() => {
         loadTelegramProgress(false); // Silent refresh
-      }, 10000);
+      }, 5000); // Reduced to 5 seconds for faster updates
       return () => clearInterval(interval);
     }
   }, [user]);
