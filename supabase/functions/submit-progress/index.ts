@@ -21,24 +21,25 @@ serve(async (req) => {
     const requestData = await req.json()
     console.log('📊 Received progress data:', requestData)
 
-    const {
-      user_id,
-      user_message,
-      bot_response,
-      family_role,
-      emotional_state,
-      vocabulary_learned = [],
-      learning_level = 'beginner',
-      session_emotions = [],
-      spanish_words_total = 0,
-      grammar_points_total = 0,
-      message_count = 1
-    } = requestData
+    console.log('📊 Raw request data:', JSON.stringify(requestData, null, 2))
 
-    if (!user_id || !user_message || !bot_response) {
-      console.error('❌ Missing required fields')
+    // Support multiple data formats from bot integration
+    const userId = requestData.user_id || requestData.userId || requestData.telegram_user_id
+    const userMessage = requestData.user_message || requestData.userMessage || requestData.message
+    const botResponse = requestData.bot_response || requestData.botResponse || requestData.response
+    const familyRole = requestData.family_role || requestData.familyRole || 'family_member'
+    const emotionalState = requestData.emotional_state || requestData.emotionalState || 'neutral'
+    const vocabularyLearned = requestData.vocabulary_learned || requestData.vocabularyLearned || []
+    const learningLevel = requestData.learning_level || requestData.learningLevel || 'beginner'
+    const sessionEmotions = requestData.session_emotions || requestData.sessionEmotions || []
+    const spanishWordsTotal = requestData.spanish_words_total || requestData.spanishWordsTotal || 0
+    const grammarPointsTotal = requestData.grammar_points_total || requestData.grammarPointsTotal || 0
+    const messageCount = requestData.message_count || requestData.messageCount || 1
+
+    if (!userId) {
+      console.error('❌ Missing user_id field:', Object.keys(requestData))
       return new Response(
-        JSON.stringify({ error: 'Missing required fields: user_id, user_message, bot_response' }),
+        JSON.stringify({ error: 'Missing user_id field. Available fields: ' + Object.keys(requestData).join(', ') }),
         { 
           status: 400, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
@@ -50,24 +51,24 @@ serve(async (req) => {
     const { data, error } = await supabase
       .from('learning_sessions')
       .insert({
-        user_id,
+        user_id: userId,
         session_type: 'conversation',
         source: 'telegram',
         content: {
-          user_message,
-          bot_response,
-          family_role,
-          emotional_state,
-          message_count
+          user_message: userMessage || 'No message content',
+          bot_response: botResponse || 'No response content',
+          family_role: familyRole,
+          emotional_state: emotionalState,
+          message_count: messageCount
         },
         progress_data: {
-          vocabulary_learned,
-          learning_level,
-          session_emotions,
-          spanish_words_total,
-          grammar_points_total
+          vocabulary_learned: vocabularyLearned,
+          learning_level: learningLevel,
+          session_emotions: sessionEmotions,
+          spanish_words_total: spanishWordsTotal,
+          grammar_points_total: grammarPointsTotal
         },
-        emotional_tone: emotional_state,
+        emotional_tone: emotionalState,
         completed_at: new Date().toISOString()
       })
 
