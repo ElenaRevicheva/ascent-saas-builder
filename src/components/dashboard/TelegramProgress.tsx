@@ -504,7 +504,7 @@ export const TelegramProgress = () => {
             <p className="text-sm text-muted-foreground">Click on any session to see your learning insights</p>
           </CardHeader>
           <CardContent className="space-y-3">
-            {sessions.slice(0, 10).map((session) => {
+            {sessions.slice(0, 5).map((session) => {
               const isExpanded = expandedSessions.has(session.id);
               const toggleExpansion = () => {
                 const newExpanded = new Set(expandedSessions);
