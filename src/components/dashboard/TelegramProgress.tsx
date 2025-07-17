@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -80,8 +79,30 @@ export const TelegramProgress = () => {
     
     try {
       console.log('🔄 Loading Telegram progress for user:', user?.id);
+      console.log('🕐 Current time:', new Date().toISOString());
+      console.log('🕐 30 minutes ago:', new Date(Date.now() - 30 * 60 * 1000).toISOString());
       
-      // Get both telegram and telegram_chat sources
+      // First, let's check ALL learning sessions for this user to see what's there
+      const { data: allSessions, error: allError } = await supabase
+        .from('learning_sessions')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false })
+        .limit(100);
+
+      console.log('📊 ALL sessions for user:', allSessions?.length || 0);
+      console.log('📊 ALL sessions data:', allSessions?.slice(0, 5)); // First 5 sessions
+
+      // Filter sessions from last 30 minutes
+      const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000);
+      const recentSessions = allSessions?.filter(session => 
+        new Date(session.created_at) >= thirtyMinutesAgo
+      ) || [];
+      
+      console.log('🕐 Recent sessions (last 30 min):', recentSessions.length);
+      console.log('🕐 Recent sessions data:', recentSessions);
+
+      // Now get telegram-specific sessions
       const { data: telegramSessions, error } = await supabase
         .from('learning_sessions')
         .select('*')
@@ -95,19 +116,42 @@ export const TelegramProgress = () => {
         throw error;
       }
 
-      console.log('📊 Raw sessions data:', telegramSessions);
-      console.log('📊 Sessions count:', telegramSessions?.length || 0);
+      console.log('📊 Telegram sessions found:', telegramSessions?.length || 0);
+      console.log('📊 Telegram sessions sources:', [...new Set(telegramSessions?.map(s => s.source) || [])]);
       
-      // Log detailed session info
+      // Check for recent telegram sessions
+      const recentTelegramSessions = telegramSessions?.filter(session => 
+        new Date(session.created_at) >= thirtyMinutesAgo
+      ) || [];
+      
+      console.log('🕐 Recent Telegram sessions (last 30 min):', recentTelegramSessions.length);
+      
+      if (recentTelegramSessions.length > 0) {
+        console.log('✅ Found recent Telegram sessions!');
+        recentTelegramSessions.forEach((session, index) => {
+          console.log(`📋 Recent Session ${index + 1}:`, {
+            id: session.id.substring(0, 8),
+            created: session.created_at,
+            source: session.source,
+            minutes_ago: Math.round((Date.now() - new Date(session.created_at).getTime()) / (1000 * 60))
+          });
+        });
+      } else {
+        console.log('❌ No recent Telegram sessions found');
+      }
+
+      // Enhanced session analysis
       telegramSessions?.forEach((session, index) => {
         console.log(`📋 Session ${index + 1}:`, {
           id: session.id.substring(0, 8),
           created: session.created_at,
           source: session.source,
+          session_type: session.session_type,
           content_keys: Object.keys(session.content || {}),
           progress_data_keys: Object.keys(session.progress_data || {}),
           has_user_message: !!(session.content && typeof session.content === 'object' && 'user_message' in session.content),
-          has_bot_response: !!(session.content && typeof session.content === 'object' && 'bot_response' in session.content)
+          has_bot_response: !!(session.content && typeof session.content === 'object' && 'bot_response' in session.content),
+          minutes_ago: Math.round((Date.now() - new Date(session.created_at).getTime()) / (1000 * 60))
         });
       });
 
@@ -117,10 +161,21 @@ export const TelegramProgress = () => {
       // Enhanced debug info
       setDebugInfo({
         user_id: user?.id,
-        sessions_found: telegramSessions?.length || 0,
+        current_time: new Date().toISOString(),
+        thirty_minutes_ago: thirtyMinutesAgo.toISOString(),
+        all_sessions_count: allSessions?.length || 0,
+        telegram_sessions_count: telegramSessions?.length || 0,
+        recent_sessions_count: recentSessions.length,
+        recent_telegram_sessions_count: recentTelegramSessions.length,
+        telegram_sources: [...new Set(telegramSessions?.map(s => s.source) || [])],
         last_session: telegramSessions?.[0]?.created_at || 'None',
-        sources: [...new Set(telegramSessions?.map(s => s.source) || [])],
-        raw_sessions: telegramSessions?.slice(0, 3) // First 3 sessions for debug
+        all_sources_found: [...new Set(allSessions?.map(s => s.source) || [])],
+        recent_telegram_sessions: recentTelegramSessions.map(s => ({
+          id: s.id.substring(0, 8),
+          created: s.created_at,
+          source: s.source,
+          minutes_ago: Math.round((Date.now() - new Date(s.created_at).getTime()) / (1000 * 60))
+        }))
       });
       
     } catch (error) {
@@ -254,7 +309,7 @@ export const TelegramProgress = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header Card with Learning Score and Debug Info */}
+      {/* Header Card with Learning Score and Enhanced Debug Info */}
       <Card className="border-border/50 shadow-magical bg-gradient-to-br from-[hsl(var(--espaluz-primary))]/5 to-purple-500/5">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
@@ -299,25 +354,48 @@ export const TelegramProgress = () => {
             Last updated: {lastRefresh.toLocaleTimeString()} | Found {sessions.length} conversations
           </div>
           
-          {/* Enhanced Debug Information */}
+          {/* ENHANCED Debug Information */}
           {debugInfo && (
-            <div className="mt-3 p-3 bg-muted/30 rounded-lg text-xs border border-yellow-500/20">
+            <div className="mt-3 p-4 bg-red-500/10 rounded-lg text-xs border border-red-500/30">
               <details>
-                <summary className="cursor-pointer font-medium text-yellow-600">🐛 Debug Info (click to expand)</summary>
-                <div className="mt-2 space-y-2">
-                  <div><strong>User ID:</strong> {debugInfo.user_id}</div>
-                  <div><strong>Sessions Found:</strong> {debugInfo.sessions_found}</div>
-                  <div><strong>Sources:</strong> {debugInfo.sources.join(', ') || 'None'}</div>
-                  <div><strong>Last Session:</strong> {debugInfo.last_session}</div>
-                  {debugInfo.connected_bots !== undefined && (
-                    <div><strong>Connected Bots:</strong> {debugInfo.connected_bots}</div>
-                  )}
-                  {debugInfo.raw_sessions && debugInfo.raw_sessions.length > 0 && (
-                    <div className="mt-2">
-                      <strong>Sample Sessions:</strong>
-                      <pre className="mt-1 text-xs overflow-auto bg-background/50 p-2 rounded">
-                        {JSON.stringify(debugInfo.raw_sessions, null, 2)}
+                <summary className="cursor-pointer font-medium text-red-600">🐛 ENHANCED Debug Info - Why No Recent Sessions? (click to expand)</summary>
+                <div className="mt-3 space-y-3">
+                  <div className="grid gap-2">
+                    <div><strong>User ID:</strong> {debugInfo.user_id}</div>
+                    <div><strong>Current Time:</strong> {debugInfo.current_time}</div>
+                    <div><strong>30 Min Ago:</strong> {debugInfo.thirty_minutes_ago}</div>
+                  </div>
+                  
+                  <div className="border-t border-red-500/20 pt-2">
+                    <div><strong>ALL Learning Sessions:</strong> {debugInfo.all_sessions_count}</div>
+                    <div><strong>Recent Sessions (30min):</strong> {debugInfo.recent_sessions_count}</div>
+                    <div><strong>All Sources Found:</strong> {debugInfo.all_sources_found.join(', ') || 'None'}</div>
+                  </div>
+                  
+                  <div className="border-t border-red-500/20 pt-2">
+                    <div><strong>Telegram Sessions Total:</strong> {debugInfo.telegram_sessions_count}</div>
+                    <div><strong>Recent Telegram Sessions:</strong> {debugInfo.recent_telegram_sessions_count}</div>
+                    <div><strong>Telegram Sources:</strong> {debugInfo.telegram_sources.join(', ') || 'None'}</div>
+                    <div><strong>Last Telegram Session:</strong> {debugInfo.last_session}</div>
+                  </div>
+                  
+                  {debugInfo.recent_telegram_sessions && debugInfo.recent_telegram_sessions.length > 0 && (
+                    <div className="border-t border-red-500/20 pt-2">
+                      <div><strong>Recent Telegram Sessions Details:</strong></div>
+                      <pre className="mt-1 text-xs overflow-auto bg-background/50 p-2 rounded max-h-32">
+                        {JSON.stringify(debugInfo.recent_telegram_sessions, null, 2)}
                       </pre>
+                    </div>
+                  )}
+                  
+                  {debugInfo.connected_bots !== undefined && (
+                    <div className="border-t border-red-500/20 pt-2">
+                      <div><strong>Connected Bots:</strong> {debugInfo.connected_bots}</div>
+                      {debugInfo.bot_details && (
+                        <pre className="mt-1 text-xs overflow-auto bg-background/50 p-2 rounded">
+                          {JSON.stringify(debugInfo.bot_details, null, 2)}
+                        </pre>
+                      )}
                     </div>
                   )}
                 </div>
@@ -326,9 +404,7 @@ export const TelegramProgress = () => {
           )}
         </CardHeader>
         
-        {/* Force show stats even if empty to debug */}
         <CardContent>
-          {/* Enhanced Stats Grid */}
           <div className="grid gap-4 md:grid-cols-4">
             <div className="text-center p-4 bg-gradient-to-br from-blue-500/10 to-blue-600/5 rounded-xl border border-blue-500/20">
               <div className="flex items-center justify-center mb-2">
@@ -371,7 +447,6 @@ export const TelegramProgress = () => {
         </CardContent>
       </Card>
 
-      {/* Learning Topics & Insights */}
       {stats.topics.length > 0 && (
         <Card className="border-border/50 shadow-magical">
           <CardHeader>
