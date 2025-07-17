@@ -63,13 +63,13 @@ serve(async (req) => {
     const content = requestData.content || {}
     const progressData = requestData.progress_data || {}
     
-    // Insert learning session
+    // Insert learning session - ensure source is valid
     const { data, error } = await supabase
       .from('learning_sessions')
       .insert({
         user_id: userId,
         session_type: requestData.session_type || 'conversation',
-        source: requestData.source || 'telegram',
+        source: 'telegram', // Force valid source value
         content: content,
         progress_data: progressData,
         emotional_tone: requestData.emotional_tone || 'neutral',
