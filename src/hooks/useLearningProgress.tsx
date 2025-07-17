@@ -87,8 +87,45 @@ export const useLearningProgress = () => {
     }
   };
 
+  const recordChatLearning = async (vocabularyLearned: string[], confidence: number, timeSpentMinutes: number) => {
+    if (!user) {
+      console.error('No user found for chat learning tracking');
+      return;
+    }
+
+    try {
+      console.log('Recording chat learning session:', { vocabularyLearned, confidence, timeSpentMinutes });
+      
+      // Record learning session
+      const { error } = await supabase
+        .from('learning_sessions')
+        .insert({
+          user_id: user.id,
+          session_type: 'chat',
+          source: 'dashboard_chat',
+          duration_minutes: timeSpentMinutes,
+          content: {
+            vocabulary_learned: vocabularyLearned,
+            confidence_score: confidence
+          },
+          progress_data: {
+            vocabulary_count: vocabularyLearned.length,
+            confidence: confidence
+          }
+        });
+
+      if (error) throw error;
+      
+      console.log('Chat learning session recorded successfully');
+    } catch (error) {
+      console.error('Error recording chat learning:', error);
+      // Don't show error toast - just log it and continue
+    }
+  };
+
   return {
     trackProgress,
+    recordChatLearning,
     loading
   };
 };
