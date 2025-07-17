@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { TelegramLearningAnalysis } from './TelegramLearningAnalysis';
 
 interface TelegramSession {
   id: string;
@@ -490,118 +491,65 @@ export const TelegramProgress = () => {
         </Card>
       )}
 
-      {/* Recent Conversations - Always show this section for debugging */}
-      <Card className="border-border/50 shadow-magical">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5 text-blue-500" />
-            Recent Telegram Conversations ({sessions.length})
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {sessions.length > 0 ? (
-            <div className="space-y-3">
-              {sessions.slice(0, 10).map((session) => (
-                <div key={session.id} className="p-4 bg-gradient-to-r from-background/80 to-background/40 border border-border/50 rounded-lg hover-scale transition-all duration-200">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <span className="text-sm font-medium">
-                        {new Date(session.created_at).toLocaleDateString('en-US', { 
-                          month: 'short', 
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </span>
+      {/* Enhanced Learning Analysis */}
+      <TelegramLearningAnalysis sessions={sessions} />
+
+      {/* Recent Conversations Debug Section (collapsible) */}
+      {sessions.length > 0 && (
+        <Card className="border-border/50 shadow-magical">
+          <CardContent className="p-4">
+            <details>
+              <summary className="cursor-pointer font-medium text-muted-foreground text-sm mb-4">
+                🔍 Debug: Recent Conversations ({sessions.length}) - Click to expand
+              </summary>
+              <div className="space-y-3">
+                {sessions.slice(0, 5).map((session) => (
+                  <div key={session.id} className="p-3 bg-muted/20 border border-border/30 rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <span className="text-sm font-medium">
+                          {new Date(session.created_at).toLocaleDateString('en-US', { 
+                            month: 'short', 
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </span>
+                        <Badge variant="outline" className="text-xs">
+                          {session.source}
+                        </Badge>
+                      </div>
                       <Badge variant="outline" className="text-xs">
-                        {session.source}
+                        {session.duration_minutes || 2}min
                       </Badge>
                     </div>
-                    <Badge variant="outline" className="text-xs bg-blue-500/10 border-blue-500/20">
-                      {session.duration_minutes || 2}min chat
-                    </Badge>
+                    
+                    {session.content?.user_message && (
+                      <div className="text-xs text-muted-foreground mb-2 p-2 bg-background/50 rounded border-l-2 border-[hsl(var(--espaluz-primary))]/30">
+                        "You: {typeof session.content.user_message === 'string' ? session.content.user_message.substring(0, 100) : 'Message'}{typeof session.content.user_message === 'string' && session.content.user_message.length > 100 ? '...' : ''}"
+                      </div>
+                    )}
+                    
+                    <details>
+                      <summary className="text-xs text-muted-foreground cursor-pointer">Session Debug Data</summary>
+                      <pre className="text-xs mt-1 p-2 bg-background/30 rounded overflow-auto max-h-32">
+                        {JSON.stringify({
+                          id: session.id.substring(0, 8),
+                          content_keys: Object.keys(session.content || {}),
+                          progress_data_keys: Object.keys(session.progress_data || {}),
+                          vocabulary_count: session.progress_data?.vocabulary_learned?.length || 0,
+                          has_bot_response: !!(session.content?.bot_response)
+                        }, null, 2)}
+                      </pre>
+                    </details>
                   </div>
-                  
-                  {session.content && typeof session.content === 'object' && 'user_message' in session.content && (
-                    <div className="text-sm text-muted-foreground mb-3 p-2 bg-muted/30 rounded-md italic border-l-2 border-[hsl(var(--espaluz-primary))]/30">
-                      "You: {typeof session.content.user_message === 'string' ? session.content.user_message.substring(0, 150) : 'Message content'}{typeof session.content.user_message === 'string' && session.content.user_message.length > 150 ? '...' : ''}"
-                    </div>
-                  )}
-                  
-                  {/* Display learned vocabulary from new structure */}
-                  {session.progress_data?.vocabulary_learned?.length > 0 && (
-                    <div className="mb-2">
-                      <div className="text-xs text-muted-foreground mb-1">Words learned:</div>
-                      <div className="flex flex-wrap gap-1">
-                        {session.progress_data.vocabulary_learned.slice(0, 6).map((word: string, index: number) => (
-                          <Badge key={index} variant="outline" className="text-xs bg-[hsl(var(--espaluz-primary))]/10 border-[hsl(var(--espaluz-primary))]/20">
-                            {word}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Display topics */}
-                  {session.progress_data?.topics_discussed?.length > 0 && (
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-1">Topics discussed:</div>
-                      <div className="flex flex-wrap gap-1">
-                        {session.progress_data.topics_discussed.map((topic: string, index: number) => (
-                          <Badge key={index} variant="secondary" className="text-xs">
-                            {topic}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Debug info for each session */}
-                  <details className="mt-2">
-                    <summary className="text-xs text-muted-foreground cursor-pointer">Debug Session Data</summary>
-                    <pre className="text-xs mt-1 p-2 bg-muted/20 rounded overflow-auto">
-                      {JSON.stringify({
-                        id: session.id,
-                        source: session.source,
-                        content_keys: Object.keys(session.content || {}),
-                        progress_data_keys: Object.keys(session.progress_data || {}),
-                        content: session.content,
-                        progress_data: session.progress_data
-                      }, null, 2)}
-                    </pre>
-                  </details>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <div className="w-20 h-20 bg-[hsl(var(--espaluz-primary))]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MessageSquare className="h-10 w-10 text-[hsl(var(--espaluz-primary))]/50" />
+                ))}
               </div>
-              <h3 className="text-lg font-semibold mb-2">No Telegram Sessions Found</h3>
-              <p className="text-muted-foreground mb-1">No conversations detected yet.</p>
-              <p className="text-sm text-muted-foreground">Check the debug info above for more details.</p>
-              <div className="flex justify-center gap-3 mt-4">
-                <Button 
-                  onClick={handleManualRefresh}
-                  variant="outline"
-                >
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  Force Refresh
-                </Button>
-                <Button 
-                  onClick={checkBotConnection}
-                  variant="outline"
-                >
-                  <AlertCircle className="h-4 w-4 mr-2" />
-                  Check Bot Connection
-                </Button>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            </details>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
