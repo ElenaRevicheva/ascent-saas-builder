@@ -1,10 +1,13 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { MessageSquare, BookOpen, Clock, Trophy, TrendingUp, Star, Brain, Zap } from 'lucide-react';
+import { MessageSquare, BookOpen, Clock, Trophy, TrendingUp, Star, Brain, Zap, RefreshCw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface TelegramSession {
   id: string;
@@ -18,6 +21,7 @@ export const TelegramProgress = () => {
   const { user } = useAuth();
   const [sessions, setSessions] = useState<TelegramSession[]>([]);
   const [loading, setLoading] = useState(true);
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
 
   useEffect(() => {
     if (user) {
@@ -28,130 +32,134 @@ export const TelegramProgress = () => {
   // Auto-refresh every 30 seconds
   useEffect(() => {
     if (user) {
-      const interval = setInterval(loadTelegramProgress, 30000);
+      const interval = setInterval(() => {
+        loadTelegramProgress(false); // Silent refresh
+      }, 30000);
       return () => clearInterval(interval);
     }
   }, [user]);
 
-  const loadTelegramProgress = async () => {
+  // Real-time subscription for new sessions
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('telegram-sessions-updates')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'learning_sessions',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          console.log('New learning session:', payload);
+          if (payload.new.source === 'telegram') {
+            loadTelegramProgress(false);
+            toast.success('New Telegram conversation recorded! 🎉');
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
+
+  const loadTelegramProgress = async (showLoading = true) => {
+    if (showLoading) setLoading(true);
+    
     try {
+      console.log('Loading Telegram progress for user:', user?.id);
+      
       const { data: telegramSessions, error } = await supabase
         .from('learning_sessions')
         .select('*')
         .eq('user_id', user?.id)
         .eq('source', 'telegram')
         .order('created_at', { ascending: false })
-        .limit(10);
+        .limit(20);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error loading Telegram sessions:', error);
+        throw error;
+      }
+
+      console.log('Loaded Telegram sessions:', telegramSessions?.length || 0);
       setSessions(telegramSessions || []);
+      setLastRefresh(new Date());
+      
     } catch (error) {
       console.error('Error loading Telegram progress:', error);
+      toast.error('Failed to load Telegram progress');
     } finally {
-      setLoading(false);
+      if (showLoading) setLoading(false);
     }
+  };
+
+  const handleManualRefresh = () => {
+    loadTelegramProgress(true);
+    toast.success('Refreshing your Telegram progress...');
   };
 
   const getEnhancedStats = () => {
     const totalSessions = sessions.length;
     const totalMinutes = sessions.reduce((sum, s) => sum + (s.duration_minutes || 0), 0);
     
-    // Extract vocabulary and analyze complexity
-    const allVocabulary = sessions.flatMap(s => s.progress_data?.vocabulary_learned || []);
-    const uniqueVocabulary = [...new Set(allVocabulary)];
-    
-    // Enhanced phrase extraction with categories
-    const spanishPhrases: string[] = [];
-    const greetings: string[] = [];
-    const foodTerms: string[] = [];
-    const familyTerms: string[] = [];
-    const cookingTerms: string[] = [];
-    const emotions: string[] = [];
-    
-    // Topic analysis from user messages
-    const userTopics: string[] = [];
+    // Extract vocabulary from progress_data (new structure)
+    const allVocabulary: string[] = [];
+    const allPhrases: string[] = [];
+    const allTopics: string[] = [];
     
     sessions.forEach(session => {
-      const botResponse = session.content?.bot_response || '';
-      const userMessage = session.content?.user_message || '';
-      
-      // Analyze user topics
-      if (userMessage.toLowerCase().includes('мама') || userMessage.includes('family')) {
-        userTopics.push('Family Conversations');
+      // Handle new progress_data structure
+      if (session.progress_data?.vocabulary_learned) {
+        allVocabulary.push(...session.progress_data.vocabulary_learned);
       }
-      if (userMessage.toLowerCase().includes('готовить') || userMessage.includes('cook')) {
-        userTopics.push('Cooking & Food');
+      if (session.progress_data?.phrases_practiced) {
+        allPhrases.push(...session.progress_data.phrases_practiced);
       }
-      if (userMessage.toLowerCase().includes('тревож') || userMessage.includes('worry')) {
-        userTopics.push('Emotions & Feelings');
+      if (session.progress_data?.topics_discussed) {
+        allTopics.push(...session.progress_data.topics_discussed);
       }
       
-      // Enhanced phrase extraction
-      const extractPhrases = (text: string, regex: RegExp, processor: (match: string) => string) => {
-        const matches = text.match(regex);
-        if (matches) {
-          matches.forEach((match: string) => {
-            const phrase = processor(match).trim();
-            if (phrase.length > 2) {
-              spanishPhrases.push(phrase);
-              
-              // Categorize phrases
-              if (phrase.toLowerCase().includes('hola') || phrase.toLowerCase().includes('buenos')) {
-                greetings.push(phrase);
-              } else if (phrase.toLowerCase().includes('comida') || phrase.toLowerCase().includes('cocinar') || 
-                        phrase.toLowerCase().includes('espaguetis') || phrase.toLowerCase().includes('ajo')) {
-                foodTerms.push(phrase);
-              } else if (phrase.toLowerCase().includes('familia') || phrase.toLowerCase().includes('madre') || 
-                        phrase.toLowerCase().includes('padre')) {
-                familyTerms.push(phrase);
-              } else if (phrase.toLowerCase().includes('cocinar') || phrase.toLowerCase().includes('preparar') || 
-                        phrase.toLowerCase().includes('aceite')) {
-                cookingTerms.push(phrase);
-              } else if (phrase.toLowerCase().includes('respeto') || phrase.toLowerCase().includes('amor') || 
-                        phrase.toLowerCase().includes('tranquil')) {
-                emotions.push(phrase);
-              }
-            }
+      // Legacy support for old structure
+      if (session.content?.bot_response) {
+        const botResponse = session.content.bot_response;
+        const vocabMatches = botResponse.match(/\*\*([^*]+)\*\*/g);
+        if (vocabMatches) {
+          vocabMatches.forEach((match: string) => {
+            const word = match.replace(/\*\*/g, '').trim();
+            if (word.length > 1) allVocabulary.push(word);
           });
         }
-      };
-      
-      // Multiple extraction patterns
-      extractPhrases(botResponse, /\*\*([^*]+)\*\*/g, (match) => match.replace(/\*\*/g, ''));
-      extractPhrases(botResponse, /"([^"]+)"/g, (match) => match.replace(/"/g, ''));
-      extractPhrases(botResponse, /- ([^\n]+)/g, (match) => match.replace(/^- /, ''));
-      extractPhrases(botResponse, /\b[A-Z][a-z]+ [a-z]+\b/g, (match) => match);
-      extractPhrases(botResponse, /\([^)]+\)/g, (match) => match.replace(/[()]/g, ''));
+      }
     });
     
-    const uniquePhrases = [...new Set(spanishPhrases)].slice(0, 15);
-    const uniqueTopics = [...new Set(userTopics)];
+    const uniqueVocabulary = [...new Set(allVocabulary)];
+    const uniquePhrases = [...new Set(allPhrases)];
+    const uniqueTopics = [...new Set(allTopics)];
     
     // Calculate learning insights
     const avgSessionLength = totalSessions > 0 ? Math.round(totalMinutes / totalSessions) : 0;
     const vocabularyDiversity = uniqueVocabulary.length + uniquePhrases.length;
-    const learningScore = Math.min(100, Math.round((vocabularyDiversity * 10) + (totalSessions * 5)));
+    const learningScore = Math.min(100, Math.round((vocabularyDiversity * 8) + (totalSessions * 10)));
     
     return {
       totalSessions,
       totalMinutes,
       vocabularyCount: uniqueVocabulary.length,
-      uniqueVocabulary,
-      phrases: uniquePhrases,
-      categories: {
-        greetings: [...new Set(greetings)],
-        food: [...new Set(foodTerms)],
-        family: [...new Set(familyTerms)],
-        cooking: [...new Set(cookingTerms)],
-        emotions: [...new Set(emotions)]
-      },
-      topics: uniqueTopics,
+      uniqueVocabulary: uniqueVocabulary.slice(0, 20),
+      phrases: uniquePhrases.slice(0, 15),
+      topics: uniqueTopics.slice(0, 8),
       insights: {
         avgSessionLength,
         vocabularyDiversity,
         learningScore,
         mostActiveDay: sessions.length > 0 ? new Date(sessions[0].created_at).toLocaleDateString() : null,
-        streak: Math.min(7, totalSessions) // Simple streak calculation
+        streak: Math.min(7, totalSessions)
       }
     };
   };
@@ -183,11 +191,25 @@ export const TelegramProgress = () => {
                 <p className="text-sm text-muted-foreground font-normal">Your Spanish learning progress from bot conversations</p>
               </div>
             </CardTitle>
-            <div className="text-right">
-              <div className="text-3xl font-bold text-[hsl(var(--espaluz-primary))]">{stats.insights.learningScore}</div>
-              <div className="text-xs text-muted-foreground">Learning Score</div>
-              <Progress value={stats.insights.learningScore} className="w-16 h-2 mt-1" />
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <div className="text-3xl font-bold text-[hsl(var(--espaluz-primary))]">{stats.insights.learningScore}</div>
+                <div className="text-xs text-muted-foreground">Learning Score</div>
+                <Progress value={stats.insights.learningScore} className="w-16 h-2 mt-1" />
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleManualRefresh}
+                className="flex items-center gap-2"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Refresh
+              </Button>
             </div>
+          </div>
+          <div className="text-xs text-muted-foreground mt-2">
+            Last updated: {lastRefresh.toLocaleTimeString()}
           </div>
         </CardHeader>
         
@@ -201,7 +223,7 @@ export const TelegramProgress = () => {
               </div>
               <div className="text-sm text-muted-foreground">Chat Sessions</div>
               {stats.insights.streak > 0 && (
-                <div className="text-xs text-blue-600 mt-1">🔥 {stats.insights.streak} day streak</div>
+                <div className="text-xs text-blue-600 mt-1">🔥 {stats.insights.streak} session streak</div>
               )}
             </div>
             
@@ -279,136 +301,75 @@ export const TelegramProgress = () => {
         </Card>
       )}
 
-      {/* Categorized Spanish Content */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* Spanish Phrases by Category */}
+      {/* Recent Conversations */}
+      {sessions.length > 0 && (
         <Card className="border-border/50 shadow-magical">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
-              Spanish Phrases by Category
+              <MessageSquare className="h-5 w-5 text-blue-500" />
+              Recent Telegram Conversations ({sessions.length})
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {Object.entries(stats.categories).map(([category, phrases]) => 
-              phrases.length > 0 && (
-                <div key={category}>
-                  <h5 className="font-medium mb-2 text-sm capitalize flex items-center gap-2">
-                    {category === 'food' && '🍽️'}
-                    {category === 'family' && '👨‍👩‍👧‍👦'}
-                    {category === 'cooking' && '👨‍🍳'}
-                    {category === 'emotions' && '❤️'}
-                    {category === 'greetings' && '👋'}
-                    {category} ({phrases.length})
-                  </h5>
-                  <div className="grid gap-2">
-                    {phrases.slice(0, 3).map((phrase, index) => (
-                      <div 
-                        key={index} 
-                        className="p-3 bg-gradient-to-r from-[hsl(var(--espaluz-primary))]/10 to-[hsl(var(--espaluz-primary))]/5 border border-[hsl(var(--espaluz-primary))]/20 rounded-lg hover-scale transition-all duration-200"
-                      >
-                        <span className="text-[hsl(var(--espaluz-primary))] font-medium">{phrase}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )
-            )}
-            
-            {/* All phrases if no categories */}
-            {Object.values(stats.categories).every(cat => cat.length === 0) && stats.phrases.length > 0 && (
-              <div>
-                <h5 className="font-medium mb-3 text-sm">All Spanish Phrases</h5>
-                <div className="grid gap-2">
-                  {stats.phrases.slice(0, 8).map((phrase, index) => (
-                    <div 
-                      key={index} 
-                      className="p-3 bg-gradient-to-r from-[hsl(var(--espaluz-primary))]/10 to-[hsl(var(--espaluz-primary))]/5 border border-[hsl(var(--espaluz-primary))]/20 rounded-lg hover-scale transition-all duration-200"
-                    >
-                      <span className="text-[hsl(var(--espaluz-primary))] font-medium">{phrase}</span>
+          <CardContent>
+            <div className="space-y-3">
+              {sessions.slice(0, 5).map((session) => (
+                <div key={session.id} className="p-4 bg-gradient-to-r from-background/80 to-background/40 border border-border/50 rounded-lg hover-scale transition-all duration-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span className="text-sm font-medium">
+                        {new Date(session.created_at).toLocaleDateString('en-US', { 
+                          month: 'short', 
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </span>
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Vocabulary & Recent Sessions */}
-        <Card className="border-border/50 shadow-magical">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Trophy className="h-5 w-5 text-yellow-500" />
-              Vocabulary & Recent Activity
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Enhanced Vocabulary */}
-            {stats.uniqueVocabulary.length > 0 && (
-              <div>
-                <h5 className="font-medium mb-3 text-sm">Individual Words Mastered</h5>
-                <div className="flex flex-wrap gap-2">
-                  {stats.uniqueVocabulary.map((word, index) => (
-                    <Badge 
-                      key={index} 
-                      variant="secondary" 
-                      className="text-sm px-3 py-1.5 bg-gradient-to-r from-rose-100/60 to-pink-100/60 border-rose-200/40 text-rose-700 dark:text-rose-300 dark:from-rose-900/30 dark:to-pink-900/30 dark:border-rose-800/30 hover-scale"
-                    >
-                      {word}
+                    <Badge variant="outline" className="text-xs bg-blue-500/10 border-blue-500/20">
+                      {session.duration_minutes || 2}min chat
                     </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Enhanced Recent Sessions */}
-            {sessions.length > 0 && (
-              <div>
-                <h5 className="font-medium mb-3 text-sm flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
-                  Recent Conversations
-                </h5>
-                <div className="space-y-3">
-                  {sessions.slice(0, 2).map((session) => (
-                    <div key={session.id} className="p-4 bg-gradient-to-r from-background/80 to-background/40 border border-border/50 rounded-lg hover-scale transition-all duration-200">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          <span className="text-sm font-medium">
-                            {new Date(session.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                          </span>
-                        </div>
-                        <Badge variant="outline" className="text-xs bg-blue-500/10 border-blue-500/20">
-                          {session.duration_minutes || 1}min chat
-                        </Badge>
-                      </div>
-                      
-                      {session.content?.user_message && (
-                        <div className="text-sm text-muted-foreground mb-3 p-2 bg-muted/30 rounded-md italic border-l-2 border-[hsl(var(--espaluz-primary))]/30">
-                          "{session.content.user_message.substring(0, 100)}..."
-                        </div>
-                      )}
-                      
-                      {session.progress_data?.vocabulary_learned?.length > 0 && (
-                        <div>
-                          <div className="text-xs text-muted-foreground mb-1">Words learned:</div>
-                          <div className="flex flex-wrap gap-1">
-                            {session.progress_data.vocabulary_learned.slice(0, 4).map((word: string, index: number) => (
-                              <Badge key={index} variant="outline" className="text-xs bg-[hsl(var(--espaluz-primary))]/10 border-[hsl(var(--espaluz-primary))]/20">
-                                {word}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                  </div>
+                  
+                  {session.content?.user_message && (
+                    <div className="text-sm text-muted-foreground mb-3 p-2 bg-muted/30 rounded-md italic border-l-2 border-[hsl(var(--espaluz-primary))]/30">
+                      "You: {session.content.user_message.substring(0, 150)}{session.content.user_message.length > 150 ? '...' : ''}"
                     </div>
-                  ))}
+                  )}
+                  
+                  {/* Display learned vocabulary from new structure */}
+                  {session.progress_data?.vocabulary_learned?.length > 0 && (
+                    <div className="mb-2">
+                      <div className="text-xs text-muted-foreground mb-1">Words learned:</div>
+                      <div className="flex flex-wrap gap-1">
+                        {session.progress_data.vocabulary_learned.slice(0, 6).map((word: string, index: number) => (
+                          <Badge key={index} variant="outline" className="text-xs bg-[hsl(var(--espaluz-primary))]/10 border-[hsl(var(--espaluz-primary))]/20">
+                            {word}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Display topics */}
+                  {session.progress_data?.topics_discussed?.length > 0 && (
+                    <div>
+                      <div className="text-xs text-muted-foreground mb-1">Topics discussed:</div>
+                      <div className="flex flex-wrap gap-1">
+                        {session.progress_data.topics_discussed.map((topic: string, index: number) => (
+                          <Badge key={index} variant="secondary" className="text-xs">
+                            {topic}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
-            )}
+              ))}
+            </div>
           </CardContent>
         </Card>
-      </div>
+      )}
 
       {/* No Sessions Message */}
       {sessions.length === 0 && (
@@ -420,6 +381,14 @@ export const TelegramProgress = () => {
             <h3 className="text-lg font-semibold mb-2">Start Your Spanish Journey!</h3>
             <p className="text-muted-foreground mb-1">No Telegram conversations yet.</p>
             <p className="text-sm text-muted-foreground">Connect with your Spanish learning bot to see detailed progress here!</p>
+            <Button 
+              onClick={handleManualRefresh}
+              variant="outline" 
+              className="mt-4"
+            >
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Check for New Conversations
+            </Button>
           </CardContent>
         </Card>
       )}
