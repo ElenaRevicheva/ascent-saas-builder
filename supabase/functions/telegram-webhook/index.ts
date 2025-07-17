@@ -1,4 +1,3 @@
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3'
@@ -20,23 +19,37 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const telegramUpdate = await req.json();
-    console.log('Received Telegram update:', JSON.stringify(telegramUpdate, null, 2));
+    console.log('=== TELEGRAM WEBHOOK TRIGGERED ===');
+    console.log('Full update received:', JSON.stringify(telegramUpdate, null, 2));
 
-    // Extract message data
-    const message = telegramUpdate.message;
+    // Extract message data - handle both webhook and polling formats
+    let message = telegramUpdate.message;
+    
+    // If no direct message, check if it's in a different format
+    if (!message && telegramUpdate.update_id) {
+      console.log('Checking for message in update format...');
+      message = telegramUpdate.message;
+    }
+
     if (!message) {
-      console.log('No message found in update');
-      return new Response('No message found', { status: 200 });
+      console.log('❌ No message found in update');
+      console.log('Update structure:', Object.keys(telegramUpdate));
+      return new Response(JSON.stringify({ error: 'No message found', received: telegramUpdate }), { 
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
     }
 
     const chatId = message.chat.id;
     const userId = message.from.id;
-    const username = message.from.username || message.from.first_name;
-    const text = message.text;
+    const username = message.from.username || message.from.first_name || 'Unknown';
+    const text = message.text || '';
 
-    console.log(`Processing message from ${username} (${userId}): ${text}`);
+    console.log(`📱 Processing message from ${username} (${userId}): "${text}"`);
+    console.log(`Chat ID: ${chatId}`);
 
     // Check if bot is connected for this user
+    console.log('🔍 Checking for connected bot...');
     const { data: connectedBot, error: botError } = await supabase
       .from('connected_bots')
       .select('*')
@@ -46,26 +59,34 @@ serve(async (req) => {
       .single();
 
     if (botError) {
-      console.error('Error checking connected bot:', botError);
+      console.error('❌ Error checking connected bot:', botError);
+      return new Response(JSON.stringify({ error: 'Database error', details: botError }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     if (!connectedBot) {
-      console.log('Bot not connected for user:', userId);
-      return new Response(JSON.stringify({ error: 'Bot not connected or not found' }), {
+      console.log('❌ No connected bot found for user:', userId);
+      return new Response(JSON.stringify({ 
+        error: 'Bot not connected', 
+        user_id: userId,
+        platform_user_id: userId.toString()
+      }), {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    console.log('Found connected bot for user:', connectedBot.user_id);
+    console.log('✅ Found connected bot for user:', connectedBot.user_id);
 
     // Generate AI response for Spanish learning
     const botResponse = generateSpanishLearningResponse(text, username);
+    console.log('🤖 Generated bot response:', botResponse.substring(0, 100) + '...');
     
     // Extract learning insights from the conversation
     const learningInsights = extractLearningInsights(text, botResponse);
-
-    console.log('Generated learning insights:', learningInsights);
+    console.log('📊 Extracted learning insights:', learningInsights);
 
     // Create learning session with enhanced progress data
     const sessionData = {
@@ -78,7 +99,9 @@ serve(async (req) => {
         bot_response: botResponse,
         telegram_user_id: userId,
         telegram_username: username,
-        chat_id: chatId
+        chat_id: chatId,
+        message_id: message.message_id,
+        timestamp: new Date().toISOString()
       },
       progress_data: {
         platform: 'telegram',
@@ -87,11 +110,14 @@ serve(async (req) => {
         phrases_practiced: learningInsights.phrases,
         topics_discussed: learningInsights.topics,
         learning_level: learningInsights.level,
-        conversation_quality: learningInsights.quality
+        conversation_quality: learningInsights.quality,
+        word_count: text.split(' ').length,
+        response_word_count: botResponse.split(' ').length
       }
     };
 
-    console.log('Inserting learning session:', JSON.stringify(sessionData, null, 2));
+    console.log('💾 Attempting to insert learning session...');
+    console.log('Session data:', JSON.stringify(sessionData, null, 2));
 
     const { data: sessionResult, error: sessionError } = await supabase
       .from('learning_sessions')
@@ -99,25 +125,32 @@ serve(async (req) => {
       .select();
 
     if (sessionError) {
-      console.error('Error creating learning session:', sessionError);
-      console.error('Session data that failed:', JSON.stringify(sessionData, null, 2));
+      console.error('❌ ERROR creating learning session:', sessionError);
+      console.error('Failed session data:', JSON.stringify(sessionData, null, 2));
+      
+      // Still continue to send response to user
     } else {
-      console.log('Learning session created successfully:', sessionResult);
+      console.log('✅ Learning session created successfully!');
+      console.log('Session result:', sessionResult);
     }
 
     // Update last activity for connected bot
+    console.log('🔄 Updating bot last activity...');
     const { error: updateError } = await supabase
       .from('connected_bots')
       .update({ last_activity: new Date().toISOString() })
       .eq('id', connectedBot.id);
 
     if (updateError) {
-      console.error('Error updating bot activity:', updateError);
+      console.error('❌ Error updating bot activity:', updateError);
+    } else {
+      console.log('✅ Bot activity updated');
     }
 
     // Send response back to Telegram
     const botToken = Deno.env.get('TELEGRAM_BOT_TOKEN');
     if (botToken) {
+      console.log('📤 Sending response to Telegram...');
       try {
         const telegramResponse = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
           method: 'POST',
@@ -129,26 +162,40 @@ serve(async (req) => {
           }),
         });
 
+        const responseData = await telegramResponse.json();
+        
         if (!telegramResponse.ok) {
-          console.error('Failed to send Telegram message:', await telegramResponse.text());
+          console.error('❌ Failed to send Telegram message:', responseData);
         } else {
-          console.log('Successfully sent response to Telegram');
+          console.log('✅ Successfully sent response to Telegram');
         }
       } catch (telegramError) {
-        console.error('Error sending Telegram message:', telegramError);
+        console.error('❌ Error sending Telegram message:', telegramError);
       }
     } else {
-      console.log('No Telegram bot token found');
+      console.log('⚠️ No Telegram bot token found - cannot send response');
     }
 
-    return new Response('OK', {
+    console.log('=== WEBHOOK PROCESSING COMPLETE ===');
+    
+    return new Response(JSON.stringify({ 
+      success: true, 
+      session_created: !sessionError,
+      user_id: connectedBot.user_id,
+      message_processed: text.substring(0, 50)
+    }), {
       status: 200,
-      headers: corsHeaders,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 
   } catch (error) {
-    console.error('Error in telegram-webhook:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    console.error('❌ CRITICAL ERROR in telegram-webhook:', error);
+    console.error('Error stack:', error.stack);
+    return new Response(JSON.stringify({ 
+      error: 'Internal server error', 
+      message: error.message,
+      stack: error.stack 
+    }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

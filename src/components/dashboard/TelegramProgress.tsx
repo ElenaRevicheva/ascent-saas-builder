@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { MessageSquare, BookOpen, Clock, Trophy, TrendingUp, Star, Brain, Zap, RefreshCw } from 'lucide-react';
+import { MessageSquare, BookOpen, Clock, Trophy, TrendingUp, Star, Brain, Zap, RefreshCw, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -21,6 +21,7 @@ export const TelegramProgress = () => {
   const [sessions, setSessions] = useState<TelegramSession[]>([]);
   const [loading, setLoading] = useState(true);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
+  const [debugInfo, setDebugInfo] = useState<any>(null);
 
   useEffect(() => {
     if (user) {
@@ -28,12 +29,12 @@ export const TelegramProgress = () => {
     }
   }, [user]);
 
-  // Auto-refresh every 10 seconds for better responsiveness
+  // Auto-refresh every 5 seconds for better responsiveness
   useEffect(() => {
     if (user) {
       const interval = setInterval(() => {
         loadTelegramProgress(false); // Silent refresh
-      }, 10000);
+      }, 5000);
       return () => clearInterval(interval);
     }
   }, [user]);
@@ -42,6 +43,8 @@ export const TelegramProgress = () => {
   useEffect(() => {
     if (!user) return;
 
+    console.log('Setting up real-time subscription for user:', user.id);
+    
     const channel = supabase
       .channel('telegram-sessions-updates')
       .on(
@@ -53,16 +56,34 @@ export const TelegramProgress = () => {
           filter: `user_id=eq.${user.id}`
         },
         (payload) => {
-          console.log('New learning session detected:', payload);
+          console.log('📡 Real-time: New learning session detected:', payload);
           if (payload.new.source === 'telegram') {
             loadTelegramProgress(false);
             toast.success('New Telegram conversation recorded! 🎉');
           }
         }
       )
-      .subscribe();
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'learning_sessions',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          console.log('📡 Real-time: Learning session updated:', payload);
+          if (payload.new.source === 'telegram') {
+            loadTelegramProgress(false);
+          }
+        }
+      )
+      .subscribe((status) => {
+        console.log('📡 Real-time subscription status:', status);
+      });
 
     return () => {
+      console.log('Cleaning up real-time subscription');
       supabase.removeChannel(channel);
     };
   }, [user]);
@@ -71,27 +92,44 @@ export const TelegramProgress = () => {
     if (showLoading) setLoading(true);
     
     try {
-      console.log('Loading Telegram progress for user:', user?.id);
+      console.log('🔄 Loading Telegram progress for user:', user?.id);
       
+      // Get both telegram and telegram_chat sources
       const { data: telegramSessions, error } = await supabase
         .from('learning_sessions')
         .select('*')
         .eq('user_id', user?.id)
-        .eq('source', 'telegram')
+        .in('source', ['telegram', 'telegram_chat'])
         .order('created_at', { ascending: false })
-        .limit(20);
+        .limit(50);
 
       if (error) {
-        console.error('Error loading Telegram sessions:', error);
+        console.error('❌ Error loading Telegram sessions:', error);
         throw error;
       }
 
-      console.log('Loaded Telegram sessions:', telegramSessions?.length || 0, telegramSessions);
+      console.log('📊 Loaded sessions:', telegramSessions?.length || 0);
+      console.log('📊 Session details:', telegramSessions?.map(s => ({
+        id: s.id.substring(0, 8),
+        created: s.created_at,
+        source: s.source,
+        hasContent: !!s.content,
+        hasProgressData: !!s.progress_data
+      })));
+
       setSessions(telegramSessions || []);
       setLastRefresh(new Date());
       
+      // Set debug info
+      setDebugInfo({
+        user_id: user?.id,
+        sessions_found: telegramSessions?.length || 0,
+        last_session: telegramSessions?.[0]?.created_at || 'None',
+        sources: [...new Set(telegramSessions?.map(s => s.source) || [])]
+      });
+      
     } catch (error) {
-      console.error('Error loading Telegram progress:', error);
+      console.error('❌ Error loading Telegram progress:', error);
       toast.error('Failed to load Telegram progress');
     } finally {
       if (showLoading) setLoading(false);
@@ -99,8 +137,50 @@ export const TelegramProgress = () => {
   };
 
   const handleManualRefresh = () => {
+    console.log('🔄 Manual refresh triggered');
     loadTelegramProgress(true);
     toast.info('Refreshing your Telegram progress...');
+  };
+
+  const checkBotConnection = async () => {
+    if (!user) return;
+    
+    try {
+      console.log('🔍 Checking bot connection for user:', user.id);
+      
+      const { data: connectedBots, error } = await supabase
+        .from('connected_bots')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('platform', 'telegram')
+        .eq('is_active', true);
+
+      if (error) {
+        console.error('❌ Error checking bot connection:', error);
+        toast.error('Error checking bot connection');
+        return;
+      }
+
+      console.log('🤖 Connected bots:', connectedBots);
+      
+      if (!connectedBots || connectedBots.length === 0) {
+        toast.error('No Telegram bot connected. Please connect your bot first.');
+      } else {
+        toast.success(`Found ${connectedBots.length} connected Telegram bot(s)`);
+        setDebugInfo(prev => ({
+          ...prev,
+          connected_bots: connectedBots.length,
+          bot_details: connectedBots.map(b => ({
+            platform_user_id: b.platform_user_id,
+            last_activity: b.last_activity,
+            platform_username: b.platform_username
+          }))
+        }));
+      }
+    } catch (error) {
+      console.error('❌ Error in bot connection check:', error);
+      toast.error('Failed to check bot connection');
+    }
   };
 
   const getEnhancedStats = () => {
@@ -177,7 +257,7 @@ export const TelegramProgress = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header Card with Learning Score */}
+      {/* Header Card with Learning Score and Debug Info */}
       <Card className="border-border/50 shadow-magical bg-gradient-to-br from-[hsl(var(--espaluz-primary))]/5 to-purple-500/5">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
@@ -196,20 +276,43 @@ export const TelegramProgress = () => {
                 <div className="text-xs text-muted-foreground">Learning Score</div>
                 <Progress value={stats.insights.learningScore} className="w-16 h-2 mt-1" />
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleManualRefresh}
-                className="flex items-center gap-2"
-              >
-                <RefreshCw className="h-4 w-4" />
-                Refresh
-              </Button>
+              <div className="flex flex-col gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleManualRefresh}
+                  className="flex items-center gap-2"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                  Refresh
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={checkBotConnection}
+                  className="flex items-center gap-2"
+                >
+                  <AlertCircle className="h-4 w-4" />
+                  Check Bot
+                </Button>
+              </div>
             </div>
           </div>
           <div className="text-xs text-muted-foreground mt-2">
             Last updated: {lastRefresh.toLocaleTimeString()} | Found {sessions.length} conversations
           </div>
+          
+          {/* Debug Information */}
+          {debugInfo && (
+            <div className="mt-3 p-3 bg-muted/30 rounded-lg text-xs">
+              <details>
+                <summary className="cursor-pointer font-medium">Debug Info (click to expand)</summary>
+                <pre className="mt-2 text-xs overflow-auto">
+                  {JSON.stringify(debugInfo, null, 2)}
+                </pre>
+              </details>
+            </div>
+          )}
         </CardHeader>
         
         <CardContent>
@@ -311,7 +414,7 @@ export const TelegramProgress = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {sessions.slice(0, 5).map((session) => (
+              {sessions.slice(0, 10).map((session) => (
                 <div key={session.id} className="p-4 bg-gradient-to-r from-background/80 to-background/40 border border-border/50 rounded-lg hover-scale transition-all duration-200">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
@@ -324,6 +427,9 @@ export const TelegramProgress = () => {
                           minute: '2-digit'
                         })}
                       </span>
+                      <Badge variant="outline" className="text-xs">
+                        {session.source}
+                      </Badge>
                     </div>
                     <Badge variant="outline" className="text-xs bg-blue-500/10 border-blue-500/20">
                       {session.duration_minutes || 2}min chat
@@ -380,14 +486,22 @@ export const TelegramProgress = () => {
             <h3 className="text-lg font-semibold mb-2">Start Your Spanish Journey!</h3>
             <p className="text-muted-foreground mb-1">No Telegram conversations yet.</p>
             <p className="text-sm text-muted-foreground">Connect with your Spanish learning bot to see detailed progress here!</p>
-            <Button 
-              onClick={handleManualRefresh}
-              variant="outline" 
-              className="mt-4"
-            >
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Check for New Conversations
-            </Button>
+            <div className="flex justify-center gap-3 mt-4">
+              <Button 
+                onClick={handleManualRefresh}
+                variant="outline"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Check for New Conversations
+              </Button>
+              <Button 
+                onClick={checkBotConnection}
+                variant="outline"
+              >
+                <AlertCircle className="h-4 w-4 mr-2" />
+                Check Bot Connection
+              </Button>
+            </div>
           </CardContent>
         </Card>
       )}
