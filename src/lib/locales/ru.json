@@ -88,5 +88,38 @@
     "edit": "Редактировать",
     "delete": "Удалить",
     "close": "Закрыть"
+  },
+  "learningAnalysis": {
+    "title": "Анализ обучения",
+    "subtitle": "Инсайты на основе ИИ из ваших разговоров",
+    "progressScore": "Оценка прогресса обучения",
+    "basedonStats": "На основе словарного запаса, последовательности и вовлеченности",
+    "vocabularyLearned": "Изученный словарь",
+    "wordsLearned": "Изученные слова",
+    "consistency": "Последовательность",
+    "topicsExplored": "Изученные темы",
+    "avgSession": "Средняя сессия",
+    "yourStrengths": "Ваши сильные стороны",
+    "learningInsights": "Инсайты обучения",
+    "personalizedRecommendations": "Персонализированные рекомендации",
+    "practiceExercises": "Упражнения для практики",
+    "vocabularyChallenges": "Словарные вызовы",
+    "languageInsights": "Языковые инсайты",
+    "grammarInContext": "Грамматика в контексте",
+    "nextLearningSteps": "Следующие шаги обучения",
+    "chatNow": "Чат сейчас",
+    "debugSessionData": "Отладка данных сессии",
+    "level": {
+      "beginner": "Начальный уровень",
+      "intermediate": "Средний уровень",
+      "advanced": "Продвинутый уровень"
+    },
+    "lessonsCompleted": "Уроков завершено",
+    "timeSpent": "Времени потрачено",
+    "dayStreak": "Дневная серия",
+    "weeklyProgress": "Недельный прогресс",
+    "averageScore": "Средний балл",
+    "latestAchievement": "Последнее достижение",
+    "yourLearningJourney": "Ваше обучающее путешествие"
   }
 }

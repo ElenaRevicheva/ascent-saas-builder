@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 import { 
   Brain, 
   TrendingUp, 
@@ -31,6 +32,7 @@ interface LearningAnalysisProps {
 }
 
 export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => {
+  const { t } = useTranslation();
   console.log('🎯 TelegramLearningAnalysis received session:', {
     id: session.id.substring(0, 8),
     vocabulary: session.progress_data?.vocabulary_learned?.length || 0,
@@ -322,12 +324,12 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
             <div className="flex items-center gap-3">
               <Brain className="h-6 w-6 text-[hsl(var(--espaluz-primary))]" />
               <div>
-                <h3 className="text-lg font-bold">Learning Analysis</h3>
-                <p className="text-sm text-muted-foreground font-normal">AI-powered insights from your conversations</p>
+                <h3 className="text-lg font-bold">{t('learningAnalysis.title')}</h3>
+                <p className="text-sm text-muted-foreground font-normal">{t('learningAnalysis.subtitle')}</p>
               </div>
             </div>
             <Badge className={`${getLevelColor(learningData.level)} font-semibold`}>
-              {learningData.level.charAt(0).toUpperCase() + learningData.level.slice(1)} Level
+              {t(`learningAnalysis.level.${learningData.level.toLowerCase()}`)}
             </Badge>
           </CardTitle>
         </CardHeader>
@@ -337,10 +339,10 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
             <div className="text-4xl font-bold text-[hsl(var(--espaluz-primary))] mb-2">
               {learningData.score}
             </div>
-            <div className="text-sm text-muted-foreground mb-3">Learning Progress Score</div>
+            <div className="text-sm text-muted-foreground mb-3">{t('learningAnalysis.progressScore')}</div>
             <Progress value={learningData.score} className="w-full h-3" />
             <div className="text-xs text-muted-foreground mt-2">
-              Based on vocabulary, consistency, and engagement
+              {t('learningAnalysis.basedonStats')}
             </div>
           </div>
 
@@ -349,7 +351,7 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
         <div className="p-4 bg-gradient-to-br from-green-500/10 to-green-600/5 rounded-xl border border-green-500/20">
           <div className="flex items-center gap-2 mb-3">
             <BookOpen className="h-5 w-5 text-green-500" />
-            <h4 className="font-semibold text-green-700">Vocabulary Learned ({learningData.vocabularyWords.length} words)</h4>
+            <h4 className="font-semibold text-green-700">{t('learningAnalysis.vocabularyLearned')} ({learningData.vocabularyWords.length} {learningData.vocabularyWords.length === 1 ? 'word' : 'words'})</h4>
           </div>
           <div className="flex flex-wrap gap-2">
             {learningData.vocabularyWords.map((word: string, index: number) => (
@@ -366,25 +368,25 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
         <div className="text-center p-4 bg-gradient-to-br from-blue-500/10 to-blue-600/5 rounded-xl border border-blue-500/20">
           <BookOpen className="h-5 w-5 text-blue-500 mx-auto mb-2" />
           <div className="text-xl font-bold text-blue-600">{learningData.metrics.vocabularySize}</div>
-          <div className="text-xs text-muted-foreground">Words Learned</div>
+          <div className="text-xs text-muted-foreground">{t('learningAnalysis.wordsLearned')}</div>
         </div>
             
             <div className="text-center p-4 bg-gradient-to-br from-green-500/10 to-green-600/5 rounded-xl border border-green-500/20">
               <Target className="h-5 w-5 text-green-500 mx-auto mb-2" />
               <div className="text-xl font-bold text-green-600">{learningData.metrics.consistency}%</div>
-              <div className="text-xs text-muted-foreground">Consistency</div>
+              <div className="text-xs text-muted-foreground">{t('learningAnalysis.consistency')}</div>
             </div>
             
             <div className="text-center p-4 bg-gradient-to-br from-purple-500/10 to-purple-600/5 rounded-xl border border-purple-500/20">
               <MessageCircle className="h-5 w-5 text-purple-500 mx-auto mb-2" />
               <div className="text-xl font-bold text-purple-600">{learningData.metrics.topicDiversity}</div>
-              <div className="text-xs text-muted-foreground">Topics Explored</div>
+              <div className="text-xs text-muted-foreground">{t('learningAnalysis.topicsExplored')}</div>
             </div>
             
             <div className="text-center p-4 bg-gradient-to-br from-orange-500/10 to-orange-600/5 rounded-xl border border-orange-500/20">
               <Clock className="h-5 w-5 text-orange-500 mx-auto mb-2" />
               <div className="text-xl font-bold text-orange-600">{learningData.metrics.avgSessionLength}min</div>
-              <div className="text-xs text-muted-foreground">Avg Session</div>
+              <div className="text-xs text-muted-foreground">{t('learningAnalysis.avgSession')}</div>
             </div>
           </div>
         </CardContent>
@@ -396,7 +398,7 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <Award className="h-5 w-5 text-emerald-500" />
-              <span>Your Strengths</span>
+              <span>{t('learningAnalysis.yourStrengths')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -418,7 +420,7 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <TrendingUp className="h-5 w-5 text-blue-500" />
-              <span>Learning Insights</span>
+              <span>{t('learningAnalysis.learningInsights')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -440,7 +442,7 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <Target className="h-5 w-5 text-indigo-500" />
-              <span>Practice Exercises</span>
+              <span>{t('learningAnalysis.practiceExercises')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -465,7 +467,7 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <ArrowRight className="h-5 w-5 text-purple-500" />
-              <span>Next Learning Steps</span>
+              <span>{t('learningAnalysis.nextLearningSteps')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -486,7 +488,7 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
             <Lightbulb className="h-5 w-5 text-amber-500" />
-            <span>Quick Tips</span>
+            <span>{t('learningAnalysis.personalizedRecommendations')}</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -510,7 +512,7 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
                   className="bg-[hsl(var(--espaluz-primary))] hover:bg-[hsl(var(--espaluz-primary))]/90"
                   onClick={() => window.open('https://t.me/espaluz_bot', '_blank')}
                 >
-                  Chat Now
+                  {t('learningAnalysis.chatNow')}
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               </div>

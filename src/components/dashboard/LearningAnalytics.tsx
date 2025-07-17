@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+import { useTranslation } from 'react-i18next';
 import { 
   TrendingUp, 
   Clock, 
@@ -26,6 +27,7 @@ interface LearningStats {
 
 export const LearningAnalytics = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [stats, setStats] = useState<LearningStats>({
     totalLessonsCompleted: 3,
     totalTimeSpent: 125,
@@ -80,7 +82,7 @@ export const LearningAnalytics = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <TrendingUp className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
-          Your Learning Journey
+          {t('learningAnalysis.yourLearningJourney')}
         </CardTitle>
       </CardHeader>
       
@@ -94,7 +96,7 @@ export const LearningAnalytics = () => {
             <p className="text-2xl font-bold text-[hsl(var(--espaluz-primary))]">
               {stats.totalLessonsCompleted}
             </p>
-            <p className="text-sm text-muted-foreground">Lessons Completed</p>
+            <p className="text-sm text-muted-foreground">{t('learningAnalysis.lessonsCompleted') || 'Lessons Completed'}</p>
           </div>
           
           <div className="bg-background/50 rounded-lg p-4 text-center">
@@ -104,7 +106,7 @@ export const LearningAnalytics = () => {
             <p className="text-2xl font-bold text-orange-500">
               {stats.totalTimeSpent}m
             </p>
-            <p className="text-sm text-muted-foreground">Time Spent</p>
+            <p className="text-sm text-muted-foreground">{t('learningAnalysis.timeSpent')}</p>
           </div>
           
           <div className="bg-background/50 rounded-lg p-4 text-center">
@@ -114,7 +116,7 @@ export const LearningAnalytics = () => {
             <p className="text-2xl font-bold text-yellow-500">
               {stats.currentStreak}
             </p>
-            <p className="text-sm text-muted-foreground">Day Streak</p>
+            <p className="text-sm text-muted-foreground">{t('learningAnalysis.dayStreak')}</p>
           </div>
           
           <div className="bg-background/50 rounded-lg p-4 text-center">
@@ -124,7 +126,7 @@ export const LearningAnalytics = () => {
             <p className="text-2xl font-bold text-purple-500">
               {stats.vocabularyLearned}
             </p>
-            <p className="text-sm text-muted-foreground">Words Learned</p>
+            <p className="text-sm text-muted-foreground">{t('learningAnalysis.wordsLearned')}</p>
           </div>
         </div>
 
@@ -132,7 +134,7 @@ export const LearningAnalytics = () => {
         <div className="space-y-4">
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium">Weekly Progress</span>
+              <span className="text-sm font-medium">{t('learningAnalysis.weeklyProgress')}</span>
               <Badge variant="outline">{stats.weeklyProgress}%</Badge>
             </div>
             <Progress value={stats.weeklyProgress} className="h-2" />
@@ -140,7 +142,7 @@ export const LearningAnalytics = () => {
           
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium">Average Score</span>
+              <span className="text-sm font-medium">{t('learningAnalysis.averageScore')}</span>
               <Badge variant="outline" className="bg-green-500 text-white">
                 {stats.averageScore}%
               </Badge>
@@ -153,7 +155,7 @@ export const LearningAnalytics = () => {
         <div className="mt-6 p-4 bg-gradient-to-r from-[hsl(var(--espaluz-primary))]/10 to-purple-500/10 rounded-lg border border-[hsl(var(--espaluz-primary))]/20">
           <div className="flex items-center gap-2 mb-2">
             <Trophy className="h-4 w-4 text-[hsl(var(--espaluz-primary))]" />
-            <span className="font-medium text-[hsl(var(--espaluz-primary))]">Latest Achievement</span>
+            <span className="font-medium text-[hsl(var(--espaluz-primary))]">{t('learningAnalysis.latestAchievement')}</span>
           </div>
           <p className="text-sm text-muted-foreground">
             🎉 ¡Excelente! You've completed your first lesson!

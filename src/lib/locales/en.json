@@ -88,5 +88,38 @@
     "edit": "Edit",
     "delete": "Delete",
     "close": "Close"
+  },
+  "learningAnalysis": {
+    "title": "Learning Analysis",
+    "subtitle": "AI-powered insights from your conversations",
+    "progressScore": "Learning Progress Score",
+    "basedonStats": "Based on vocabulary, consistency, and engagement",
+    "vocabularyLearned": "Vocabulary Learned",
+    "wordsLearned": "Words Learned",
+    "consistency": "Consistency",
+    "topicsExplored": "Topics Explored",
+    "avgSession": "Avg Session",
+    "yourStrengths": "Your Strengths",
+    "learningInsights": "Learning Insights",
+    "personalizedRecommendations": "Personalized Recommendations",
+    "practiceExercises": "Practice Exercises",
+    "vocabularyChallenges": "Vocabulary Challenges",
+    "languageInsights": "Language Insights", 
+    "grammarInContext": "Grammar in Context",
+    "nextLearningSteps": "Next Learning Steps",
+    "chatNow": "Chat Now",
+    "debugSessionData": "Debug Session Data",
+    "level": {
+      "beginner": "Beginner Level",
+      "intermediate": "Intermediate Level", 
+      "advanced": "Advanced Level"
+    },
+    "lessonsCompleted": "Lessons Completed",
+    "timeSpent": "Time Spent",
+    "dayStreak": "Day Streak",
+    "weeklyProgress": "Weekly Progress",
+    "averageScore": "Average Score",
+    "latestAchievement": "Latest Achievement",
+    "yourLearningJourney": "Your Learning Journey"
   }
 }

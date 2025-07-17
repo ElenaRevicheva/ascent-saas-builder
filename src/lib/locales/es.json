@@ -88,5 +88,38 @@
     "edit": "Editar",
     "delete": "Eliminar",
     "close": "Cerrar"
+  },
+  "learningAnalysis": {
+    "title": "Análisis de Aprendizaje",
+    "subtitle": "Perspectivas potenciadas por IA de tus conversaciones",
+    "progressScore": "Puntuación de Progreso de Aprendizaje",
+    "basedonStats": "Basado en vocabulario, consistencia y participación",
+    "vocabularyLearned": "Vocabulario Aprendido",
+    "wordsLearned": "Palabras Aprendidas",
+    "consistency": "Consistencia",
+    "topicsExplored": "Temas Explorados",
+    "avgSession": "Sesión Promedio",
+    "yourStrengths": "Tus Fortalezas",
+    "learningInsights": "Perspectivas de Aprendizaje",
+    "personalizedRecommendations": "Recomendaciones Personalizadas",
+    "practiceExercises": "Ejercicios de Práctica",
+    "vocabularyChallenges": "Desafíos de Vocabulario",
+    "languageInsights": "Perspectivas del Idioma",
+    "grammarInContext": "Gramática en Contexto",
+    "nextLearningSteps": "Próximos Pasos de Aprendizaje",
+    "chatNow": "Chatear Ahora",
+    "debugSessionData": "Depurar Datos de Sesión",
+    "level": {
+      "beginner": "Nivel Principiante",
+      "intermediate": "Nivel Intermedio",
+      "advanced": "Nivel Avanzado"
+    },
+    "lessonsCompleted": "Lecciones Completadas",
+    "timeSpent": "Tiempo Dedicado",
+    "dayStreak": "Racha de Días",
+    "weeklyProgress": "Progreso Semanal",
+    "averageScore": "Puntuación Promedio",
+    "latestAchievement": "Último Logro",
+    "yourLearningJourney": "Tu Viaje de Aprendizaje"
   }
 }
