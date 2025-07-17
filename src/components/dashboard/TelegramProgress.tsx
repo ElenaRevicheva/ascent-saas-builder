@@ -30,12 +30,12 @@ export const TelegramProgress = () => {
     }
   }, [user]);
 
-  // Auto-refresh every 5 seconds for better responsiveness
+  // Auto-refresh every 10 seconds instead of 5 to reduce load
   useEffect(() => {
     if (user) {
       const interval = setInterval(() => {
         loadTelegramProgress(false); // Silent refresh
-      }, 5000);
+      }, 10000);
       return () => clearInterval(interval);
     }
   }, [user]);
@@ -44,7 +44,7 @@ export const TelegramProgress = () => {
   useEffect(() => {
     if (!user) return;
 
-    console.log('Setting up real-time subscription for user:', user.id);
+    console.log('🔔 Setting up real-time subscription for user:', user.id);
     
     const channel = supabase
       .channel('telegram-sessions-updates')
@@ -58,24 +58,9 @@ export const TelegramProgress = () => {
         },
         (payload) => {
           console.log('📡 Real-time: New learning session detected:', payload);
-          if (payload.new.source === 'telegram') {
+          if (payload.new.source === 'telegram' || payload.new.source === 'telegram_chat') {
             loadTelegramProgress(false);
             toast.success('New Telegram conversation recorded! 🎉');
-          }
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'learning_sessions',
-          filter: `user_id=eq.${user.id}`
-        },
-        (payload) => {
-          console.log('📡 Real-time: Learning session updated:', payload);
-          if (payload.new.source === 'telegram') {
-            loadTelegramProgress(false);
           }
         }
       )
@@ -109,24 +94,32 @@ export const TelegramProgress = () => {
         throw error;
       }
 
-      console.log('📊 Loaded sessions:', telegramSessions?.length || 0);
-      console.log('📊 Session details:', telegramSessions?.map(s => ({
-        id: s.id.substring(0, 8),
-        created: s.created_at,
-        source: s.source,
-        hasContent: !!s.content,
-        hasProgressData: !!s.progress_data
-      })));
+      console.log('📊 Raw sessions data:', telegramSessions);
+      console.log('📊 Sessions count:', telegramSessions?.length || 0);
+      
+      // Log detailed session info
+      telegramSessions?.forEach((session, index) => {
+        console.log(`📋 Session ${index + 1}:`, {
+          id: session.id.substring(0, 8),
+          created: session.created_at,
+          source: session.source,
+          content_keys: Object.keys(session.content || {}),
+          progress_data_keys: Object.keys(session.progress_data || {}),
+          has_user_message: !!session.content?.user_message,
+          has_bot_response: !!session.content?.bot_response
+        });
+      });
 
       setSessions(telegramSessions || []);
       setLastRefresh(new Date());
       
-      // Set debug info
+      // Enhanced debug info
       setDebugInfo({
         user_id: user?.id,
         sessions_found: telegramSessions?.length || 0,
         last_session: telegramSessions?.[0]?.created_at || 'None',
-        sources: [...new Set(telegramSessions?.map(s => s.source) || [])]
+        sources: [...new Set(telegramSessions?.map(s => s.source) || [])],
+        raw_sessions: telegramSessions?.slice(0, 3) // First 3 sessions for debug
       });
       
     } catch (error) {
@@ -303,19 +296,34 @@ export const TelegramProgress = () => {
             Last updated: {lastRefresh.toLocaleTimeString()} | Found {sessions.length} conversations
           </div>
           
-          {/* Debug Information */}
+          {/* Enhanced Debug Information */}
           {debugInfo && (
-            <div className="mt-3 p-3 bg-muted/30 rounded-lg text-xs">
+            <div className="mt-3 p-3 bg-muted/30 rounded-lg text-xs border border-yellow-500/20">
               <details>
-                <summary className="cursor-pointer font-medium">Debug Info (click to expand)</summary>
-                <pre className="mt-2 text-xs overflow-auto">
-                  {JSON.stringify(debugInfo, null, 2)}
-                </pre>
+                <summary className="cursor-pointer font-medium text-yellow-600">🐛 Debug Info (click to expand)</summary>
+                <div className="mt-2 space-y-2">
+                  <div><strong>User ID:</strong> {debugInfo.user_id}</div>
+                  <div><strong>Sessions Found:</strong> {debugInfo.sessions_found}</div>
+                  <div><strong>Sources:</strong> {debugInfo.sources.join(', ') || 'None'}</div>
+                  <div><strong>Last Session:</strong> {debugInfo.last_session}</div>
+                  {debugInfo.connected_bots !== undefined && (
+                    <div><strong>Connected Bots:</strong> {debugInfo.connected_bots}</div>
+                  )}
+                  {debugInfo.raw_sessions && debugInfo.raw_sessions.length > 0 && (
+                    <div className="mt-2">
+                      <strong>Sample Sessions:</strong>
+                      <pre className="mt-1 text-xs overflow-auto bg-background/50 p-2 rounded">
+                        {JSON.stringify(debugInfo.raw_sessions, null, 2)}
+                      </pre>
+                    </div>
+                  )}
+                </div>
               </details>
             </div>
           )}
         </CardHeader>
         
+        {/* Force show stats even if empty to debug */}
         <CardContent>
           {/* Enhanced Stats Grid */}
           <div className="grid gap-4 md:grid-cols-4">
@@ -404,16 +412,16 @@ export const TelegramProgress = () => {
         </Card>
       )}
 
-      {/* Recent Conversations */}
-      {sessions.length > 0 && (
-        <Card className="border-border/50 shadow-magical">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5 text-blue-500" />
-              Recent Telegram Conversations ({sessions.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+      {/* Recent Conversations - Always show this section for debugging */}
+      <Card className="border-border/50 shadow-magical">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <MessageSquare className="h-5 w-5 text-blue-500" />
+            Recent Telegram Conversations ({sessions.length})
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {sessions.length > 0 ? (
             <div className="space-y-3">
               {sessions.slice(0, 10).map((session) => (
                 <div key={session.id} className="p-4 bg-gradient-to-r from-background/80 to-background/40 border border-border/50 rounded-lg hover-scale transition-all duration-200">
@@ -470,42 +478,52 @@ export const TelegramProgress = () => {
                       </div>
                     </div>
                   )}
+                  
+                  {/* Debug info for each session */}
+                  <details className="mt-2">
+                    <summary className="text-xs text-muted-foreground cursor-pointer">Debug Session Data</summary>
+                    <pre className="text-xs mt-1 p-2 bg-muted/20 rounded overflow-auto">
+                      {JSON.stringify({
+                        id: session.id,
+                        source: session.source,
+                        content_keys: Object.keys(session.content || {}),
+                        progress_data_keys: Object.keys(session.progress_data || {}),
+                        content: session.content,
+                        progress_data: session.progress_data
+                      }, null, 2)}
+                    </pre>
+                  </details>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* No Sessions Message */}
-      {sessions.length === 0 && (
-        <Card className="border-border/50 shadow-magical">
-          <CardContent className="text-center py-12">
-            <div className="w-20 h-20 bg-[hsl(var(--espaluz-primary))]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <MessageSquare className="h-10 w-10 text-[hsl(var(--espaluz-primary))]/50" />
+          ) : (
+            <div className="text-center py-12">
+              <div className="w-20 h-20 bg-[hsl(var(--espaluz-primary))]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MessageSquare className="h-10 w-10 text-[hsl(var(--espaluz-primary))]/50" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">No Telegram Sessions Found</h3>
+              <p className="text-muted-foreground mb-1">No conversations detected yet.</p>
+              <p className="text-sm text-muted-foreground">Check the debug info above for more details.</p>
+              <div className="flex justify-center gap-3 mt-4">
+                <Button 
+                  onClick={handleManualRefresh}
+                  variant="outline"
+                >
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Force Refresh
+                </Button>
+                <Button 
+                  onClick={checkBotConnection}
+                  variant="outline"
+                >
+                  <AlertCircle className="h-4 w-4 mr-2" />
+                  Check Bot Connection
+                </Button>
+              </div>
             </div>
-            <h3 className="text-lg font-semibold mb-2">Start Your Spanish Journey!</h3>
-            <p className="text-muted-foreground mb-1">No Telegram conversations yet.</p>
-            <p className="text-sm text-muted-foreground">Connect with your Spanish learning bot to see detailed progress here!</p>
-            <div className="flex justify-center gap-3 mt-4">
-              <Button 
-                onClick={handleManualRefresh}
-                variant="outline"
-              >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Check for New Conversations
-              </Button>
-              <Button 
-                onClick={checkBotConnection}
-                variant="outline"
-              >
-                <AlertCircle className="h-4 w-4 mr-2" />
-                Check Bot Connection
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };
