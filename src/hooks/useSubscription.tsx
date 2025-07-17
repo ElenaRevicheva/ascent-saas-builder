@@ -19,25 +19,33 @@ export const useSubscription = () => {
     trialDaysLeft: 7,
     isTrialActive: true,
     isSubscriptionActive: false,
-    loading: true
+    loading: false
   });
 
   useEffect(() => {
-    if (!user) {
-      setSubscription(prev => ({ ...prev, loading: false }));
-      return;
+    // Default trial status is already set in useState for instant loading
+    if (user) {
+      // Async background check for actual subscription status (non-blocking)
+      setTimeout(async () => {
+        try {
+          const { data } = await supabase
+            .rpc('get_user_subscription_status', { user_uuid: user.id });
+          
+          if (data?.[0]) {
+            setSubscription({
+              status: data[0].status,
+              planType: data[0].plan_type,
+              trialDaysLeft: data[0].trial_days_left,
+              isTrialActive: data[0].is_trial_active,
+              isSubscriptionActive: data[0].is_subscription_active,
+              loading: false
+            });
+          }
+        } catch {
+          // Keep default trial status on error
+        }
+      }, 100);
     }
-
-    // Simplified: just set default trial status without database query to avoid hanging
-    console.log('Setting default subscription status for user:', user.id);
-    setSubscription({
-      status: 'free_trial',
-      planType: 'free_trial',
-      trialDaysLeft: 7,
-      isTrialActive: true,
-      isSubscriptionActive: false,
-      loading: false
-    });
   }, [user]);
 
   const createSubscription = async (paypalSubscriptionId: string) => {

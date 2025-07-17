@@ -36,9 +36,8 @@ const Dashboard = () => {
   const chatRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
-  // Simplified onboarding check without database queries that could hang
+  // Instantly hide onboarding for fast loading
   useEffect(() => {
-    // Skip onboarding for now to avoid hanging
     setCheckingOnboarding(false);
   }, []);
 
@@ -61,7 +60,8 @@ const Dashboard = () => {
     return () => window.removeEventListener('hashchange', scrollToChat);
   }, [location.state]);
 
-  if (loading || checkingOnboarding) {
+  // Remove loading spinner for instant dashboard rendering
+  if (checkingOnboarding) {
     return (
       <div className="min-h-screen" style={{ background: 'var(--gradient-magical)' }}>
         <div className="flex items-center justify-center min-h-screen">
