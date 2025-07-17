@@ -1,4 +1,32 @@
 {
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "about": "About",
+    "signIn": "Sign In",
+    "getStarted": "Get Started"
+  },
+  "hero": {
+    "title": "Meet EspaLuz — Your Family's First Emotionally Intelligent Language Coach",
+    "subtitle": "Not just another chatbot. Not just grammar drills.",
+    "description": "EspaLuz is your on-the-go AI tutor that feels you, adapts to you, and guides your family through real-life Spanish or English — with empathy.",
+    "trulyIntelligent": "Truly intelligent",
+    "trulyIntelligentDesc": "understands your tone, mood, and emotional state",
+    "humanLikeSupport": "Human-like support",
+    "humanLikeSupportDesc": "replies with warmth, patience, and encouragement",
+    "spanishCompanion": "Your Spanish companion everywhere",
+    "spanishCompanionDesc": "Web, Telegram, WhatsApp, 24/7",
+    "builtForAdventures": "Built for real adventures",
+    "builtForAdventuresDesc": "perfect for:",
+    "englishSpeakers": "English speakers heading to LATAM - Whether you're moving to Panama, exploring Mexico, working in Costa Rica, discovering El Salvador, or calling Colombia home, we've got you covered! Learn the Spanish AND the culture of your exact destination.",
+    "spanishSpeakers": "Spanish speakers mastering English for work, travel, or study",
+    "speakNaturally": "Whether you're moving, vacationing, or upskilling for a new career, EspaLuz helps you speak naturally — not like a textbook, but like a local.",
+    "startSpeaking": "Start speaking confidently in just a couple of weeks — without stress or pressure.",
+    "languageEmotional": "Because language is more than words — it's emotional.",
+    "firstAI": "And EspaLuz is the first AI tutor that truly gets that.",
+    "tryDemo": "Try Demo FREE!",
+    "startFull": "Start Full Version"
+  },
   "dashboard": {
     "title": "EspaLuz",
     "welcome": "Welcome to Your Spanish Journey! 🌟",

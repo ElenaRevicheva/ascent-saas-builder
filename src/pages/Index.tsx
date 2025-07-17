@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import Pricing from "@/components/Pricing";
@@ -107,6 +108,7 @@ function FeedbackForm() {
 }
 
 const Index = () => {
+  const { t } = useTranslation();
   const [showDemoModal, setShowDemoModal] = useState(false);
 
   const handleStartDemo = () => {
@@ -139,35 +141,35 @@ const Index = () => {
           <div className="flex items-center justify-start text-left">
             <span className="text-3xl mr-3">🧠</span>
             <div>
-              <span className="font-bold text-orange-600 text-lg">Truly intelligent</span>
-              <span className="text-muted-foreground text-lg"> — understands your tone, mood, and emotional state</span>
+              <span className="font-bold text-orange-600 text-lg">{t("hero.trulyIntelligent")}</span>
+              <span className="text-muted-foreground text-lg"> — {t("hero.trulyIntelligentDesc")}</span>
             </div>
           </div>
           
           <div className="flex items-center justify-start text-left">
             <span className="text-3xl mr-3">💬</span>
             <div>
-              <span className="font-bold text-purple-600 text-lg">Human-like support</span>
-              <span className="text-muted-foreground text-lg"> — replies with warmth, patience, and encouragement</span>
+              <span className="font-bold text-purple-600 text-lg">{t("hero.humanLikeSupport")}</span>
+              <span className="text-muted-foreground text-lg"> — {t("hero.humanLikeSupportDesc")}</span>
             </div>
           </div>
           
           <div className="flex items-center justify-start text-left">
             <span className="text-3xl mr-3">📱</span>
             <div>
-              <span className="font-bold text-blue-600 text-lg">Your Spanish companion everywhere</span>
-              <span className="text-muted-foreground text-lg"> — Web, Telegram, WhatsApp, 24/7</span>
+              <span className="font-bold text-blue-600 text-lg">{t("hero.spanishCompanion")}</span>
+              <span className="text-muted-foreground text-lg"> — {t("hero.spanishCompanionDesc")}</span>
             </div>
           </div>
           
           <div className="flex items-start justify-start text-left">
             <span className="text-3xl mr-3">🌍</span>
             <div>
-              <span className="font-bold text-green-600 text-lg">Built for real adventures</span>
-              <span className="text-muted-foreground text-lg"> — perfect for:</span>
+              <span className="font-bold text-green-600 text-lg">{t("hero.builtForAdventures")}</span>
+              <span className="text-muted-foreground text-lg"> — {t("hero.builtForAdventuresDesc")}</span>
               <div className="mt-2 ml-4">
-                <p className="text-orange-600 leading-relaxed">English speakers heading to LATAM - Whether you're moving to Panama, exploring Mexico, working in Costa Rica, discovering El Salvador, or calling Colombia home, we've got you covered! Learn the Spanish AND the culture of your exact destination.</p>
-                <p className="text-purple-600 mt-2">Spanish speakers mastering English for work, travel, or study</p>
+                <p className="text-orange-600 leading-relaxed">{t("hero.englishSpeakers")}</p>
+                <p className="text-purple-600 mt-2">{t("hero.spanishSpeakers")}</p>
               </div>
             </div>
           </div>
@@ -189,12 +191,12 @@ const Index = () => {
             className="text-base px-6 bg-gradient-primary hover:shadow-glow text-white rounded-full shadow-lg hover:scale-105 transition-all duration-300"
           >
             <MessageSquare className="mr-2 h-4 w-4" />
-            🎯 Try Demo FREE!
+            🎯 {t("hero.tryDemo")}
           </Button>
           <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer">
             <Button size="lg" variant="outline" className="text-base px-6 rounded-full border-2 border-primary text-primary hover:bg-gradient-primary hover:text-white transition-all duration-300">
               <Crown className="mr-2 h-4 w-4" />
-              🚀 Start Full Version
+              🚀 {t("hero.startFull")}
             </Button>
           </a>
         </div>

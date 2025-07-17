@@ -1,4 +1,32 @@
 {
+  "nav": {
+    "features": "Características",
+    "pricing": "Precios",
+    "about": "Acerca de",
+    "signIn": "Iniciar Sesión",
+    "getStarted": "Comenzar"
+  },
+  "hero": {
+    "title": "Conoce a EspaLuz — El Primer Coach de Idiomas Emocionalmente Inteligente para tu Familia",
+    "subtitle": "No es solo otro chatbot. No solo ejercicios de gramática.",
+    "description": "EspaLuz es tu tutor de IA sobre la marcha que te siente, se adapta a ti, y guía a tu familia a través del español o inglés de la vida real — con empatía.",
+    "trulyIntelligent": "Verdaderamente inteligente",
+    "trulyIntelligentDesc": "entiende tu tono, estado de ánimo y estado emocional",
+    "humanLikeSupport": "Apoyo humano",
+    "humanLikeSupportDesc": "responde con calidez, paciencia y aliento",
+    "spanishCompanion": "Tu compañero de español en todas partes",
+    "spanishCompanionDesc": "Web, Telegram, WhatsApp, 24/7",
+    "builtForAdventures": "Creado para aventuras reales",
+    "builtForAdventuresDesc": "perfecto para:",
+    "englishSpeakers": "Hablantes de inglés que van a LATAM - Ya sea que te mudes a Panamá, explores México, trabajes en Costa Rica, descubras El Salvador, o llames hogar a Colombia, ¡te tenemos cubierto! Aprende el español Y la cultura de tu destino exacto.",
+    "spanishSpeakers": "Hablantes de español dominando el inglés para trabajo, viajes o estudios",
+    "speakNaturally": "Ya sea que te estés mudando, de vacaciones, o mejorando tus habilidades para una nueva carrera, EspaLuz te ayuda a hablar naturalmente — no como un libro de texto, sino como un local.",
+    "startSpeaking": "Comienza a hablar con confianza en solo un par de semanas — sin estrés ni presión.",
+    "languageEmotional": "Porque el idioma es más que palabras — es emocional.",
+    "firstAI": "Y EspaLuz es el primer tutor de IA que realmente lo entiende.",
+    "tryDemo": "¡Prueba Demo GRATIS!",
+    "startFull": "Iniciar Versión Completa"
+  },
   "dashboard": {
     "title": "EspaLuz",
     "welcome": "¡Bienvenido a Tu Viaje en Español! 🌟",
