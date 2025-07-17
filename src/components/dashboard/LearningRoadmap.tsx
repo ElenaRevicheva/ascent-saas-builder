@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -22,6 +23,7 @@ interface RoadmapStep {
 export const LearningRoadmap = () => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
+  const [learningOptionsOpen, setLearningOptionsOpen] = useState(false);
 
   const roadmapSteps: RoadmapStep[] = [
     {
@@ -63,12 +65,9 @@ export const LearningRoadmap = () => {
       action: 'Choose Learning Method',
       onClick: () => {
         setOpen(false);
-        // Trigger the LearningOptions dialog
+        // Open the LearningOptions dialog directly
         setTimeout(() => {
-          const learningOptionsButton = document.querySelector('[data-learning-options-trigger]');
-          if (learningOptionsButton) {
-            (learningOptionsButton as HTMLButtonElement).click();
-          }
+          setLearningOptionsOpen(true);
         }, 100);
       }
     },
@@ -115,103 +114,108 @@ export const LearningRoadmap = () => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button 
-          variant="default" 
-          size="lg"
-          className="bg-green-600 hover:bg-green-700 text-white shadow-lg px-8 py-3 text-lg font-semibold"
-        >
-          <Map className="h-5 w-5 mr-2" />
-          Your Learning Roadmap
-        </Button>
-      </DialogTrigger>
-      
-      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-orange-500 via-pink-400 to-purple-600 bg-clip-text text-transparent">
-            Your Spanish Learning Journey 🗺️
-          </DialogTitle>
-        </DialogHeader>
+    <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button 
+            variant="default" 
+            size="lg"
+            className="bg-green-600 hover:bg-green-700 text-white shadow-lg px-8 py-3 text-lg font-semibold"
+          >
+            <Map className="h-5 w-5 mr-2" />
+            Your Learning Roadmap
+          </Button>
+        </DialogTrigger>
         
-        <div className="space-y-6 mt-6">
-          <div className="text-center p-4 bg-gradient-to-r from-orange-50 to-purple-50 rounded-lg border border-orange-200">
-            <h3 className="text-lg font-semibold text-orange-800 mb-2">Welcome to EspaLuz! ✨</h3>
-            <p className="text-orange-700">
-              Follow these steps to start your magical Spanish learning adventure with your family.
-              Each step builds on the previous one to create the perfect learning experience.
-            </p>
-          </div>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-orange-500 via-pink-400 to-purple-600 bg-clip-text text-transparent">
+              Your Spanish Learning Journey 🗺️
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-6 mt-6">
+            <div className="text-center p-4 bg-gradient-to-r from-orange-50 to-purple-50 rounded-lg border border-orange-200">
+              <h3 className="text-lg font-semibold text-orange-800 mb-2">Welcome to EspaLuz! ✨</h3>
+              <p className="text-orange-700">
+                Follow these steps to start your magical Spanish learning adventure with your family.
+                Each step builds on the previous one to create the perfect learning experience.
+              </p>
+            </div>
 
-          <div className="grid gap-4">
-            {roadmapSteps.map((step, index) => {
-              const Icon = step.icon;
-              const isCompleted = step.completed;
-              
-              return (
-                <Card key={step.id} className="transition-all duration-300 hover:shadow-lg">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-3">
-                        <Badge variant="secondary" className="w-8 h-8 rounded-full flex items-center justify-center">
-                          {index + 1}
-                        </Badge>
-                        <div className={`p-2 rounded-full ${isCompleted ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600'}`}>
-                          <Icon className="h-5 w-5" />
+            <div className="grid gap-4">
+              {roadmapSteps.map((step, index) => {
+                const Icon = step.icon;
+                const isCompleted = step.completed;
+                
+                return (
+                  <Card key={step.id} className="transition-all duration-300 hover:shadow-lg">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3">
+                          <Badge variant="secondary" className="w-8 h-8 rounded-full flex items-center justify-center">
+                            {index + 1}
+                          </Badge>
+                          <div className={`p-2 rounded-full ${isCompleted ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600'}`}>
+                            <Icon className="h-5 w-5" />
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <CardTitle className="text-lg flex items-center gap-2">
+                            {step.title}
+                            {isCompleted && <CheckCircle className="h-5 w-5 text-green-500" />}
+                          </CardTitle>
                         </div>
                       </div>
-                      <div className="flex-1">
-                        <CardTitle className="text-lg flex items-center gap-2">
-                          {step.title}
-                          {isCompleted && <CheckCircle className="h-5 w-5 text-green-500" />}
-                        </CardTitle>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  
-                  <CardContent className="pt-0">
-                    <CardDescription className="text-sm mb-4">
-                      {step.description}
-                    </CardDescription>
+                    </CardHeader>
                     
-                    <div className="flex justify-end">
-                      {step.link ? (
-                        <Button 
-                          asChild
-                          variant={isCompleted ? "outline" : "default"}
-                          size="sm"
-                        >
-                          <Link to={step.link} onClick={() => setOpen(false)}>
+                    <CardContent className="pt-0">
+                      <CardDescription className="text-sm mb-4">
+                        {step.description}
+                      </CardDescription>
+                      
+                      <div className="flex justify-end">
+                        {step.link ? (
+                          <Button 
+                            asChild
+                            variant={isCompleted ? "outline" : "default"}
+                            size="sm"
+                          >
+                            <Link to={step.link} onClick={() => setOpen(false)}>
+                              {step.action}
+                              <ArrowRight className="h-4 w-4 ml-1" />
+                            </Link>
+                          </Button>
+                        ) : (
+                          <Button 
+                            variant={isCompleted ? "outline" : "default"}
+                            size="sm"
+                            onClick={() => handleStepAction(step)}
+                          >
                             {step.action}
                             <ArrowRight className="h-4 w-4 ml-1" />
-                          </Link>
-                        </Button>
-                      ) : (
-                        <Button 
-                          variant={isCompleted ? "outline" : "default"}
-                          size="sm"
-                          onClick={() => handleStepAction(step)}
-                        >
-                          {step.action}
-                          <ArrowRight className="h-4 w-4 ml-1" />
-                        </Button>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
+                          </Button>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
 
-          <div className="text-center p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
-            <h4 className="font-semibold text-purple-800 mb-2">🎯 Pro Tip</h4>
-            <p className="text-sm text-purple-700">
-              Complete each step in order for the best experience. You can always come back to this roadmap 
-              by clicking the "Your Learning Journey" button in your dashboard header.
-            </p>
+            <div className="text-center p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+              <h4 className="font-semibold text-purple-800 mb-2">🎯 Pro Tip</h4>
+              <p className="text-sm text-purple-700">
+                Complete each step in order for the best experience. You can always come back to this roadmap 
+                by clicking the "Your Learning Journey" button in your dashboard header.
+              </p>
+            </div>
           </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+
+      {/* Learning Options Dialog - controlled separately */}
+      <LearningOptions open={learningOptionsOpen} onOpenChange={setLearningOptionsOpen} />
+    </>
   );
 };

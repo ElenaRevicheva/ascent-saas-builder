@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,8 +22,17 @@ interface LearningOption {
   popular?: boolean;
 }
 
-export const LearningOptions = () => {
-  const [open, setOpen] = useState(false);
+interface LearningOptionsProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export const LearningOptions = ({ open: controlledOpen, onOpenChange }: LearningOptionsProps = {}) => {
+  const [internalOpen, setInternalOpen] = useState(false);
+  
+  // Use controlled state if provided, otherwise use internal state
+  const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
+  const setOpen = onOpenChange || setInternalOpen;
 
   const learningOptions: LearningOption[] = [
     {
@@ -95,16 +105,19 @@ export const LearningOptions = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button 
-          size="sm"
-          className="w-full mt-3 bg-[hsl(var(--espaluz-primary))] hover:bg-[hsl(var(--espaluz-primary))]/90"
-          data-learning-options-trigger
-        >
-          <Zap className="h-4 w-4 mr-2" />
-          Start Learning
-        </Button>
-      </DialogTrigger>
+      {/* Only show trigger if not controlled from parent */}
+      {controlledOpen === undefined && (
+        <DialogTrigger asChild>
+          <Button 
+            size="sm"
+            className="w-full mt-3 bg-[hsl(var(--espaluz-primary))] hover:bg-[hsl(var(--espaluz-primary))]/90"
+            data-learning-options-trigger
+          >
+            <Zap className="h-4 w-4 mr-2" />
+            Start Learning
+          </Button>
+        </DialogTrigger>
+      )}
       
       <DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
