@@ -38,7 +38,7 @@ const Pricing = () => {
       ],
       popular: true,
       paypal: true,
-      comingSoon: true,
+      comingSoon: false,
       merchantId: "P8TXABNT28ZXG"
     },
     {
@@ -92,12 +92,6 @@ const Pricing = () => {
                 </div>
               )}
               
-              {/* Remove Most Popular badge */}
-              {plan.name === "Standard" && plan.comingSoon && (
-                <div className="mb-2">
-                  <span className="inline-block bg-gradient-to-r from-orange-400 to-yellow-400 to-lime-400 text-white px-3 py-1 rounded-full text-xs font-bold">Coming soon</span>
-                </div>
-              )}
               <CardHeader className="text-center pb-6">
                 {plan.name === "Premium" && plan.comingSoon && (
                   <div className="mb-2">
@@ -112,8 +106,12 @@ const Pricing = () => {
                       <span className="text-muted-foreground">
                         {plan.duration ? `/${plan.duration}` : '/month'}
                       </span>
-                      <div className="text-xs text-muted-foreground mt-2">Secure payment powered by PayPal</div>
-                      <div className="text-xs text-muted-foreground">Merchant ID: {plan.merchantId}</div>
+                      {plan.paypal && (
+                        <>
+                          <div className="text-xs text-muted-foreground mt-2">Secure payment powered by PayPal</div>
+                          <div className="text-xs text-muted-foreground">Merchant ID: {plan.merchantId}</div>
+                        </>
+                      )}
                     </>
                   ) : (
                     <span className="text-2xl font-bold text-primary">{plan.price}</span>
@@ -131,15 +129,28 @@ const Pricing = () => {
               </CardHeader>
               
               <CardContent className="pt-0">
-                {plan.paypal ? (
+                {plan.paypal && !plan.comingSoon ? (
+                  <div className="mb-6">
+                    <PayPalButton 
+                      planType="standard"
+                      onSuccess={(subscriptionId) => {
+                        console.log('PayPal subscription successful:', subscriptionId);
+                        // You can add additional success handling here
+                      }}
+                      onError={(error) => {
+                        console.error('PayPal subscription error:', error);
+                      }}
+                    />
+                  </div>
+                ) : plan.comingSoon && plan.paypal ? (
                   <div className="mb-6">
                     <Button 
                       variant="outline" 
                       size="lg" 
                       className="w-full"
-                      disabled={plan.comingSoon}
+                      disabled
                     >
-                      {plan.popular && plan.comingSoon ? 'Most Popular' : plan.comingSoon ? '' : 'Subscribe with PayPal'}
+                      Coming Soon
                     </Button>
                   </div>
                 ) : plan.comingSoon ? (
@@ -150,7 +161,7 @@ const Pricing = () => {
                       className="w-full"
                       disabled
                     >
-                      {plan.popular && plan.comingSoon ? 'Most Popular' : ''}
+                      Coming Soon
                     </Button>
                   </div>
                 ) : (

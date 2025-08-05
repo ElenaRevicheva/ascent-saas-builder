@@ -2,9 +2,10 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useSubscription } from "@/hooks/useSubscription";
+import { PAYPAL_CONFIG, getPayPalSDKUrl } from "@/config/paypal";
 
 interface PayPalButtonProps {
-  planType: "monthly";
+  planType: "standard" | "premium";
   onSuccess?: (subscriptionId: string) => void;
   onError?: (error: any) => void;
 }
@@ -23,7 +24,7 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
     // Load PayPal SDK
     if (!window.paypal) {
       const script = document.createElement("script");
-      script.src = "https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&vault=true&intent=subscription";
+      script.src = getPayPalSDKUrl();
       script.async = true;
       script.onload = initializePayPal;
       document.body.appendChild(script);
@@ -51,11 +52,16 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
         label: 'subscribe'
       },
       createSubscription: function(data: any, actions: any) {
+        const planId = PAYPAL_CONFIG.plans[planType]?.id;
+        if (!planId) {
+          throw new Error(`No PayPal plan ID found for ${planType}`);
+        }
+        
         return actions.subscription.create({
-          'plan_id': 'P-7XX77777XX777777X', // This will be your PayPal subscription plan ID
+          'plan_id': planId,
           'subscriber': {
             'name': {
-              'given_name': 'New',
+              'given_name': 'EspaLuz',
               'surname': 'Subscriber'
             }
           }
@@ -105,7 +111,7 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
           Secure payment powered by PayPal
         </p>
         <p className="text-xs text-muted-foreground mt-1">
-          Merchant ID: P8TXABNT28ZXG
+          Merchant ID: {PAYPAL_CONFIG.merchantId}
         </p>
       </div>
     </div>
