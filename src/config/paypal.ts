@@ -1,7 +1,7 @@
 // PayPal Configuration for EspaLuz
 export const PAYPAL_CONFIG = {
   // Your PayPal Client ID from PayPal Developer Dashboard
-  clientId: import.meta.env.VITE_PAYPAL_CLIENT_ID || 'YOUR_PAYPAL_CLIENT_ID',
+  clientId: 'AUpTsgq7TMjNOxaUj4UR09_keGV74GHAxO8Da8vqwuBBRmfG4mZ1JgDCPvKQs8BfB1u_q5NXwCELBKgi',
   
   // Your actual PayPal Merchant ID
   merchantId: import.meta.env.VITE_PAYPAL_MERCHANT_ID || 'P8TXABNT28ZXG',
