@@ -9,7 +9,7 @@ export const PAYPAL_CONFIG = {
   // PayPal Subscription Plan IDs (you'll create these in PayPal Dashboard)
   plans: {
     standard: {
-      id: import.meta.env.VITE_PAYPAL_STANDARD_PLAN_ID || 'P-7XX77777XX777777X',
+      id: 'P-38A73508FY163121MNCJXTYY',
       name: 'EspaLuz Standard',
       price: '$7.77/month'
     },
