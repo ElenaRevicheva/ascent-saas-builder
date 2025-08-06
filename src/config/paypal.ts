@@ -4,7 +4,7 @@ export const PAYPAL_CONFIG = {
   clientId: 'AUpTsgq7TMjNOxaUj4UR09_keGV74GHAxO8Da8vqwuBBRmfG4mZ1JgDCPvKQs8BfB1u_q5NXwCELBKgi',
   
   // Your actual PayPal Merchant ID
-  merchantId: import.meta.env.VITE_PAYPAL_MERCHANT_ID || 'P8TXABNT28ZXG',
+  merchantId: 'C3CGZX3P692W6',
   
   // PayPal Subscription Plan IDs (you'll create these in PayPal Dashboard)
   plans: {
