@@ -3,7 +3,7 @@ export const PAYPAL_CONFIG = {
   // Your PayPal Client ID from PayPal Developer Dashboard
   clientId: 'AUpTsgq7TMjNOxaUj4UR09_keGV74GHAxO8Da8vqwuBBRmfG4mZ1JgDCPvKQs8BfB1u_q5NXwCELBKgi',
   
-  // Your actual PayPal Merchant ID
+  // Your actual PayPal Merchant ID  
   merchantId: 'C3CGZX3P692W6',
   
   // PayPal Subscription Plan IDs (you'll create these in PayPal Dashboard)
@@ -14,14 +14,14 @@ export const PAYPAL_CONFIG = {
       price: '$7.77/month'
     },
     premium: {
-      id: import.meta.env.VITE_PAYPAL_PREMIUM_PLAN_ID || 'P-8XX88888XX888888X',
+      id: 'P-8XX88888XX888888X', // Remove env var dependency since they're not supported
       name: 'EspaLuz Premium',
       price: 'Coming Soon'
     }
   },
   
-  // Environment settings
-  environment: import.meta.env.VITE_PAYPAL_ENVIRONMENT || 'sandbox' // 'sandbox' or 'production'
+  // Environment settings - default to production for live payments
+  environment: 'production' // 'sandbox' or 'production'
 };
 
 export const getPayPalSDKUrl = () => {

@@ -42,63 +42,115 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
   }, []);
 
   const initializePayPal = () => {
-    if (!window.paypal) return;
+    if (!window.paypal) {
+      console.error('PayPal SDK not loaded');
+      toast({
+        title: "PayPal Error",
+        description: "PayPal services are temporarily unavailable. Please try again later.",
+        variant: "destructive"
+      });
+      return;
+    }
 
-    window.paypal.Buttons({
-      style: {
-        shape: 'rect',
-        color: 'blue',
-        layout: 'vertical',
-        label: 'subscribe'
-      },
-      createSubscription: function(data: any, actions: any) {
-        const planId = PAYPAL_CONFIG.plans[planType]?.id;
-        if (!planId) {
-          throw new Error(`No PayPal plan ID found for ${planType}`);
-        }
-        
-        return actions.subscription.create({
-          'plan_id': planId,
-          'subscriber': {
-            'name': {
-              'given_name': 'EspaLuz',
-              'surname': 'Subscriber'
-            }
+    try {
+      window.paypal.Buttons({
+        style: {
+          shape: 'rect',
+          color: 'blue',
+          layout: 'vertical',
+          label: 'subscribe',
+          height: 40
+        },
+        createSubscription: function(data: any, actions: any) {
+          const planId = PAYPAL_CONFIG.plans[planType]?.id;
+          if (!planId || planId.includes('XX')) {
+            console.error('Invalid PayPal plan ID:', planId);
+            throw new Error(`Invalid PayPal plan ID for ${planType}. Please contact support.`);
           }
-        });
-      },
-      onApprove: function(data: any, actions: any) {
-        // Create subscription in our database
-        createSubscription(data.subscriptionID);
-        
-        toast({
-          title: "Subscription Activated!",
-          description: "Welcome to EspaLuz Premium! Your subscription is now active.",
-        });
-        
-        if (onSuccess) {
-          onSuccess(data.subscriptionID);
+          
+          console.log('Creating PayPal subscription with plan ID:', planId);
+          
+          return actions.subscription.create({
+            'plan_id': planId,
+            'subscriber': {
+              'name': {
+                'given_name': 'EspaLuz',
+                'surname': 'Subscriber'
+              }
+            },
+            'application_context': {
+              'brand_name': 'EspaLuz',
+              'user_action': 'SUBSCRIBE_NOW',
+              'payment_method': {
+                'payer_selected': 'PAYPAL',
+                'payee_preferred': 'IMMEDIATE_PAYMENT_REQUIRED'
+              }
+            }
+          });
+        },
+        onApprove: async function(data: any, actions: any) {
+          console.log('PayPal subscription approved:', data.subscriptionID);
+          
+          try {
+            // Create subscription in our database
+            const result = await createSubscription(data.subscriptionID);
+            
+            if (result?.error) {
+              throw new Error('Failed to create subscription in database');
+            }
+            
+            toast({
+              title: "Subscription Activated!",
+              description: "Welcome to EspaLuz Premium! Your subscription is now active.",
+            });
+            
+            if (onSuccess) {
+              onSuccess(data.subscriptionID);
+            }
+          } catch (error) {
+            console.error('Database subscription creation failed:', error);
+            toast({
+              title: "Subscription Error",
+              description: "Payment successful but there was an issue activating your subscription. Please contact support.",
+              variant: "destructive"
+            });
+          }
+        },
+        onError: function(err: any) {
+          console.error('PayPal Error Details:', err);
+          
+          let errorMessage = "Something went wrong with your subscription. Please try again.";
+          
+          if (err.message && err.message.includes('plan')) {
+            errorMessage = "Invalid subscription plan. Please contact support.";
+          }
+          
+          toast({
+            title: "Payment Error",
+            description: errorMessage,
+            variant: "destructive"
+          });
+          
+          if (onError) {
+            onError(err);
+          }
+        },
+        onCancel: function(data: any) {
+          console.log('PayPal subscription cancelled by user');
+          toast({
+            title: "Payment Cancelled",
+            description: "Your subscription was cancelled.",
+          });
         }
-      },
-      onError: function(err: any) {
-        console.error('PayPal Error:', err);
-        toast({
-          title: "Payment Error",
-          description: "Something went wrong with your subscription. Please try again.",
-          variant: "destructive"
-        });
-        
-        if (onError) {
-          onError(err);
-        }
-      },
-      onCancel: function(data: any) {
-        toast({
-          title: "Payment Cancelled",
-          description: "Your subscription was cancelled.",
-        });
-      }
-    }).render('#paypal-button-container');
+      }).render('#paypal-button-container');
+    } catch (error) {
+      console.error('PayPal button initialization failed:', error);
+      toast({
+        title: "PayPal Error",
+        description: "Failed to initialize PayPal. Please refresh the page and try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
