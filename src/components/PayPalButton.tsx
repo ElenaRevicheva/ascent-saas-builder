@@ -2,7 +2,9 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useSubscription } from "@/hooks/useSubscription";
+import { useAuth } from "@/hooks/useAuth";
 import { PAYPAL_CONFIG, getPayPalSDKUrl } from "@/config/paypal";
+import { Link } from "react-router-dom";
 
 interface PayPalButtonProps {
   planType: "standard" | "premium";
@@ -19,16 +21,53 @@ declare global {
 const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
   const { toast } = useToast();
   const { createSubscription } = useSubscription();
+  const { user } = useAuth();
+
+  // If user is not authenticated, show login prompt instead of PayPal button
+  if (!user) {
+    return (
+      <div className="w-full">
+        <Link to="/auth">
+          <Button variant="hero" size="lg" className="w-full">
+            Sign In to Subscribe
+          </Button>
+        </Link>
+        <div className="text-center mt-4">
+          <p className="text-sm text-muted-foreground">
+            Please sign in to activate your subscription
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   useEffect(() => {
-    // Load PayPal SDK
+    // Clean up any existing PayPal buttons first
+    const container = document.getElementById("paypal-button-container");
+    if (container) {
+      container.innerHTML = "";
+    }
+
+    // Load PayPal SDK if not already loaded
     if (!window.paypal) {
       const script = document.createElement("script");
       script.src = getPayPalSDKUrl();
       script.async = true;
-      script.onload = initializePayPal;
+      script.onload = () => {
+        console.log('PayPal SDK loaded successfully');
+        initializePayPal();
+      };
+      script.onerror = () => {
+        console.error('Failed to load PayPal SDK');
+        toast({
+          title: "PayPal Error",
+          description: "Failed to load PayPal services. Please check your internet connection and try again.",
+          variant: "destructive"
+        });
+      };
       document.body.appendChild(script);
     } else {
+      console.log('PayPal SDK already loaded');
       initializePayPal();
     }
 
@@ -39,7 +78,7 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
         container.innerHTML = "";
       }
     };
-  }, []);
+  }, [planType]); // Re-initialize when planType changes
 
   const initializePayPal = () => {
     if (!window.paypal) {
@@ -157,12 +196,18 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
     <div className="w-full">
       <div id="paypal-button-container" className="w-full min-h-[50px]">
         {/* PayPal button will render here */}
+        <div className="flex items-center justify-center h-12 text-muted-foreground">
+          Loading PayPal...
+        </div>
       </div>
       <div className="text-center mt-4">
         <p className="text-sm text-muted-foreground">
           Secure payment powered by PayPal
         </p>
         <p className="text-xs text-muted-foreground mt-1">
+          Plan: {PAYPAL_CONFIG.plans[planType]?.name} - {PAYPAL_CONFIG.plans[planType]?.price}
+        </p>
+        <p className="text-xs text-muted-foreground">
           Merchant ID: {PAYPAL_CONFIG.merchantId}
         </p>
       </div>

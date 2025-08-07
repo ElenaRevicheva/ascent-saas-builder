@@ -49,10 +49,15 @@ export const useSubscription = () => {
   }, [user]);
 
   const createSubscription = async (paypalSubscriptionId: string) => {
-    if (!user) return { error: 'User not authenticated' };
+    if (!user) {
+      console.error('User not authenticated for subscription creation');
+      return { error: 'User not authenticated. Please log in to subscribe.' };
+    }
 
     try {
-      const { error } = await supabase
+      console.log('Creating subscription for user:', user.id, 'PayPal ID:', paypalSubscriptionId);
+      
+      const { data, error } = await supabase
         .from('user_subscriptions')
         .insert({
           user_id: user.id,
@@ -62,18 +67,25 @@ export const useSubscription = () => {
           plan_type: 'standard',
           current_period_start: new Date().toISOString(),
           current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
-        });
+        })
+        .select();
 
-      if (!error) {
-        // Refresh subscription status
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+      if (error) {
+        console.error('Database error creating subscription:', error);
+        return { error: error.message };
       }
 
-      return { error };
-    } catch (error) {
-      return { error };
+      console.log('Subscription created successfully:', data);
+
+      // Refresh subscription status after successful creation
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+
+      return { error: null };
+    } catch (error: any) {
+      console.error('Unexpected error creating subscription:', error);
+      return { error: error.message || 'Failed to create subscription' };
     }
   };
 

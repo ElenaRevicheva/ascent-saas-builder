@@ -135,7 +135,10 @@ const Pricing = () => {
                       planType="standard"
                       onSuccess={(subscriptionId) => {
                         console.log('PayPal subscription successful:', subscriptionId);
-                        // You can add additional success handling here
+                        // Redirect to dashboard after successful subscription
+                        setTimeout(() => {
+                          window.location.href = '/dashboard';
+                        }, 2000);
                       }}
                       onError={(error) => {
                         console.error('PayPal subscription error:', error);
