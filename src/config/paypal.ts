@@ -14,7 +14,7 @@ export const PAYPAL_CONFIG = {
       price: '$7.77/month'
     },
     premium: {
-      id: 'P-8XX88888XX888888X', // Remove env var dependency since they're not supported
+      id: null, // Premium plan not yet configured
       name: 'EspaLuz Premium',
       price: 'Coming Soon'
     }
