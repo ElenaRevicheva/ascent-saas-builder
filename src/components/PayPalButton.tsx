@@ -102,12 +102,9 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
         },
         createSubscription: function(data: any, actions: any) {
           const planId = PAYPAL_CONFIG.plans[planType]?.id;
-          if (!planId || planId.includes('XX') || planId === null) {
-            console.error('Invalid PayPal plan ID:', planId, 'for plan type:', planType);
-            const errorMsg = planType === 'premium' 
-              ? 'Premium plan is coming soon! Please try the Standard plan.' 
-              : `Invalid PayPal plan ID for ${planType}. Please contact support.`;
-            throw new Error(errorMsg);
+          if (!planId || planId.includes('XX')) {
+            console.error('Invalid PayPal plan ID:', planId);
+            throw new Error(`Invalid PayPal plan ID for ${planType}. Please contact support.`);
           }
           
           console.log('Creating PayPal subscription with plan ID:', planId);
