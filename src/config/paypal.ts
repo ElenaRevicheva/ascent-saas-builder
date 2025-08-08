@@ -10,7 +10,7 @@ export const PAYPAL_CONFIG = {
   // PayPal Subscription Plan IDs (you'll create these in PayPal Dashboard)
   plans: {
     standard: {
-      id: 'P-5ML4271244454362WXNWU5NQ', // Sandbox plan ID for testing
+      id: null, // You need to create this plan in PayPal Developer Dashboard first
       name: 'EspaLuz Standard',
       price: '$7.77/month'
     },

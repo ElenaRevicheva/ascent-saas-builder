@@ -94,11 +94,14 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
     return (
       <div className="w-full">
         <Button variant="outline" size="lg" className="w-full" disabled>
-          Coming Soon
+          Setup Required
         </Button>
         <div className="text-center mt-4">
           <p className="text-sm text-muted-foreground">
-            This plan is not available yet
+            PayPal subscription plan needs to be created in PayPal Dashboard
+          </p>
+          <p className="text-xs text-muted-foreground mt-2">
+            Visit PayPal Developer Dashboard → Products & Plans → Create Plan
           </p>
         </div>
       </div>
