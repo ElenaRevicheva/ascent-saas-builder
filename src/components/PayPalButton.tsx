@@ -24,14 +24,42 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
   const { createSubscription } = useSubscription();
   const { user } = useAuth();
 
-  // Move all hooks to the top - they must always be called
-  useEffect(() => {
-    // Only initialize PayPal if user is authenticated and plan is available
-    const plan = PAYPAL_CONFIG.plans[planType];
-    if (!user || !plan?.id) {
-      return;
-    }
+  // If user is not authenticated, show login prompt instead of PayPal button
+  if (!user) {
+    return (
+      <div className="w-full">
+        <Link to="/auth">
+          <Button variant="hero" size="lg" className="w-full">
+            Sign In to Subscribe
+          </Button>
+        </Link>
+        <div className="text-center mt-4">
+          <p className="text-sm text-muted-foreground">
+            Please sign in to activate your subscription
+          </p>
+        </div>
+      </div>
+    );
+  }
 
+  // Check if plan is available
+  const plan = PAYPAL_CONFIG.plans[planType];
+  if (!plan?.id) {
+    return (
+      <div className="w-full">
+        <Button variant="outline" size="lg" className="w-full" disabled>
+          Coming Soon
+        </Button>
+        <div className="text-center mt-4">
+          <p className="text-sm text-muted-foreground">
+            This plan is not available yet
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  useEffect(() => {
     // Clean up any existing PayPal buttons first
     const container = document.getElementById("paypal-button-container");
     if (container) {
@@ -68,45 +96,7 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
         container.innerHTML = "";
       }
     };
-  }, [planType, user]);
-
-  // If user is not authenticated, show login prompt instead of PayPal button
-  if (!user) {
-    return (
-      <div className="w-full">
-        <Link to="/auth">
-          <Button variant="hero" size="lg" className="w-full">
-            Sign In to Subscribe
-          </Button>
-        </Link>
-        <div className="text-center mt-4">
-          <p className="text-sm text-muted-foreground">
-            Please sign in to activate your subscription
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  // Check if plan is available
-  const plan = PAYPAL_CONFIG.plans[planType];
-  if (!plan?.id) {
-    return (
-      <div className="w-full">
-        <Button variant="outline" size="lg" className="w-full" disabled>
-          Setup Required
-        </Button>
-        <div className="text-center mt-4">
-          <p className="text-sm text-muted-foreground">
-            PayPal subscription plan needs to be created in PayPal Dashboard
-          </p>
-          <p className="text-xs text-muted-foreground mt-2">
-            Visit PayPal Developer Dashboard → Products & Plans → Create Plan
-          </p>
-        </div>
-      </div>
-    );
-  }
+  }, [planType]);
 
   const initializePayPal = () => {
     if (!window.paypal) {
