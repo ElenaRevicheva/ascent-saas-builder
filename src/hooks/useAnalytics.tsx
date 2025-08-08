@@ -80,7 +80,7 @@ export const useAnalytics = () => {
       const currentPage = window.location.pathname;
       trackPageView(currentPage);
     }
-  }, [user, window.location.pathname]);
+  }, [user]);
 
   return {
     trackEvent,
