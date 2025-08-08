@@ -10,7 +10,7 @@ export const PAYPAL_CONFIG = {
   // PayPal Subscription Plan IDs (you'll create these in PayPal Dashboard)
   plans: {
     standard: {
-      id: 'P-38A73508FY163121MNCJXTYY',
+      id: null, // Set to null until valid sandbox plan is created
       name: 'EspaLuz Standard',
       price: '$7.77/month'
     },
@@ -21,8 +21,8 @@ export const PAYPAL_CONFIG = {
     }
   },
   
-  // Environment settings - default to production for live payments
-  environment: 'production' // 'sandbox' or 'production'
+  // Environment settings - use sandbox for testing
+  environment: 'sandbox' // 'sandbox' or 'production'
 };
 
 export const getPayPalSDKUrl = () => {
