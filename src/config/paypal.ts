@@ -1,3 +1,4 @@
+
 // PayPal Configuration for EspaLuz
 export const PAYPAL_CONFIG = {
   // Your PayPal Client ID from PayPal Developer Dashboard
@@ -14,7 +15,7 @@ export const PAYPAL_CONFIG = {
       price: '$7.77/month'
     },
     premium: {
-      id: 'P-8XX88888XX888888X', // Remove env var dependency since they're not supported
+      id: null, // Set to null until premium plan is created
       name: 'EspaLuz Premium',
       price: 'Coming Soon'
     }

@@ -41,7 +41,8 @@ export const useSubscription = () => {
               loading: false
             });
           }
-        } catch {
+        } catch (error) {
+          console.error('Error fetching subscription status:', error);
           // Keep default trial status on error
         }
       }, 100);

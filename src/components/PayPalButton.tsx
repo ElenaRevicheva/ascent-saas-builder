@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -41,6 +42,23 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
     );
   }
 
+  // Check if plan is available
+  const plan = PAYPAL_CONFIG.plans[planType];
+  if (!plan?.id) {
+    return (
+      <div className="w-full">
+        <Button variant="outline" size="lg" className="w-full" disabled>
+          Coming Soon
+        </Button>
+        <div className="text-center mt-4">
+          <p className="text-sm text-muted-foreground">
+            This plan is not available yet
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   useEffect(() => {
     // Clean up any existing PayPal buttons first
     const container = document.getElementById("paypal-button-container");
@@ -78,7 +96,7 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
         container.innerHTML = "";
       }
     };
-  }, [planType]); // Re-initialize when planType changes
+  }, [planType]);
 
   const initializePayPal = () => {
     if (!window.paypal) {
@@ -86,6 +104,17 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
       toast({
         title: "PayPal Error",
         description: "PayPal services are temporarily unavailable. Please try again later.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const planId = PAYPAL_CONFIG.plans[planType]?.id;
+    if (!planId) {
+      console.error('Invalid PayPal plan ID:', planId);
+      toast({
+        title: "Configuration Error",
+        description: `${planType} plan is not available yet. Please contact support.`,
         variant: "destructive"
       });
       return;
@@ -101,21 +130,16 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
           height: 40
         },
         createSubscription: function(data: any, actions: any) {
-          const planId = PAYPAL_CONFIG.plans[planType]?.id;
-          if (!planId || planId.includes('XX')) {
-            console.error('Invalid PayPal plan ID:', planId);
-            throw new Error(`Invalid PayPal plan ID for ${planType}. Please contact support.`);
-          }
-          
           console.log('Creating PayPal subscription with plan ID:', planId);
           
           return actions.subscription.create({
             'plan_id': planId,
             'subscriber': {
               'name': {
-                'given_name': 'EspaLuz',
-                'surname': 'Subscriber'
-              }
+                'given_name': user?.user_metadata?.full_name?.split(' ')[0] || 'EspaLuz',
+                'surname': user?.user_metadata?.full_name?.split(' ')[1] || 'Subscriber'
+              },
+              'email_address': user?.email || ''
             },
             'application_context': {
               'brand_name': 'EspaLuz',
@@ -150,7 +174,7 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
             console.error('Database subscription creation failed:', error);
             toast({
               title: "Subscription Error",
-              description: "Payment successful but there was an issue activating your subscription. Please contact support.",
+              description: "Payment successful but there was an issue activating your subscription. Please contact support with subscription ID: " + data.subscriptionID,
               variant: "destructive"
             });
           }
@@ -160,8 +184,14 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
           
           let errorMessage = "Something went wrong with your subscription. Please try again.";
           
-          if (err.message && err.message.includes('plan')) {
-            errorMessage = "Invalid subscription plan. Please contact support.";
+          if (err.message) {
+            if (err.message.includes('plan')) {
+              errorMessage = "Invalid subscription plan. Please contact support.";
+            } else if (err.message.includes('payment')) {
+              errorMessage = "Payment processing failed. Please check your payment method.";
+            } else if (err.message.includes('network')) {
+              errorMessage = "Network error. Please check your internet connection.";
+            }
           }
           
           toast({
