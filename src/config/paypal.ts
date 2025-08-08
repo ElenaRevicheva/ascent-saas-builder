@@ -2,7 +2,7 @@
 // PayPal Configuration for EspaLuz
 export const PAYPAL_CONFIG = {
   // Your PayPal Client ID from PayPal Developer Dashboard
-  clientId: 'AUpTsgq7TMjNOxaUj4UR09_keGV74GHAxO8Da8vqwuBBRmfG4mZ1JgDCPvKQs8BfB1u_q5NXwCELBKgi',
+  clientId: 'AUyb8OH20DHNmEWHSW4SSsNPPbuJ4NKQW-feaiEF9Hlk8s5xlQUHJ2qJbVwd-y4StyD_o70Zba5DSotz',
   
   // Your actual PayPal Merchant ID  
   merchantId: 'C3CGZX3P692W6',
