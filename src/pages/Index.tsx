@@ -17,6 +17,7 @@ import { supabase } from "@/integrations/supabase/client";
 import brandAvatar2 from '@/assets/brand-avatar-2.jpg';
 import espaluzQr from '@/assets/espaluz-qr.jpg';
 import creatorQr from '@/assets/creator-qr.jpg';
+import whatsappQr from '@/assets/qr code of whatsapp espaluz.jpg';
 
 function FeedbackForm() {
   const [formData, setFormData] = useState({
@@ -225,7 +226,7 @@ const Index = () => {
               
               <div className="flex flex-col items-center space-y-2">
                 <img 
-                  src={espaluzQr} 
+                  src={whatsappQr} 
                   alt="EspaLuz WhatsApp QR Code" 
                   className="w-32 h-32 object-contain rounded-xl shadow-lg border-2 border-green-300" 
                 />
