@@ -17,7 +17,7 @@ import { supabase } from "@/integrations/supabase/client";
 import brandAvatar2 from '@/assets/brand-avatar-2.jpg';
 import espaluzQr from '@/assets/espaluz-qr.jpg';
 import creatorQr from '@/assets/creator-qr.jpg';
-import whatsappQr from '@/assets/qr code of whatsapp espaluz.jpg';
+import whatsappQr from '@/assets/whatsapp-qr-code.jpg';
 
 function FeedbackForm() {
   const [formData, setFormData] = useState({
