@@ -5,7 +5,6 @@ import Footer from "@/components/Footer";
 import Pricing from "@/components/Pricing";
 import { CookieConsent } from "@/components/CookieConsent";
 import { ChatWithEspaluz } from "@/components/dashboard/ChatWithEspaluz";
-import { WhatsAppWaitlistForm } from "@/components/WhatsAppWaitlistForm";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -204,23 +203,24 @@ const Index = () => {
         {/* WhatsApp Section */}
         <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 max-w-2xl mx-auto mb-4">
           <div className="text-center space-y-4">
-            <h3 className="text-xl font-bold text-green-600">📱 Join the Waitlist for EspaLuz WhatsApp Official</h3>
-            <WhatsAppWaitlistForm />
-            
-            <div className="border-t border-white/20 pt-4">
-              <p className="text-sm text-muted-foreground mb-3">
-                Or try our WhatsApp testing sandbox now:
-              </p>
-              <a 
-                href="https://api.whatsapp.com/send/?phone=14155238886&text=join+pride-liquid" 
-                target="_blank" 
+            <h3 className="text-xl font-bold text-green-600">📱 Chat with EspaLuz on WhatsApp — Live Now</h3>
+            <div className="flex flex-col items-center gap-4">
+              <a
+                href="https://bit.ly/EspaLuz"
+                target="_blank"
                 rel="noopener noreferrer"
               >
-                <Button size="sm" variant="outline" className="border-green-400 text-green-600 hover:bg-green-50">
-                  <MessageSquare className="mr-2 h-3 w-3" />
-                  Try Sandbox FREE
+                <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white">
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  Open WhatsApp Chat
                 </Button>
               </a>
+              <img
+                src={espaluzQr}
+                alt="EspaLuz WhatsApp QR"
+                className="w-40 h-40 rounded-lg shadow-md mx-auto"
+              />
+              <p className="text-xs text-muted-foreground">Scan the QR to open `https://bit.ly/EspaLuz`</p>
             </div>
           </div>
         </div>
