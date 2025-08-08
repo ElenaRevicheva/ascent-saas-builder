@@ -139,22 +139,7 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
           console.log('Creating PayPal subscription with plan ID:', planId);
           
           return actions.subscription.create({
-            'plan_id': planId,
-            'subscriber': {
-              'name': {
-                'given_name': user?.user_metadata?.full_name?.split(' ')[0] || 'EspaLuz',
-                'surname': user?.user_metadata?.full_name?.split(' ')[1] || 'Subscriber'
-              },
-              'email_address': user?.email || ''
-            },
-            'application_context': {
-              'brand_name': 'EspaLuz',
-              'user_action': 'SUBSCRIBE_NOW',
-              'payment_method': {
-                'payer_selected': 'PAYPAL',
-                'payee_preferred': 'IMMEDIATE_PAYMENT_REQUIRED'
-              }
-            }
+            'plan_id': planId
           });
         },
         onApprove: async function(data: any, actions: any) {
