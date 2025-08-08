@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Check, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import PayPalButton from "./PayPalButton";
+import { PAYPAL_CONFIG } from "@/config/paypal";
 
 const Pricing = () => {
   const plans = [
@@ -39,7 +40,7 @@ const Pricing = () => {
       popular: true,
       paypal: true,
       comingSoon: false,
-      merchantId: "P8TXABNT28ZXG"
+      merchantId: PAYPAL_CONFIG.merchantId
     },
     {
       name: "Premium",
