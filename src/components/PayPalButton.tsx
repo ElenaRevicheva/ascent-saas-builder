@@ -305,6 +305,16 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
             </p>
           </div>
         )}
+        {PAYPAL_CONFIG.environment === 'production' && (
+          <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded">
+            <p className="text-xs text-green-700">
+              🟢 Production Mode: Live PayPal payments enabled
+            </p>
+            <p className="text-xs text-green-600 mt-1">
+              Plan {plan?.id} is configured for live payments
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

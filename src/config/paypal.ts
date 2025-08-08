@@ -21,8 +21,8 @@ export const PAYPAL_CONFIG = {
     }
   },
   
-  // Environment settings - use sandbox for testing, production when ready to go live
-  environment: 'sandbox' // 'sandbox' or 'production'
+  // Environment settings - NOW LIVE IN PRODUCTION
+  environment: 'production' // 'sandbox' or 'production'
 };
 
 export const getPayPalSDKUrl = () => {
