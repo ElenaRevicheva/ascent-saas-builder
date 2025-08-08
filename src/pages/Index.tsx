@@ -17,7 +17,7 @@ import { supabase } from "@/integrations/supabase/client";
 import brandAvatar2 from '@/assets/brand-avatar-2.jpg';
 import espaluzQr from '@/assets/espaluz-qr.jpg';
 import creatorQr from '@/assets/creator-qr.jpg';
-import whatsappQr from '@/assets/qr code of whatsapp espaluz.jpg';
+import { QRCodeCanvas } from 'qrcode.react';
 
 function FeedbackForm() {
   const [formData, setFormData] = useState({
@@ -225,11 +225,15 @@ const Index = () => {
               </div>
               
               <div className="flex flex-col items-center space-y-2">
-                <img 
-                  src={whatsappQr} 
-                  alt="EspaLuz WhatsApp QR Code" 
-                  className="w-32 h-32 object-contain rounded-xl shadow-lg border-2 border-green-300" 
-                />
+                <div className="w-32 h-32 rounded-xl shadow-lg border-2 border-green-300 bg-white p-2 flex items-center justify-center">
+                  <QRCodeCanvas
+                    value="https://bit.ly/EspaLuz"
+                    size={112}
+                    bgColor="#ffffff"
+                    fgColor="#000000"
+                    includeMargin={false}
+                  />
+                </div>
                 <p className="text-xs text-green-600 font-medium">Scan to chat instantly!</p>
               </div>
             </div>
