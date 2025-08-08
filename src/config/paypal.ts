@@ -21,11 +21,11 @@ export const PAYPAL_CONFIG = {
     }
   },
   
-  // Environment settings - default to production for live payments
-  environment: 'production' // 'sandbox' or 'production'
+  // Environment settings - use sandbox for testing, production when ready to go live
+  environment: 'sandbox' // 'sandbox' or 'production'
 };
 
 export const getPayPalSDKUrl = () => {
   const env = PAYPAL_CONFIG.environment === 'production' ? '' : '.sandbox';
-  return `https://www${env}.paypal.com/sdk/js?client-id=${PAYPAL_CONFIG.clientId}&vault=true&intent=subscription`;
+  return `https://www${env}.paypal.com/sdk/js?client-id=${PAYPAL_CONFIG.clientId}&vault=true&intent=subscription&components=buttons`;
 };

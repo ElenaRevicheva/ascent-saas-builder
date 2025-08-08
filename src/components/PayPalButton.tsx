@@ -24,6 +24,24 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
   const { createSubscription } = useSubscription();
   const { user } = useAuth();
 
+  // Function to validate PayPal plan
+  const validatePlan = async (planId: string) => {
+    try {
+      // For production apps, you would validate the plan via API
+      // For now, we'll do basic client-side validation
+      console.log('Validating PayPal plan:', planId);
+      
+      if (!planId || planId.length < 10) {
+        throw new Error('Invalid plan ID format');
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Plan validation failed:', error);
+      return false;
+    }
+  };
+
   // Always call useEffect before any conditional returns
   useEffect(() => {
     // Only initialize PayPal if user is authenticated and plan is available
@@ -31,6 +49,7 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
     
     const plan = PAYPAL_CONFIG.plans[planType];
     if (!plan?.id) return;
+    
     // Clean up any existing PayPal buttons first
     const container = document.getElementById("paypal-button-container");
     if (container) {
@@ -104,7 +123,7 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
     );
   }
 
-  const initializePayPal = () => {
+  const initializePayPal = async () => {
     if (!window.paypal) {
       console.error('PayPal SDK not loaded');
       toast({
@@ -126,6 +145,17 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
       return;
     }
 
+    // Validate plan before initializing
+    const planValid = await validatePlan(planId);
+    if (!planValid) {
+      toast({
+        title: "Plan Configuration Error",
+        description: "There's an issue with the subscription plan. Please contact support.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     try {
       window.paypal.Buttons({
         style: {
@@ -137,25 +167,29 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
         },
         createSubscription: function(data: any, actions: any) {
           console.log('Creating PayPal subscription with plan ID:', planId);
+          console.log('User email:', user?.email);
+          console.log('Environment:', PAYPAL_CONFIG.environment);
           
-          return actions.subscription.create({
+          const subscriptionData = {
             'plan_id': planId,
             'subscriber': {
               'name': {
                 'given_name': user?.user_metadata?.full_name?.split(' ')[0] || 'EspaLuz',
-                'surname': user?.user_metadata?.full_name?.split(' ')[1] || 'Subscriber'
+                'surname': user?.user_metadata?.full_name?.split(' ')[1] || 'User'
               },
               'email_address': user?.email || ''
             },
             'application_context': {
               'brand_name': 'EspaLuz',
               'user_action': 'SUBSCRIBE_NOW',
-              'payment_method': {
-                'payer_selected': 'PAYPAL',
-                'payee_preferred': 'IMMEDIATE_PAYMENT_REQUIRED'
-              }
+              'return_url': window.location.origin + '/dashboard',
+              'cancel_url': window.location.origin + '/pricing'
             }
-          });
+          };
+          
+          console.log('Subscription data:', subscriptionData);
+          
+          return actions.subscription.create(subscriptionData);
         },
         onApprove: async function(data: any, actions: any) {
           console.log('PayPal subscription approved:', data.subscriptionID);
@@ -191,14 +225,23 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
           let errorMessage = "Something went wrong with your subscription. Please try again.";
           
           if (err.message) {
-            if (err.message.includes('plan')) {
-              errorMessage = "Invalid subscription plan. Please contact support.";
+            if (err.message.includes('plan') || err.message.includes('PLAN')) {
+              errorMessage = "Invalid subscription plan. The plan may not exist in this environment. Please contact support.";
             } else if (err.message.includes('payment')) {
               errorMessage = "Payment processing failed. Please check your payment method.";
             } else if (err.message.includes('network')) {
               errorMessage = "Network error. Please check your internet connection.";
+            } else if (err.message.includes('VALIDATION_ERROR')) {
+              errorMessage = "Invalid subscription configuration. Please contact support.";
+            } else if (err.message.includes('INVALID_REQUEST')) {
+              errorMessage = "Invalid subscription request. Please contact support.";
             }
           }
+          
+          // Log additional error details for debugging
+          console.log('Environment:', PAYPAL_CONFIG.environment);
+          console.log('Plan ID:', planId);
+          console.log('Client ID:', PAYPAL_CONFIG.clientId);
           
           toast({
             title: "Payment Error",
@@ -246,6 +289,22 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
         <p className="text-xs text-muted-foreground">
           Merchant ID: {PAYPAL_CONFIG.merchantId}
         </p>
+        <p className="text-xs text-muted-foreground">
+          Environment: {PAYPAL_CONFIG.environment}
+        </p>
+        <p className="text-xs text-muted-foreground">
+          Plan ID: {plan?.id}
+        </p>
+        {PAYPAL_CONFIG.environment === 'sandbox' && (
+          <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded">
+            <p className="text-xs text-yellow-700">
+              🧪 Sandbox Mode: Make sure your PayPal plan exists in the sandbox environment
+            </p>
+            <p className="text-xs text-yellow-600 mt-1">
+              If you see errors, verify that plan ID {plan?.id} is created in your PayPal sandbox account
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
