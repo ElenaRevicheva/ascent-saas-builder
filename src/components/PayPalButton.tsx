@@ -24,42 +24,13 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
   const { createSubscription } = useSubscription();
   const { user } = useAuth();
 
-  // If user is not authenticated, show login prompt instead of PayPal button
-  if (!user) {
-    return (
-      <div className="w-full">
-        <Link to="/auth">
-          <Button variant="hero" size="lg" className="w-full">
-            Sign In to Subscribe
-          </Button>
-        </Link>
-        <div className="text-center mt-4">
-          <p className="text-sm text-muted-foreground">
-            Please sign in to activate your subscription
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  // Check if plan is available
-  const plan = PAYPAL_CONFIG.plans[planType];
-  if (!plan?.id) {
-    return (
-      <div className="w-full">
-        <Button variant="outline" size="lg" className="w-full" disabled>
-          Coming Soon
-        </Button>
-        <div className="text-center mt-4">
-          <p className="text-sm text-muted-foreground">
-            This plan is not available yet
-          </p>
-        </div>
-      </div>
-    );
-  }
-
+  // Always call useEffect before any conditional returns
   useEffect(() => {
+    // Only initialize PayPal if user is authenticated and plan is available
+    if (!user) return;
+    
+    const plan = PAYPAL_CONFIG.plans[planType];
+    if (!plan?.id) return;
     // Clean up any existing PayPal buttons first
     const container = document.getElementById("paypal-button-container");
     if (container) {
@@ -96,7 +67,42 @@ const PayPalButton = ({ planType, onSuccess, onError }: PayPalButtonProps) => {
         container.innerHTML = "";
       }
     };
-  }, [planType]);
+  }, [planType, user, toast]);
+
+  // If user is not authenticated, show login prompt instead of PayPal button
+  if (!user) {
+    return (
+      <div className="w-full">
+        <Link to="/auth">
+          <Button variant="hero" size="lg" className="w-full">
+            Sign In to Subscribe
+          </Button>
+        </Link>
+        <div className="text-center mt-4">
+          <p className="text-sm text-muted-foreground">
+            Please sign in to activate your subscription
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Check if plan is available
+  const plan = PAYPAL_CONFIG.plans[planType];
+  if (!plan?.id) {
+    return (
+      <div className="w-full">
+        <Button variant="outline" size="lg" className="w-full" disabled>
+          Coming Soon
+        </Button>
+        <div className="text-center mt-4">
+          <p className="text-sm text-muted-foreground">
+            This plan is not available yet
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const initializePayPal = () => {
     if (!window.paypal) {
