@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import Pricing from "@/components/Pricing";
 import { CookieConsent } from "@/components/CookieConsent";
 import { ChatWithEspaluz } from "@/components/dashboard/ChatWithEspaluz";
-import { WhatsAppWaitlistForm } from "@/components/WhatsAppWaitlistForm";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -204,12 +204,38 @@ const Index = () => {
         {/* WhatsApp Section */}
         <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 max-w-2xl mx-auto mb-4">
           <div className="text-center space-y-4">
-            <h3 className="text-xl font-bold text-green-600">📱 Join the Waitlist for EspaLuz WhatsApp Official</h3>
-            <WhatsAppWaitlistForm />
+            <h3 className="text-xl font-bold text-green-600">📱 EspaLuz WhatsApp is Now LIVE!</h3>
+            
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+              <div className="flex flex-col items-center space-y-3">
+                <p className="text-sm text-muted-foreground">
+                  Scan the QR code or click the button to start chatting with EspaLuz on WhatsApp!
+                </p>
+                <a 
+                  href="https://bit.ly/EspaLuz" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  <Button size="lg" className="bg-green-500 hover:bg-green-600 text-white border-green-400 hover:shadow-lg">
+                    <MessageSquare className="mr-2 h-4 w-4" />
+                    💬 Start WhatsApp Chat
+                  </Button>
+                </a>
+              </div>
+              
+              <div className="flex flex-col items-center space-y-2">
+                <img 
+                  src={espaluzQr} 
+                  alt="EspaLuz WhatsApp QR Code" 
+                  className="w-32 h-32 object-contain rounded-xl shadow-lg border-2 border-green-300" 
+                />
+                <p className="text-xs text-green-600 font-medium">Scan to chat instantly!</p>
+              </div>
+            </div>
             
             <div className="border-t border-white/20 pt-4">
               <p className="text-sm text-muted-foreground mb-3">
-                Or try our WhatsApp testing sandbox now:
+                Or try our WhatsApp testing sandbox:
               </p>
               <a 
                 href="https://api.whatsapp.com/send/?phone=14155238886&text=join+pride-liquid" 
