@@ -518,6 +518,287 @@ const Index = () => {
         </div>
       </section>
 
+      {/* EspaLuz Detailed Description Section */}
+      <section className="container mx-auto px-4 py-16 bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 rounded-3xl shadow-lg">
+        <div className="text-center mb-8">
+          <h2 className="text-4xl font-bold text-foreground mb-6">
+            🌟 EspaLuz: Your Family's Personal Spanish-English Tutor in WhatsApp or Telegram
+          </h2>
+        </div>
+
+        <div className="max-w-4xl mx-auto space-y-8">
+          {/* Send Messages Your Way */}
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
+            <h3 className="text-2xl font-bold text-purple-700 mb-4 flex items-center gap-2">
+              📱✨ Send Messages Your Way, Get Learning Magic Back
+            </h3>
+            <div className="space-y-3 text-gray-700">
+              <p className="flex items-start gap-2">
+                <span className="text-xl">🎤💬</span>
+                <span>Talk or type naturally — in 🇬🇧 English, 🇪🇸 Spanish, or 🇷🇺 Russian — just like talking to a friend</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">👧🧒</span>
+                <span>Your kids can ramble, giggle, or ask questions however feels comfortable</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">🔊📖</span>
+                <span>Get back profound audio and text responses in Spanish and English</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">👩‍👩‍👦</span>
+                <span>Perfect for busy parents who want to practice while 🚗 driving or 🍳 cooking</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Type Anything */}
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
+            <h3 className="text-2xl font-bold text-blue-700 mb-4 flex items-center gap-2">
+              📝✨ Type Anything – We Make It a Learning Moment
+            </h3>
+            <div className="space-y-3 text-gray-700">
+              <p className="flex items-start gap-2">
+                <span className="text-xl">💡</span>
+                <span>Text us random thoughts, grocery lists 🛒, or questions about your new country 🌎</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">📚</span>
+                <span>Instantly see your message transformed into beautiful bilingual lessons</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">🏥➡️</span>
+                <span>"Where's the closest pharmacy?" becomes a cultural adventure 🎉</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Point, Snap, Learn */}
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
+            <h3 className="text-2xl font-bold text-green-700 mb-4 flex items-center gap-2">
+              📸 Point, Snap, Learn – The World Becomes Your Classroom
+            </h3>
+            <div className="space-y-3 text-gray-700">
+              <p className="flex items-start gap-2">
+                <span className="text-xl">🍴</span>
+                <span>Take photos of restaurant menus, 🚏 street signs, or 📒 your child's homework</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">🔍</span>
+                <span>Watch as we instantly translate everything and explain cultural context 🌐</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">🌟</span>
+                <span>Turn every family outing into a Spanish discovery adventure 🎈</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Emotional Learning Companion */}
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
+            <h3 className="text-2xl font-bold text-pink-700 mb-4 flex items-center gap-2">
+              🎭 Your Family's Emotional Learning Companion
+            </h3>
+            <h4 className="text-xl font-semibold text-pink-600 mb-3">💖 We Remember How You Feel</h4>
+            <div className="space-y-3 text-gray-700">
+              <p className="flex items-start gap-2">
+                <span className="text-xl">😰</span>
+                <span>Stressed about moving to a new country? We adapt with extra patience 🕊️ and encouragement ✨</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">👶</span>
+                <span>Kids feeling shy about speaking Spanish? We make it playful 🎲 and confidence-building 💪</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">🏡</span>
+                <span>Homesick? We connect your memories 🖼️ to new cultural discoveries 🎶</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Made for Real Families */}
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
+            <h3 className="text-2xl font-bold text-indigo-700 mb-4 flex items-center gap-2">
+              👨‍👩‍👧‍👦 Made for Real Families
+            </h3>
+            <div className="space-y-3 text-gray-700">
+              <p className="flex items-start gap-2">
+                <span className="text-xl">🧑‍💼</span>
+                <span>Recognizes if it's Mom asking about work phrases 💼 or little Sofia practicing 🎨 colors</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">👵👦</span>
+                <span>Adjusts responses for grandparents, teenagers, or curious toddlers 🐣</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">🤝</span>
+                <span>Creates family learning moments that bring everyone together ❤️</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Learning That Comes Alive */}
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
+            <h3 className="text-2xl font-bold text-orange-700 mb-4 flex items-center gap-2">
+              🎥 Learning That Comes Alive
+            </h3>
+            <p className="flex items-start gap-2 text-gray-700">
+              <span className="text-xl">🎬</span>
+              <span>Personalized video lessons — every conversation creates a short, engaging avatar video 🎨 your kid will love 💛</span>
+            </p>
+          </div>
+
+          {/* Your Personal Coach */}
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
+            <h3 className="text-2xl font-bold text-purple-700 mb-4 flex items-center gap-2">
+              🗣️ Your Personal Spanish and English Coach
+            </h3>
+            <h4 className="text-xl font-semibold text-purple-600 mb-3">🌎 Your Cultural Bridge to LATAM</h4>
+          </div>
+
+          {/* Country-Specific Wisdom */}
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
+            <h3 className="text-2xl font-bold text-green-700 mb-4 flex items-center gap-2">
+              🏠 Country-Specific Wisdom
+            </h3>
+            <div className="space-y-3 text-gray-700">
+              <p className="flex items-start gap-2">
+                <span className="text-xl">🇲🇽</span>
+                <span>Moving to Mexico? Learn about compadrazgo culture 🤝 and proper greetings 👋</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">🇨🇴</span>
+                <span>In Colombia? Discover regional food 🍲, transport 🚌, and family customs 🎶</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">🌍</span>
+                <span>Covers 20+ Spanish-speaking countries with insider knowledge 📖</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Real-Life Survival Skills */}
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
+            <h3 className="text-2xl font-bold text-blue-700 mb-4 flex items-center gap-2">
+              🚗 Real-Life Survival Skills
+            </h3>
+            <div className="space-y-3 text-gray-700">
+              <p className="flex items-start gap-2">
+                <span className="text-xl">📍</span>
+                <span>"How do I tell the taxi driver my address?"</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">🏫</span>
+                <span>"What's the polite way to ask for help at my child's school?"</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">👋</span>
+                <span>"How do I make friends with other parents in the neighborhood?"</span>
+              </p>
+            </div>
+          </div>
+
+          {/* The Magic Happens Instantly */}
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
+            <h3 className="text-2xl font-bold text-orange-700 mb-4 flex items-center gap-2">
+              ✨ The Magic Happens Instantly
+            </h3>
+            <div className="space-y-3 text-gray-700">
+              <p className="flex items-start gap-2">
+                <span className="text-xl">⚡</span>
+                <span>Zero learning curve — just scan QR for WhatsApp or Telegram 🔗 and start chatting on the go 🚀</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">📱</span>
+                <span>No apps to download, no passwords 🔑 to remember</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">🌐</span>
+                <span>Works on any phone, anywhere in the world</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Always Getting Smarter */}
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
+            <h3 className="text-2xl font-bold text-indigo-700 mb-4 flex items-center gap-2">
+              🔄 Always Getting Smarter
+            </h3>
+            <div className="space-y-3 text-gray-700">
+              <p className="flex items-start gap-2">
+                <span className="text-xl">🧠</span>
+                <span>Remembers your family's learning style 🎯 and adjusts</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">📈</span>
+                <span>Builds on previous conversations to deepen understanding</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-xl">🌟</span>
+                <span>Grows with your family as your Spanish improves 🌹</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Why Families Choose EspaLuz */}
+          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-6 shadow-md border-2 border-orange-200">
+            <h3 className="text-2xl font-bold text-orange-700 mb-4 flex items-center gap-2">
+              🎯 Why Families Choose EspaLuz
+            </h3>
+            <div className="space-y-4 text-gray-700">
+              <blockquote className="border-l-4 border-orange-400 pl-4 italic">
+                <p className="flex items-start gap-2">
+                  <span className="text-xl">💬</span>
+                  <span>"Finally, a Spanish tutor that understands my 4-year-old's attention span 🧸 AND helps me navigate parent-teacher conferences in Mexico City!" — Maria, expat mom</span>
+                </p>
+              </blockquote>
+              <blockquote className="border-l-4 border-orange-400 pl-4 italic">
+                <p className="flex items-start gap-2">
+                  <span className="text-xl">💬</span>
+                  <span>"It's like having a bilingual best friend 👯‍♀️ who's also a teacher 👩‍🏫, cultural expert 🌎, and patient grandparent 👵 all in one." — Carmen, multigenerational family in Panama</span>
+                </p>
+              </blockquote>
+            </div>
+          </div>
+
+          {/* Call to Action */}
+          <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-8 shadow-md border-2 border-purple-200 text-center">
+            <h3 className="text-2xl font-bold text-purple-700 mb-4">
+              From 🏥 pharmacies to 🏛️ immigration offices... Learn Spanish 🇪🇸 and improve your English 🇬🇧 right where Life happens! 🌍💫
+            </h3>
+            <div className="space-y-4">
+              <p className="text-xl font-semibold text-gray-700">
+                👉 Ready to start your learning journey on the go?
+              </p>
+              <p className="text-lg text-gray-700">
+                📲 Just text: <span className="font-bold text-green-600">WhatsApp +507-6662-3757</span> or click the link to Telegram 👉 
+                <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-bold ml-1">
+                  https://t.me/EspaLuzFamily_bot
+                </a>
+              </p>
+              <p className="text-xl font-bold text-orange-600">
+                Say "¡Hola!" and watch the magic begin ✨🌟
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+                <a href="https://api.whatsapp.com/send/?phone=50766623757" target="_blank" rel="noopener noreferrer">
+                  <Button size="lg" className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full">
+                    <MessageSquare className="mr-2 h-4 w-4" />
+                    💬 Start WhatsApp Chat
+                  </Button>
+                </a>
+                <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer">
+                  <Button size="lg" variant="outline" className="border-blue-500 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-full">
+                    <MessageSquare className="mr-2 h-4 w-4" />
+                    🚀 Join Telegram
+                  </Button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Philosophy Section */}
       <section className="container mx-auto px-4 py-16">
         <div className="text-center mb-12">
