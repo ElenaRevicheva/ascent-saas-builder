@@ -116,7 +116,7 @@ const SubscriptionFlow = ({ planType, onSuccess, onError }: SubscriptionFlowProp
             'application_context': {
               'brand_name': 'EspaLuz',
               'user_action': 'SUBSCRIBE_NOW',
-              'return_url': window.location.origin + '/subscription-success',
+              'return_url': window.location.origin + '/subscription-complete',
               'cancel_url': window.location.origin + '/#pricing'
             }
           };
@@ -145,8 +145,8 @@ const SubscriptionFlow = ({ planType, onSuccess, onError }: SubscriptionFlowProp
               description: "Now please create your account to access EspaLuz.",
             });
             
-            // Redirect to subscription success page
-            window.location.href = '/subscription-success';
+            // Redirect to streamlined subscription complete page
+            window.location.href = '/subscription-complete';
             
             if (onSuccess) {
               onSuccess(data.subscriptionID);
