@@ -258,9 +258,9 @@ const SubscriptionFlow = ({ planType, onSuccess, onError }: SubscriptionFlowProp
       {!showPayPal ? (
         <Card>
           <CardHeader className="text-center space-y-4">
-            <CardTitle className="text-2xl font-bold text-primary">{plan.name}</CardTitle>
+            <CardTitle className="text-2xl font-bold text-primary">EspaLuz Standard</CardTitle>
             <p className="text-3xl font-bold text-foreground">
-              ${plan.price}/month
+              $7.77/month
             </p>
             
             <p className="text-lg font-semibold text-primary">
@@ -276,13 +276,6 @@ const SubscriptionFlow = ({ planType, onSuccess, onError }: SubscriptionFlowProp
               </p>
               <p className="text-sm font-bold text-green-700">
                 🎁 BONUS: 1 week free trial after PayPal onboarding confirmation
-              </p>
-            </div>
-            
-            <div className="mt-6">
-              <h3 className="text-xl font-bold text-primary mb-2">Subscribe to EspaLuz Standard</h3>
-              <p className="text-lg font-semibold text-foreground">
-                ${plan.price}/month - Start your unlimited bilingual Journey
               </p>
             </div>
             
