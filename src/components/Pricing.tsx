@@ -17,7 +17,9 @@ const Pricing = () => {
         "✨ Chat in any language - English, Spanish, or Russian",
         "🌍 Instant translation magic - every word teaches you",
         "🧠 Smart AI that gets you - context-aware replies",
-        "🗣️ Natural pronunciation - AI voices in Spanish & English"
+        "🗣️ Natural pronunciation - AI voices in Spanish & English",
+        "🎬 Avatar video generation with synchronized audio",
+        "🎤 Voice recording and transcription"
       ],
       popular: false,
       paypal: false
@@ -28,7 +30,7 @@ const Pricing = () => {
       duration: "month",
       description: "WhatsApp AI Tutor - Spanish&English in your pocket!",
       features: [
-        "✨ Everything in Free Trial PLUS WhatsApp AI Tutor",
+        "✨ Everything in Free Trial UNLIMITED PLUS WhatsApp AI Tutor",
         "🚀 Bilingual Chat without limits - practice anytime, anywhere",
         "🧠 AI that adapts to YOU - your tutor gets YOUR style",
         "🎬 Avatar video replies - kids do enjoy",

@@ -179,40 +179,13 @@ export const ChatWithEspaluz = ({ onUpgradeClick }: ChatWithEspaluzProps) => {
     try {
       let aiMessage: ChatMessage;
       
-      if (!user) {
-        // Free trial mode - provide simple bilingual responses with video script
-        const freeTrialResponses = [
-          {
-            response: "¡Hola! Hello! I'm EspaLuz, your bilingual language coach. How can I help you practice Spanish and English today? ¿Cómo puedo ayudarte?\n\n[VIDEO SCRIPT START]\n¡Hola! Soy EspaLuz, tu tutora de español. Hello! I'm EspaLuz, your Spanish tutor.\n[VIDEO SCRIPT END]",
-            videoScript: "¡Hola! Soy EspaLuz, tu tutora de español. Hello! I'm EspaLuz, your Spanish tutor."
-          },
-          {
-            response: "¡Excelente! That's great! I love helping families learn together. What would you like to practice? ¿Qué te gustaría practicar?\n\n[VIDEO SCRIPT START]\n¡Excelente trabajo! Excellent work! Let's practice together. ¡Vamos a practicar juntos!\n[VIDEO SCRIPT END]",
-            videoScript: "¡Excelente trabajo! Excellent work! Let's practice together. ¡Vamos a practicar juntos!"
-          },
-          {
-            response: "¡Muy bien! Very good! Keep practicing - every conversation helps you improve. Sign up for unlimited conversations, voice, video, and progress tracking!\n\n[VIDEO SCRIPT START]\n¡Muy bien! Very good! Practice makes perfect. La práctica hace la perfección.\n[VIDEO SCRIPT END]",
-            videoScript: "¡Muy bien! Very good! Practice makes perfect. La práctica hace la perfección."
-          }
-        ];
-        
-        const randomResponse = freeTrialResponses[Math.floor(Math.random() * freeTrialResponses.length)];
-        
-        aiMessage = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: randomResponse.response,
-          videoScript: randomResponse.videoScript,
-          timestamp: new Date()
-        };
-        
-      } else {
-        // Full functionality for authenticated users with multimedia system prompt
-        const { data, error } = await supabase.functions.invoke('espaluz-chat', {
-          body: {
-            message: userMessage.content,
-            userId: user?.id,
-            systemPrompt: `You are EspaLuz, a bilingual Spanish-English AI tutor. Your responses should be warm, encouraging, and educational.
+      // Use full AI functionality for both authenticated and non-authenticated users
+      // This gives free trial users the complete experience
+      const { data, error } = await supabase.functions.invoke('espaluz-chat', {
+        body: {
+          message: userMessage.content,
+          userId: user?.id || 'free-trial-user', // Use placeholder ID for free trial users
+          systemPrompt: `You are EspaLuz, a bilingual Spanish-English AI tutor. Your responses should be warm, encouraging, and educational.
 
 CRITICAL: Your answer MUST have TWO PARTS:
 1️⃣ A full, thoughtful bilingual response that helps the user learn
@@ -230,51 +203,50 @@ Example format:
 [VIDEO SCRIPT END]
 
 The video script will be used to generate an avatar video with synchronized audio.`
-          }
-        });
-
-        if (error) throw error;
-
-        // Extract video script from response
-        console.log('🎬 AI RESPONSE for video script extraction:', data.response);
-        console.log('🎬 Looking for VIDEO SCRIPT START in response...');
-        console.log('🎬 Contains VIDEO SCRIPT START:', data.response.includes('[VIDEO SCRIPT START]'));
-        console.log('🎬 Contains VIDEO SCRIPT END:', data.response.includes('[VIDEO SCRIPT END]'));
-        
-        const extractedVideoScript = extractVideoScript(data.response);
-        console.log('🎬 EXTRACTED VIDEO SCRIPT:', extractedVideoScript);
-
-        aiMessage = {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: data.response,
-          videoScript: extractedVideoScript || data.videoScript,
-          familyMember: data.familyMember,
-          emotion: data.emotion,
-          confidence: data.confidence,
-          timestamp: new Date()
-        };
-        
-        // Show emotion detection if confidence is high
-        if (data.confidence > 0.6) {
-          toast.success(`${t('chat.emotionDetected')}: ${data.emotion} (${Math.round(data.confidence * 100)}%)`);
         }
+      });
 
-        // Extract vocabulary from AI response for learning tracking
-        const vocabularyPattern = /\b[a-záéíóúñü]+\b/gi;
-        const detectedVocabulary = data.response.match(vocabularyPattern)?.slice(0, 5) || [];
-        
-        // Record chat learning session
-        if (user) {
-          await recordChatLearning(detectedVocabulary, data.confidence, 2);
-        }
+      if (error) throw error;
+
+      // Extract video script from response
+      console.log('🎬 AI RESPONSE for video script extraction:', data.response);
+      console.log('🎬 Looking for VIDEO SCRIPT START in response...');
+      console.log('🎬 Contains VIDEO SCRIPT START:', data.response.includes('[VIDEO SCRIPT START]'));
+      console.log('🎬 Contains VIDEO SCRIPT END:', data.response.includes('[VIDEO SCRIPT END]'));
+      
+      const extractedVideoScript = extractVideoScript(data.response);
+      console.log('🎬 EXTRACTED VIDEO SCRIPT:', extractedVideoScript);
+
+      aiMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: data.response,
+        videoScript: extractedVideoScript || data.videoScript,
+        familyMember: data.familyMember,
+        emotion: data.emotion,
+        confidence: data.confidence,
+        timestamp: new Date()
+      };
+      
+      // Show emotion detection if confidence is high
+      if (data.confidence > 0.6) {
+        toast.success(`${t('chat.emotionDetected')}: ${data.emotion} (${Math.round(data.confidence * 100)}%)`);
+      }
+
+      // Extract vocabulary from AI response for learning tracking
+      const vocabularyPattern = /\b[a-záéíóúñü]+\b/gi;
+      const detectedVocabulary = data.response.match(vocabularyPattern)?.slice(0, 5) || [];
+      
+      // Record chat learning session for authenticated users only
+      if (user) {
+        await recordChatLearning(detectedVocabulary, data.confidence, 2);
       }
 
       // Add AI message immediately
       setMessages(prev => [...prev, aiMessage]);
       
-      // Automatically generate multimedia for authenticated users
-      if (user && aiMessage) {
+      // Automatically generate multimedia for all users (free trial gets full experience)
+      if (aiMessage) {
         // Generate voice and video in parallel
         setTimeout(() => {
           // Generate voice for full response
@@ -333,11 +305,8 @@ The video script will be used to generate an avatar video with synchronized audi
   const generateVoice = async (messageId: string, text: string, isVideoScript = false) => {
     if (loadingMedia[messageId] === 'voice') return;
     
-    if (!user) {
-      toast.info('Voice generation is available with subscription! Sign up to unlock all features.');
-      onUpgradeClick?.();
-      return;
-    }
+    // Allow voice generation for free trial users (no restrictions)
+    // Full functionality showcase for potential subscribers
     
     console.log('🎧 Generating voice audio for text length:', text.length);
     setLoadingMedia(prev => ({ ...prev, [messageId]: 'voice' }));
@@ -428,11 +397,8 @@ The video script will be used to generate an avatar video with synchronized audi
   const generateVideo = async (messageId: string, videoScript: string) => {
     if (loadingMedia[messageId] === 'video') return;
     
-    if (!user) {
-      toast.info('Video generation is available with subscription! Sign up to unlock all features.');
-      onUpgradeClick?.();
-      return;
-    }
+    // Allow video generation for free trial users (no restrictions)
+    // Full functionality showcase for potential subscribers
     
     setLoadingMedia(prev => ({ ...prev, [messageId]: 'video' }));
     
@@ -655,11 +621,14 @@ The video script will be used to generate an avatar video with synchronized audi
   };
 
   const startRecording = async () => {
-    if (!user) {
-      toast.info('Voice recording is available with subscription! Sign up to unlock all features.');
+    // Check free message limit for non-authenticated users
+    if (!user && hasReachedLimit) {
+      toast.error('Free message limit reached! Sign up to continue unlimited conversations.');
       onUpgradeClick?.();
       return;
     }
+    
+    // Allow voice recording for free trial users within their limit
     
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -735,11 +704,16 @@ The video script will be used to generate an avatar video with synchronized audi
           };
           setMessages(prev => [...prev, userMessage]);
           
+          // Increment message count for non-authenticated users
+          if (!user) {
+            incrementMessageCount();
+          }
+          
           // Send to Espaluz for bilingual response
           const { data: chatData, error: chatError } = await supabase.functions.invoke('espaluz-chat', {
             body: {
               message: transcribedText,
-              userId: user?.id,
+              userId: user?.id || 'free-trial-user', // Use placeholder ID for free trial users
               isVoiceInput: true,
               originalLanguage: recordingLanguage
             }
@@ -769,8 +743,10 @@ The video script will be used to generate an avatar video with synchronized audi
           const vocabularyPattern = /\b[a-záéíóúñü]+\b/gi;
           const detectedVocabulary = transcribedText.match(vocabularyPattern)?.slice(0, 5) || [];
           
-          // Record voice chat learning session
-          await recordChatLearning(detectedVocabulary, chatData.confidence, 3);
+          // Record voice chat learning session for authenticated users only
+          if (user) {
+            await recordChatLearning(detectedVocabulary, chatData.confidence, 3);
+          }
           
         } catch (error) {
           console.error('Error processing voice message:', error);
@@ -839,13 +815,13 @@ The video script will be used to generate an avatar video with synchronized audi
               )}
             </div>
             <div className="text-sm space-y-1">
-              <p>✨ <strong>Sign up to get unlimited access:</strong></p>
+              <p>✨ <strong>You're experiencing the full EspaLuz features! Sign up for unlimited access:</strong></p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-1 text-xs">
                 <span>• Unlimited conversations</span>
-                <span>• Voice & video generation</span>
+                <span>• Unlimited voice & video generation</span>
                 <span>• Family member profiles</span>
-                <span>• Progress tracking</span>
-                <span>• Personalized lessons</span>
+                <span>• Progress tracking & analytics</span>
+                <span>• Personalized learning paths</span>
                 <span>• All conversations saved forever</span>
               </div>
               <Button 
