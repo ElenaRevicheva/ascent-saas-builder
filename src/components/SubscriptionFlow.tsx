@@ -257,34 +257,41 @@ const SubscriptionFlow = ({ planType, onSuccess, onError }: SubscriptionFlowProp
     <div className="w-full max-w-md mx-auto">
       {!showPayPal ? (
         <Card>
-          <CardHeader className="text-center">
-            <div className="mb-4 p-3 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200">
+          <CardHeader className="text-center space-y-4">
+            <CardTitle className="text-2xl font-bold text-primary">{plan.name}</CardTitle>
+            <p className="text-3xl font-bold text-foreground">
+              ${plan.price}/month
+            </p>
+            
+            <p className="text-lg font-semibold text-primary">
+              🎯 Full EspaLuz Dashboard Experience - Unlimited Learning!
+            </p>
+            
+            <div className="space-y-2">
               <p className="text-sm font-medium text-green-800">
                 🛡️ Secure payment powered by PayPal
               </p>
-              <p className="text-xs text-green-600 mt-1">
+              <p className="text-xs text-green-600">
                 Merchant ID: P8TXABNT28ZXG
               </p>
-              <p className="text-sm font-bold text-green-700 mt-2">
+              <p className="text-sm font-bold text-green-700">
                 🎁 BONUS: 1 week free trial after PayPal onboarding confirmation
               </p>
             </div>
             
-            <p className="text-lg font-semibold text-primary mb-2">
-              🎯 Full EspaLuz Dashboard Experience - Unlimited Learning!
-            </p>
-            
-            <CardTitle className="text-2xl font-bold text-primary">Subscribe to EspaLuz Standard</CardTitle>
-            <p className="text-lg font-semibold text-foreground">
-              ${plan.price}/month - Start your unlimited Journey
-            </p>
+            <div className="mt-6">
+              <h3 className="text-xl font-bold text-primary mb-2">Subscribe to EspaLuz Standard</h3>
+              <p className="text-lg font-semibold text-foreground">
+                ${plan.price}/month - Start your unlimited bilingual Journey
+              </p>
+            </div>
             
             <div className="mt-4 space-y-2">
               <p className="text-sm font-medium text-blue-700 bg-blue-50 px-3 py-2 rounded-lg">
                 🎯 Step 1: Enter your details and complete PayPal onboarding
               </p>
               <p className="text-sm font-medium text-purple-700 bg-purple-50 px-3 py-2 rounded-lg">
-                🔐 Step 2: Your account will be automatically created after PayPal onboarding confirmation, just password should be created
+                🔐 Step 2: Your account will be automatically created after onboarding confirmation
               </p>
             </div>
           </CardHeader>
