@@ -258,26 +258,7 @@ const SubscriptionFlow = ({ planType, onSuccess, onError }: SubscriptionFlowProp
       {!showPayPal ? (
         <Card>
           <CardHeader className="text-center space-y-4">
-            <CardTitle className="text-2xl font-bold text-primary">EspaLuz Standard</CardTitle>
-            <p className="text-3xl font-bold text-foreground">
-              $7.77/month
-            </p>
-            
-            <p className="text-lg font-semibold text-primary">
-              🎯 Full EspaLuz Dashboard Experience - Unlimited Learning!
-            </p>
-            
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-green-800">
-                🛡️ Secure payment powered by PayPal
-              </p>
-              <p className="text-xs text-green-600">
-                Merchant ID: P8TXABNT28ZXG
-              </p>
-              <p className="text-sm font-bold text-green-700">
-                🎁 BONUS: 1 week free trial after PayPal onboarding confirmation
-              </p>
-            </div>
+            <CardTitle className="text-2xl font-bold text-primary">Complete Your Subscription</CardTitle>
             
             <div className="mt-4 space-y-2">
               <p className="text-sm font-medium text-blue-700 bg-blue-50 px-3 py-2 rounded-lg">
