@@ -30,7 +30,7 @@ export const manuallyActivateSubscription = async (
       const { data: { users }, error: listError } = await supabase.auth.admin.listUsers();
       
       if (!listError && users) {
-        const foundUser = users.find(u => u.email === userEmail);
+        const foundUser = users.find((u: any) => u.email === userEmail);
         if (foundUser) {
           userId = foundUser.id;
           console.log('Found user via admin.listUsers:', userId);

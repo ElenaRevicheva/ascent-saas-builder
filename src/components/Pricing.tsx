@@ -9,7 +9,7 @@ interface PricingPlan {
   price: number | string;
   duration?: string;
   description: string;
-  features: (string | { label: string; link: string })[];
+  features: (string | { label: string; link: string; labelClass?: string; linkClass?: string; linkText?: string })[];
   popular: boolean;
   paypal: boolean;
   comingSoon?: boolean;
@@ -38,7 +38,7 @@ const Pricing = () => {
       paypal: false
     },
     {
-      name: "Standard",
+      name: "EspaLuz Standard",
       price: 7.77,
       duration: "month",
       description: "🎯 Full EspaLuz Dashboard Experience - Unlimited Learning!",
@@ -56,7 +56,7 @@ const Pricing = () => {
       paypal: true,
       comingSoon: false,
       merchantId: "P8TXABNT28ZXG",
-      bonus: "🎁 BONUS: 1 week free trial"
+      bonus: "🎁 BONUS: 1 week free trial after PayPal onboarding confirmation"
     },
     {
       name: "Premium",

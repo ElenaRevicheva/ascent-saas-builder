@@ -56,7 +56,11 @@ const SubscriptionRecoveryTool = () => {
         planType
       );
 
-      setResult(recoveryResult);
+      setResult({
+        success: recoveryResult.success,
+        message: recoveryResult.message || '',
+        error: recoveryResult.error
+      });
 
       if (recoveryResult.success) {
         toast({
