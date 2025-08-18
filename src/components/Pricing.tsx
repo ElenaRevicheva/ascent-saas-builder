@@ -61,16 +61,15 @@ const Pricing = () => {
     {
       name: "Premium",
       price: "Coming Soon",
-      description: "Coming soon",
+      description: "",
       features: [
-        "✨ Everything in Standard SUPERCHARGED:",
+        "✨ Everything in Standard SUPERPOWERED:",
         "👨‍👩‍👧‍👦 Family squad (5+ users) - Spanish for the whole crew!",
-        "🎯 AI-crafted learning paths - built just for YOU",
+        "🎯 AI-crafted learning paths - built just for YOU via integration of your EspaLuz progress from WhatsApp or Telegram, analysing and tracking your goals and making your personalized lessons in dashboard",
         "📊 Pro analytics dashboard - watch your Spanish explode",
         "📚 Exclusive content vault - premium resources only",
         "💎 White-glove support - we've got your back 24/7",
-        "⚙️ Developer API access - Spanish learning, your way",
-        { label: "", link: "https://t.me/EspaLuzFamily_bot", linkText: "Try Telegram AI Tutor NOW!", linkClass: "text-blue-600 font-bold hover:underline" }
+        "⚙️ Developer API access - Spanish learning, your way"
       ],
       popular: false,
       paypal: false,
