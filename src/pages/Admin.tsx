@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { manuallyActivateSubscription } from '@/utils/subscriptionRecovery';
+import SubscriptionRecoveryTool from '@/components/admin/SubscriptionRecoveryTool';
 
 const ADMIN_EMAIL = 'your-admin@email.com'; // TODO: Replace with your admin email
 const PAGE_SIZE = 10;
@@ -168,6 +169,11 @@ const Admin = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Subscription Recovery Tool */}
+      <div className="mt-8">
+        <SubscriptionRecoveryTool />
+      </div>
     </div>
   );
 };

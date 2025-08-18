@@ -20,6 +20,7 @@ import { ReferralSystem } from '@/components/ReferralSystem';
 import { TelegramProgress } from '@/components/dashboard/TelegramProgress';
 import { LearningOptions } from '@/components/dashboard/LearningOptions';
 import SubscriptionFlow from '@/components/SubscriptionFlow';
+import SubscriptionRecovery from '@/components/SubscriptionRecovery';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const Dashboard = () => {
@@ -102,6 +103,11 @@ const Dashboard = () => {
       />
 
       <div className="container mx-auto px-4 py-8">
+        {/* Subscription Recovery - Critical Issues */}
+        <div className="mb-8">
+          <SubscriptionRecovery />
+        </div>
+
         {/* Learning Analytics - Top Priority */}
         <div className="mb-8" data-learning-analytics>
           <LearningAnalytics />

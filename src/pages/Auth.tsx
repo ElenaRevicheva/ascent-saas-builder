@@ -11,6 +11,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useReferralTracking } from '@/hooks/useReferralTracking';
 import { supabase } from '@/integrations/supabase/client';
 import { Eye, EyeOff, ArrowLeft, Sparkles } from 'lucide-react';
+import SubscriptionRecovery from '@/components/SubscriptionRecovery';
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +29,7 @@ const Auth = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // Function to handle pending subscription activation
+  // Function to handle pending subscription activation with improved error handling and retry
   const handlePendingSubscriptionActivation = async (user: any) => {
     const pendingSubscription = localStorage.getItem('pending-subscription');
     if (!user || !pendingSubscription) return;
@@ -36,44 +37,164 @@ const Auth = () => {
     try {
       const subscriptionData = JSON.parse(pendingSubscription);
       console.log('Processing pending subscription for user:', user.id, 'PayPal ID:', subscriptionData.subscriptionId);
+      console.log('Full subscription data:', subscriptionData);
       
-      // Create subscription in database
-      const { error: subError } = await supabase
+      // First check if subscription already exists to avoid duplicates
+      const { data: existingSub, error: checkError } = await supabase
         .from('user_subscriptions')
-        .insert([{
-          user_id: user.id,
-          subscription_id: subscriptionData.subscriptionId,
-          paypal_subscription_id: subscriptionData.subscriptionId,
-          plan_type: subscriptionData.planType,
-          status: 'active',
-          current_period_start: new Date().toISOString(),
-          current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
-        }]);
-      
-      if (subError) {
-        console.error('Failed to create subscription:', subError);
-        console.error('Subscription data:', subscriptionData);
+        .select('id, status')
+        .eq('user_id', user.id)
+        .eq('paypal_subscription_id', subscriptionData.subscriptionId)
+        .maybeSingle();
+
+      if (checkError) {
+        console.error('Error checking existing subscription:', checkError);
+        throw new Error(`Database check failed: ${checkError.message}`);
+      }
+
+      if (existingSub) {
+        console.log('Subscription already exists:', existingSub);
+        localStorage.removeItem('pending-subscription');
         toast({
-          title: "Subscription Activation Error",
-          description: "Your payment was successful but we couldn't activate your subscription. Please contact support with ID: " + subscriptionData.subscriptionId,
-          variant: "destructive"
+          title: "Subscription Already Active!",
+          description: "Your subscription is already activated. Welcome to EspaLuz!",
+        });
+        return;
+      }
+      
+      // Create subscription in database with retry mechanism
+      let retryCount = 0;
+      const maxRetries = 3;
+      let subError = null;
+
+      while (retryCount < maxRetries) {
+        const { error } = await supabase
+          .from('user_subscriptions')
+          .insert([{
+            user_id: user.id,
+            subscription_id: subscriptionData.subscriptionId,
+            paypal_subscription_id: subscriptionData.subscriptionId,
+            plan_type: subscriptionData.planType || 'standard',
+            status: 'active',
+            current_period_start: new Date().toISOString(),
+            current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
+          }]);
+        
+        if (!error) {
+          // Success - clear pending subscription and show success message
+          localStorage.removeItem('pending-subscription');
+          console.log('Subscription activated successfully for user:', user.id, 'PayPal ID:', subscriptionData.subscriptionId);
+          toast({
+            title: "Subscription Activated! 🎉",
+            description: "Welcome to EspaLuz Premium! Your subscription is now active.",
+          });
+          return;
+        }
+
+        subError = error;
+        retryCount++;
+        console.error(`Subscription activation attempt ${retryCount} failed:`, error);
+        
+        if (retryCount < maxRetries) {
+          console.log(`Retrying subscription activation in ${retryCount * 1000}ms...`);
+          await new Promise(resolve => setTimeout(resolve, retryCount * 1000));
+        }
+      }
+
+      // All retries failed - show detailed error with recovery instructions
+      console.error('Failed to create subscription after', maxRetries, 'attempts:', subError);
+      console.error('User ID:', user.id);
+      console.error('Subscription data:', subscriptionData);
+      
+      // Don't clear localStorage so user can retry or support can recover
+      toast({
+        title: "Subscription Activation Error",
+        description: `Your payment was successful but we couldn't activate your subscription. Please contact support with ID: ${subscriptionData.subscriptionId}`,
+        variant: "destructive",
+        duration: 10000 // Show longer for important error
+      });
+
+      // Store detailed error info for support
+      const errorDetails = {
+        userId: user.id,
+        subscriptionId: subscriptionData.subscriptionId,
+        error: subError?.message || 'Unknown error',
+        timestamp: new Date().toISOString(),
+        retryCount: maxRetries
+      };
+      localStorage.setItem('subscription-activation-error', JSON.stringify(errorDetails));
+      
+    } catch (error: any) {
+      console.error('Error processing pending subscription:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        userId: user?.id
+      });
+      
+      toast({
+        title: "Subscription Processing Error",
+        description: "There was an issue processing your subscription. Please contact support with the error details.",
+        variant: "destructive",
+        duration: 10000
+      });
+
+      // Store error details for debugging
+      const errorDetails = {
+        userId: user?.id,
+        error: error.message,
+        stack: error.stack,
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem('subscription-processing-error', JSON.stringify(errorDetails));
+    }
+  };
+
+  // Function to verify subscription activation after account creation
+  const verifySubscriptionActivation = async (user: any) => {
+    const pendingSubscription = localStorage.getItem('pending-subscription');
+    if (!user || !pendingSubscription) return;
+
+    try {
+      const subscriptionData = JSON.parse(pendingSubscription);
+      console.log('Verifying subscription activation for user:', user.id);
+
+      // Check if subscription exists and is active
+      const { data: subscription, error } = await supabase
+        .from('user_subscriptions')
+        .select('id, status, plan_type, paypal_subscription_id')
+        .eq('user_id', user.id)
+        .eq('paypal_subscription_id', subscriptionData.subscriptionId)
+        .eq('status', 'active')
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error verifying subscription:', error);
+        return;
+      }
+
+      if (subscription) {
+        console.log('Subscription verification successful:', subscription);
+        // Clear pending subscription data since activation was verified
+        localStorage.removeItem('pending-subscription');
+        localStorage.removeItem('subscription-activation-error');
+        localStorage.removeItem('subscription-processing-error');
+        
+        toast({
+          title: "Subscription Verified! ✅",
+          description: "Your subscription is active and ready to use.",
         });
       } else {
-        // Clear pending subscription
-        localStorage.removeItem('pending-subscription');
-        console.log('Subscription activated successfully for user:', user.id, 'PayPal ID:', subscriptionData.subscriptionId);
+        console.warn('Subscription verification failed - no active subscription found');
+        // Keep pending data for potential recovery
         toast({
-          title: "Subscription Activated!",
-          description: "Welcome to EspaLuz Premium! Your subscription is now active.",
+          title: "Subscription Verification",
+          description: "We're still processing your subscription. It should be active shortly.",
+          variant: "default"
         });
       }
     } catch (error) {
-      console.error('Error processing pending subscription:', error);
-      toast({
-        title: "Subscription Processing Error",
-        description: "There was an issue processing your subscription. Please contact support.",
-        variant: "destructive"
-      });
+      console.error('Error during subscription verification:', error);
     }
   };
 
@@ -202,6 +323,11 @@ const Auth = () => {
         // Handle pending subscription if user came from PayPal flow
         if (user) {
           await handlePendingSubscriptionActivation(user);
+          
+          // Verify subscription activation after a short delay
+          setTimeout(async () => {
+            await verifySubscriptionActivation(user);
+          }, 3000);
         }
         
         if (!localStorage.getItem('pending-subscription')) {
@@ -234,6 +360,11 @@ const Auth = () => {
           <p className="text-muted-foreground">
             Your AI Spanish tutor awaits
           </p>
+        </div>
+
+        {/* Show subscription recovery component if there are activation issues */}
+        <div className="mb-6">
+          <SubscriptionRecovery />
         </div>
 
         <Card className="border-border shadow-card">

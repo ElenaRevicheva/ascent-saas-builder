@@ -20,23 +20,62 @@ export const manuallyActivateSubscription = async (
   try {
     console.log('Attempting manual subscription activation for:', userEmail, 'PayPal ID:', paypalSubscriptionId);
     
-    // First, get the user by email
-    const { data: users, error: userError } = await supabase
-      .from('auth.users')
-      .select('id')
-      .eq('email', userEmail)
-      .limit(1);
+    // Try multiple approaches to find the user
+    let userId = null;
+    let userLookupError = null;
 
-    if (userError) {
-      console.error('Error finding user:', userError);
-      return { success: false, error: 'User lookup failed: ' + userError.message };
+    // Approach 1: Look up user by checking if we can find their profile
+    // This assumes the user has already created an account and profile
+    try {
+      const { data: { users }, error: listError } = await supabase.auth.admin.listUsers();
+      
+      if (!listError && users) {
+        const foundUser = users.find(u => u.email === userEmail);
+        if (foundUser) {
+          userId = foundUser.id;
+          console.log('Found user via admin.listUsers:', userId);
+        }
+      } else {
+        console.log('Admin listUsers not available, trying profile lookup');
+      }
+    } catch (error) {
+      console.log('Auth admin not available, trying alternative lookup');
     }
 
-    if (!users || users.length === 0) {
-      return { success: false, error: 'User not found with email: ' + userEmail };
+    // Approach 2: If admin access isn't available, try to find user through existing subscriptions
+    if (!userId) {
+      try {
+        const { data: existingSubs, error: subError } = await supabase
+          .from('user_subscriptions')
+          .select('user_id')
+          .eq('paypal_subscription_id', paypalSubscriptionId)
+          .limit(1);
+
+        if (!subError && existingSubs && existingSubs.length > 0) {
+          userId = existingSubs[0].user_id;
+          console.log('Found user via existing subscription:', userId);
+        }
+      } catch (error) {
+        console.log('Could not lookup via existing subscriptions');
+      }
     }
 
-    const userId = users[0].id;
+    // Approach 3: Manual user ID input (for admin use)
+    // If we still can't find the user, provide helpful error message
+    if (!userId) {
+      return { 
+        success: false, 
+        error: `Could not automatically find user with email: ${userEmail}. This could mean:
+        1. The user hasn't created an account yet
+        2. The email address is incorrect
+        3. Database permissions don't allow user lookup
+        
+        Please verify:
+        - The user has successfully created an account
+        - The email address is exactly correct
+        - Try using the user's UUID directly if known` 
+      };
+    }
 
     // Check if subscription already exists
     const { data: existingSubscriptions, error: checkError } = await supabase
