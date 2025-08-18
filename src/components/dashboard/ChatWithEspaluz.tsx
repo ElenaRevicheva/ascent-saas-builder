@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useLearningProgress } from '@/hooks/useLearningProgress';
+import { useFreeMessages } from '@/hooks/useFreeMessages';
 import avatarImage from '@/assets/avatar-teacher.jpg';
 
 interface ChatMessage {
@@ -28,18 +29,25 @@ interface ChatMessage {
 }
 
 interface ChatWithEspaluzProps {
-  demoMode?: boolean;
+  
   onUpgradeClick?: () => void;
 }
 
-export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEspaluzProps) => {
+export const ChatWithEspaluz = ({ onUpgradeClick }: ChatWithEspaluzProps) => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { recordChatLearning } = useLearningProgress();
+  const { 
+    freeMessagesUsed, 
+    remainingMessages, 
+    hasReachedLimit, 
+    isNearLimit, 
+    incrementMessageCount,
+    FREE_MESSAGE_LIMIT 
+  } = useFreeMessages();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [demoMessageCount, setDemoMessageCount] = useState(0);
   const [loadingMedia, setLoadingMedia] = useState<{[key: string]: 'voice' | 'video' | null}>({});
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
@@ -60,28 +68,24 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
   }, [messages]);
 
   useEffect(() => {
-    if (demoMode) {
-      // Load demo messages from localStorage
-      const savedDemoMessages = localStorage.getItem('espaluz-demo-messages');
-      const savedDemoCount = localStorage.getItem('espaluz-demo-count');
-      if (savedDemoMessages) {
+    if (!user) {
+      // Load free trial messages from localStorage for non-authenticated users
+      const savedFreeTrialMessages = localStorage.getItem('espaluz-free-trial-messages');
+      if (savedFreeTrialMessages) {
         try {
-          const parsedMessages = JSON.parse(savedDemoMessages).map((msg: any) => ({
+          const parsedMessages = JSON.parse(savedFreeTrialMessages).map((msg: any) => ({
             ...msg,
             timestamp: new Date(msg.timestamp)
           }));
           setMessages(parsedMessages);
         } catch (error) {
-          console.error('Error parsing demo messages:', error);
+          console.error('Error parsing free trial messages:', error);
         }
-      }
-      if (savedDemoCount) {
-        setDemoMessageCount(parseInt(savedDemoCount));
       }
     } else if (user) {
       loadChatHistory();
     }
-  }, [user, demoMode]);
+  }, [user]);
 
   const loadChatHistory = async () => {
     try {
@@ -147,18 +151,13 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
     
-    // Check demo limitations
-    if (demoMode) {
-      if (demoMessageCount >= 20) {
-        toast.error('Demo limit reached! Subscribe to continue unlimited conversations.');
+    // Check free message limitations for non-authenticated users
+    if (!user) {
+      if (hasReachedLimit) {
+        toast.error('Free message limit reached! Sign up to continue unlimited conversations.');
         onUpgradeClick?.();
         return;
       }
-      if (!user) {
-        // Demo mode without authentication
-      }
-    } else if (!user) {
-      return;
     }
 
     const userMessage: ChatMessage = {
@@ -171,13 +170,18 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setLoading(true);
+    
+    // Increment message count for non-authenticated users
+    if (!user) {
+      incrementMessageCount();
+    }
 
     try {
       let aiMessage: ChatMessage;
       
-      if (demoMode && !user) {
-        // Demo mode - provide a simple bilingual response with video script
-        const demoResponses = [
+      if (!user) {
+        // Free trial mode - provide simple bilingual responses with video script
+        const freeTrialResponses = [
           {
             response: "¡Hola! Hello! I'm EspaLuz, your bilingual language coach. How can I help you practice Spanish and English today? ¿Cómo puedo ayudarte?\n\n[VIDEO SCRIPT START]\n¡Hola! Soy EspaLuz, tu tutora de español. Hello! I'm EspaLuz, your Spanish tutor.\n[VIDEO SCRIPT END]",
             videoScript: "¡Hola! Soy EspaLuz, tu tutora de español. Hello! I'm EspaLuz, your Spanish tutor."
@@ -187,25 +191,20 @@ export const ChatWithEspaluz = ({ demoMode = false, onUpgradeClick }: ChatWithEs
             videoScript: "¡Excelente trabajo! Excellent work! Let's practice together. ¡Vamos a practicar juntos!"
           },
           {
-            response: "¡Muy bien! Very good! Keep practicing - every conversation helps you improve. Remember, in our full version, I can generate videos, voice, and track your family's progress!\n\n[VIDEO SCRIPT START]\n¡Muy bien! Very good! Practice makes perfect. La práctica hace la perfección.\n[VIDEO SCRIPT END]",
+            response: "¡Muy bien! Very good! Keep practicing - every conversation helps you improve. Sign up for unlimited conversations, voice, video, and progress tracking!\n\n[VIDEO SCRIPT START]\n¡Muy bien! Very good! Practice makes perfect. La práctica hace la perfección.\n[VIDEO SCRIPT END]",
             videoScript: "¡Muy bien! Very good! Practice makes perfect. La práctica hace la perfección."
           }
         ];
         
-        const randomDemo = demoResponses[Math.floor(Math.random() * demoResponses.length)];
+        const randomResponse = freeTrialResponses[Math.floor(Math.random() * freeTrialResponses.length)];
         
         aiMessage = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: randomDemo.response,
-          videoScript: randomDemo.videoScript,
+          content: randomResponse.response,
+          videoScript: randomResponse.videoScript,
           timestamp: new Date()
         };
-        
-        // Update demo count
-        const newCount = demoMessageCount + 1;
-        setDemoMessageCount(newCount);
-        localStorage.setItem('espaluz-demo-count', newCount.toString());
         
       } else {
         // Full functionality for authenticated users with multimedia system prompt
@@ -275,7 +274,7 @@ The video script will be used to generate an avatar video with synchronized audi
       setMessages(prev => [...prev, aiMessage]);
       
       // Automatically generate multimedia for authenticated users
-      if (!demoMode && user && aiMessage) {
+      if (user && aiMessage) {
         // Generate voice and video in parallel
         setTimeout(() => {
           // Generate voice for full response
@@ -286,10 +285,10 @@ The video script will be used to generate an avatar video with synchronized audi
         }, 500); // Small delay to let the message render first
       }
       
-      // Save demo messages to localStorage
-      if (demoMode) {
+      // Save free trial messages to localStorage for non-authenticated users
+      if (!user) {
         const updatedMessages = [...messages, userMessage, aiMessage];
-        localStorage.setItem('espaluz-demo-messages', JSON.stringify(updatedMessages));
+        localStorage.setItem('espaluz-free-trial-messages', JSON.stringify(updatedMessages));
       }
 
     } catch (error) {
@@ -334,8 +333,8 @@ The video script will be used to generate an avatar video with synchronized audi
   const generateVoice = async (messageId: string, text: string, isVideoScript = false) => {
     if (loadingMedia[messageId] === 'voice') return;
     
-    if (demoMode && !user) {
-      toast.info('Voice generation is available with subscription! Subscribe to unlock all features.');
+    if (!user) {
+      toast.info('Voice generation is available with subscription! Sign up to unlock all features.');
       onUpgradeClick?.();
       return;
     }
@@ -429,8 +428,8 @@ The video script will be used to generate an avatar video with synchronized audi
   const generateVideo = async (messageId: string, videoScript: string) => {
     if (loadingMedia[messageId] === 'video') return;
     
-    if (demoMode && !user) {
-      toast.info('Video generation is available with subscription! Subscribe to unlock all features.');
+    if (!user) {
+      toast.info('Video generation is available with subscription! Sign up to unlock all features.');
       onUpgradeClick?.();
       return;
     }
@@ -656,8 +655,8 @@ The video script will be used to generate an avatar video with synchronized audi
   };
 
   const startRecording = async () => {
-    if (demoMode && !user) {
-      toast.info('Voice recording is available with subscription! Subscribe to unlock all features.');
+    if (!user) {
+      toast.info('Voice recording is available with subscription! Sign up to unlock all features.');
       onUpgradeClick?.();
       return;
     }
@@ -821,28 +820,26 @@ The video script will be used to generate an avatar video with synchronized audi
     );
   };
 
-  const remainingDemoMessages = 20 - demoMessageCount;
-  
   return (
     <div className="space-y-4">
-      {/* Demo Information Banner */}
-      {demoMode && (
+      {/* Free Messages Information Banner */}
+      {!user && (
         <Alert className="border-[hsl(var(--espaluz-primary))]/20 bg-gradient-to-r from-orange-50 to-pink-50">
           <Info className="h-4 w-4" />
           <AlertDescription className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="font-medium">
-                🎯 Free Demo - {remainingDemoMessages} messages remaining
+                🎯 Free Trial - {remainingMessages} messages remaining
               </span>
-              {remainingDemoMessages <= 5 && (
+              {isNearLimit && (
                 <Badge variant="destructive" className="animate-pulse">
                   <Crown className="h-3 w-3 mr-1" />
-                  Upgrade Soon!
+                  Sign Up Soon!
                 </Badge>
               )}
             </div>
             <div className="text-sm space-y-1">
-              <p>✨ <strong>With subscription, you get:</strong></p>
+              <p>✨ <strong>Sign up to get unlimited access:</strong></p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-1 text-xs">
                 <span>• Unlimited conversations</span>
                 <span>• Voice & video generation</span>
@@ -857,7 +854,7 @@ The video script will be used to generate an avatar video with synchronized audi
                 onClick={onUpgradeClick}
               >
                 <Star className="h-3 w-3 mr-1" />
-                Subscribe Now - Keep Everything!
+                Sign Up & Subscribe Now!
               </Button>
             </div>
           </AlertDescription>
@@ -868,11 +865,11 @@ The video script will be used to generate an avatar video with synchronized audi
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
-            {demoMode ? 'Demo: Chat with EspaLuz' : 'Chat with EspaLuz'}
+            Chat with EspaLuz
             <Heart className="h-4 w-4 text-[hsl(var(--espaluz-secondary))]" />
-            {demoMode && (
+            {!user && (
               <Badge variant="outline" className="text-xs">
-                Demo Mode
+                Free Trial
               </Badge>
             )}
           </CardTitle>

@@ -9,10 +9,10 @@ const Pricing = () => {
     {
       name: "Free Trial",
       price: 0,
-      duration: "1 week",
-      description: "Try EspaLuz risk-free for one week",
+      duration: "20 messages",
+      description: "Try EspaLuz risk-free with 20 free messages",
       features: [
-        "7-day free trial",
+        "20 free messages to EspaLuz",
         { label: "¡Conversemos! Chat with EspaLuz right here!", link: "/dashboard#chat" },
         "✨ Chat in any language - English, Spanish, or Russian",
         "🌍 Instant translation magic - every word teaches you",

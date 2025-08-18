@@ -278,7 +278,7 @@ const Index = () => {
       {/* Demo Benefits Section */}
       <section className="container mx-auto px-4 py-12 bg-gradient-magical rounded-2xl shadow-vibrant mb-6">
         <div className="text-center mb-8">
-          <Badge className="mb-3 bg-gradient-primary text-white">No Signup Required</Badge>
+          <Badge className="mb-3 bg-gradient-primary text-white">20 Free Messages</Badge>
           <h2 className="text-3xl font-bold mb-3 text-primary">
             Try EspaLuz Risk-Free!
           </h2>
@@ -913,13 +913,12 @@ const Index = () => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-center">
               <MessageSquare className="h-5 w-5 text-orange-500" />
-              Try EspaLuz Free Demo
-              <Badge variant="outline" className="ml-2">No Signup Required</Badge>
+              Try EspaLuz Free Trial
+              <Badge variant="outline" className="ml-2">20 Free Messages</Badge>
             </DialogTitle>
           </DialogHeader>
           <div className="mt-4">
             <ChatWithEspaluz 
-              demoMode={true} 
               onUpgradeClick={handleUpgradeFromDemo}
             />
           </div>

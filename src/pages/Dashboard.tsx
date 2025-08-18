@@ -145,7 +145,12 @@ const Dashboard = () => {
         
         {/* Chat Section - Full Width */}
         <div className="mt-8" id="chat" ref={chatRef}>
-          <ChatWithEspaluz />
+          <ChatWithEspaluz 
+            onUpgradeClick={() => {
+              // Redirect to pricing section
+              window.location.href = '/#pricing';
+            }}
+          />
         </div>
       </div>
     </div>
