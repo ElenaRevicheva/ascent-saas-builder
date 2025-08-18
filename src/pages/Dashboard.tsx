@@ -19,6 +19,8 @@ import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
 import { ReferralSystem } from '@/components/ReferralSystem';
 import { TelegramProgress } from '@/components/dashboard/TelegramProgress';
 import { LearningOptions } from '@/components/dashboard/LearningOptions';
+import DirectPayPalSubscription from '@/components/DirectPayPalSubscription';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -33,6 +35,7 @@ const Dashboard = () => {
   
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [checkingOnboarding, setCheckingOnboarding] = useState(true);
+  const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
@@ -147,12 +150,33 @@ const Dashboard = () => {
         <div className="mt-8" id="chat" ref={chatRef}>
           <ChatWithEspaluz 
             onUpgradeClick={() => {
-              // Redirect to pricing section
-              window.location.href = '/#pricing';
+              setShowSubscriptionDialog(true);
             }}
           />
         </div>
       </div>
+
+      {/* Direct Subscription Dialog */}
+      <Dialog open={showSubscriptionDialog} onOpenChange={setShowSubscriptionDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center">
+              🚀 Upgrade to Unlimited EspaLuz!
+            </DialogTitle>
+          </DialogHeader>
+          <DirectPayPalSubscription
+            planType="standard"
+            onSuccess={(subscriptionId) => {
+              console.log('Subscription successful:', subscriptionId);
+              setShowSubscriptionDialog(false);
+              // Don't redirect immediately, let the PayPal flow handle it
+            }}
+            onError={(error) => {
+              console.error('Subscription error:', error);
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

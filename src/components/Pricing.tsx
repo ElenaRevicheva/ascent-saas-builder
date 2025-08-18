@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, Star } from "lucide-react";
 import { Link } from "react-router-dom";
-import PayPalButton from "./PayPalButton";
+import DirectPayPalSubscription from "./DirectPayPalSubscription";
 
 const Pricing = () => {
   const plans = [
@@ -136,14 +136,11 @@ const Pricing = () => {
               <CardContent className="pt-0">
                 {plan.paypal && !plan.comingSoon ? (
                   <div className="mb-6">
-                    <PayPalButton 
+                    <DirectPayPalSubscription 
                       planType="standard"
                       onSuccess={(subscriptionId) => {
                         console.log('PayPal subscription successful:', subscriptionId);
-                        // Redirect to dashboard after successful subscription
-                        setTimeout(() => {
-                          window.location.href = '/dashboard';
-                        }, 2000);
+                        // DirectPayPalSubscription handles the redirect to auth
                       }}
                       onError={(error) => {
                         console.error('PayPal subscription error:', error);

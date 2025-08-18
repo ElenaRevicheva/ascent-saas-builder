@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Pricing from "@/components/Pricing";
 import { CookieConsent } from "@/components/CookieConsent";
 import { ChatWithEspaluz } from "@/components/dashboard/ChatWithEspaluz";
+import DirectPayPalSubscription from "@/components/DirectPayPalSubscription";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -111,6 +112,7 @@ function FeedbackForm() {
 const Index = () => {
   const { t } = useTranslation();
   const [showDemoModal, setShowDemoModal] = useState(false);
+  const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
 
   const handleStartDemo = () => {
     setShowDemoModal(true);
@@ -118,8 +120,7 @@ const Index = () => {
 
   const handleUpgradeFromDemo = () => {
     setShowDemoModal(false);
-    // Scroll to pricing section
-    document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
+    setShowSubscriptionDialog(true);
   };
 
   return (
@@ -922,6 +923,28 @@ const Index = () => {
               onUpgradeClick={handleUpgradeFromDemo}
             />
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Direct Subscription Dialog */}
+      <Dialog open={showSubscriptionDialog} onOpenChange={setShowSubscriptionDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center">
+              🚀 Subscribe to EspaLuz Standard!
+            </DialogTitle>
+          </DialogHeader>
+          <DirectPayPalSubscription
+            planType="standard"
+            onSuccess={(subscriptionId) => {
+              console.log('Subscription successful:', subscriptionId);
+              setShowSubscriptionDialog(false);
+              // PayPal flow will handle the redirect to auth
+            }}
+            onError={(error) => {
+              console.error('Subscription error:', error);
+            }}
+          />
         </DialogContent>
       </Dialog>
     </div>
