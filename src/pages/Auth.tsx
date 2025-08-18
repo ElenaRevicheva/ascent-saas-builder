@@ -28,6 +28,55 @@ const Auth = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  // Function to handle pending subscription activation
+  const handlePendingSubscriptionActivation = async (user: any) => {
+    const pendingSubscription = localStorage.getItem('pending-subscription');
+    if (!user || !pendingSubscription) return;
+
+    try {
+      const subscriptionData = JSON.parse(pendingSubscription);
+      console.log('Processing pending subscription for user:', user.id, 'PayPal ID:', subscriptionData.subscriptionId);
+      
+      // Create subscription in database
+      const { error: subError } = await supabase
+        .from('user_subscriptions')
+        .insert([{
+          user_id: user.id,
+          subscription_id: subscriptionData.subscriptionId,
+          paypal_subscription_id: subscriptionData.subscriptionId,
+          plan_type: subscriptionData.planType,
+          status: 'active',
+          current_period_start: new Date().toISOString(),
+          current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
+        }]);
+      
+      if (subError) {
+        console.error('Failed to create subscription:', subError);
+        console.error('Subscription data:', subscriptionData);
+        toast({
+          title: "Subscription Activation Error",
+          description: "Your payment was successful but we couldn't activate your subscription. Please contact support with ID: " + subscriptionData.subscriptionId,
+          variant: "destructive"
+        });
+      } else {
+        // Clear pending subscription
+        localStorage.removeItem('pending-subscription');
+        console.log('Subscription activated successfully for user:', user.id, 'PayPal ID:', subscriptionData.subscriptionId);
+        toast({
+          title: "Subscription Activated!",
+          description: "Welcome to EspaLuz Premium! Your subscription is now active.",
+        });
+      }
+    } catch (error) {
+      console.error('Error processing pending subscription:', error);
+      toast({
+        title: "Subscription Processing Error",
+        description: "There was an issue processing your subscription. Please contact support.",
+        variant: "destructive"
+      });
+    }
+  };
+
   useEffect(() => {
     if (user) {
       navigate('/dashboard');
@@ -143,40 +192,11 @@ const Auth = () => {
         }
         
         // Handle pending subscription if user came from PayPal flow
-        const pendingSubscription = localStorage.getItem('pending-subscription');
-        if (user && pendingSubscription) {
-          try {
-            const subscriptionData = JSON.parse(pendingSubscription);
-            
-            // Create subscription in database
-            const { error: subError } = await supabase
-              .from('subscriptions')
-              .insert([{
-                user_id: user.id,
-                subscription_id: subscriptionData.subscriptionId,
-                plan_type: subscriptionData.planType,
-                status: 'active'
-              }]);
-            
-            if (subError) {
-              console.error('Failed to create subscription:', subError);
-              toast({
-                title: "Subscription Activation Error",
-                description: "Your payment was successful but we couldn't activate your subscription. Please contact support with ID: " + subscriptionData.subscriptionId,
-                variant: "destructive"
-              });
-            } else {
-              // Clear pending subscription
-              localStorage.removeItem('pending-subscription');
-              toast({
-                title: "Subscription Activated!",
-                description: "Welcome to EspaLuz Premium! Your subscription is now active.",
-              });
-            }
-          } catch (error) {
-            console.error('Error processing pending subscription:', error);
-          }
-        } else {
+        if (user) {
+          await handlePendingSubscriptionActivation(user);
+        }
+        
+        if (!localStorage.getItem('pending-subscription')) {
           toast({
             title: "Account created!",
             description: "Please check your email to confirm your account.",

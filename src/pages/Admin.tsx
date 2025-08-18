@@ -4,12 +4,17 @@ import { useAuth } from '@/hooks/useAuth';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Table } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
+import { manuallyActivateSubscription } from '@/utils/subscriptionRecovery';
 
 const ADMIN_EMAIL = 'your-admin@email.com'; // TODO: Replace with your admin email
 const PAGE_SIZE = 10;
 
 const Admin = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [profiles, setProfiles] = useState([]);
   const [subscriptions, setSubscriptions] = useState({});
   const [loading, setLoading] = useState(true);
@@ -18,6 +23,11 @@ const Admin = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [deletingId, setDeletingId] = useState('');
+  
+  // Subscription recovery state
+  const [recoveryEmail, setRecoveryEmail] = useState('');
+  const [recoveryPayPalId, setRecoveryPayPalId] = useState('');
+  const [recoveryLoading, setRecoveryLoading] = useState(false);
 
   // Fetch paginated, filtered profiles
   useEffect(() => {

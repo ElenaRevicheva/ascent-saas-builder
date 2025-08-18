@@ -79,8 +79,26 @@ export const useSubscription = () => {
       console.log('Subscription created successfully:', data);
 
       // Refresh subscription status after successful creation
-      setTimeout(() => {
-        window.location.reload();
+      setTimeout(async () => {
+        try {
+          const { data } = await supabase
+            .rpc('get_user_subscription_status', { user_uuid: user.id });
+          
+          if (data?.[0]) {
+            setSubscription({
+              status: data[0].status,
+              planType: data[0].plan_type,
+              trialDaysLeft: data[0].trial_days_left,
+              isTrialActive: data[0].is_trial_active,
+              isSubscriptionActive: data[0].is_subscription_active,
+              loading: false
+            });
+          }
+        } catch (error) {
+          console.error('Error refreshing subscription status:', error);
+          // Fallback to page reload if refresh fails
+          window.location.reload();
+        }
       }, 1500);
 
       return { error: null };
