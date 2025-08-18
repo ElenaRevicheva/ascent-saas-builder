@@ -12,6 +12,8 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useLearningProgress } from '@/hooks/useLearningProgress';
 import { useFreeMessages } from '@/hooks/useFreeMessages';
+import DirectPayPalSubscription from '@/components/DirectPayPalSubscription';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import avatarImage from '@/assets/avatar-teacher.jpg';
 
 interface ChatMessage {
@@ -48,6 +50,7 @@ export const ChatWithEspaluz = ({ onUpgradeClick }: ChatWithEspaluzProps) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
   const [loadingMedia, setLoadingMedia] = useState<{[key: string]: 'voice' | 'video' | null}>({});
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
@@ -154,8 +157,8 @@ export const ChatWithEspaluz = ({ onUpgradeClick }: ChatWithEspaluzProps) => {
     // Check free message limitations for non-authenticated users
     if (!user) {
       if (hasReachedLimit) {
-        toast.error('Free message limit reached! Sign up to continue unlimited conversations.');
-        onUpgradeClick?.();
+        toast.error('Free message limit reached! Subscribe to continue unlimited conversations.');
+        setShowSubscriptionDialog(true);
         return;
       }
     }
@@ -623,8 +626,8 @@ The video script will be used to generate an avatar video with synchronized audi
   const startRecording = async () => {
     // Check free message limit for non-authenticated users
     if (!user && hasReachedLimit) {
-      toast.error('Free message limit reached! Sign up to continue unlimited conversations.');
-      onUpgradeClick?.();
+      toast.error('Free message limit reached! Subscribe to continue unlimited conversations.');
+      setShowSubscriptionDialog(true);
       return;
     }
     
@@ -827,10 +830,10 @@ The video script will be used to generate an avatar video with synchronized audi
               <Button 
                 size="sm" 
                 className="mt-2 bg-[hsl(var(--espaluz-primary))] hover:bg-[hsl(var(--espaluz-primary))]/90"
-                onClick={onUpgradeClick}
+                onClick={() => setShowSubscriptionDialog(true)}
               >
                 <Star className="h-3 w-3 mr-1" />
-                Sign Up & Subscribe Now!
+                Subscribe Now - Get Unlimited!
               </Button>
             </div>
           </AlertDescription>
@@ -1172,6 +1175,29 @@ The video script will be used to generate an avatar video with synchronized audi
         </div>
       </CardContent>
     </Card>
+
+      {/* Direct Subscription Dialog */}
+      <Dialog open={showSubscriptionDialog} onOpenChange={setShowSubscriptionDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center">
+              🚀 Upgrade to Unlimited EspaLuz!
+            </DialogTitle>
+          </DialogHeader>
+          <DirectPayPalSubscription
+            planType="standard"
+            onSuccess={(subscriptionId) => {
+              console.log('Subscription successful:', subscriptionId);
+              setShowSubscriptionDialog(false);
+              toast.success('Subscription successful! Please create your account to continue.');
+            }}
+            onError={(error) => {
+              console.error('Subscription error:', error);
+              toast.error('Subscription failed. Please try again.');
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

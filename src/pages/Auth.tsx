@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { useReferralTracking } from '@/hooks/useReferralTracking';
+import { supabase } from '@/integrations/supabase/client';
 import { Eye, EyeOff, ArrowLeft, Sparkles } from 'lucide-react';
 
 const Auth = () => {
@@ -34,16 +35,35 @@ const Auth = () => {
   }, [user, navigate]);
 
   useEffect(() => {
-    // Check for referral code in URL
+    // Check for referral code and subscription info in URL
     const urlParams = new URLSearchParams(window.location.search);
     const referralCode = urlParams.get('ref');
+    const subscriptionStatus = urlParams.get('subscription');
+    const emailParam = urlParams.get('email');
+    
     if (referralCode) {
       setFormData(prev => ({
         ...prev,
         referralCode: referralCode
       }));
     }
-  }, []);
+    
+    // Pre-fill email if coming from subscription flow
+    if (emailParam) {
+      setFormData(prev => ({
+        ...prev,
+        email: decodeURIComponent(emailParam)
+      }));
+    }
+    
+    // Show message if coming from subscription flow
+    if (subscriptionStatus === 'pending') {
+      toast({
+        title: "Payment Successful!",
+        description: "Please create your account to activate your subscription.",
+      });
+    }
+  }, [toast]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
@@ -121,10 +141,47 @@ const Auth = () => {
         if (user && formData.referralCode) {
           await processReferralSignup(user.id, formData.referralCode);
         }
-        toast({
-          title: "Account created!",
-          description: "Please check your email to confirm your account.",
-        });
+        
+        // Handle pending subscription if user came from PayPal flow
+        const pendingSubscription = localStorage.getItem('pending-subscription');
+        if (user && pendingSubscription) {
+          try {
+            const subscriptionData = JSON.parse(pendingSubscription);
+            
+            // Create subscription in database
+            const { error: subError } = await supabase
+              .from('subscriptions')
+              .insert([{
+                user_id: user.id,
+                subscription_id: subscriptionData.subscriptionId,
+                plan_type: subscriptionData.planType,
+                status: 'active'
+              }]);
+            
+            if (subError) {
+              console.error('Failed to create subscription:', subError);
+              toast({
+                title: "Subscription Activation Error",
+                description: "Your payment was successful but we couldn't activate your subscription. Please contact support with ID: " + subscriptionData.subscriptionId,
+                variant: "destructive"
+              });
+            } else {
+              // Clear pending subscription
+              localStorage.removeItem('pending-subscription');
+              toast({
+                title: "Subscription Activated!",
+                description: "Welcome to EspaLuz Premium! Your subscription is now active.",
+              });
+            }
+          } catch (error) {
+            console.error('Error processing pending subscription:', error);
+          }
+        } else {
+          toast({
+            title: "Account created!",
+            description: "Please check your email to confirm your account.",
+          });
+        }
       }
     } catch (error) {
       setError('An unexpected error occurred. Please try again.');
@@ -157,6 +214,13 @@ const Auth = () => {
             <CardDescription>
               Sign in to your account or create a new one to start learning Spanish
             </CardDescription>
+            {new URLSearchParams(window.location.search).get('subscription') === 'pending' && (
+              <Alert className="mt-4 bg-green-50 border-green-200">
+                <AlertDescription className="text-green-800">
+                  🎉 Payment successful! Create your account below to activate your EspaLuz subscription.
+                </AlertDescription>
+              </Alert>
+            )}
           </CardHeader>
           
           <CardContent>
