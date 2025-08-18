@@ -9,7 +9,8 @@ import { AlertTriangle, RefreshCw, CheckCircle } from 'lucide-react';
 
 const SubscriptionRecovery = () => {
   const [isRetrying, setIsRetrying] = useState(false);
-  const [recoveryStatus, setRecoveryStatus] = useState<'idle' | 'success' | 'failed'>('idle');
+  type RecoveryStatus = 'idle' | 'success' | 'failed';
+  const [recoveryStatus, setRecoveryStatus] = useState<RecoveryStatus>('idle');
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -200,7 +201,7 @@ const SubscriptionRecovery = () => {
         <div className="flex flex-col sm:flex-row gap-3">
           <Button
             onClick={retrySubscriptionActivation}
-            disabled={isRetrying || recoveryStatus === 'success'}
+            disabled={isRetrying || (recoveryStatus as RecoveryStatus) === 'success'}
             className="flex items-center gap-2"
             variant="default"
           >
