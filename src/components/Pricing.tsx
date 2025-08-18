@@ -4,8 +4,21 @@ import { Check, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import SubscriptionFlow from "./SubscriptionFlow";
 
+interface PricingPlan {
+  name: string;
+  price: number | string;
+  duration?: string;
+  description: string;
+  features: (string | { label: string; link: string })[];
+  popular: boolean;
+  paypal: boolean;
+  comingSoon?: boolean;
+  merchantId?: string;
+  bonus?: string;
+}
+
 const Pricing = () => {
-  const plans = [
+  const plans: PricingPlan[] = [
     {
       name: "Free Trial",
       price: 0,
@@ -28,7 +41,7 @@ const Pricing = () => {
       name: "Standard",
       price: 7.77,
       duration: "month",
-      description: "Full EspaLuz Dashboard Experience - Unlimited Learning!",
+      description: "🎯 Full EspaLuz Dashboard Experience - Unlimited Learning!",
       features: [
         "✨ Everything in Free Trial UNLIMITED",
         "🚀 Unlimited bilingual chat conversations",
@@ -37,14 +50,13 @@ const Pricing = () => {
         "🎤 Unlimited voice recording & transcription",
         "🧠 AI that adapts to YOU - personalized learning",
         "📈 Complete progress tracking & analytics",
-        "👨‍👩‍👧‍👦 Family member profiles & management",
-        "💾 All conversations saved forever",
-        "⚡ Priority support - get help instantly"
+        "👨‍👩‍👧‍👦 Family member profiles & management"
       ],
       popular: true,
       paypal: true,
       comingSoon: false,
-      merchantId: "P8TXABNT28ZXG"
+      merchantId: "P8TXABNT28ZXG",
+      bonus: "🎁 BONUS: 1 week free trial"
     },
     {
       name: "Premium",
@@ -113,8 +125,13 @@ const Pricing = () => {
                       </span>
                       {plan.paypal && (
                         <>
-                          <div className="text-xs text-muted-foreground mt-2">Secure payment powered by PayPal</div>
-                          <div className="text-xs text-muted-foreground">Merchant ID: {plan.merchantId}</div>
+                          <div className="text-sm font-medium text-green-700 mt-2">🛡️ Secure payment powered by PayPal</div>
+                          <div className="text-xs text-green-600">Merchant ID: {plan.merchantId}</div>
+                          {plan.bonus && (
+                            <div className="mt-2 px-3 py-1 bg-gradient-to-r from-green-100 to-blue-100 rounded-full">
+                              <span className="text-sm font-bold text-green-700">{plan.bonus}</span>
+                            </div>
+                          )}
                         </>
                       )}
                     </>

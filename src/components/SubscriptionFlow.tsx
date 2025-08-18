@@ -258,16 +258,27 @@ const SubscriptionFlow = ({ planType, onSuccess, onError }: SubscriptionFlowProp
       {!showPayPal ? (
         <Card>
           <CardHeader className="text-center">
-            <CardTitle>Subscribe to {plan.name}</CardTitle>
-            <p className="text-sm text-muted-foreground">
+            <CardTitle className="text-2xl font-bold text-primary">Subscribe to EspaLuz {plan.name}</CardTitle>
+            <p className="text-lg font-semibold text-foreground">
               ${plan.price}/month - Start your unlimited EspaLuz experience
             </p>
-            <p className="text-xs text-muted-foreground mt-2">
-              Step 1: Enter your details and complete payment
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Step 2: Create your account after payment
-            </p>
+            <div className="mt-4 space-y-2">
+              <p className="text-sm font-medium text-blue-700 bg-blue-50 px-3 py-2 rounded-lg">
+                🎯 Step 1: Enter your details and complete PayPal onboarding 
+                <span className="font-bold text-green-600"> BONUS 1 week free trial</span>
+              </p>
+              <p className="text-sm font-medium text-purple-700 bg-purple-50 px-3 py-2 rounded-lg">
+                🔐 Step 2: Your account will be automatically created after payment confirmation, just password should be created
+              </p>
+            </div>
+            <div className="mt-4 p-3 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200">
+              <p className="text-sm font-medium text-green-800">
+                🛡️ Secure payment powered by PayPal
+              </p>
+              <p className="text-xs text-green-600 mt-1">
+                Merchant ID: P8TXABNT28ZXG
+              </p>
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -305,9 +316,14 @@ const SubscriptionFlow = ({ planType, onSuccess, onError }: SubscriptionFlowProp
               {isLoading ? "Loading..." : "Continue to PayPal Payment"}
             </Button>
             
-            <p className="text-xs text-center text-muted-foreground">
-              Secure payment powered by PayPal. You'll create your account after payment confirmation.
-            </p>
+            <div className="text-center space-y-2">
+              <p className="text-sm font-medium text-green-700">
+                🛡️ Secure payment powered by PayPal
+              </p>
+              <p className="text-xs text-muted-foreground">
+                You'll create your account after payment confirmation.
+              </p>
+            </div>
           </CardContent>
         </Card>
       ) : (
