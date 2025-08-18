@@ -4,11 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
-import { useReferralTracking } from '@/hooks/useReferralTracking';
+
 import { supabase } from '@/integrations/supabase/client';
 import { Eye, EyeOff, ArrowLeft, Sparkles } from 'lucide-react';
 import SubscriptionRecovery from '@/components/SubscriptionRecovery';
@@ -19,13 +19,10 @@ const Auth = () => {
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     email: '',
-    password: '',
-    fullName: '',
-    referralCode: ''
+    password: ''
   });
   
-  const { signIn, signUp, user } = useAuth();
-  const { processReferralSignup } = useReferralTracking();
+  const { signIn, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -205,43 +202,17 @@ const Auth = () => {
   }, [user, navigate]);
 
   useEffect(() => {
-    // Check for referral code and subscription info in URL
+    // Pre-fill email if coming from subscription flow
     const urlParams = new URLSearchParams(window.location.search);
-    const referralCode = urlParams.get('ref');
-    const subscriptionStatus = urlParams.get('subscription');
     const emailParam = urlParams.get('email');
-    const nameParam = urlParams.get('name');
     
-    if (referralCode) {
-      setFormData(prev => ({
-        ...prev,
-        referralCode: referralCode
-      }));
-    }
-    
-    // Pre-fill email and name if coming from subscription flow
     if (emailParam) {
       setFormData(prev => ({
         ...prev,
         email: decodeURIComponent(emailParam)
       }));
     }
-    
-    if (nameParam) {
-      setFormData(prev => ({
-        ...prev,
-        fullName: decodeURIComponent(nameParam)
-      }));
-    }
-    
-    // Show message if coming from subscription flow
-    if (subscriptionStatus === 'success') {
-      toast({
-        title: "Payment Successful! 🎉",
-        description: "Your PayPal subscription is active. Now create your account to access EspaLuz.",
-      });
-    }
-  }, [toast]);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
@@ -286,63 +257,7 @@ const Auth = () => {
     }
   };
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.email || !formData.password || !formData.fullName) {
-      setError('Please fill in all fields');
-      return;
-    }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long');
-      return;
-    }
-
-    setIsLoading(true);
-    setError('');
-
-    try {
-      const { user, error } = await signUp(
-        formData.email, 
-        formData.password, 
-        formData.fullName
-      );
-      
-      if (error) {
-        if (error.message.includes('User already registered')) {
-          setError('An account with this email already exists. Please sign in instead.');
-        } else {
-          setError(error.message);
-        }
-      } else {
-        // Process referral if user came from a referral link or entered a code
-        if (user && formData.referralCode) {
-          await processReferralSignup(user.id, formData.referralCode);
-        }
-        
-        // Handle pending subscription if user came from PayPal flow
-        if (user) {
-          await handlePendingSubscriptionActivation(user);
-          
-          // Verify subscription activation after a short delay
-          setTimeout(async () => {
-            await verifySubscriptionActivation(user);
-          }, 3000);
-        }
-        
-        if (!localStorage.getItem('pending-subscription')) {
-          toast({
-            title: "Account created!",
-            description: "Please check your email to confirm your account.",
-          });
-        }
-      }
-    } catch (error) {
-      setError('An unexpected error occurred. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-4">
@@ -373,165 +288,67 @@ const Auth = () => {
             <CardDescription>
               Sign in or try EspaLuz risk free without sign up
             </CardDescription>
-            {new URLSearchParams(window.location.search).get('subscription') === 'success' && (
-              <Alert className="mt-4 bg-green-50 border-green-200">
-                <AlertDescription className="text-green-800">
-                  🎉 Payment successful! Create your account below to activate your EspaLuz subscription.
-                </AlertDescription>
-              </Alert>
-            )}
+
           </CardHeader>
           
           <CardContent>
-            <Tabs defaultValue={new URLSearchParams(window.location.search).get('subscription') === 'success' ? 'signup' : 'signin'} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="signin">Sign In</TabsTrigger>
-                <TabsTrigger value="signup">Sign Up</TabsTrigger>
-              </TabsList>
+            {error && (
+              <Alert variant="destructive" className="mb-6">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
+            <form onSubmit={handleSignIn} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="signin-email">Email</Label>
+                <Input
+                  id="signin-email"
+                  name="email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
               
-              {error && (
-                <Alert variant="destructive" className="mb-6">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-
-              <TabsContent value="signin">
-                <form onSubmit={handleSignIn} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signin-email">Email</Label>
-                    <Input
-                      id="signin-email"
-                      name="email"
-                      type="email"
-                      placeholder="your@email.com"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="signin-password">Password</Label>
-                    <div className="relative">
-                      <Input
-                        id="signin-password"
-                        name="password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Enter your password"
-                        value={formData.password}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
-                    disabled={isLoading}
-                    variant="hero"
+              <div className="space-y-2">
+                <Label htmlFor="signin-password">Password</Label>
+                <div className="relative">
+                  <Input
+                    id="signin-password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    required
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowPassword(!showPassword)}
                   >
-                    {isLoading ? "Signing in..." : "Sign In"}
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
                   </Button>
-                </form>
-              </TabsContent>
-
-              <TabsContent value="signup">
-                <form onSubmit={handleSignUp} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-name">Full Name</Label>
-                    <Input
-                      id="signup-name"
-                      name="fullName"
-                      type="text"
-                      placeholder="Your full name"
-                      value={formData.fullName}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
-                    <Input
-                      id="signup-email"
-                      name="email"
-                      type="email"
-                      placeholder="your@email.com"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
-                    <div className="relative">
-                      <Input
-                        id="signup-password"
-                        name="password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Create a password (min. 6 characters)"
-                        value={formData.password}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-referral">Referral Code (Optional)</Label>
-                    <Input
-                      id="signup-referral"
-                      name="referralCode"
-                      type="text"
-                      placeholder="Enter referral code"
-                      value={formData.referralCode}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
-                    disabled={isLoading}
-                    variant="hero"
-                  >
-                    {isLoading ? "Creating account..." : "Create Account"}
-                  </Button>
-                  
-                  <p className="text-xs text-muted-foreground text-center">
-                    By signing up, you agree to our Terms of Service and Privacy Policy
-                  </p>
-                </form>
-              </TabsContent>
-            </Tabs>
+                </div>
+              </div>
+              
+              <Button 
+                type="submit" 
+                className="w-full" 
+                disabled={isLoading}
+                variant="hero"
+              >
+                {isLoading ? "Signing in..." : "Sign In"}
+              </Button>
+            </form>
             
             {/* Try EspaLuz Risk Free Button */}
             <div className="mt-6 pt-4 border-t border-border">
