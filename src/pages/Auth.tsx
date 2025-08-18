@@ -371,7 +371,7 @@ const Auth = () => {
           <CardHeader className="text-center">
             <CardTitle>Welcome</CardTitle>
             <CardDescription>
-              Sign in to your account or create a new one to start learning Spanish
+              Sign in or try EspaLuz risk free without sign up
             </CardDescription>
             {new URLSearchParams(window.location.search).get('subscription') === 'success' && (
               <Alert className="mt-4 bg-green-50 border-green-200">
@@ -532,14 +532,25 @@ const Auth = () => {
                 </form>
               </TabsContent>
             </Tabs>
+            
+            {/* Try EspaLuz Risk Free Button */}
+            <div className="mt-6 pt-4 border-t border-border">
+              <Button 
+                onClick={() => navigate('/dashboard')} 
+                variant="outline" 
+                className="w-full bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 border-green-200 text-green-700 hover:text-green-800"
+              >
+                <Sparkles className="h-4 w-4 mr-2" />
+                Try EspaLuz Risk Free - 20 Messages
+              </Button>
+              <p className="text-xs text-muted-foreground text-center mt-2">
+                No signup required • Full features included
+              </p>
+            </div>
           </CardContent>
         </Card>
         
-        <div className="mt-6 text-center">
-          <p className="text-sm text-muted-foreground">
-            Start with a free 7-day trial • No credit card required
-          </p>
-        </div>
+
       </div>
     </div>
   );
