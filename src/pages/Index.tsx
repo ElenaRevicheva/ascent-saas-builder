@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import Pricing from "@/components/Pricing";
 import { CookieConsent } from "@/components/CookieConsent";
 import { ChatWithEspaluz } from "@/components/dashboard/ChatWithEspaluz";
-import DirectPayPalSubscription from "@/components/DirectPayPalSubscription";
+import SubscriptionFlow from "@/components/SubscriptionFlow";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -934,7 +934,7 @@ const Index = () => {
               🚀 Subscribe to EspaLuz Standard!
             </DialogTitle>
           </DialogHeader>
-          <DirectPayPalSubscription
+          <SubscriptionFlow
             planType="standard"
             onSuccess={(subscriptionId) => {
               console.log('Subscription successful:', subscriptionId);

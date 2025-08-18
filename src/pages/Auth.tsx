@@ -89,6 +89,7 @@ const Auth = () => {
     const referralCode = urlParams.get('ref');
     const subscriptionStatus = urlParams.get('subscription');
     const emailParam = urlParams.get('email');
+    const nameParam = urlParams.get('name');
     
     if (referralCode) {
       setFormData(prev => ({
@@ -97,7 +98,7 @@ const Auth = () => {
       }));
     }
     
-    // Pre-fill email if coming from subscription flow
+    // Pre-fill email and name if coming from subscription flow
     if (emailParam) {
       setFormData(prev => ({
         ...prev,
@@ -105,11 +106,18 @@ const Auth = () => {
       }));
     }
     
+    if (nameParam) {
+      setFormData(prev => ({
+        ...prev,
+        fullName: decodeURIComponent(nameParam)
+      }));
+    }
+    
     // Show message if coming from subscription flow
-    if (subscriptionStatus === 'pending') {
+    if (subscriptionStatus === 'success') {
       toast({
-        title: "Payment Successful!",
-        description: "Please create your account to activate your subscription.",
+        title: "Payment Successful! 🎉",
+        description: "Your PayPal subscription is active. Now create your account to access EspaLuz.",
       });
     }
   }, [toast]);
@@ -234,7 +242,7 @@ const Auth = () => {
             <CardDescription>
               Sign in to your account or create a new one to start learning Spanish
             </CardDescription>
-            {new URLSearchParams(window.location.search).get('subscription') === 'pending' && (
+            {new URLSearchParams(window.location.search).get('subscription') === 'success' && (
               <Alert className="mt-4 bg-green-50 border-green-200">
                 <AlertDescription className="text-green-800">
                   🎉 Payment successful! Create your account below to activate your EspaLuz subscription.
@@ -244,7 +252,7 @@ const Auth = () => {
           </CardHeader>
           
           <CardContent>
-            <Tabs defaultValue="signin" className="w-full">
+            <Tabs defaultValue={new URLSearchParams(window.location.search).get('subscription') === 'success' ? 'signup' : 'signin'} className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-6">
                 <TabsTrigger value="signin">Sign In</TabsTrigger>
                 <TabsTrigger value="signup">Sign Up</TabsTrigger>

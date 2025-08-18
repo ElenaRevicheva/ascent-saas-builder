@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { PAYPAL_CONFIG, getPayPalSDKUrl } from "@/config/paypal";
-import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-interface DirectPayPalSubscriptionProps {
+interface SubscriptionFlowProps {
   planType: "standard" | "premium";
   onSuccess?: (subscriptionId: string) => void;
   onError?: (error: any) => void;
@@ -19,11 +18,12 @@ declare global {
   }
 }
 
-const DirectPayPalSubscription = ({ planType, onSuccess, onError }: DirectPayPalSubscriptionProps) => {
+const SubscriptionFlow = ({ planType, onSuccess, onError }: SubscriptionFlowProps) => {
   const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   const [showPayPal, setShowPayPal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const plan = PAYPAL_CONFIG.plans[planType];
 
@@ -31,7 +31,7 @@ const DirectPayPalSubscription = ({ planType, onSuccess, onError }: DirectPayPal
     if (!showPayPal || !email || !fullName) return;
     
     // Clean up any existing PayPal buttons first
-    const container = document.getElementById("direct-paypal-button-container");
+    const container = document.getElementById("subscription-paypal-button-container");
     if (container) {
       container.innerHTML = "";
     }
@@ -61,7 +61,7 @@ const DirectPayPalSubscription = ({ planType, onSuccess, onError }: DirectPayPal
 
     return () => {
       // Cleanup PayPal button container
-      const container = document.getElementById("direct-paypal-button-container");
+      const container = document.getElementById("subscription-paypal-button-container");
       if (container) {
         container.innerHTML = "";
       }
@@ -116,7 +116,7 @@ const DirectPayPalSubscription = ({ planType, onSuccess, onError }: DirectPayPal
             'application_context': {
               'brand_name': 'EspaLuz',
               'user_action': 'SUBSCRIBE_NOW',
-              'return_url': window.location.origin + '/auth?subscription=success',
+              'return_url': window.location.origin + '/subscription-success',
               'cancel_url': window.location.origin + '/#pricing'
             }
           };
@@ -129,21 +129,24 @@ const DirectPayPalSubscription = ({ planType, onSuccess, onError }: DirectPayPal
           console.log('PayPal subscription approved:', data.subscriptionID);
           
           try {
-            // Store subscription info temporarily and redirect to auth for account creation
-            localStorage.setItem('pending-subscription', JSON.stringify({
+            // Store subscription info temporarily for account creation
+            const subscriptionInfo = {
               subscriptionId: data.subscriptionID,
               email: email,
               fullName: fullName,
-              planType: planType
-            }));
+              planType: planType,
+              timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('pending-subscription', JSON.stringify(subscriptionInfo));
             
             toast({
               title: "Payment Successful!",
-              description: "Please create your account to activate your subscription.",
+              description: "Now please create your account to access EspaLuz.",
             });
             
-            // Redirect to auth page with subscription success flag
-            window.location.href = '/auth?subscription=pending&email=' + encodeURIComponent(email);
+            // Redirect to subscription success page
+            window.location.href = '/subscription-success';
             
             if (onSuccess) {
               onSuccess(data.subscriptionID);
@@ -167,6 +170,8 @@ const DirectPayPalSubscription = ({ planType, onSuccess, onError }: DirectPayPal
               errorMessage = "Invalid subscription plan. The plan may not exist in this environment. Please contact support.";
             } else if (err.message.includes('payment')) {
               errorMessage = "Payment processing failed. Please check your payment method.";
+            } else if (err.message.includes('network')) {
+              errorMessage = "Network error. Please check your internet connection.";
             }
           }
           
@@ -184,10 +189,10 @@ const DirectPayPalSubscription = ({ planType, onSuccess, onError }: DirectPayPal
           console.log('PayPal subscription cancelled by user');
           toast({
             title: "Payment Cancelled",
-            description: "Your subscription was cancelled.",
+            description: "Your subscription was cancelled. You can try again anytime.",
           });
         }
-      }).render('#direct-paypal-button-container');
+      }).render('#subscription-paypal-button-container');
     } catch (error) {
       console.error('PayPal button initialization failed:', error);
       toast({
@@ -219,7 +224,18 @@ const DirectPayPalSubscription = ({ planType, onSuccess, onError }: DirectPayPal
       return;
     }
     
+    if (fullName.trim().length < 2) {
+      toast({
+        title: "Invalid Name",
+        description: "Please enter your full name.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setIsLoading(true);
     setShowPayPal(true);
+    setTimeout(() => setIsLoading(false), 1000);
   };
 
   if (!plan?.id) {
@@ -238,37 +254,45 @@ const DirectPayPalSubscription = ({ planType, onSuccess, onError }: DirectPayPal
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle className="text-center">Subscribe to {plan.name}</CardTitle>
-        <p className="text-center text-sm text-muted-foreground">
-          ${plan.price}/month - Start your unlimited EspaLuz experience
-        </p>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {!showPayPal ? (
-          <>
+    <div className="w-full max-w-md mx-auto">
+      {!showPayPal ? (
+        <Card>
+          <CardHeader className="text-center">
+            <CardTitle>Subscribe to {plan.name}</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              ${plan.price}/month - Start your unlimited EspaLuz experience
+            </p>
+            <p className="text-xs text-muted-foreground mt-2">
+              Step 1: Enter your details and complete payment
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Step 2: Create your account after payment
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="subscription-email">Email Address</Label>
               <Input
-                id="email"
+                id="subscription-email"
                 type="email"
                 placeholder="your@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                disabled={isLoading}
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
+              <Label htmlFor="subscription-fullName">Full Name</Label>
               <Input
-                id="fullName"
+                id="subscription-fullName"
                 type="text"
                 placeholder="Your Full Name"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
+                disabled={isLoading}
               />
             </div>
             
@@ -276,20 +300,25 @@ const DirectPayPalSubscription = ({ planType, onSuccess, onError }: DirectPayPal
               onClick={handleContinueToPayment}
               className="w-full bg-[hsl(var(--espaluz-primary))] hover:bg-[hsl(var(--espaluz-primary))]/90"
               size="lg"
+              disabled={isLoading}
             >
-              Continue to Payment
+              {isLoading ? "Loading..." : "Continue to PayPal Payment"}
             </Button>
             
             <p className="text-xs text-center text-muted-foreground">
-              You'll create your account after payment confirmation
+              Secure payment powered by PayPal. You'll create your account after payment confirmation.
             </p>
-          </>
-        ) : (
-          <div className="space-y-4">
-            <div className="text-center space-y-2">
-              <p className="font-medium">Ready to subscribe!</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card>
+          <CardHeader className="text-center">
+            <CardTitle>Complete Your Payment</CardTitle>
+            <div className="space-y-2">
+              <p className="text-sm font-medium">{fullName}</p>
+              <p className="text-sm text-muted-foreground">{email}</p>
               <p className="text-sm text-muted-foreground">
-                {fullName} ({email})
+                {plan.name} - ${plan.price}/month
               </p>
               <Button 
                 variant="outline" 
@@ -300,8 +329,9 @@ const DirectPayPalSubscription = ({ planType, onSuccess, onError }: DirectPayPal
                 Edit Info
               </Button>
             </div>
-            
-            <div id="direct-paypal-button-container" className="w-full min-h-[60px]">
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div id="subscription-paypal-button-container" className="w-full min-h-[60px]">
               <div className="flex items-center justify-center h-12 text-muted-foreground">
                 Loading PayPal...
               </div>
@@ -312,14 +342,14 @@ const DirectPayPalSubscription = ({ planType, onSuccess, onError }: DirectPayPal
                 Secure payment powered by PayPal
               </p>
               <p className="text-xs text-muted-foreground mt-1">
-                Plan: {plan.name} - ${plan.price}/month
+                After payment, you'll be redirected to create your account
               </p>
             </div>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 };
 
-export default DirectPayPalSubscription;
+export default SubscriptionFlow;

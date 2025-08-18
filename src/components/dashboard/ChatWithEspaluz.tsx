@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useLearningProgress } from '@/hooks/useLearningProgress';
 import { useFreeMessages } from '@/hooks/useFreeMessages';
-import DirectPayPalSubscription from '@/components/DirectPayPalSubscription';
+import SubscriptionFlow from '@/components/SubscriptionFlow';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import avatarImage from '@/assets/avatar-teacher.jpg';
 
@@ -1184,7 +1184,7 @@ The video script will be used to generate an avatar video with synchronized audi
               🚀 Upgrade to Unlimited EspaLuz!
             </DialogTitle>
           </DialogHeader>
-          <DirectPayPalSubscription
+          <SubscriptionFlow
             planType="standard"
             onSuccess={(subscriptionId) => {
               console.log('Subscription successful:', subscriptionId);

@@ -19,7 +19,7 @@ import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
 import { ReferralSystem } from '@/components/ReferralSystem';
 import { TelegramProgress } from '@/components/dashboard/TelegramProgress';
 import { LearningOptions } from '@/components/dashboard/LearningOptions';
-import DirectPayPalSubscription from '@/components/DirectPayPalSubscription';
+import SubscriptionFlow from '@/components/SubscriptionFlow';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const Dashboard = () => {
@@ -164,7 +164,7 @@ const Dashboard = () => {
               🚀 Upgrade to Unlimited EspaLuz!
             </DialogTitle>
           </DialogHeader>
-          <DirectPayPalSubscription
+          <SubscriptionFlow
             planType="standard"
             onSuccess={(subscriptionId) => {
               console.log('Subscription successful:', subscriptionId);
