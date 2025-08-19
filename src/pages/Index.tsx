@@ -534,8 +534,11 @@ const Index = () => {
                   <video 
                     className="w-full h-48 object-cover"
                     controls
+                    playsInline
+                    webkit-playsinline="true"
                     poster="data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f3f4f6'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial, sans-serif' font-size='16' fill='%236b7280' text-anchor='middle' dy='.3em'%3E🎬 Demo Video Loading...%3C/text%3E%3C/svg%3E"
                     preload="metadata"
+                    controlsList="nodownload"
                   >
                     <source src="https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/generated-videos/demo.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
