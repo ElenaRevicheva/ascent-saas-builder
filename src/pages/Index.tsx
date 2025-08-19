@@ -204,13 +204,16 @@ const Index = () => {
         </div>
         
         {/* WhatsApp Section */}
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 max-w-2xl mx-auto mb-4">
-          <div className="text-center space-y-4">
-            <h3 className="text-xl font-bold text-green-600">📱 EspaLuz WhatsApp is Now LIVE!</h3>
+        <div className="bg-gradient-to-br from-green-50/80 via-white/80 to-emerald-50/80 backdrop-blur-sm rounded-3xl p-8 max-w-4xl mx-auto mb-6 border-2 border-green-200 shadow-2xl">
+          <div className="text-center space-y-6">
+            <div className="space-y-2">
+              <h3 className="text-2xl md:text-3xl font-bold text-green-600">📱 EspaLuz WhatsApp is Now LIVE!</h3>
+              <p className="text-lg text-green-700 font-medium">Start your Spanish learning journey instantly!</p>
+            </div>
             
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-              <div className="flex flex-col items-center space-y-3">
-                <p className="text-sm text-muted-foreground">
+            <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
+              <div className="flex flex-col items-center space-y-4 order-2 lg:order-1">
+                <p className="text-base text-gray-700 font-medium max-w-sm text-center">
                   Scan the QR code or click the button to start chatting with EspaLuz on WhatsApp!
                 </p>
                 <a 
@@ -218,20 +221,23 @@ const Index = () => {
                   target="_blank" 
                   rel="noopener noreferrer"
                 >
-                  <Button size="lg" className="bg-green-500 hover:bg-green-600 text-white border-green-400 hover:shadow-lg">
-                    <MessageSquare className="mr-2 h-4 w-4" />
+                  <Button size="lg" className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                    <MessageSquare className="mr-3 h-5 w-5" />
                     💬 Start WhatsApp Chat
                   </Button>
                 </a>
               </div>
               
-              <div className="flex flex-col items-center space-y-2">
-                <img 
-                  src={whatsappQr} 
-                  alt="EspaLuz WhatsApp QR Code" 
-                  className="w-32 h-32 object-contain rounded-xl shadow-lg border-2 border-green-300" 
-                />
-                <p className="text-xs text-green-600 font-medium">Scan to chat instantly!</p>
+              <div className="flex flex-col items-center space-y-3 order-1 lg:order-2">
+                <div className="relative">
+                  <div className="absolute -inset-2 bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 rounded-3xl blur opacity-30 animate-pulse"></div>
+                  <img 
+                    src={whatsappQr} 
+                    alt="EspaLuz WhatsApp QR Code" 
+                    className="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 object-contain rounded-2xl shadow-magical border-4 border-green-400 hover:border-green-500 hover:shadow-vibrant hover:scale-105 transition-all duration-300 bg-white/95 backdrop-blur-sm ring-2 ring-green-200 hover:ring-green-300" 
+                  />
+                </div>
+                <p className="text-sm text-green-600 font-semibold bg-green-50 px-4 py-2 rounded-full border border-green-200">✨ Scan to chat instantly! ✨</p>
               </div>
             </div>
 
