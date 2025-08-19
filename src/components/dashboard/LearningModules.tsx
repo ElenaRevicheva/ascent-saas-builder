@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -17,10 +17,44 @@ import {
 } from 'lucide-react';
 import { spanishLessons, Lesson } from '@/data/spanishLessons';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 
 export const LearningModules = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [selectedDifficulty, setSelectedDifficulty] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner');
+  const [userProgress, setUserProgress] = useState<Record<string, { progress: number; isCompleted: boolean }>>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchUserProgress = async () => {
+      try {
+        const { data: progressData } = await supabase
+          .from('user_module_progress')
+          .select('module_id, progress_percentage, is_completed')
+          .eq('user_id', user.id);
+
+        const progressMap: Record<string, { progress: number; isCompleted: boolean }> = {};
+        progressData?.forEach(p => {
+          progressMap[p.module_id] = {
+            progress: p.progress_percentage,
+            isCompleted: p.is_completed
+          };
+        });
+
+        setUserProgress(progressMap);
+      } catch (error) {
+        console.error('Error fetching user progress:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserProgress();
+  }, [user]);
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -121,13 +155,26 @@ export const LearningModules = () => {
                   )}
                 </div>
                 
-                {/* Progress simulation - in real app this would come from user data */}
+                {/* Real user progress from database */}
                 <div className="flex items-center gap-2 mb-3">
-                  <Progress value={index === 0 ? 100 : index === 1 ? 60 : 0} className="flex-1 h-2" />
-                  <span className="text-xs text-muted-foreground">
-                    {index === 0 ? 'Complete' : index === 1 ? '60%' : 'Not started'}
-                  </span>
-                  {index === 0 && <CheckCircle2 className="h-4 w-4 text-green-500" />}
+                  {loading ? (
+                    <div className="flex-1 h-2 bg-muted rounded-full animate-pulse"></div>
+                  ) : (
+                    <>
+                      <Progress 
+                        value={userProgress[lesson.id]?.progress || 0} 
+                        className="flex-1 h-2" 
+                      />
+                      <span className="text-xs text-muted-foreground">
+                        {userProgress[lesson.id]?.isCompleted 
+                          ? 'Complete' 
+                          : userProgress[lesson.id]?.progress 
+                          ? `${userProgress[lesson.id].progress}%` 
+                          : 'Not started'}
+                      </span>
+                      {userProgress[lesson.id]?.isCompleted && <CheckCircle2 className="h-4 w-4 text-green-500" />}
+                    </>
+                  )}
                 </div>
               </div>
               
@@ -137,7 +184,11 @@ export const LearningModules = () => {
                 className="bg-[hsl(var(--espaluz-primary))] hover:bg-[hsl(var(--espaluz-primary))]/90"
               >
                 <Play className="h-4 w-4 mr-1" />
-                {index === 0 ? 'Review' : index === 1 ? 'Continue' : 'Start'}
+                {userProgress[lesson.id]?.isCompleted 
+                  ? 'Review' 
+                  : userProgress[lesson.id]?.progress 
+                  ? 'Continue' 
+                  : 'Start'}
               </Button>
             </div>
           </div>
