@@ -441,27 +441,32 @@ const Index = () => {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mb-12">
-          <Card className="border-border shadow-card">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Bot className="h-5 w-5" />
+          <Card className="border-border shadow-magical bg-gradient-to-br from-white to-purple-50/30 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-purple-100/50 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
+            <CardHeader className="relative">
+              <CardTitle className="flex items-center gap-3 text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                <div className="p-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg shadow-lg">
+                  <Bot className="h-6 w-6 text-white" />
+                </div>
                 Current Functionalities
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-4 relative">
               {[
-                "Accepts voice, text, and photos in English, Spanish, and Russian",
-                "Instantly translates messages into both Spanish and English",
-                "Generates bilingual replies with rich, emotional context",
-                "Creates short avatar videos in Spanish and English for children",
-                "Sends voice messages with AI voice synthesis",
-                "Translates text inside images (OCR) using GPT-4o vision",
-                "Maintains emotional memory throughout conversations",
-                "Adapts tone based on detected emotions and personal profiles"
+                { text: "Accepts voice, text, and photos in English, Spanish, and Russian", icon: "🎤", gradient: "from-green-500 to-emerald-500" },
+                { text: "Instantly translates messages into both Spanish and English", icon: "⚡", gradient: "from-yellow-500 to-orange-500" },
+                { text: "Generates bilingual replies with rich, emotional context", icon: "💬", gradient: "from-blue-500 to-cyan-500" },
+                { text: "Creates short avatar videos in Spanish and English for children", icon: "🎬", gradient: "from-purple-500 to-pink-500" },
+                { text: "Sends voice messages with AI voice synthesis", icon: "🔊", gradient: "from-indigo-500 to-purple-500" },
+                { text: "Translates text inside images (OCR) using GPT-4o vision", icon: "👁️", gradient: "from-rose-500 to-red-500" },
+                { text: "Maintains emotional memory throughout conversations", icon: "🧠", gradient: "from-teal-500 to-cyan-500" },
+                { text: "Adapts tone based on detected emotions and personal profiles", icon: "❤️", gradient: "from-pink-500 to-rose-500" }
               ].map((feature, index) => (
-                <div key={index} className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                  <span className="text-sm text-muted-foreground">{feature}</span>
+                <div key={index} className="group flex items-start gap-4 p-3 rounded-xl hover:bg-white/50 transition-all duration-300 hover:shadow-md">
+                  <div className={`flex items-center justify-center w-10 h-10 bg-gradient-to-r ${feature.gradient} rounded-full shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                    <span className="text-white text-lg">{feature.icon}</span>
+                  </div>
+                  <span className="text-gray-700 font-medium leading-relaxed flex-1 group-hover:text-gray-900 transition-colors duration-300">{feature.text}</span>
                 </div>
               ))}
             </CardContent>
