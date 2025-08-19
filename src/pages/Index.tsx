@@ -547,18 +547,6 @@ const Index = () => {
                 <p className="text-xs text-blue-600 mt-2 text-center">
                   Watch how families use EspaLuz for real-time Spanish learning
                 </p>
-                
-                {/* Fallback: Direct link to test */}
-                <div className="mt-2 text-center">
-                  <a 
-                    href="https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/generated-videos/demo.mp4" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-xs text-blue-500 hover:text-blue-700 underline"
-                  >
-                    🔗 Test direct video link
-                  </a>
-                </div>
               </div>
 
               <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer" className="w-full">
