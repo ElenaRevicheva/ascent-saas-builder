@@ -525,6 +525,35 @@ const Index = () => {
                 </div>
               </div>
 
+              {/* Demo Video Section */}
+              <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-4 border border-blue-200">
+                <h4 className="text-lg font-semibold text-blue-700 mb-3 flex items-center gap-2">
+                  🎬 See EspaLuz in Action
+                </h4>
+                <div className="relative rounded-lg overflow-hidden shadow-lg bg-gray-900">
+                  <video 
+                    className="w-full h-48 object-cover"
+                    controls
+                    poster="data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f3f4f6'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial, sans-serif' font-size='16' fill='%236b7280' text-anchor='middle' dy='.3em'%3E🎬 Demo Video Loading...%3C/text%3E%3C/svg%3E"
+                    preload="metadata"
+                  >
+                    <source src="/demo-video.mp4" type="video/mp4" />
+                    <source src="/demo-video.webm" type="video/webm" />
+                    Your browser does not support the video tag.
+                  </video>
+                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                    <div className="bg-white/90 rounded-full p-3 shadow-lg">
+                      <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-xs text-blue-600 mt-2 text-center">
+                  Watch how families use EspaLuz for real-time Spanish learning
+                </p>
+              </div>
+
               <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer" className="w-full">
                 <Button className="w-full" variant="hero">
                   <MessageSquare className="mr-2 h-4 w-4" />
