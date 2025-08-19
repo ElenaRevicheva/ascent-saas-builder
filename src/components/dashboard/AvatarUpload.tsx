@@ -122,7 +122,7 @@ export const AvatarUpload = () => {
     setIsPlaying(!isPlaying);
   };
 
-  // Check for existing avatar on component mount and auto-copy if needed
+  // Check for existing avatar on component mount and show default EspaLuz avatar if needed
   useEffect(() => {
     if (user) {
       const fileName = `${user.id}/avatar.mp4`;
@@ -130,21 +130,21 @@ export const AvatarUpload = () => {
         .from('avatars')
         .getPublicUrl(fileName);
       
-      // Check if file exists by trying to fetch it
+      // Check if user's avatar exists
       fetch(data.publicUrl, { method: 'HEAD' })
         .then(response => {
           if (response.ok) {
             setAvatarUrl(data.publicUrl);
           } else {
-            // File doesn't exist, try to copy from the old location
-            console.log('Avatar not found, attempting to copy from old location...');
-            handleCopyAvatar();
+            // Show default EspaLuz avatar
+            const defaultAvatarUrl = 'https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/avatars/5fa36928-3201-4c2f-bc27-c30b7a6d36c6/avatar.mp4';
+            setAvatarUrl(defaultAvatarUrl);
           }
         })
         .catch(() => {
-          // File doesn't exist, try to copy from the old location
-          console.log('Avatar not found, attempting to copy from old location...');
-          handleCopyAvatar();
+          // Show default EspaLuz avatar if fetch fails
+          const defaultAvatarUrl = 'https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/avatars/5fa36928-3201-4c2f-bc27-c30b7a6d36c6/avatar.mp4';
+          setAvatarUrl(defaultAvatarUrl);
         });
     }
   }, [user]);
