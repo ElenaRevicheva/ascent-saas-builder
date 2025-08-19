@@ -587,6 +587,35 @@ const Index = () => {
                   Open Telegram Chat
                 </Button>
               </a>
+
+              {/* WhatsApp Chat Section */}
+              <div className="mt-4 space-y-3">
+                <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                      <MessageSquare className="h-4 w-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm text-green-700">WhatsApp</p>
+                      <p className="text-xs text-green-600">Live & Ready</p>
+                    </div>
+                  </div>
+                  <Badge variant="default" className="bg-green-100 text-green-700 border-green-300">Live</Badge>
+                </div>
+
+                <a href="https://wa.me/YOUR_WHATSAPP_NUMBER" target="_blank" rel="noopener noreferrer" className="w-full">
+                  <Button className="w-full bg-green-500 hover:bg-green-600 text-white">
+                    <MessageSquare className="mr-2 h-4 w-4" />
+                    Open WhatsApp Chat
+                  </Button>
+                </a>
+
+                <div className="text-center">
+                  <p className="text-sm font-medium text-green-700 bg-green-50 py-2 px-4 rounded-lg border border-green-200">
+                    ✨ 1 week free trial guaranteed
+                  </p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
