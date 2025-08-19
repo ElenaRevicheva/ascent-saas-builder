@@ -276,10 +276,10 @@ const Pricing = () => {
           </div>
 
           <div className="text-center mb-16">
-            <h3 className="text-2xl font-bold text-foreground mb-4">
+            <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
               🚀 Vibe Coding → Emotional Intelligence → AI Consciousness?
             </h3>
-            <p className="text-muted-foreground max-w-4xl mx-auto">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-5xl mx-auto leading-relaxed">
               Vibe coding is not just a smarter way to build software, it is the missing layer that leads us toward AI consciousness. We're building the foundation for conscious AI through emotionally intelligent systems that understand, remember, and evolve with human experience.
             </p>
           </div>
@@ -288,9 +288,9 @@ const Pricing = () => {
         {/* Platform Overview */}
         <div className="container mx-auto px-4 py-16">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-foreground mb-4">The Birthplace of EspaLuz</h2>
-            <h3 className="text-2xl font-semibold text-primary mb-6">What is AIdeazz?</h3>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">The Birthplace of EspaLuz</h2>
+            <h3 className="text-3xl md:text-4xl font-semibold text-primary mb-8">What is AIdeazz?</h3>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto mb-8 leading-relaxed">
               EspaLuz was born from the <a href="https://www.aideazz.xyz" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold">AIdeazz.xyz</a> ecosystem — a visionary platform being developed for crafting and evolving emotionally intelligent AI Personal Assistants (AIPAs).
             </p>
             
