@@ -527,24 +527,56 @@ const Index = () => {
 
               {/* Demo Video Section */}
               <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-4 border border-blue-200">
-                <h4 className="text-lg font-semibold text-blue-700 mb-3 flex items-center gap-2">
-                  🎬 See EspaLuz in Action
+                <h4 className="text-lg font-semibold text-blue-700 mb-4 flex items-center gap-2">
+                  🎬 Who is EspaLuz?
                 </h4>
-                <div className="rounded-lg overflow-hidden shadow-lg">
-                  <video 
-                    className="w-full h-48"
-                    controls
-                    playsInline
-                    preload="metadata"
-                    style={{ backgroundColor: '#000' }}
-                  >
-                    <source src="https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/generated-videos/demo.mp4" type="video/mp4" />
-                    <p className="flex items-center justify-center h-48 bg-gray-100 text-gray-600 text-center">
-                      🎬 Video loading... If this persists, please check the browser console for errors.
+                
+                {/* Two Video Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                  {/* First Video */}
+                  <div className="space-y-2">
+                    <div className="rounded-lg overflow-hidden shadow-lg">
+                      <video 
+                        className="w-full h-40"
+                        controls
+                        playsInline
+                        preload="metadata"
+                        style={{ backgroundColor: '#000' }}
+                      >
+                        <source src="https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/generated-videos/demo.mp4" type="video/mp4" />
+                        <p className="flex items-center justify-center h-40 bg-gray-100 text-gray-600 text-center text-sm">
+                          🎬 Video loading...
+                        </p>
+                      </video>
+                    </div>
+                    <p className="text-xs text-blue-600 text-center font-medium">
+                      Meet Your AI Tutor
                     </p>
-                  </video>
+                  </div>
+                  
+                  {/* Second Video */}
+                  <div className="space-y-2">
+                    <div className="rounded-lg overflow-hidden shadow-lg">
+                      <video 
+                        className="w-full h-40"
+                        controls
+                        playsInline
+                        preload="metadata"
+                        style={{ backgroundColor: '#000' }}
+                      >
+                        <source src="https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/generated-videos/demo1.mp4" type="video/mp4" />
+                        <p className="flex items-center justify-center h-40 bg-gray-100 text-gray-600 text-center text-sm">
+                          🎬 Video loading...
+                        </p>
+                      </video>
+                    </div>
+                    <p className="text-xs text-blue-600 text-center font-medium">
+                      See Family Learning
+                    </p>
+                  </div>
                 </div>
-                <p className="text-xs text-blue-600 mt-2 text-center">
+                
+                <p className="text-xs text-blue-600 text-center">
                   Watch how families use EspaLuz for real-time Spanish learning
                 </p>
               </div>
