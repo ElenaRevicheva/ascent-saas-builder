@@ -234,22 +234,7 @@ const Index = () => {
                 <p className="text-xs text-green-600 font-medium">Scan to chat instantly!</p>
               </div>
             </div>
-            
-            <div className="border-t border-white/20 pt-4">
-              <p className="text-sm text-muted-foreground mb-3">
-                Or try our WhatsApp testing sandbox:
-              </p>
-              <a 
-                href="https://api.whatsapp.com/send/?phone=14155238886&text=join+pride-liquid" 
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                <Button size="sm" variant="outline" className="border-green-400 text-green-600 hover:bg-green-50">
-                  <MessageSquare className="mr-2 h-3 w-3" />
-                  Try Sandbox FREE
-                </Button>
-              </a>
-            </div>
+
           </div>
         </div>
       </section>
