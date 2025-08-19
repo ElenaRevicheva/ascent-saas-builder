@@ -15,6 +15,7 @@ import {
   Zap
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 
 interface LearningStats {
   totalLessonsCompleted: number;
@@ -29,33 +30,75 @@ export const LearningAnalytics = () => {
   const { user } = useAuth();
   const { t } = useTranslation();
   const [stats, setStats] = useState<LearningStats>({
-    totalLessonsCompleted: 3,
-    totalTimeSpent: 125,
-    currentStreak: 5,
-    vocabularyLearned: 47,
-    weeklyProgress: 75,
-    averageScore: 87
+    totalLessonsCompleted: 0,
+    totalTimeSpent: 0,
+    currentStreak: 0,
+    vocabularyLearned: 0,
+    weeklyProgress: 0,
+    averageScore: 0
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // Use mock data for now to avoid fetch errors
   useEffect(() => {
     if (!user) return;
     
-    console.log('Loading learning analytics for user:', user.id);
-    
-    // Simulate some realistic progress data
-    const mockStats = {
-      totalLessonsCompleted: Math.floor(Math.random() * 10) + 1,
-      totalTimeSpent: Math.floor(Math.random() * 200) + 50,
-      currentStreak: Math.floor(Math.random() * 14) + 1,
-      vocabularyLearned: Math.floor(Math.random() * 100) + 20,
-      weeklyProgress: Math.floor(Math.random() * 40) + 60,
-      averageScore: Math.floor(Math.random() * 20) + 80
+    const fetchUserLearningStats = async () => {
+      setLoading(true);
+      try {
+        console.log('Loading learning analytics for user:', user.id);
+        
+        // Fetch actual user progress from database
+        const { data: moduleProgress } = await supabase
+          .from('user_module_progress')
+          .select('*')
+          .eq('user_id', user.id);
+
+        const { data: learningSessions } = await supabase
+          .from('learning_sessions')
+          .select('*')
+          .eq('user_id', user.id);
+
+        const { data: learningStreak } = await supabase
+          .from('learning_streaks')
+          .select('current_streak')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        // Calculate stats from actual data
+        const totalLessonsCompleted = moduleProgress?.filter(p => p.is_completed).length || 0;
+        const totalTimeSpent = moduleProgress?.reduce((sum, p) => sum + (p.time_spent_minutes || 0), 0) || 0;
+        const currentStreak = learningStreak?.current_streak || 0;
+        const vocabularyLearned = moduleProgress?.reduce((sum, p) => sum + (p.vocabulary_learned?.length || 0), 0) || 0;
+        
+        // Calculate weekly progress based on recent sessions
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        const recentSessions = learningSessions?.filter(s => new Date(s.created_at) >= oneWeekAgo) || [];
+        const weeklyProgress = Math.min((recentSessions.length * 20), 100); // Cap at 100%
+        
+        // Calculate average score from module progress
+        const completedModules = moduleProgress?.filter(p => p.confidence_score && p.confidence_score > 0) || [];
+        const averageScore = completedModules.length > 0 
+          ? Math.round(completedModules.reduce((sum, p) => sum + (p.confidence_score || 0), 0) / completedModules.length * 100)
+          : 0;
+
+        setStats({
+          totalLessonsCompleted,
+          totalTimeSpent,
+          currentStreak,
+          vocabularyLearned,
+          weeklyProgress,
+          averageScore
+        });
+      } catch (error) {
+        console.error('Error fetching learning stats:', error);
+        // Keep initial zero values on error
+      } finally {
+        setLoading(false);
+      }
     };
-    
-    setStats(mockStats);
-    setLoading(false);
+
+    fetchUserLearningStats();
   }, [user]);
 
   if (loading) {
@@ -158,7 +201,9 @@ export const LearningAnalytics = () => {
             <span className="font-medium text-[hsl(var(--espaluz-primary))]">{t('learningAnalysis.latestAchievement')}</span>
           </div>
           <p className="text-sm text-muted-foreground">
-            🎉 ¡Excelente! You've completed your first lesson!
+            {stats.totalLessonsCompleted > 0 
+              ? "🎉 ¡Excelente! You've completed your first lesson!" 
+              : "Ready to start your Spanish learning journey! 🚀"}
           </p>
         </div>
       </CardContent>
