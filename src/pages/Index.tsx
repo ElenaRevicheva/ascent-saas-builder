@@ -530,30 +530,35 @@ const Index = () => {
                 <h4 className="text-lg font-semibold text-blue-700 mb-3 flex items-center gap-2">
                   🎬 See EspaLuz in Action
                 </h4>
-                <div className="relative rounded-lg overflow-hidden shadow-lg bg-gray-900">
+                <div className="rounded-lg overflow-hidden shadow-lg">
                   <video 
-                    className="w-full h-48 object-cover"
+                    className="w-full h-48"
                     controls
                     playsInline
-                    webkit-playsinline="true"
-                    poster="data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f3f4f6'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial, sans-serif' font-size='16' fill='%236b7280' text-anchor='middle' dy='.3em'%3E🎬 Demo Video Loading...%3C/text%3E%3C/svg%3E"
                     preload="metadata"
-                    controlsList="nodownload"
+                    style={{ backgroundColor: '#000' }}
                   >
                     <source src="https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/generated-videos/demo.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
+                    <p className="flex items-center justify-center h-48 bg-gray-100 text-gray-600 text-center">
+                      🎬 Video loading... If this persists, please check the browser console for errors.
+                    </p>
                   </video>
-                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-                    <div className="bg-white/90 rounded-full p-3 shadow-lg">
-                      <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                  </div>
                 </div>
                 <p className="text-xs text-blue-600 mt-2 text-center">
                   Watch how families use EspaLuz for real-time Spanish learning
                 </p>
+                
+                {/* Fallback: Direct link to test */}
+                <div className="mt-2 text-center">
+                  <a 
+                    href="https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/generated-videos/demo.mp4" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-xs text-blue-500 hover:text-blue-700 underline"
+                  >
+                    🔗 Test direct video link
+                  </a>
+                </div>
               </div>
 
               <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer" className="w-full">
