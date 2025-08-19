@@ -196,7 +196,7 @@ const Index = () => {
             🎯 {t("hero.tryDemo")}
           </Button>
           <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer">
-            <Button size="lg" variant="outline" className="text-base px-6 rounded-full border-2 border-primary text-primary hover:bg-gradient-primary hover:text-white transition-all duration-300">
+            <Button size="lg" className="text-base px-6 rounded-full bg-[#0088cc] hover:bg-[#006ba3] text-white border-0 transition-all duration-300 shadow-lg hover:shadow-xl">
               <Crown className="mr-2 h-4 w-4" />
               🚀 {t("hero.startFull")}
             </Button>
