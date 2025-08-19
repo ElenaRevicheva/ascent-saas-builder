@@ -603,7 +603,7 @@ const Index = () => {
                   <Badge variant="default" className="bg-green-100 text-green-700 border-green-300">Live</Badge>
                 </div>
 
-                <a href="https://wa.me/YOUR_WHATSAPP_NUMBER" target="_blank" rel="noopener noreferrer" className="w-full">
+                <a href="https://wa.me/50766623757" target="_blank" rel="noopener noreferrer" className="w-full">
                   <Button className="w-full bg-green-500 hover:bg-green-600 text-white">
                     <MessageSquare className="mr-2 h-4 w-4" />
                     Open WhatsApp Chat
