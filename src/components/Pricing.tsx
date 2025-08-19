@@ -328,6 +328,28 @@ const Pricing = () => {
           </div>
         </div>
 
+        {/* CTA Section */}
+        <section className="container mx-auto px-4 py-16">
+          <div className="text-center">
+            <h2 className="text-4xl font-bold text-foreground mb-4">Join the Revolution</h2>
+            <div className="grid md:grid-cols-1 gap-6 max-w-2xl mx-auto">
+              <Card className="border-border shadow-card">
+                <CardHeader>
+                  <CardTitle>Experience <span className="text-3xl font-extrabold bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 bg-clip-text text-transparent">AIevolution</span></CardTitle>
+                  <CardDescription>Try our live AIPA and see emotional AI in action</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Link to="/auth">
+                    <Button className="w-full" variant="hero">
+                      Chat Now
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
         <div className="text-center mt-12">
           <div className="mt-8 flex flex-col items-center gap-4">
             <h4 className="text-xl font-bold bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 bg-clip-text text-transparent">Invest & Partner</h4>
