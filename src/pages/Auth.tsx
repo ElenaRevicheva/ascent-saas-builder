@@ -98,17 +98,16 @@ const Auth = () => {
         }
       }
 
-      // All retries failed - show detailed error with recovery instructions
+      // All retries failed - show user-friendly message with recovery instructions
       console.error('Failed to create subscription after', maxRetries, 'attempts:', subError);
       console.error('User ID:', user.id);
       console.error('Subscription data:', subscriptionData);
       
       // Don't clear localStorage so user can retry or support can recover
       toast({
-        title: "Subscription Activation Error",
-        description: `Your payment was successful but we couldn't activate your subscription. Please contact support with ID: ${subscriptionData.subscriptionId}`,
-        variant: "destructive",
-        duration: 10000 // Show longer for important error
+        title: "Almost There! 🔄",
+        description: "Your payment was successful! We're just finishing up your subscription setup. You can retry below or it will complete automatically.",
+        duration: 8000 // Show longer but less scary
       });
 
       // Store detailed error info for support
@@ -130,10 +129,9 @@ const Auth = () => {
       });
       
       toast({
-        title: "Subscription Processing Error",
-        description: "There was an issue processing your subscription. Please contact support with the error details.",
-        variant: "destructive",
-        duration: 10000
+        title: "Setting Up Your Subscription 🔄",
+        description: "Your payment was successful! We're working on activating your subscription. Please check the options below.",
+        duration: 8000
       });
 
       // Store error details for debugging

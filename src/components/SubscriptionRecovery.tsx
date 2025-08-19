@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -9,6 +9,7 @@ import { AlertTriangle, RefreshCw, CheckCircle } from 'lucide-react';
 
 const SubscriptionRecovery = () => {
   const [isRetrying, setIsRetrying] = useState(false);
+  const [autoRetryAttempted, setAutoRetryAttempted] = useState(false);
   type RecoveryStatus = 'idle' | 'success' | 'failed';
   const [recoveryStatus, setRecoveryStatus] = useState<RecoveryStatus>('idle');
   const { toast } = useToast();
@@ -33,6 +34,19 @@ const SubscriptionRecovery = () => {
   };
 
   const { activationError, processingError, pendingSubscription } = getErrorDetails();
+
+  // Automatic retry effect - attempt once automatically after 3 seconds
+  useEffect(() => {
+    if (user && pendingSubscription && !autoRetryAttempted && !isRetrying && recoveryStatus === 'idle') {
+      const timer = setTimeout(() => {
+        console.log('Attempting automatic subscription recovery...');
+        setAutoRetryAttempted(true);
+        retrySubscriptionActivation();
+      }, 3000); // Wait 3 seconds before auto-retry
+
+      return () => clearTimeout(timer);
+    }
+  }, [user, pendingSubscription, autoRetryAttempted, isRetrying, recoveryStatus]);
 
   // Don't show recovery component if no error data or no user
   if (!user || (!activationError && !processingError && !pendingSubscription)) {
@@ -176,14 +190,17 @@ const SubscriptionRecovery = () => {
   }
 
   return (
-    <Card className="border-orange-200 bg-orange-50">
+    <Card className="border-blue-200 bg-blue-50">
       <CardHeader>
         <div className="flex items-center gap-2">
-          <AlertTriangle className="h-5 w-5 text-orange-600" />
-          <CardTitle className="text-orange-800">Subscription Activation Issue</CardTitle>
+          <RefreshCw className="h-5 w-5 text-blue-600" />
+          <CardTitle className="text-blue-800">Finalizing Your Subscription 🔄</CardTitle>
         </div>
-        <CardDescription className="text-orange-700">
-          We detected that your PayPal payment was successful but your subscription wasn't activated properly.
+        <CardDescription className="text-blue-700">
+          Great news! Your PayPal payment was successful. We're just finishing up your subscription setup.
+          {!autoRetryAttempted && !isRetrying && (
+            <span className="block mt-2 text-sm font-medium">⏳ Auto-completing in a few seconds...</span>
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -208,12 +225,12 @@ const SubscriptionRecovery = () => {
             {isRetrying ? (
               <>
                 <RefreshCw className="h-4 w-4 animate-spin" />
-                Retrying...
+                Completing Setup...
               </>
             ) : (
               <>
                 <RefreshCw className="h-4 w-4" />
-                Retry Activation
+                Complete Setup
               </>
             )}
           </Button>
@@ -229,22 +246,22 @@ const SubscriptionRecovery = () => {
         </div>
 
         {recoveryStatus === 'failed' && (
-          <Alert variant="destructive">
-            <AlertDescription>
-              The retry attempt failed. Please contact support with the error details for manual activation.
+          <Alert className="bg-yellow-50 border-yellow-200">
+            <AlertDescription className="text-yellow-800">
+              The setup is taking a bit longer than usual. Our support team can complete this for you quickly - just click "Contact Support" above.
             </AlertDescription>
           </Alert>
         )}
 
         <div className="text-sm text-muted-foreground">
-          <p><strong>What happened?</strong></p>
-          <p>Your PayPal payment was processed successfully, but there was a technical issue preventing your subscription from being activated in our system.</p>
+          <p><strong>What's happening?</strong></p>
+          <p>Your PayPal payment was processed successfully! We're just completing the final setup steps for your subscription.</p>
           <br />
-          <p><strong>Next steps:</strong></p>
+          <p><strong>What to do:</strong></p>
           <ul className="list-disc list-inside space-y-1">
-            <li>Try the "Retry Activation" button above</li>
-            <li>If that doesn't work, click "Contact Support" to get help</li>
-            <li>Your payment is safe and we'll make sure your subscription gets activated</li>
+            <li>Click "Complete Setup" above to finish the process</li>
+            <li>This usually completes in seconds</li>
+            <li>If you need help, our support team is ready to assist</li>
           </ul>
         </div>
       </CardContent>

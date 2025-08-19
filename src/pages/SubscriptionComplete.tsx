@@ -111,23 +111,28 @@ const SubscriptionComplete = () => {
 
         if (subError) {
           console.error('Failed to create subscription:', subError);
-          // Don't show error to user, but log it for recovery
+          // Store error for recovery but show user-friendly message
           localStorage.setItem('subscription-activation-error', JSON.stringify({
             userId: user.id,
             subscriptionId: subscriptionData.subscriptionId,
             error: subError.message,
             timestamp: new Date().toISOString()
           }));
+          
+          toast({
+            title: "Account Created! 🎉",
+            description: "Your account is ready! We're finalizing your subscription - you'll have access in just a moment.",
+          });
         } else {
           console.log('Subscription created successfully');
           // Clear pending subscription data
           localStorage.removeItem('pending-subscription');
+          
+          toast({
+            title: "Account Created Successfully! 🎉",
+            description: "Welcome to EspaLuz! Your subscription is now active.",
+          });
         }
-
-        toast({
-          title: "Account Created Successfully! 🎉",
-          description: "Welcome to EspaLuz! Your subscription is now active.",
-        });
 
         // Redirect to dashboard
         navigate('/dashboard');
