@@ -949,77 +949,75 @@ const Index = () => {
             <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-orange-500 mx-auto rounded-full"></div>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              {/* Founder Introduction */}
-              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-200/30">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-                    <span className="text-white text-xl">🧠</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-purple-700">Solo Founder and AI Entrepreneur</h3>
+          <div className="space-y-8">
+            {/* Founder Introduction */}
+            <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-200/30">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
+                  <span className="text-white text-xl">🧠</span>
                 </div>
-                <h4 className="text-2xl font-bold text-gray-800 mb-3">Elena Revicheva</h4>
-                <p className="text-gray-700 leading-relaxed">
-                  Hi, I'm Elena — founder of <span className="font-semibold text-purple-600">AIdeazz</span>, where I craft emotionally intelligent AI agents to support real human lives.
-                </p>
+                <h3 className="text-xl font-bold text-purple-700">Solo Founder and AI Entrepreneur</h3>
               </div>
+              <h4 className="text-2xl font-bold text-gray-800 mb-3">Elena Revicheva</h4>
+              <p className="text-gray-700 leading-relaxed">
+                Hi, I'm Elena — founder of <span className="font-semibold text-purple-600">AIdeazz</span>, where I craft emotionally intelligent AI agents to support real human lives.
+              </p>
+            </div>
 
-              {/* Journey Story */}
-              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-orange-200/30">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-                    <span className="text-white text-xl">✨</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-orange-700">EspaLuz: A Personal Journey</h3>
+            {/* Journey Story */}
+            <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-orange-200/30">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
+                  <span className="text-white text-xl">✨</span>
                 </div>
-                <p className="text-gray-700 leading-relaxed mb-4">
-                  <span className="font-semibold text-orange-600">EspaLuz is our first graduate.</span> My journey to AIdeazz was deeply personal:
-                </p>
+                <h3 className="text-xl font-bold text-orange-700">EspaLuz: A Personal Journey</h3>
+              </div>
+              <p className="text-gray-700 leading-relaxed mb-4">
+                <span className="font-semibold text-orange-600">EspaLuz is our first graduate.</span> My journey to AIdeazz was deeply personal:
+              </p>
+              
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl mt-1">🇷🇺</span>
+                  <p className="text-gray-700">Former IT executive & CLO in Russia's E-Government</p>
+                </div>
                 
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <span className="text-2xl mt-1">🇷🇺</span>
-                    <p className="text-gray-700">Former IT executive & CLO in Russia's E-Government</p>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl mt-1">✈️</span>
+                  <div className="text-gray-700">
+                    <p className="mb-2">Relocated to Panama in 2022 as a single mother with:</p>
+                    <ul className="ml-4 space-y-1 text-sm">
+                      <li>• My 1-year-old daughter</li>
+                      <li>• Elderly parents (ages 62 & 70)</li>
+                      <li>• Mom spoke Russian-English, dad only English</li>
+                    </ul>
+                    <p className="mt-2 font-medium text-gray-800">This wasn't an adventure — it was a great challenge for all my family.</p>
                   </div>
-                  
-                  <div className="flex items-start gap-3">
-                    <span className="text-2xl mt-1">✈️</span>
-                    <div className="text-gray-700">
-                      <p className="mb-2">Relocated to Panama in 2022 as a single mother with:</p>
-                      <ul className="ml-4 space-y-1 text-sm">
-                        <li>• My 1-year-old daughter</li>
-                        <li>• Elderly parents (ages 62 & 70)</li>
-                        <li>• Mom spoke Russian-English, dad only English</li>
-                      </ul>
-                      <p className="mt-2 font-medium text-gray-800">This wasn't an adventure — it was a great challenge for all my family.</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-3">
-                    <span className="text-2xl mt-1">💡</span>
-                    <div className="text-gray-700">
-                      <p className="mb-2"><span className="font-semibold">Started with zero:</span> no profession left, no Spanish, no network.</p>
-                      <p className="mb-2">Traditional language apps felt cold, robotic — nothing like the warm teacher my three-generation family needed.</p>
-                      <p className="font-medium text-purple-700">AI helped me create EspaLuz AI Family Tutor. AI helped me rebuild myself from scratch. Now I'm sharing that path through the AIdeazz ecosystem for all generations.</p>
-                    </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl mt-1">💡</span>
+                  <div className="text-gray-700">
+                    <p className="mb-2"><span className="font-semibold">Started with zero:</span> no profession left, no Spanish, no network.</p>
+                    <p className="mb-2">Traditional language apps felt cold, robotic — nothing like the warm teacher my three-generation family needed.</p>
+                    <p className="font-medium text-purple-700">AI helped me create EspaLuz AI Family Tutor. AI helped me rebuild myself from scratch. Now I'm sharing that path through the AIdeazz ecosystem for all generations.</p>
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* Call to Action */}
-              <div className="bg-gradient-to-r from-purple-100/80 to-pink-100/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-200/50 text-center">
-                <div className="flex items-center justify-center gap-2 mb-3">
-                  <span className="text-2xl">📇</span>
-                  <h3 className="text-lg font-bold text-purple-700">Connect & Collaborate</h3>
-                </div>
-                <p className="text-gray-700 mb-4">
-                  Scan my card below to connect, collaborate, or join the AIdeazz journey.
-                </p>
-                <p className="text-lg font-semibold text-purple-600">
-                  Have any AIdeazz? Get on the ledger.
-                </p>
+            {/* Call to Action */}
+            <div className="bg-gradient-to-r from-purple-100/80 to-pink-100/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-200/50 text-center">
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <span className="text-2xl">📇</span>
+                <h3 className="text-lg font-bold text-purple-700">Connect & Collaborate</h3>
               </div>
+              <p className="text-gray-700 mb-4">
+                Scan my card below to connect, collaborate, or join the AIdeazz journey.
+              </p>
+              <p className="text-lg font-semibold text-purple-600">
+                Have any AIdeazz? Get on the ledger.
+              </p>
             </div>
 
             {/* QR Code and Visual Elements */}
