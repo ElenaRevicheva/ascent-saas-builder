@@ -537,8 +537,7 @@ const Index = () => {
                     poster="data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f3f4f6'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial, sans-serif' font-size='16' fill='%236b7280' text-anchor='middle' dy='.3em'%3E🎬 Demo Video Loading...%3C/text%3E%3C/svg%3E"
                     preload="metadata"
                   >
-                    <source src="/demo-video.mp4" type="video/mp4" />
-                    <source src="/demo-video.webm" type="video/webm" />
+                    <source src="https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/generated-videos/demo.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                   <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
