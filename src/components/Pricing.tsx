@@ -319,10 +319,10 @@ const Pricing = () => {
           </div>
 
           <div className="text-center mb-16">
-            <h3 className="text-2xl font-bold text-foreground mb-4">
+            <h3 className="text-4xl md:text-5xl font-bold text-foreground mb-8">
               Built Not to Replace People — But to Help Humans Thrive
             </h3>
-            <p className="text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
               AIdeazz empowers human potential through AI that truly understands, adapts, and grows with you. This is AI for human flourishing.
             </p>
           </div>
