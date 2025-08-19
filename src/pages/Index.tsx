@@ -381,7 +381,6 @@ const Index = () => {
           <div className="flex flex-col items-center space-y-6">
             <div className="space-y-2">
               <h3 className="text-2xl md:text-3xl font-bold text-blue-600">🚀 Invite your family!</h3>
-              <p className="text-lg text-purple-700 font-medium">Scan to join our Telegram and start learning together.</p>
             </div>
             
             <div className="relative">
@@ -394,7 +393,7 @@ const Index = () => {
             </div>
             
             <div className="space-y-4">
-              <p className="text-sm text-blue-600 font-semibold bg-blue-50 px-4 py-2 rounded-full border border-blue-200">✨ Scan to join the family! ✨</p>
+              <p className="text-sm text-blue-600 font-semibold bg-blue-50 px-4 py-2 rounded-full border border-blue-200">Scan or scan QR</p>
               <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer">
                 <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
                   <MessageSquare className="mr-3 h-5 w-5" />
