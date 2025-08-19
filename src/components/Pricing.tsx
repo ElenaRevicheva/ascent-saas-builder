@@ -290,9 +290,27 @@ const Pricing = () => {
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-foreground mb-4">The Birthplace of EspaLuz</h2>
             <h3 className="text-2xl font-semibold text-primary mb-6">What is AIdeazz?</h3>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-4">
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-6">
               EspaLuz was born from the <a href="https://www.aideazz.xyz" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold">AIdeazz.xyz</a> ecosystem — a visionary platform being developed for crafting and evolving emotionally intelligent AI Personal Assistants (AIPAs).
             </p>
+            
+            {/* AIPA Demo Video */}
+            <div className="mb-8">
+              <div className="max-w-4xl mx-auto">
+                <h4 className="text-xl font-semibold text-foreground mb-4">See AIPA in Action</h4>
+                <div className="relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-r from-purple-100 to-orange-100 p-1">
+                  <video 
+                    controls 
+                    className="w-full h-auto rounded-md bg-black"
+                    poster=""
+                  >
+                    <source src="https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/generated-videos/demo2.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              </div>
+            </div>
+            
             <div className="bg-gradient-to-r from-purple-50 to-orange-50 border border-purple-200 rounded-lg p-4 max-w-2xl mx-auto">
               <p className="text-purple-800 font-medium">
                 🚧 <strong>Currently in Development</strong> — The full AIdeazz ecosystem is being built to revolutionize how we interact with AI. Get ready for a new era of emotionally intelligent assistants! EspaLuz is our first graduate, showcasing the incredible potential of truly empathetic AI.
