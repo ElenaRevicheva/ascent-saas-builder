@@ -890,9 +890,9 @@ const Index = () => {
       </div>
 
       {/* About the Creator Section */}
-      <section id="about" className="container mx-auto px-4 py-8 mt-2 text-center bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 rounded-3xl shadow-lg">
-        <h2 className="text-3xl font-extrabold text-purple-700 mb-4">About the Creator</h2>
-        <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-6">
+      <section id="about" className="container mx-auto px-4 py-8 mt-2 bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 rounded-3xl shadow-lg">
+        <h2 className="text-3xl font-extrabold text-purple-700 mb-4 text-center">About the Creator</h2>
+        <p className="text-lg text-gray-700 max-w-6xl mx-auto mb-6 text-left leading-relaxed">
           🧠 <span className="font-bold text-purple-700">Solo Founder and AI Entrepreneur: Elena Revicheva</span><br/>
           Hi, I'm Elena — founder of AIdeazz, where I craft emotionally intelligent AI agents to support real human lives.<br/><br/>
           <span className="font-bold text-orange-700">EspaLuz is our first graduate. My journey to AIdeazz was deeply personal:</span><br/><br/>
@@ -901,8 +901,10 @@ const Index = () => {
           💡 Started with zero: no profession left, no Spanish, no network. Traditional language apps felt cold, robotic — nothing like the warm teacher my three-generation family needed and can not help on the go, right here, right now. AI helped me to create EspaLuz AI Family Tutor on the go. AI helped me to rebuild myself from scratch. Now I'm sharing that path through AIdeazz ecosystem for all generations.<br/><br/>
           📇 Scan my card below to connect, collaborate, or join the AIdeazz journey. Have any AIdeazz? Get on the ledger.
         </p>
-        <img src={creatorQr} alt="Creator Business Card QR" className="mx-auto w-48 h-48 object-contain rounded-2xl shadow-xl border-4 border-purple-300 mb-4" />
-        <p className="text-md text-purple-600 font-semibold">Let's build the future of learning together!</p>
+        <div className="text-center">
+          <img src={creatorQr} alt="Creator Business Card QR" className="mx-auto w-48 h-48 object-contain rounded-2xl shadow-xl border-4 border-purple-300 mb-4" />
+          <p className="text-md text-purple-600 font-semibold">Let's build the future of learning together!</p>
+        </div>
       </section>
 
       <Footer />
