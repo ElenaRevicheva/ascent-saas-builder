@@ -132,60 +132,97 @@ const Index = () => {
         <div className="mx-auto w-32 h-32 mb-4 flex items-center justify-center">
           <img src={brandAvatar2} alt="EspaLuz Avatar" className="w-full h-full rounded-full border-4 border-primary shadow-glow object-cover bg-white" />
         </div>
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-relaxed bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 bg-clip-text text-transparent drop-shadow px-4 py-2">
-          Meet EspaLuz — Your Family’s First Emotionally Intelligent Language Coach
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-8 leading-tight bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 bg-clip-text text-transparent drop-shadow-lg px-4 py-2 tracking-tight">
+          Meet EspaLuz — Your Family's First Emotionally Intelligent Language Coach
         </h1>
-        <p className="text-base text-foreground mb-4 max-w-3xl mx-auto leading-relaxed font-medium">
-          {t("hero.subtitle")}<br/>
-          <span className="text-primary font-semibold">EspaLuz</span> {t("hero.description")}
-        </p>
-        <div className="max-w-3xl mx-auto mb-6 space-y-4">
-          <div className="flex items-center justify-start text-left">
-            <span className="text-3xl mr-3">🧠</span>
-            <div>
-              <span className="font-bold text-orange-600 text-lg">{t("hero.trulyIntelligent")}</span>
-              <span className="text-muted-foreground text-lg"> — {t("hero.trulyIntelligentDesc")}</span>
+        <div className="text-lg md:text-xl text-foreground mb-8 max-w-4xl mx-auto leading-relaxed font-medium space-y-3">
+          <p className="text-center">
+            {t("hero.subtitle")}
+          </p>
+          <p className="text-center">
+            <span className="text-primary font-bold text-xl">EspaLuz</span> {t("hero.description")}
+          </p>
+        </div>
+        <div className="max-w-4xl mx-auto mb-8 space-y-6">
+          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-orange-200/50 hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center justify-start text-left">
+              <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-lg mr-4 flex-shrink-0">
+                <span className="text-white text-2xl">🧠</span>
+              </div>
+              <div>
+                <h3 className="font-bold text-orange-600 text-xl mb-2">{t("hero.trulyIntelligent")}</h3>
+                <p className="text-gray-700 text-lg leading-relaxed">{t("hero.trulyIntelligentDesc")}</p>
+              </div>
             </div>
           </div>
           
-          <div className="flex items-center justify-start text-left">
-            <span className="text-3xl mr-3">💬</span>
-            <div>
-              <span className="font-bold text-purple-600 text-lg">{t("hero.humanLikeSupport")}</span>
-              <span className="text-muted-foreground text-lg"> — {t("hero.humanLikeSupportDesc")}</span>
+          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-200/50 hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center justify-start text-left">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg mr-4 flex-shrink-0">
+                <span className="text-white text-2xl">💬</span>
+              </div>
+              <div>
+                <h3 className="font-bold text-purple-600 text-xl mb-2">{t("hero.humanLikeSupport")}</h3>
+                <p className="text-gray-700 text-lg leading-relaxed">{t("hero.humanLikeSupportDesc")}</p>
+              </div>
             </div>
           </div>
           
-          <div className="flex items-center justify-start text-left">
-            <span className="text-3xl mr-3">📱</span>
-            <div>
-              <span className="font-bold text-blue-600 text-lg">{t("hero.spanishCompanion")}</span>
-              <span className="text-muted-foreground text-lg"> — {t("hero.spanishCompanionDesc")}</span>
+          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-blue-200/50 hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center justify-start text-left">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg mr-4 flex-shrink-0">
+                <span className="text-white text-2xl">📱</span>
+              </div>
+              <div>
+                <h3 className="font-bold text-blue-600 text-xl mb-2">{t("hero.spanishCompanion")}</h3>
+                <p className="text-gray-700 text-lg leading-relaxed">{t("hero.spanishCompanionDesc")}</p>
+              </div>
             </div>
           </div>
           
-          <div className="flex items-start justify-start text-left">
-            <span className="text-3xl mr-3">🌍</span>
-            <div>
-              <span className="font-bold text-green-600 text-lg">{t("hero.builtForAdventures")}</span>
-              <span className="text-muted-foreground text-lg"> — {t("hero.builtForAdventuresDesc")}</span>
-              <div className="mt-2 ml-4">
-                <p className="text-orange-600 leading-relaxed">{t("hero.englishSpeakers")}</p>
-                <p className="text-purple-600 mt-2">{t("hero.spanishSpeakers")}</p>
+          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-green-200/50 hover:shadow-xl transition-all duration-300">
+            <div className="flex items-start justify-start text-left">
+              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center shadow-lg mr-4 flex-shrink-0">
+                <span className="text-white text-2xl">🌍</span>
+              </div>
+              <div>
+                <h3 className="font-bold text-green-600 text-xl mb-2">{t("hero.builtForAdventures")}</h3>
+                <p className="text-gray-700 text-lg leading-relaxed mb-4">{t("hero.builtForAdventuresDesc")}</p>
+                <div className="ml-4 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                    <p className="text-orange-600 leading-relaxed font-medium">{t("hero.englishSpeakers")}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                    <p className="text-purple-600 leading-relaxed font-medium">{t("hero.spanishSpeakers")}</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <p className="text-lg text-muted-foreground mb-4 max-w-2xl mx-auto">
-          ✨ {t("hero.speakNaturally")}
-        </p>
-        <p className="text-lg text-orange-700 font-semibold mb-4 max-w-2xl mx-auto">
-          ⚡ {t("hero.startSpeaking")}
-        </p>
-        <p className="text-lg text-purple-700 font-semibold max-w-2xl mx-auto">
-          💡 Because language is more than words — it’s emotional.<br/>
-          And EspaLuz is the first AI tutor that truly gets that.
-        </p>
+        <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-orange-200/30 max-w-3xl mx-auto mb-6">
+          <div className="space-y-4 text-center">
+            <p className="text-xl text-gray-700 font-medium flex items-center justify-center gap-2">
+              <span className="text-2xl">✨</span>
+              {t("hero.speakNaturally")}
+            </p>
+            <p className="text-xl text-orange-700 font-bold flex items-center justify-center gap-2">
+              <span className="text-2xl">⚡</span>
+              {t("hero.startSpeaking")}
+            </p>
+            <div className="border-t border-gray-200 pt-4">
+              <p className="text-xl text-purple-700 font-bold leading-relaxed">
+                <span className="text-2xl mr-2">💡</span>
+                Because language is more than words — it's <span className="text-pink-600">emotional</span>.
+              </p>
+              <p className="text-lg text-gray-600 mt-2">
+                And <span className="font-bold text-primary">EspaLuz</span> is the first AI tutor that truly gets that.
+              </p>
+            </div>
+          </div>
+        </div>
         <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6 mb-4">
           <Button 
             onClick={handleStartDemo}
@@ -386,61 +423,74 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="container mx-auto px-4 py-16">
-        <div className="text-center mb-12">
-          <Badge variant="outline" className="mb-4">Living Proof of Concept</Badge>
-          <h2 className="text-4xl font-bold text-foreground mb-4">
+      <section id="features" className="container mx-auto px-4 py-20 bg-gradient-to-br from-blue-50/50 via-white to-purple-50/50 rounded-3xl shadow-lg">
+        <div className="text-center mb-16">
+          <Badge variant="outline" className="mb-6 text-lg px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0">
+            Living Proof of Concept
+          </Badge>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-foreground mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
             EspaLuz - AI Family Tutor
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Your bilingual AI family tutor — emotionally intelligent, culturally aware, and ready to help expat families thrive in Spanish-speaking countries, Spanish speakers upgrading their English, and travelers exploring new cultures.
+          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full mb-6"></div>
+          <p className="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed font-medium">
+            Your bilingual AI family tutor — <span className="font-bold text-blue-600">emotionally intelligent</span>, 
+            <span className="font-bold text-purple-600"> culturally aware</span>, and ready to help expat families thrive in Spanish-speaking countries, 
+            Spanish speakers upgrading their English, and travelers exploring new cultures.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <Card className="text-center border-border shadow-card">
-            <CardHeader>
-              <Heart className="h-8 w-8 text-red-500 mx-auto mb-2" />
-              <CardTitle className="text-lg">Emotionally Intelligent</CardTitle>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          <Card className="text-center border-2 border-red-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm">
+            <CardHeader className="pb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <Heart className="h-8 w-8 text-white" />
+              </div>
+              <CardTitle className="text-xl font-bold text-red-600 mb-2">Emotionally Intelligent</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-gray-700 leading-relaxed font-medium">
                 Understands emotional challenges of cultural adaptation and family transitions
               </p>
             </CardContent>
           </Card>
 
-          <Card className="text-center border-border shadow-card">
-            <CardHeader>
-              <Globe className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-              <CardTitle className="text-lg">Bilingual Support</CardTitle>
+          <Card className="text-center border-2 border-blue-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm">
+            <CardHeader className="pb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <Globe className="h-8 w-8 text-white" />
+              </div>
+              <CardTitle className="text-xl font-bold text-blue-600 mb-2">Bilingual Support</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-gray-700 leading-relaxed font-medium">
                 Fluent in English, Spanish, and Russian with instant translation
               </p>
             </CardContent>
           </Card>
 
-          <Card className="text-center border-border shadow-card">
-            <CardHeader>
-              <Users className="h-8 w-8 text-green-500 mx-auto mb-2" />
-              <CardTitle className="text-lg">Family-Focused</CardTitle>
+          <Card className="text-center border-2 border-green-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm">
+            <CardHeader className="pb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <Users className="h-8 w-8 text-white" />
+              </div>
+              <CardTitle className="text-xl font-bold text-green-600 mb-2">Family-Focused</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-gray-700 leading-relaxed font-medium">
                 Personalized support for both children and adults navigating new environments
               </p>
             </CardContent>
           </Card>
 
-          <Card className="text-center border-border shadow-card">
-            <CardHeader>
-              <MessageSquare className="h-8 w-8 text-purple-500 mx-auto mb-2" />
-              <CardTitle className="text-lg">Real-time Chat</CardTitle>
+          <Card className="text-center border-2 border-purple-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm">
+            <CardHeader className="pb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <MessageSquare className="h-8 w-8 text-white" />
+              </div>
+              <CardTitle className="text-xl font-bold text-purple-600 mb-2">Real-time Chat</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-gray-700 leading-relaxed font-medium">
                 Voice, text, and image support with avatar videos for children
               </p>
             </CardContent>
@@ -890,20 +940,109 @@ const Index = () => {
       </div>
 
       {/* About the Creator Section */}
-      <section id="about" className="container mx-auto px-4 py-8 mt-2 bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 rounded-3xl shadow-lg">
-        <h2 className="text-3xl font-extrabold text-purple-700 mb-4 text-center">About the Creator</h2>
-        <p className="text-lg text-gray-700 max-w-6xl mx-auto mb-6 text-left leading-relaxed">
-          🧠 <span className="font-bold text-purple-700">Solo Founder and AI Entrepreneur: Elena Revicheva</span><br/>
-          Hi, I'm Elena — founder of AIdeazz, where I craft emotionally intelligent AI agents to support real human lives.<br/><br/>
-          <span className="font-bold text-orange-700">EspaLuz is our first graduate. My journey to AIdeazz was deeply personal:</span><br/><br/>
-          🇷🇺 Former IT exec & CLO in Russia's E-Government.<br/>
-          ✈️ Relocated to Panama in 2022 as a single mother with my 1-year-old daughter and elderly parents (ages 62 & 70) — my mom spoke Russian-English, my dad only English. This wasn't an adventure, it was a great challenge for all my family.<br/>
-          💡 Started with zero: no profession left, no Spanish, no network. Traditional language apps felt cold, robotic — nothing like the warm teacher my three-generation family needed and can not help on the go, right here, right now. AI helped me to create EspaLuz AI Family Tutor on the go. AI helped me to rebuild myself from scratch. Now I'm sharing that path through AIdeazz ecosystem for all generations.<br/><br/>
-          📇 Scan my card below to connect, collaborate, or join the AIdeazz journey. Have any AIdeazz? Get on the ledger.
-        </p>
-        <div className="text-center">
-          <img src={creatorQr} alt="Creator Business Card QR" className="mx-auto w-48 h-48 object-contain rounded-2xl shadow-xl border-4 border-purple-300 mb-4" />
-          <p className="text-md text-purple-600 font-semibold">Let's build the future of learning together!</p>
+      <section id="about" className="container mx-auto px-4 py-16 mt-8 bg-gradient-to-br from-purple-50/80 via-pink-50/80 to-orange-50/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-purple-200/50">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent mb-4 drop-shadow-sm">
+              About the Creator
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-orange-500 mx-auto rounded-full"></div>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-8">
+              {/* Founder Introduction */}
+              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-200/30">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
+                    <span className="text-white text-xl">🧠</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-purple-700">Solo Founder and AI Entrepreneur</h3>
+                </div>
+                <h4 className="text-2xl font-bold text-gray-800 mb-3">Elena Revicheva</h4>
+                <p className="text-gray-700 leading-relaxed">
+                  Hi, I'm Elena — founder of <span className="font-semibold text-purple-600">AIdeazz</span>, where I craft emotionally intelligent AI agents to support real human lives.
+                </p>
+              </div>
+
+              {/* Journey Story */}
+              <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-orange-200/30">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
+                    <span className="text-white text-xl">✨</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-orange-700">EspaLuz: A Personal Journey</h3>
+                </div>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  <span className="font-semibold text-orange-600">EspaLuz is our first graduate.</span> My journey to AIdeazz was deeply personal:
+                </p>
+                
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl mt-1">🇷🇺</span>
+                    <p className="text-gray-700">Former IT executive & CLO in Russia's E-Government</p>
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl mt-1">✈️</span>
+                    <div className="text-gray-700">
+                      <p className="mb-2">Relocated to Panama in 2022 as a single mother with:</p>
+                      <ul className="ml-4 space-y-1 text-sm">
+                        <li>• My 1-year-old daughter</li>
+                        <li>• Elderly parents (ages 62 & 70)</li>
+                        <li>• Mom spoke Russian-English, dad only English</li>
+                      </ul>
+                      <p className="mt-2 font-medium text-gray-800">This wasn't an adventure — it was a great challenge for all my family.</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl mt-1">💡</span>
+                    <div className="text-gray-700">
+                      <p className="mb-2"><span className="font-semibold">Started with zero:</span> no profession left, no Spanish, no network.</p>
+                      <p className="mb-2">Traditional language apps felt cold, robotic — nothing like the warm teacher my three-generation family needed.</p>
+                      <p className="font-medium text-purple-700">AI helped me create EspaLuz AI Family Tutor. AI helped me rebuild myself from scratch. Now I'm sharing that path through the AIdeazz ecosystem for all generations.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Call to Action */}
+              <div className="bg-gradient-to-r from-purple-100/80 to-pink-100/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-200/50 text-center">
+                <div className="flex items-center justify-center gap-2 mb-3">
+                  <span className="text-2xl">📇</span>
+                  <h3 className="text-lg font-bold text-purple-700">Connect & Collaborate</h3>
+                </div>
+                <p className="text-gray-700 mb-4">
+                  Scan my card below to connect, collaborate, or join the AIdeazz journey.
+                </p>
+                <p className="text-lg font-semibold text-purple-600">
+                  Have any AIdeazz? Get on the ledger.
+                </p>
+              </div>
+            </div>
+
+            {/* QR Code and Visual Elements */}
+            <div className="text-center space-y-6">
+              <div className="relative">
+                <div className="absolute -inset-4 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 rounded-3xl blur opacity-20 animate-pulse"></div>
+                <img 
+                  src={creatorQr} 
+                  alt="Creator Business Card QR" 
+                  className="relative mx-auto w-64 h-64 md:w-72 md:h-72 object-contain rounded-2xl shadow-2xl border-4 border-purple-400 hover:border-purple-500 hover:shadow-vibrant hover:scale-105 transition-all duration-300 bg-white/95 backdrop-blur-sm ring-2 ring-purple-200 hover:ring-purple-300" 
+                />
+              </div>
+              
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-200/30">
+                <h4 className="text-xl font-bold text-purple-600 mb-2">Let's Build Together!</h4>
+                <p className="text-gray-700 text-lg leading-relaxed">
+                  🚀 The future of learning is <span className="font-semibold text-orange-600">emotionally intelligent</span>, 
+                  <span className="font-semibold text-purple-600"> culturally aware</span>, and 
+                  <span className="font-semibold text-pink-600"> family-focused</span>.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

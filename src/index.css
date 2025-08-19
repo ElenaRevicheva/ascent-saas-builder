@@ -124,6 +124,77 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+  }
+
+  /* Enhanced typography */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-extrabold;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+  }
+
+  h1 {
+    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl;
+  }
+
+  h2 {
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl;
+  }
+
+  h3 {
+    @apply text-xl sm:text-2xl md:text-3xl;
+  }
+
+  h4 {
+    @apply text-lg sm:text-xl md:text-2xl;
+  }
+
+  p {
+    @apply leading-relaxed text-base sm:text-lg;
+  }
+
+  /* Mobile-first responsive text */
+  @media (max-width: 640px) {
+    h1 {
+      line-height: 1.1;
+    }
+    
+    h2 {
+      line-height: 1.15;
+    }
+    
+    p {
+      @apply text-sm leading-relaxed;
+    }
+  }
+
+  /* Smooth transitions for interactive elements */
+  .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Enhanced visual hierarchy */
+  .text-emphasis {
+    @apply font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+  }
+
+  .section-divider {
+    @apply w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full;
+  }
+
+  /* Improved readability */
+  .prose-enhanced {
+    @apply leading-relaxed text-gray-700;
+  }
+
+  .prose-enhanced strong {
+    @apply font-bold text-gray-900;
+  }
+
+  /* Card hover effects */
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-2xl hover:scale-105;
   }
 }
 
