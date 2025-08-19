@@ -376,11 +376,33 @@ const Index = () => {
       </section>
 
       {/* QR Code Viral Loop Section */}
-      <section className="container mx-auto px-4 py-8 text-center">
-        <div className="flex flex-col items-center">
-          <img src={espaluzQr} alt="EspaLuz QR" className="w-48 h-48 object-contain rounded-2xl shadow-xl border-4 border-pink-300 mb-4" />
-          <h3 className="text-2xl font-bold text-orange-600 mb-2">Invite your family!</h3>
-          <p className="text-lg text-purple-700 mb-2">Scan to join our Telegram and start learning together.</p>
+      <section className="container mx-auto px-4 py-12 text-center">
+        <div className="bg-gradient-to-br from-blue-50/80 via-white/80 to-purple-50/80 backdrop-blur-sm rounded-3xl p-8 max-w-4xl mx-auto border-2 border-blue-200 shadow-2xl">
+          <div className="flex flex-col items-center space-y-6">
+            <div className="space-y-2">
+              <h3 className="text-2xl md:text-3xl font-bold text-blue-600">🚀 Invite your family!</h3>
+              <p className="text-lg text-purple-700 font-medium">Scan to join our Telegram and start learning together.</p>
+            </div>
+            
+            <div className="relative">
+              <div className="absolute -inset-2 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl blur opacity-30 animate-pulse"></div>
+              <img 
+                src={espaluzQr} 
+                alt="EspaLuz Telegram QR Code" 
+                className="relative w-56 h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain rounded-2xl shadow-magical border-4 border-blue-400 hover:border-blue-500 hover:shadow-vibrant hover:scale-105 transition-all duration-300 bg-white/95 backdrop-blur-sm ring-2 ring-blue-200 hover:ring-blue-300" 
+              />
+            </div>
+            
+            <div className="space-y-4">
+              <p className="text-sm text-blue-600 font-semibold bg-blue-50 px-4 py-2 rounded-full border border-blue-200">✨ Scan to join the family! ✨</p>
+              <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer">
+                <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                  <MessageSquare className="mr-3 h-5 w-5" />
+                  🚀 Join Telegram Family
+                </Button>
+              </a>
+            </div>
+          </div>
         </div>
       </section>
 
