@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { feedbackSchema } from "@/lib/validations";
 
 import brandAvatar2 from '@/assets/brand-avatar-2.jpg';
 import espaluzQr from '@/assets/espaluz-qr.jpg';
@@ -34,12 +35,15 @@ function FeedbackForm() {
     setSubmitStatus('idle');
 
     try {
+      // Validate form data
+      const validatedData = feedbackSchema.parse(formData);
+
       const { error } = await supabase
         .from('feedback')
         .insert([
           {
-            email: formData.email || null,
-            message: formData.message
+            email: validatedData.email || null,
+            message: validatedData.message
           }
         ]);
 
@@ -48,9 +52,13 @@ function FeedbackForm() {
       setSubmitStatus('success');
       // Reset form
       setFormData({ email: '', message: '' });
-    } catch (error) {
-      console.error('Error submitting feedback:', error);
-      setSubmitStatus('error');
+    } catch (error: any) {
+      if (error.errors) {
+        // Zod validation errors
+        setSubmitStatus('error');
+      } else {
+        setSubmitStatus('error');
+      }
     } finally {
       setIsSubmitting(false);
     }

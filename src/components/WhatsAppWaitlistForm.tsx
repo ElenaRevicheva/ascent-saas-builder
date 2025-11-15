@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { MessageSquare } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { waitlistSchema } from "@/lib/validations";
 
 export function WhatsAppWaitlistForm() {
   const [formData, setFormData] = useState({
@@ -18,13 +19,16 @@ export function WhatsAppWaitlistForm() {
     setIsSubmitting(true);
 
     try {
+      // Validate form data
+      const validatedData = waitlistSchema.parse(formData);
+
       const { error } = await supabase
         .from('whatsapp_waitlist')
         .insert([
           {
-            email: formData.email,
-            name: formData.name,
-            phone: formData.phone || null
+            email: validatedData.email,
+            name: validatedData.name,
+            phone: validatedData.phone || null
           }
         ]);
 
@@ -37,13 +41,22 @@ export function WhatsAppWaitlistForm() {
 
       // Reset form
       setFormData({ email: '', name: '', phone: '' });
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
+    } catch (error: any) {
+      if (error.errors) {
+        // Zod validation errors
+        const firstError = error.errors[0];
+        toast({
+          title: "Validation Error",
+          description: firstError.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Something went wrong. Please try again.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }

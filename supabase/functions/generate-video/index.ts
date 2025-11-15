@@ -15,19 +15,13 @@ serve(async (req) => {
   try {
     const { videoScript, voice = "es", userId } = await req.json();
     
-    console.log(`🎬 FULL REQUEST BODY:`, JSON.stringify({ videoScript, voice, userId }));
-    console.log(`🎬 VIDEO SCRIPT TYPE:`, typeof videoScript);
-    console.log(`🎬 VIDEO SCRIPT VALUE:`, videoScript);
-    console.log(`🎬 VIDEO SCRIPT LENGTH:`, videoScript ? videoScript.length : 'NULL');
-    
-    if (!videoScript) {
-      console.log(`❌ No video script provided!`);
-      throw new Error('Video script is required');
+    if (!videoScript || !userId) {
+      throw new Error('Video script and userId are required');
     }
 
-    console.log(`🎬 Processing video request for user: ${userId}`);
-    console.log(`📝 Video script length: ${videoScript.length} characters`);
-    console.log(`🎭 Voice model: ${voice}`);
+    if (videoScript.length > 10000) {
+      throw new Error('Video script exceeds maximum length of 10000 characters');
+    }
 
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -36,12 +30,7 @@ serve(async (req) => {
 
     // Use the known working avatar video directly since file copying doesn't work with actual content
     const userAvatarUrl = 'https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/avatars/5fa36928-3201-4c2f-bc27-c30b7a6d36c6/avatar.mp4';
-    console.log('🎬 Using known working avatar video:', userAvatarUrl);
 
-    // Extract video script from markers (following Telegram bot logic)
-    console.log('🎬 Received full content:', videoScript);
-    console.log('🎬 Full content length:', videoScript.length);
-    
     // Extract ONLY the text between [VIDEO SCRIPT START] and [VIDEO SCRIPT END] markers
     let scriptToUse = '';
     const videoStartMarker = '[VIDEO SCRIPT START]';
@@ -52,26 +41,20 @@ serve(async (req) => {
     
     if (startIndex !== -1 && endIndex !== -1 && endIndex > startIndex) {
       scriptToUse = videoScript.substring(startIndex + videoStartMarker.length, endIndex).trim();
-      console.log('🎬 Extracted video script from markers:', scriptToUse);
     } else {
       // Fallback if no markers found
-      console.log('🎬 No video script markers found, using default');
       scriptToUse = 'Español: Gracias por practicar conmigo. Me encanta ayudarte con español.\nEnglish: Thank you for practicing with me. I love helping you with Spanish.';
     }
-    
-    console.log('🎬 Using script:', scriptToUse);
 
     // Clean text for TTS
     const cleanedScript = cleanTextForTTS(scriptToUse);
-    console.log(`🧹 Cleaned script for TTS: ${cleanedScript}`);
 
     let base64Audio = '';
     
     try {
       base64Audio = await generateVideoChunkAudio(cleanedScript, voice);
-      console.log('✅ Video audio generated successfully');
     } catch (error) {
-      console.error(`❌ Video audio generation failed:`, error);
+      // Silent fail for audio generation
     }
 
     // Calculate estimated duration (rough estimate)
@@ -85,8 +68,6 @@ serve(async (req) => {
       estimatedDuration,
       processedText: scriptToUse.length > 0 ? scriptToUse.substring(0, 100) + '...' : ''
     };
-
-    console.log('🎬 Video generation completed successfully');
 
     return new Response(JSON.stringify(response), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
