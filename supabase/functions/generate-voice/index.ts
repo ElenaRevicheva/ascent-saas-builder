@@ -14,14 +14,16 @@ serve(async (req) => {
   try {
     const { text, voice = "es", userId } = await req.json();
     
-    if (!text) {
-      throw new Error('Text is required');
+    if (!text || !userId) {
+      throw new Error('Text and userId are required');
+    }
+
+    if (text.length > 5000) {
+      throw new Error('Text exceeds maximum length of 5000 characters');
     }
 
     // Clean text for TTS
     const cleanedText = cleanTextForTTS(text);
-    
-    console.log('🎵 Generating voice for text:', cleanedText);
     
     // Generate audio using OpenAI TTS with Nova voice
     const base64Audio = await generateOpenAIVoice(cleanedText);

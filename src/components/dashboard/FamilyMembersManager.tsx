@@ -11,6 +11,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import { familyMemberSchema } from '@/lib/validations';
 
 interface FamilyMember {
   id: string;
@@ -95,19 +96,14 @@ export const FamilyMembersManager = () => {
   };
 
   const saveFamilyMember = async () => {
-    console.log('Attempting to save family member:', formData);
-    if (!formData.name?.trim()) {
-      toast.error('Name is required');
-      return;
-    }
-
     setLoading(true);
     try {
-      const memberData = {
+      // Prepare data for validation
+      const dataToValidate = {
         name: formData.name!,
         role: formData.role || 'adult',
         age: formData.age,
-        learning_level: formData.learning_level || 'beginner',
+        learning_level: (formData.learning_level || 'beginner') as 'beginner' | 'intermediate' | 'advanced',
         interests: typeof formData.interests === 'string' 
           ? formData.interests.split(',').map(s => s.trim()).filter(s => s)
           : Array.isArray(formData.interests) ? formData.interests : [],
@@ -117,33 +113,53 @@ export const FamilyMembersManager = () => {
         name_variants: typeof formData.name_variants === 'string'
           ? formData.name_variants.split(',').map(s => s.trim()).filter(s => s)
           : Array.isArray(formData.name_variants) ? formData.name_variants : [],
-        is_active: formData.is_active !== undefined ? formData.is_active : true,
+        is_active: formData.is_active !== undefined ? formData.is_active : true
+      };
+
+      // Validate the data
+      const validatedData = familyMemberSchema.parse(dataToValidate);
+
+      const finalMemberData = {
+        name: validatedData.name!,
+        role: validatedData.role!,
+        age: validatedData.age,
+        learning_level: validatedData.learning_level,
+        interests: validatedData.interests,
+        tone: validatedData.tone!,
+        spanish_preference: validatedData.spanish_preference,
+        english_preference: validatedData.english_preference,
+        name_variants: validatedData.name_variants,
+        is_active: validatedData.is_active,
         user_id: user?.id!
       };
 
       if (editingMember) {
         const { error } = await supabase
           .from('family_members')
-          .update(memberData)
+          .update(finalMemberData)
           .eq('id', editingMember.id);
         
         if (error) throw error;
-        toast.success('Family member updated successfully');
       } else {
         const { error } = await supabase
           .from('family_members')
-          .insert(memberData);
+          .insert([finalMemberData]);
         
         if (error) throw error;
-        toast.success('Family member added successfully');
       }
 
-      await loadFamilyMembers();
-      resetForm();
+      toast.success(editingMember ? 'Family member updated!' : 'Family member added!');
       setIsDialogOpen(false);
-    } catch (error) {
-      console.error('Error saving family member:', error);
-      toast.error('Error saving family member');
+      resetForm();
+      await loadFamilyMembers();
+    } catch (error: any) {
+      if (error.errors) {
+        // Zod validation errors
+        const firstError = error.errors[0];
+        toast.error(firstError.message);
+      } else {
+        toast.error('Error saving family member');
+      }
     } finally {
       setLoading(false);
     }

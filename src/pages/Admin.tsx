@@ -10,12 +10,13 @@ import { useToast } from '@/hooks/use-toast';
 import { manuallyActivateSubscription } from '@/utils/subscriptionRecovery';
 import SubscriptionRecoveryTool from '@/components/admin/SubscriptionRecoveryTool';
 
-const ADMIN_EMAIL = 'your-admin@email.com'; // TODO: Replace with your admin email
 const PAGE_SIZE = 10;
 
 const Admin = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [checkingAdmin, setCheckingAdmin] = useState(true);
   const [profiles, setProfiles] = useState([]);
   const [subscriptions, setSubscriptions] = useState({});
   const [loading, setLoading] = useState(true);
@@ -30,9 +31,38 @@ const Admin = () => {
   const [recoveryPayPalId, setRecoveryPayPalId] = useState('');
   const [recoveryLoading, setRecoveryLoading] = useState(false);
 
+  // Check if user is admin on mount
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (!user) {
+        setCheckingAdmin(false);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .eq('role', 'admin')
+          .single();
+
+        setIsAdmin(!!data && !error);
+      } catch (error) {
+        setIsAdmin(false);
+      } finally {
+        setCheckingAdmin(false);
+      }
+    };
+
+    checkAdminStatus();
+  }, [user]);
+
   // Fetch paginated, filtered profiles
   useEffect(() => {
     const fetchProfiles = async () => {
+      if (!isAdmin) return;
+      
       setLoading(true);
       setError('');
       try {
@@ -67,10 +97,8 @@ const Admin = () => {
         setLoading(false);
       }
     };
-    if (user && user.email === ADMIN_EMAIL) {
-      fetchProfiles();
-    }
-  }, [user, search, page]);
+    fetchProfiles();
+  }, [user, search, page, isAdmin]);
 
   // Delete profile
   const handleDelete = async (id: string) => {
@@ -87,11 +115,31 @@ const Admin = () => {
     }
   };
 
-  if (!user) {
-    return <div className="p-8 text-center">Please sign in as admin to view this page.</div>;
+  if (checkingAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="pt-6">
+            <p>Checking permissions...</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
-  if (user.email !== ADMIN_EMAIL) {
-    return <div className="p-8 text-center text-red-500">Access denied. You are not the admin.</div>;
+
+  if (!user || !isAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Access Denied</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p>You must be an administrator to access this page.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return (
