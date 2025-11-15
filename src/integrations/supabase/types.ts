@@ -378,7 +378,7 @@ export type Database = {
           action: string
           created_at: string | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           resource_id: string | null
           resource_type: string
           user_agent: string | null
@@ -388,7 +388,7 @@ export type Database = {
           action: string
           created_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           resource_id?: string | null
           resource_type: string
           user_agent?: string | null
@@ -398,7 +398,7 @@ export type Database = {
           action?: string
           created_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           resource_id?: string | null
           resource_type?: string
           user_agent?: string | null
@@ -618,18 +618,9 @@ export type Database = {
         Args: { from_user_id: string; to_user_id: string }
         Returns: boolean
       }
-      force_copy_avatar_content: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      generate_connection_code: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      generate_referral_code: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      force_copy_avatar_content: { Args: never; Returns: boolean }
+      generate_connection_code: { Args: never; Returns: string }
+      generate_referral_code: { Args: never; Returns: string }
       get_user_subscription_status: {
         Args: { user_uuid: string }
         Returns: {
@@ -647,10 +638,7 @@ export type Database = {
         }
         Returns: boolean
       }
-      is_current_user_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      is_current_user_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
