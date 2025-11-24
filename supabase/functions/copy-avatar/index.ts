@@ -12,10 +12,31 @@ serve(async (req) => {
   }
 
   try {
+    // Extract user ID from JWT token
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new Error('Missing authorization header');
+    }
+
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    // Verify user authentication and admin role
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      throw new Error('Unauthorized');
+    }
+
+    // Check if user is admin
+    const { data: roleData, error: roleError } = await supabase
+      .rpc('has_role', { _user_id: user.id, _role: 'admin' });
+
+    if (roleError || !roleData) {
+      throw new Error('Admin access required');
+    }
 
     const { fromUserId, toUserId } = await req.json();
 
@@ -23,10 +44,14 @@ serve(async (req) => {
       throw new Error('Missing fromUserId or toUserId');
     }
 
-    console.log(`Copying avatar from ${fromUserId} to ${toUserId}`);
+    console.log(`Admin ${user.id} copying avatar from ${fromUserId} to ${toUserId}`);
+
+    // Use service role for storage operations
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
 
     // First, check if the source file exists
-    const { data: sourceList, error: listError } = await supabase.storage
+    const { data: sourceList, error: listError } = await supabaseService.storage
       .from('avatars')
       .list(fromUserId, { limit: 10 });
 
@@ -43,8 +68,12 @@ serve(async (req) => {
 
     console.log('Found source file:', sourceFile);
 
+    // Use service role for storage operations
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
+
     // Download the file from the source location
-    const { data: downloadData, error: downloadError } = await supabase.storage
+    const { data: downloadData, error: downloadError } = await supabaseService.storage
       .from('avatars')
       .download(`${fromUserId}/avatar.mp4`);
 
@@ -55,8 +84,12 @@ serve(async (req) => {
 
     console.log('File downloaded successfully, size:', downloadData.size);
 
+    // Use service role for storage operations
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
+
     // Upload the file to the destination location
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    const { data: uploadData, error: uploadError } = await supabaseService.storage
       .from('avatars')
       .upload(`${toUserId}/avatar.mp4`, downloadData, {
         upsert: true,
@@ -71,7 +104,7 @@ serve(async (req) => {
     console.log('File uploaded successfully:', uploadData);
 
     // Get the public URL to verify
-    const { data: publicUrlData } = supabase.storage
+    const { data: publicUrlData } = supabaseService.storage
       .from('avatars')
       .getPublicUrl(`${toUserId}/avatar.mp4`);
 

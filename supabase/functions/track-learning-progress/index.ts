@@ -13,15 +13,31 @@ serve(async (req) => {
   }
 
   try {
-    const { userId, moduleId, progressData } = await req.json();
-    
-    if (!userId || !moduleId || !progressData) {
-      throw new Error('Missing required parameters');
+    // Extract user ID from JWT token
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new Error('Missing authorization header');
     }
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    // Verify user authentication
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      throw new Error('Unauthorized');
+    }
+
+    const userId = user.id;
+
+    const { moduleId, progressData } = await req.json();
+    
+    if (!moduleId || !progressData) {
+      throw new Error('Missing required parameters');
+    }
 
     console.log(`Tracking progress for user ${userId}, module ${moduleId}`);
 
