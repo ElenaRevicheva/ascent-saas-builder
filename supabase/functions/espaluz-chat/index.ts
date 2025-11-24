@@ -185,19 +185,35 @@ serve(async (req) => {
   }
 
   try {
+    // Extract user ID from JWT token
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new Error('Missing authorization header');
+    }
+
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    // Verify user authentication
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      throw new Error('Unauthorized');
+    }
+
+    const userId = user.id;
     
     const claudeApiKey = Deno.env.get('ANTHROPIC_API_KEY');
     if (!claudeApiKey) {
       throw new Error('ANTHROPIC_API_KEY not configured');
     }
 
-    const { message, userId, isVoiceInput, originalLanguage } = await req.json();
+    const { message, isVoiceInput, originalLanguage } = await req.json();
     
-    if (!message || !userId) {
-      throw new Error('Message and userId are required');
+    if (!message) {
+      throw new Error('Message is required');
     }
 
     console.log(`Processing message for user ${userId}: ${message}`);
