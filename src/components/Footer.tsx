@@ -39,7 +39,7 @@ const Footer = () => {
                   <span className="text-gray-700 font-medium group-hover:text-gray-900 transition-colors duration-300">AIdeazz Ecosystem</span>
                   <span className="text-purple-400 group-hover:text-purple-600 transition-colors duration-300">→</span>
                 </a>
-                <a href="https://lit.link/en/aideazz" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 p-3 bg-gradient-to-r from-orange-50 to-pink-50 hover:from-orange-100 hover:to-pink-100 rounded-lg border border-orange-200/50 hover:border-orange-300 transition-all duration-300 hover:shadow-md">
+                <a href="https://www.aideazz.xyz/card" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 p-3 bg-gradient-to-r from-orange-50 to-pink-50 hover:from-orange-100 hover:to-pink-100 rounded-lg border border-orange-200/50 hover:border-orange-300 transition-all duration-300 hover:shadow-md">
                   <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-orange-500 to-pink-500 rounded-full shadow-sm group-hover:scale-110 transition-transform duration-300">
                     <span className="text-white text-sm">👤</span>
                   </div>
