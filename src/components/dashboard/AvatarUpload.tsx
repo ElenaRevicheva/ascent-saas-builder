@@ -1,12 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Upload, Video, Trash2, Play, Pause, Copy } from 'lucide-react';
+import { Upload, Video, Trash2, Play, Pause } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { copyAvatarToCurrentUser } from '@/utils/copyAvatar';
-import { callCopyAvatar } from '@/utils/callCopyAvatar';
 
 export const AvatarUpload = () => {
   const { user } = useAuth();
@@ -87,30 +85,6 @@ export const AvatarUpload = () => {
     }
   };
 
-  const handleCopyAvatar = async () => {
-    if (!user) return;
-    
-    setUploading(true);
-    try {
-      const result = await callCopyAvatar();
-      console.log('Copy result:', result);
-      
-      // Refresh the avatar URL
-      const fileName = `${user.id}/avatar.mp4`;
-      const { data } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(fileName);
-      
-      setAvatarUrl(data.publicUrl);
-      toast.success('Avatar video copied successfully!');
-    } catch (error) {
-      console.error('Error copying avatar:', error);
-      toast.error('Failed to copy avatar video');
-    } finally {
-      setUploading(false);
-    }
-  };
-
   const togglePlayback = () => {
     if (!videoRef.current) return;
 
@@ -165,30 +139,18 @@ export const AvatarUpload = () => {
               Upload your 30-second avatar MP4 video to use in video generation.
             </p>
             
-            <div className="flex gap-2">
-              <Button
-                onClick={handleFileSelect}
-                disabled={uploading}
-                className="flex-1 bg-[hsl(var(--espaluz-primary))] hover:bg-[hsl(var(--espaluz-primary))]/90"
-              >
-                {uploading ? (
-                  <div className="w-4 h-4 border border-current border-t-transparent rounded-full animate-spin mr-2" />
-                ) : (
-                  <Upload className="h-4 w-4 mr-2" />
-                )}
-                {uploading ? 'Processing...' : 'Upload Video'}
-              </Button>
-              
-              <Button
-                onClick={handleCopyAvatar}
-                disabled={uploading}
-                variant="outline"
-                className="flex-1"
-              >
-                <Copy className="h-4 w-4 mr-2" />
-                Copy Avatar
-              </Button>
-            </div>
+            <Button
+              onClick={handleFileSelect}
+              disabled={uploading}
+              className="w-full bg-[hsl(var(--espaluz-primary))] hover:bg-[hsl(var(--espaluz-primary))]/90"
+            >
+              {uploading ? (
+                <div className="w-4 h-4 border border-current border-t-transparent rounded-full animate-spin mr-2" />
+              ) : (
+                <Upload className="h-4 w-4 mr-2" />
+              )}
+              {uploading ? 'Processing...' : 'Upload Video'}
+            </Button>
             
             <input
               ref={fileInputRef}
