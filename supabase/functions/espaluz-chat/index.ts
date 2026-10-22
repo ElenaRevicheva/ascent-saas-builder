@@ -171,12 +171,47 @@ Make every interaction educational and structured while maintaining warmth and e
   ];
 
   return {
-    model: "claude-3-5-sonnet-20241022",
+    model: CLAUDE_MODELS[0],
     max_tokens: 1000,
     temperature: 0.7,
     system: systemPrompt,
     messages
   };
+}
+
+// claude-3-5-sonnet-20241022 is retired (404). Current models on Elena's key, first that answers wins (22 Oct 2026).
+const CLAUDE_MODELS = ["claude-sonnet-4-6", "claude-sonnet-4-5-20250929", "claude-haiku-4-5-20251001"];
+
+// Classroom (22 Oct 2026, Elena): children 5-7, real bilingual sentences, taught by Pere and Titi — the same rules
+// as Alisa's mode in the EspaLuz Telegram bot. Short spoken replies: the classroom reads every reply aloud.
+const KIDS_CLASSROOM_PROMPT = `You are the voice of two friends from Panama who teach a child aged 5 to 7 Spanish and English in a cozy classroom in Parque Natural Metropolitano:
+- Pere: a calm, gentle baby sloth with a juicy green bandana. He speaks slowly and kindly, teaches the new sentences and leads the calm breathing.
+- Titi: a tiny, playful Geoffroy's tamarin with an orange bandana. He loves movement games and sometimes makes a funny little mistake on purpose so the child can correct him.
+
+How to talk:
+- Always use real, complete sentences, never single words. Say each idea in Spanish first, then the same idea in English on the next line.
+- Short and clear for a 5-7 year old (about 5-10 words per sentence). At most 4 sentence pairs per reply. Warm and playful. No markdown, no bullet points, at most one emoji.
+- Let Pere and Titi speak by name ("Pere: ..." / "Titi: ...").
+- End every reply with ONE simple question and invite the child to answer with a whole sentence, in Spanish or English.
+- If the child makes a mistake, praise the try and say the correct whole sentence once; never say "wrong".
+
+Lesson rhythm across the conversation (about 5-10 minutes): hello from both and one question about the child's day; a wake-up game with Titi (jumps, "Simon dice / Simon says", cross-crawl); Pere teaches 3 useful new sentences on today's theme, one at a time; a game with Titi using them; a calm moment with Pere (hands on the belly, three slow breaths, one feelings sentence); praise, a star, and goodbye.
+Themes: animals, colors, family, food, school, the playground, feelings, Panama (sloths, toucans, the beach, the Canal).
+Never ask for personal information such as addresses, school names or phone numbers.`;
+
+async function callClaude(apiKey: string, request: any): Promise<any> {
+  let last = '';
+  for (const model of CLAUDE_MODELS) {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
+      body: JSON.stringify({ ...request, model }),
+    });
+    if (r.ok) return await r.json();
+    last = `${model}: ${r.status} ${(await r.text()).slice(0, 200)}`;
+    if (r.status !== 404 && r.status !== 400) break; // only a missing/retired model is worth the next one
+  }
+  throw new Error(`Claude API error: ${last}`);
 }
 
 serve(async (req) => {
@@ -210,7 +245,7 @@ serve(async (req) => {
       throw new Error('ANTHROPIC_API_KEY not configured');
     }
 
-    const { message, isVoiceInput, originalLanguage } = await req.json();
+    const { message, isVoiceInput, originalLanguage, kids } = await req.json();
     
     if (!message) {
       throw new Error('Message is required');
@@ -241,23 +276,12 @@ serve(async (req) => {
       ];
     }).flat().filter(msg => msg.content) || [];
 
-    const claudeRequest = formatClaudeRequest(message, familyMember, emotion, conversationHistory, isVoiceInput, originalLanguage);
+    const claudeRequest = kids
+      ? { max_tokens: 500, temperature: 0.7, system: KIDS_CLASSROOM_PROMPT,
+          messages: [...(Array.isArray(kids.history) ? kids.history.slice(-10) : []), { role: 'user', content: message }] }
+      : formatClaudeRequest(message, familyMember, emotion, conversationHistory, isVoiceInput, originalLanguage);
 
-    const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': claudeApiKey,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify(claudeRequest)
-    });
-
-    if (!claudeResponse.ok) {
-      throw new Error(`Claude API error: ${claudeResponse.status} ${await claudeResponse.text()}`);
-    }
-
-    const claudeResult = await claudeResponse.json();
+    const claudeResult = await callClaude(claudeApiKey, claudeRequest);
     const fullResponse = claudeResult.content[0].text;
     const videoScript = extractVideoScript(fullResponse);
 
@@ -274,7 +298,7 @@ serve(async (req) => {
         .from('learning_sessions')
         .insert({
           user_id: userId,
-          session_type: 'chat',
+          session_type: kids ? 'classroom' : 'chat',
           source: 'web',
           content: {
             user_message: message,

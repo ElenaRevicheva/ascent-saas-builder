@@ -25,6 +25,8 @@ const Auth = () => {
   const { signIn, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  // The classroom sends parents here with ?next=/classroom (22 Oct 2026); only that page is allowed back.
+  const afterSignIn = new URLSearchParams(window.location.search).get('next') === '/classroom' ? '/classroom' : '/dashboard';
 
   // Function to handle pending subscription activation with improved error handling and retry
   const handlePendingSubscriptionActivation = async (user: any) => {
@@ -195,9 +197,9 @@ const Auth = () => {
 
   useEffect(() => {
     if (user) {
-      navigate('/dashboard');
+      navigate(afterSignIn);
     }
-  }, [user, navigate]);
+  }, [user, navigate, afterSignIn]);
 
   useEffect(() => {
     // Pre-fill email if coming from subscription flow
@@ -246,7 +248,7 @@ const Auth = () => {
           title: "Welcome back!",
           description: "You have successfully signed in.",
         });
-        navigate('/dashboard');
+        navigate(afterSignIn);
       }
     } catch (error) {
       setError('An unexpected error occurred. Please try again.');

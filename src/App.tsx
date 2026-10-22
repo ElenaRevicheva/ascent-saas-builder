@@ -15,6 +15,7 @@ import SubscriptionSuccess from "./pages/SubscriptionSuccess";
 import SubscriptionComplete from "./pages/SubscriptionComplete";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import Classroom from "./pages/Classroom";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -32,6 +33,7 @@ const App = () => (
         <Route path="/subscription-success" element={<SubscriptionSuccess />} />
         <Route path="/subscription-complete" element={<SubscriptionComplete />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/classroom" element={<Classroom />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
