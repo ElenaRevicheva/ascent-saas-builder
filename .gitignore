@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Pere + Titi images/videos/voices: kept on this disk, never in the public repo or on Oracle
+creatives/
