@@ -5,3 +5,33 @@ verify_jwt = false
 
 [functions.connect-telegram-bot]
 verify_jwt = false
+
+# 28 Oct 2026: Lovable redeploys every function from this repo on Publish and turns the JWT check OFF unless it is
+# named here. These functions are called only by signed-in users; keeping verify_jwt on stops anyone with the public
+# key from spending the Replicate / OpenAI / Groq credits behind them.
+[functions.espaluz-chat]
+verify_jwt = true
+
+[functions.generate-voice]
+verify_jwt = true
+
+[functions.generate-video]
+verify_jwt = true
+
+[functions.voice-to-text]
+verify_jwt = true
+
+[functions.connect-bot]
+verify_jwt = true
+
+[functions.submit-progress]
+verify_jwt = true
+
+[functions.track-learning-progress]
+verify_jwt = true
+
+[functions.copy-avatar]
+verify_jwt = true
+
+[functions.update-bot-activity]
+verify_jwt = true
