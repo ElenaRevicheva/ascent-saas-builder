@@ -214,6 +214,65 @@ async function callClaude(apiKey: string, request: any): Promise<any> {
   throw new Error(`Claude API error: ${last}`);
 }
 
+// 28 Oct 2026 — the fleet's order rule (Elena, 25 Oct): FREE first (Gemini, Groq), Claude by money. The Anthropic
+// org ran out of credit on 28 Oct and every classroom turn died with "credit balance is too low" while the bots kept
+// answering on Groq. Same model ids as the bots' llm_chain.py; each provider is used only when its secret exists.
+const GROQ_MODEL = Deno.env.get('GROQ_MODEL') || 'openai/gpt-oss-120b';
+const GEMINI_MODEL = Deno.env.get('GEMINI_MODEL') || 'gemini-2.5-flash';
+
+async function callGroq(apiKey: string, request: any): Promise<any> {
+  const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${apiKey}`, 'content-type': 'application/json', 'User-Agent': 'espaluz-chat/1.0' },
+    body: JSON.stringify({ model: GROQ_MODEL, max_tokens: request.max_tokens, temperature: request.temperature,
+                           messages: [{ role: 'system', content: request.system }, ...request.messages] }),
+  });
+  if (!r.ok) throw new Error(`Groq ${GROQ_MODEL}: ${r.status} ${(await r.text()).slice(0, 200)}`);
+  const j = await r.json();
+  const text = j.choices?.[0]?.message?.content;
+  if (!text) throw new Error('Groq: empty answer');
+  return { content: [{ text }] };
+}
+
+async function callGemini(apiKey: string, request: any): Promise<any> {
+  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`, {
+    method: 'POST',
+    headers: { 'x-goog-api-key': apiKey, 'content-type': 'application/json' },
+    body: JSON.stringify({
+      system_instruction: { parts: [{ text: request.system }] },
+      contents: request.messages.map((m: any) => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] })),
+      generationConfig: { maxOutputTokens: request.max_tokens, temperature: request.temperature },
+    }),
+  });
+  if (!r.ok) throw new Error(`Gemini ${GEMINI_MODEL}: ${r.status} ${(await r.text()).slice(0, 200)}`);
+  const j = await r.json();
+  const text = j.candidates?.[0]?.content?.parts?.map((p: any) => p.text).join('') ;
+  if (!text) throw new Error('Gemini: empty answer');
+  return { content: [{ text }] };
+}
+
+/** First provider that answers wins: Gemini → Groq → Claude. A provider without a secret is skipped, not an error. */
+async function callChain(request: any): Promise<{ result: any; provider: string }> {
+  const chain: [string, string | undefined, (k: string, r: any) => Promise<any>][] = [
+    ['gemini', Deno.env.get('GEMINI_API_KEY'), callGemini],
+    ['groq', Deno.env.get('GROQ_API_KEY'), callGroq],
+    ['claude', Deno.env.get('ANTHROPIC_API_KEY'), callClaude],
+  ];
+  const errors: string[] = [];
+  for (const [name, key, fn] of chain) {
+    if (!key) continue;
+    try {
+      const result = await fn(key, request);
+      console.log(`answered by ${name}`);
+      return { result, provider: name };
+    } catch (e) {
+      errors.push(`${name}: ${(e as Error).message}`);
+      console.error(`${name} failed, trying the next provider:`, (e as Error).message);
+    }
+  }
+  throw new Error(errors.length ? errors.join(' | ') : 'No LLM provider configured (GEMINI_API_KEY, GROQ_API_KEY or ANTHROPIC_API_KEY)');
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -240,11 +299,6 @@ serve(async (req) => {
 
     const userId = user.id;
     
-    const claudeApiKey = Deno.env.get('ANTHROPIC_API_KEY');
-    if (!claudeApiKey) {
-      throw new Error('ANTHROPIC_API_KEY not configured');
-    }
-
     const { message, isVoiceInput, originalLanguage, kids } = await req.json();
     
     if (!message) {
@@ -281,7 +335,7 @@ serve(async (req) => {
           messages: [...(Array.isArray(kids.history) ? kids.history.slice(-10) : []), { role: 'user', content: message }] }
       : formatClaudeRequest(message, familyMember, emotion, conversationHistory, isVoiceInput, originalLanguage);
 
-    const claudeResult = await callClaude(claudeApiKey, claudeRequest);
+    const { result: claudeResult, provider } = await callChain(claudeRequest);
     const fullResponse = claudeResult.content[0].text;
     const videoScript = extractVideoScript(fullResponse);
 
@@ -332,6 +386,7 @@ serve(async (req) => {
 
     return new Response(JSON.stringify({
       response: fullResponse,
+      provider,
       videoScript,
       familyMember: familyMember.name,
       familyMemberRole: familyMember.role,
