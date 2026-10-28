@@ -7,49 +7,75 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
 // Pere + Titi's classroom (22 Oct 2026): the dashboard chat's voice loop (voice-to-text -> espaluz-chat -> generate-voice)
-// in kids mode, with the heroes' clips as the avatar. 28 Oct 2026: the SAME 25 clips and the same playlist rule as the
-// EspaLuz Telegram bot (hero_shot_list): a lead clip that fits the words, then talking and action shots alternating,
-// the least recently played action shot first, so one turn after another looks different.
+// in kids mode, with the heroes' clips as the avatar. 28 Oct 2026 (Elena: the picture must match what the line says, and
+// a chain of clips "looks repetitive and simulated"): ONE picture per hero line, named by the tutor as "Pere [shot]: ...",
+// else chosen from the lesson words, else that hero's talking clip. The same 25 clips and rules as the EspaLuz Telegram bot.
 type Turn = { role: "user" | "assistant"; content: string };
+type Line = { who: "pere" | "titi"; clip: string; chars: number };
 
 const IDLE_CLIP = "/heroes/duo-hello.mp4";
-const TALK = ["pere-talking-1", "pere-talking-2", "titi-talking-1", "titi-talking-2"];
-const ACT = [
-  "pere-hello", "pere-breathing", "pere-sleepy", "pere-counting", "pere-thinking", "pere-clap", "pere-listening",
-  "titi-cheer", "titi-cheer-2", "titi-silly", "titi-crosscrawl", "titi-dance", "titi-counting-jumps", "titi-freeze",
-  "titi-oops", "titi-listening", "duo-highfive", "duo-peekaboo",
-];
-const recent: string[] = []; // action shots just played go to the back of the line (one child, one line)
+const TALK = { pere: ["pere-talking-1", "pere-talking-2"], titi: ["titi-talking-1", "titi-talking-2"] };
+const SHOT_CLIPS: Record<"pere" | "titi", Record<string, string>> = {
+  pere: { hello: "pere-hello", counting: "pere-counting", thinking: "pere-thinking", clap: "pere-clap", listening: "pere-listening",
+          breathing: "pere-breathing", sleepy: "pere-sleepy", goodbye: "duo-goodbye", highfive: "duo-highfive", peekaboo: "duo-peekaboo" },
+  titi: { cheer: "titi-cheer", silly: "titi-silly", dance: "titi-dance", jump: "titi-crosscrawl", counting: "titi-counting-jumps",
+          freeze: "titi-freeze", oops: "titi-oops", listening: "titi-listening", goodbye: "duo-goodbye", highfive: "duo-highfive",
+          peekaboo: "duo-peekaboo", hello: "duo-hello" },
+};
+const SHOT_ALIASES: Record<string, string> = {
+  count: "counting", counts: "counting", numbers: "counting", listen: "listening", think: "thinking", thinks: "thinking",
+  breathe: "breathing", breath: "breathing", calm: "breathing", sleep: "sleepy", jumps: "jump", jumping: "jump", crosscrawl: "jump",
+  "cross-crawl": "jump", simon: "jump", "high five": "highfive", "high-five": "highfive", wave: "hello", hi: "hello", bye: "goodbye",
+  laugh: "silly", giggle: "silly", funny: "silly", mistake: "oops", statue: "freeze", applause: "clap", praise: "clap", happy: "cheer",
+  excited: "cheer", cheering: "cheer", dancing: "dance", music: "dance", hide: "peekaboo", surprise: "peekaboo",
+};
+const recent: string[] = []; // clips just played go to the back of the line
 
-const shuffled = <T,>(a: T[]) => [...a].sort(() => Math.random() - 0.5);
-
-function heroShots(text: string): string[] {
-  const t = text.toLowerCase();
+/** The lesson words that pick a picture when the tutor gave no tag (same list as the bot). */
+function clipFromWords(who: "pere" | "titi", t: string, first: boolean, last: boolean): string | null {
   const has = (ws: string[]) => ws.some((w) => t.includes(w));
-  const one = (ns: string[]) => [ns[Math.floor(Math.random() * ns.length)]];
-  let lead: string[] = [];
-  if (has(["adiós", "adios", "bye", "hasta mañana", "see you"])) lead = ["duo-goodbye"];
-  else if (has(["respira", "breath", "barriga", "belly", "calma", "calm"])) lead = ["pere-breathing"];
-  else if (has(["noche", "night", "dormir", "sleep", "sueño"])) lead = ["pere-sleepy"];
-  else if (has(["baila", "dance", "música", "music"])) lead = ["titi-dance"];
-  else if (has(["rodilla", "knee", "salta", "jump", "simon"])) lead = ["titi-crosscrawl"];
-  else if (has(["muy bien", "bravo", "excelente", "great job", "well done", "perfecto"])) lead = one(["duo-highfive", "pere-clap"]);
-  else if (has(["cuenta", "contar", "count", "uno, dos", "one, two"])) lead = one(["pere-counting", "titi-counting-jumps"]);
-  else if (has(["congela", "estatua", "freeze", "statue"])) lead = ["titi-freeze"];
-  else if (has(["ups", "oops", "me equivoqu", "mistake", "error"])) lead = ["titi-oops"];
-  else if (has(["dónde está", "donde esta", "where is", "escondid", "peekaboo", "cucú"])) lead = ["duo-peekaboo"];
-  else if (has(["repite", "repeat", "dime", "tell me", "escucha", "listen"])) lead = one(["pere-listening", "titi-listening"]);
-  else if (has(["piensa", "adivina", "think", "guess"])) lead = ["pere-thinking"];
-  // least recently played first; the lead counts as just played so it is not shown twice in one turn
-  const seen = [...recent, ...lead];
-  const age = new Map(seen.map((n, i) => [n, seen.length - 1 - i])); // 0 = most recent
-  const act = shuffled(ACT).sort((a, b) => (age.get(b) ?? 1e6) - (age.get(a) ?? 1e6));
-  const talk = shuffled(TALK);
-  const mix = act.flatMap((a, i) => [talk[i % talk.length], a]);
-  recent.push(...lead, ...act.slice(0, 2)); // the first two action shots are the ones a 10–20 s line actually reaches
-  while (recent.length > 12) recent.shift();
-  return [...lead, ...mix].map((n) => `/heroes/${n}.mp4`);
+  if (first && has(["hola", "hello", "hi "])) return "duo-hello";
+  if (last && has(["adiós", "adios", "bye", "hasta mañana", "see you"])) return "duo-goodbye";
+  if (who === "pere" && has(["respira", "breath", "barriga", "belly", "calma", "calm"])) return "pere-breathing";
+  if (who === "pere" && has(["noche", "night", "dormir", "sleep", "sueño"])) return "pere-sleepy";
+  if (who === "titi" && has(["baila", "dance", "música", "music"])) return "titi-dance";
+  if (who === "titi" && has(["rodilla", "knee", "salta", "jump", "simon"])) return "titi-crosscrawl";
+  if (has(["muy bien", "bravo", "excelente", "great job", "well done", "perfecto"])) return first ? "duo-highfive" : who === "pere" ? "pere-clap" : "titi-cheer";
+  if (has(["cuenta", "contar", "count", "uno, dos", "one, two"])) return who === "pere" ? "pere-counting" : "titi-counting-jumps";
+  if (who === "titi" && has(["congela", "estatua", "freeze", "statue"])) return "titi-freeze";
+  if (who === "titi" && has(["ups", "oops", "me equivoqu", "mistake"])) return "titi-oops";
+  if (has(["dónde está", "donde esta", "where is", "escondid", "peekaboo", "cucú"])) return "duo-peekaboo";
+  return null;
 }
+
+function pickClip(who: "pere" | "titi", text: string, shot: string | null, first: boolean, last: boolean): string {
+  const tag = SHOT_ALIASES[shot ?? ""] ?? shot ?? "";
+  let name = tag && tag !== "talk" ? SHOT_CLIPS[who][tag] ?? null : null;
+  if (!name && tag !== "talk") name = clipFromWords(who, text.toLowerCase(), first, last);
+  if (name === "titi-cheer" && recent.includes("titi-cheer") && !recent.includes("titi-cheer-2")) name = "titi-cheer-2";
+  if (!name) {
+    const age = new Map(recent.map((n, i) => [n, recent.length - 1 - i])); // 0 = most recent
+    name = [...TALK[who]].sort(() => Math.random() - 0.5).sort((a, b) => (age.get(b) ?? 1e6) - (age.get(a) ?? 1e6))[0];
+  }
+  recent.push(name);
+  while (recent.length > 12) recent.shift();
+  return `/heroes/${name}.mp4`;
+}
+
+/** "Pere [counting]: ..." lines -> one picture each; unlabeled text goes to Pere. */
+function heroLines(text: string): Line[] {
+  const raw: { who: "pere" | "titi"; shot: string | null; text: string }[] = [];
+  for (const line of text.split("\n")) {
+    const m = line.trim().match(/^[^\w]*(pere|titi)\s*(?:\[\s*([a-z][a-z -]*?)\s*\])?\s*:\s*(.*)$/i);
+    if (m) raw.push({ who: m[1].toLowerCase() as "pere" | "titi", shot: m[2]?.toLowerCase().trim() || null, text: m[3] });
+    else if (raw.length && line.trim()) raw[raw.length - 1].text += " " + line.trim();
+  }
+  if (!raw.length) raw.push({ who: "pere", shot: null, text });
+  return raw.map((r, i) => ({ who: r.who, clip: pickClip(r.who, r.text, r.shot, i === 0, i === raw.length - 1), chars: Math.max(r.text.length, 1) }));
+}
+
+/** The tag is for the picture only; the child reads "Pere: ...". */
+const stripShotTags = (text: string) => text.replace(/\b(pere|titi)\s*\[[^\]\n]*\]\s*:/gi, "$1:");
 
 function toAudioUrl(base64: string): string {
   const bin = atob(base64.replace(/^data:audio\/[^;]+;base64,/, ""));
@@ -62,9 +88,9 @@ const Classroom = () => {
   const { user, loading } = useAuth();
   const [turns, setTurns] = useState<Turn[]>([]);
   const [reply, setReply] = useState("");
-  const [playlist, setPlaylist] = useState<string[]>([IDLE_CLIP]);
+  const [lines, setLines] = useState<Line[]>([]);
   const [shot, setShot] = useState(0);
-  const idle = () => { setPlaylist([IDLE_CLIP]); setShot(0); };
+  const idle = () => { setLines([]); setShot(0); };
   const [busy, setBusy] = useState(false);
   const [recording, setRecording] = useState(false);
   const [stars, setStars] = useState(0);
@@ -74,13 +100,21 @@ const Classroom = () => {
 
   useEffect(() => () => { audio.current?.pause(); }, []);
 
-  const speak = async (text: string) => {
+  const speak = async (text: string, spoken: Line[]) => {
     const { data, error } = await supabase.functions.invoke("generate-voice", { body: { text, voice: "es", userId: user?.id } });
     const b64 = data?.audioContent || data?.audioBase64;
     if (error || !b64) { idle(); return; } // the words stay on screen even when the voice fails
     audio.current?.pause();
     const a = new Audio(toAudioUrl(b64));
     audio.current = a;
+    // one voice for the whole reply: each line's picture gets the share of the time its words take
+    const total = spoken.reduce((n, l) => n + l.chars, 0);
+    a.ontimeupdate = () => {
+      if (!a.duration) return;
+      let acc = 0;
+      const i = spoken.findIndex((l) => (acc += l.chars) / total > a.currentTime / a.duration);
+      setShot(Math.max(0, i === -1 ? spoken.length - 1 : i));
+    };
     a.onended = idle;
     await a.play().catch(() => undefined);
   };
@@ -94,11 +128,12 @@ const Classroom = () => {
       const text: string = data?.response || "";
       if (error || !text) throw new Error(data?.error || error?.message || "no answer");
       setTurns((t) => [...t, { role: "user", content: childSays }, { role: "assistant", content: text }]);
-      setReply(text);
-      setPlaylist(heroShots(text));
+      setReply(stripShotTags(text));
+      const spoken = heroLines(text);
+      setLines(spoken);
       setShot(0);
       if (countsAsStar) setStars((s) => s + 1);
-      await speak(text);
+      await speak(stripShotTags(text), spoken);
     } catch (e) {
       toast.error("Pere y Titi no pudieron contestar. / Pere and Titi could not answer. Try again!");
       console.error("classroom talk failed", e);
@@ -166,11 +201,10 @@ const Classroom = () => {
       </div>
 
       <video
-        key={`${playlist[shot]}-${shot}`}
-        src={playlist[shot]}
+        key={`${lines[shot]?.clip ?? IDLE_CLIP}-${shot}`}
+        src={lines[shot]?.clip ?? IDLE_CLIP}
         autoPlay
-        loop={playlist.length === 1}
-        onEnded={() => setShot((i) => (i + 1) % playlist.length)}
+        loop
         muted
         playsInline
         className="w-full max-w-[520px] aspect-square rounded-[2rem] shadow-2xl border-8 border-white/80 object-cover"
