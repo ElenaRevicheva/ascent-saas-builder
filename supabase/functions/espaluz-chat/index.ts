@@ -217,21 +217,36 @@ async function callClaude(apiKey: string, request: any): Promise<any> {
 // 28 Oct 2026 — the fleet's order rule (Elena, 25 Oct): FREE first (Gemini, Groq), Claude by money. The Anthropic
 // org ran out of credit on 28 Oct and every classroom turn died with "credit balance is too low" while the bots kept
 // answering on Groq. Same model ids as the bots' llm_chain.py; each provider is used only when its secret exists.
-const GROQ_MODEL = Deno.env.get('GROQ_MODEL') || 'openai/gpt-oss-120b';
+// 28 Oct 2026 23:30 UTC: Groq's free tier counts tokens PER MODEL per day (gpt-oss-120b: 200k TPD, used 199,668 ->
+// 429, and with Gemini unset and Anthropic dry the classroom said "could not answer"). So Groq is a waterfall of
+// models, each with its own daily budget; a model that is rate-limited, decommissioned or unknown is skipped.
+const GROQ_MODELS = (Deno.env.get('GROQ_MODELS') || Deno.env.get('GROQ_MODEL') ||
+  'openai/gpt-oss-120b,meta-llama/llama-4-scout-17b-16e-instruct,llama-3.3-70b-versatile,openai/gpt-oss-20b,qwen/qwen3-32b,llama-3.1-8b-instant')
+  .split(',').map((m) => m.trim()).filter(Boolean);
 const GEMINI_MODEL = Deno.env.get('GEMINI_MODEL') || 'gemini-2.5-flash';
 
 async function callGroq(apiKey: string, request: any): Promise<any> {
-  const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${apiKey}`, 'content-type': 'application/json', 'User-Agent': 'espaluz-chat/1.0' },
-    body: JSON.stringify({ model: GROQ_MODEL, max_tokens: request.max_tokens, temperature: request.temperature,
-                           messages: [{ role: 'system', content: request.system }, ...request.messages] }),
-  });
-  if (!r.ok) throw new Error(`Groq ${GROQ_MODEL}: ${r.status} ${(await r.text()).slice(0, 200)}`);
-  const j = await r.json();
-  const text = j.choices?.[0]?.message?.content;
-  if (!text) throw new Error('Groq: empty answer');
-  return { content: [{ text }] };
+  const errors: string[] = [];
+  for (const model of GROQ_MODELS) {
+    const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${apiKey}`, 'content-type': 'application/json', 'User-Agent': 'espaluz-chat/1.0' },
+      body: JSON.stringify({ model, max_tokens: request.max_tokens, temperature: request.temperature,
+                             messages: [{ role: 'system', content: request.system }, ...request.messages] }),
+    });
+    if (!r.ok) {
+      const why = `Groq ${model}: ${r.status} ${(await r.text()).slice(0, 160)}`;
+      errors.push(why);
+      console.error(why, '- trying the next Groq model');
+      continue;
+    }
+    const j = await r.json();
+    const text = j.choices?.[0]?.message?.content;
+    if (!text) { errors.push(`Groq ${model}: empty answer`); continue; }
+    console.log(`groq model ${model}`);
+    return { content: [{ text }], model };
+  }
+  throw new Error(errors.join(' || '));
 }
 
 async function callGemini(apiKey: string, request: any): Promise<any> {
