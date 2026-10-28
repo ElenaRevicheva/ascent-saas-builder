@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Circle, Users, MessageSquare, BookOpen, BarChart3, Crown, ArrowRight, Map } from 'lucide-react';
+import { CheckCircle, Circle, Users, MessageSquare, BookOpen, BarChart3, Crown, ArrowRight, Map, Smile } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { LearningOptions } from './LearningOptions';
@@ -70,6 +70,14 @@ export const LearningRoadmap = () => {
           setLearningOptionsOpen(true);
         }, 100);
       }
+    },
+    {
+      id: 'kids-classroom',
+      title: "Pere and Titi's Classroom (kids 5-7)",
+      description: 'A calm sloth and a playful tamarin teach your child real Spanish and English sentences by voice, with games and praise.',
+      icon: Smile,
+      action: 'Open the Classroom',
+      link: '/classroom'
     },
     {
       id: 'track-progress',

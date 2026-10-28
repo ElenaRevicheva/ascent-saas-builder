@@ -11,7 +11,7 @@ import { useAuth } from "@/hooks/useAuth";
 // a chain of clips "looks repetitive and simulated"): ONE picture per hero line, named by the tutor as "Pere [shot]: ...",
 // else chosen from the lesson words, else that hero's talking clip. The same 25 clips and rules as the EspaLuz Telegram bot.
 type Turn = { role: "user" | "assistant"; content: string };
-type Line = { who: "pere" | "titi"; clip: string; chars: number };
+type Line = { who: "pere" | "titi"; clip: string; chars: number; text: string };
 
 const IDLE_CLIP = "/heroes/duo-hello.mp4";
 const TALK = { pere: ["pere-talking-1", "pere-talking-2"], titi: ["titi-talking-1", "titi-talking-2"] };
@@ -71,7 +71,7 @@ function heroLines(text: string): Line[] {
     else if (raw.length && line.trim()) raw[raw.length - 1].text += " " + line.trim();
   }
   if (!raw.length) raw.push({ who: "pere", shot: null, text });
-  return raw.map((r, i) => ({ who: r.who, clip: pickClip(r.who, r.text, r.shot, i === 0, i === raw.length - 1), chars: Math.max(r.text.length, 1) }));
+  return raw.map((r, i) => ({ who: r.who, clip: pickClip(r.who, r.text, r.shot, i === 0, i === raw.length - 1), chars: Math.max(r.text.length, 1), text: r.text }));
 }
 
 /** The tag is for the picture only; the child reads "Pere: ...". */
@@ -100,23 +100,46 @@ const Classroom = () => {
 
   useEffect(() => () => { audio.current?.pause(); }, []);
 
-  const speak = async (text: string, spoken: Line[]) => {
-    const { data, error } = await supabase.functions.invoke("generate-voice", { body: { text, voice: "es", userId: user?.id } });
+  const voiceFor = async (text: string, hero?: "pere" | "titi"): Promise<string | null> => {
+    const { data, error } = await supabase.functions.invoke("generate-voice", { body: { text, voice: "es", userId: user?.id, hero } });
     const b64 = data?.audioContent || data?.audioBase64;
-    if (error || !b64) { idle(); return; } // the words stay on screen even when the voice fails
-    audio.current?.pause();
-    const a = new Audio(toAudioUrl(b64));
-    audio.current = a;
-    // one voice for the whole reply: each line's picture gets the share of the time its words take
+    return error || !b64 ? null : toAudioUrl(b64);
+  };
+
+  const play = (url: string, onTime?: (a: HTMLAudioElement) => void) =>
+    new Promise<void>((done) => {
+      audio.current?.pause();
+      const a = new Audio(url);
+      audio.current = a;
+      if (onTime) a.ontimeupdate = () => onTime(a);
+      a.onended = () => done();
+      a.onerror = () => done();
+      a.play().catch(() => done());
+    });
+
+  // 28 Oct 2026: Pere and Titi speak their own lines in their own voices (the Telegram bot's MiniMax voices, via
+  // generate-voice `hero`), the picture of each line on screen while it is said. If any line has no hero voice,
+  // the whole reply is read in the usual single voice and the pictures follow the words by their share of the time.
+  const speak = async (text: string, spoken: Line[]) => {
+    const urls = await Promise.all(spoken.map((l) => voiceFor(l.text, l.who)));
+    if (spoken.length && urls.every((u): u is string => !!u)) {
+      for (let i = 0; i < spoken.length; i++) {
+        setShot(i);
+        await play(urls[i]);
+      }
+      idle();
+      return;
+    }
+    const whole = await voiceFor(text);
+    if (!whole) { idle(); return; } // the words stay on screen even when the voice fails
     const total = spoken.reduce((n, l) => n + l.chars, 0);
-    a.ontimeupdate = () => {
+    await play(whole, (a) => {
       if (!a.duration) return;
       let acc = 0;
       const i = spoken.findIndex((l) => (acc += l.chars) / total > a.currentTime / a.duration);
       setShot(Math.max(0, i === -1 ? spoken.length - 1 : i));
-    };
-    a.onended = idle;
-    await a.play().catch(() => undefined);
+    });
+    idle();
   };
 
   const talk = async (childSays: string, countsAsStar: boolean) => {

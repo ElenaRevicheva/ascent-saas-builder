@@ -23,6 +23,9 @@ const Navigation = () => {
           <a href="#about" className="text-muted-foreground hover:text-foreground transition-colors">
             {t("nav.about")}
           </a>
+          <Link to="/classroom" className="text-muted-foreground hover:text-foreground transition-colors">
+            🦥🐒 Kids classroom
+          </Link>
         </div>
 
         <div className="flex items-center space-x-4">

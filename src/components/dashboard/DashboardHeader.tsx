@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import familyLearningSpanish from '@/assets/family-learning-spanish.jpg';
 import brandAvatar1 from '@/assets/brand-avatar-1.jpg';
 import { LearningRoadmap } from './LearningRoadmap';
+import { Link } from 'react-router-dom';
 
 interface DashboardHeaderProps {
   user: any;
@@ -42,6 +43,9 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
               <div className="flex items-center gap-4">
                 <LanguageSwitcher variant="select" size="sm" />
                 {getStatusBadge()}
+                <Button asChild variant="hero" size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg">
+                  <Link to="/classroom">🦥🐒 Kids classroom</Link>
+                </Button>
                 <Button
                   variant="hero"
                   size="lg"

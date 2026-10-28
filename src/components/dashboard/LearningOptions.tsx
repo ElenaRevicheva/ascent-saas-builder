@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MessageSquare, Monitor, Smartphone, Bot, Users, Zap, ArrowRight, CheckCircle } from 'lucide-react';
+import { MessageSquare, Monitor, Smartphone, Bot, Users, Zap, ArrowRight, CheckCircle, Smile } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Link } from 'react-router-dom';
 
@@ -59,6 +59,30 @@ export const LearningOptions = ({ open: controlledOpen, onOpenChange }: Learning
       gradient: 'from-blue-500 to-cyan-500',
       badgeText: 'Most Popular',
       popular: true
+    },
+    {
+      id: 'kids-classroom',
+      title: "Pere and Titi's Classroom",
+      description: 'For children 5-7: a calm sloth and a playful tamarin teach real Spanish and English sentences by voice, with games and praise.',
+      icon: Smile,
+      features: [
+        'Voice only - the child holds the mic and talks',
+        'Two animated heroes with their own voices',
+        'Short bilingual sentences, never single words',
+        'Movement games and a calm breathing moment',
+        'A star for every answer'
+      ],
+      pros: [
+        'Made for ages 5-7',
+        'No reading needed',
+        'Five to ten minutes a day',
+        'Same heroes as the Telegram bot'
+      ],
+      action: 'Open the Classroom',
+      actionLink: '/classroom',
+      actionType: 'link',
+      gradient: 'from-green-500 to-emerald-500',
+      badgeText: 'For kids'
     },
     {
       id: 'dashboard-chat',

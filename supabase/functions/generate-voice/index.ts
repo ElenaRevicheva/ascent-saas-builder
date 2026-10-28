@@ -6,14 +6,23 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Pere + Titi's own voices (28 Oct 2026, Elena: "give voices to Pere and Titi like Telegram"): the same MiniMax Speech
+// voices the EspaLuz Telegram bot pins (HERO_VOICES in its main.py), via Replicate. Needs the REPLICATE_API_TOKEN
+// secret on this project; without it, or on any failure, the usual single voice below answers, so the classroom never
+// goes silent because of the heroes.
+const HERO_VOICES: Record<string, { voice_id: string; pitch: number; speed: number; emotion: string }> = {
+  pere: { voice_id: "Spanish_Rudolph", pitch: -2, speed: 0.82, emotion: "calm" },
+  titi: { voice_id: "Spanish_AnimeCharacter", pitch: 3, speed: 1.15, emotion: "happy" },
+};
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { text, voice = "es", userId } = await req.json();
-    
+    const { text, voice = "es", userId, hero } = await req.json();
+
     if (!text || !userId) {
       throw new Error('Text and userId are required');
     }
@@ -24,14 +33,27 @@ serve(async (req) => {
 
     // Clean text for TTS
     const cleanedText = cleanTextForTTS(text);
-    
-    // Generate audio using OpenAI TTS with Nova voice
-    const base64Audio = await generateOpenAIVoice(cleanedText);
+
+    let base64Audio = '';
+    let spokenBy = 'openai-nova';
+    if (hero && HERO_VOICES[hero] && Deno.env.get('REPLICATE_API_TOKEN')) {
+      try {
+        base64Audio = await generateHeroVoice(hero, cleanedText);
+        spokenBy = `minimax-${hero}`;
+      } catch (heroError) {
+        console.error(`hero voice ${hero} failed, using the usual voice:`, heroError);
+      }
+    }
+    if (!base64Audio) {
+      // Generate audio using OpenAI TTS with Nova voice
+      base64Audio = await generateOpenAIVoice(cleanedText);
+    }
 
     const response = {
       success: true,
       audioContent: base64Audio,
       mimeType: 'audio/mpeg',
+      spokenBy,
       processedText: cleanedText.length > 0 ? cleanedText.substring(0, 100) + '...' : ''
     };
 
@@ -41,7 +63,7 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error in generate-voice:', error);
-    return new Response(JSON.stringify({ 
+    return new Response(JSON.stringify({
       error: error.message,
       fallback: 'Voice generation temporarily unavailable. Please try again later.'
     }), {
@@ -50,6 +72,33 @@ serve(async (req) => {
     });
   }
 });
+
+// One hero line in that hero's cartoon voice: MiniMax Speech 2.6 HD on Replicate -> mp3 bytes as base64.
+async function generateHeroVoice(hero: string, text: string): Promise<string> {
+  const token = Deno.env.get('REPLICATE_API_TOKEN')!;
+  const v = HERO_VOICES[hero];
+  const spoken = text.replace(/\s*\/\s*/g, '. ').slice(0, 900); // "Hola. / Hello." pauses between languages, never says "slash"
+  const headers = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'Prefer': 'wait=60' };
+  const body = { input: { text: spoken, voice_id: v.voice_id, pitch: v.pitch, speed: v.speed, emotion: v.emotion,
+                          language_boost: 'Automatic', audio_format: 'mp3', sample_rate: 32000 } };
+  let r = await fetch('https://api.replicate.com/v1/models/minimax/speech-2.6-hd/predictions', { method: 'POST', headers, body: JSON.stringify(body) });
+  if (r.status === 429) { // low-balance accounts get ~6 requests a minute
+    await new Promise((res) => setTimeout(res, 11000));
+    r = await fetch('https://api.replicate.com/v1/models/minimax/speech-2.6-hd/predictions', { method: 'POST', headers, body: JSON.stringify(body) });
+  }
+  if (!r.ok) throw new Error(`Replicate ${r.status}: ${(await r.text()).slice(0, 200)}`);
+  let p = await r.json();
+  const t0 = Date.now();
+  while ((p.status === 'starting' || p.status === 'processing') && Date.now() - t0 < 50000) {
+    await new Promise((res) => setTimeout(res, 2000));
+    p = await (await fetch(p.urls.get, { headers })).json();
+  }
+  const out = Array.isArray(p.output) ? p.output[0] : p.output;
+  if (!out) throw new Error(`no audio (${p.status}: ${p.error || ''})`);
+  const audio = await fetch(out);
+  if (!audio.ok) throw new Error(`audio download ${audio.status}`);
+  return bytesToBase64(new Uint8Array(await audio.arrayBuffer()));
+}
 
 // Generate voice using OpenAI TTS
 async function generateOpenAIVoice(text: string): Promise<string> {
@@ -80,17 +129,19 @@ async function generateOpenAIVoice(text: string): Promise<string> {
   }
 
   const arrayBuffer = await response.arrayBuffer();
-  const audioBytes = new Uint8Array(arrayBuffer);
-  
+  return bytesToBase64(new Uint8Array(arrayBuffer));
+}
+
+function bytesToBase64(audioBytes: Uint8Array): string {
   // Convert to base64
   let binaryString = '';
   const chunkSize = 8192;
-  
+
   for (let i = 0; i < audioBytes.length; i += chunkSize) {
     const chunk = audioBytes.slice(i, i + chunkSize);
     binaryString += String.fromCharCode.apply(null, Array.from(chunk));
   }
-  
+
   return btoa(binaryString);
 }
 
@@ -109,4 +160,3 @@ function cleanTextForTTS(text: string): string {
   text = text.replace(/^[•·\-*]\s*/gm, '');
   return text;
 }
-
