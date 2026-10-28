@@ -7,19 +7,48 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
 // Pere + Titi's classroom (22 Oct 2026): the dashboard chat's voice loop (voice-to-text -> espaluz-chat -> generate-voice)
-// in kids mode, with the heroes' clips as the avatar. Clip choice follows the EspaLuz Telegram bot's alisa_hero_clip().
+// in kids mode, with the heroes' clips as the avatar. 28 Oct 2026: the SAME 25 clips and the same playlist rule as the
+// EspaLuz Telegram bot (hero_shot_list): a lead clip that fits the words, then talking and action shots alternating,
+// the least recently played action shot first, so one turn after another looks different.
 type Turn = { role: "user" | "assistant"; content: string };
 
 const IDLE_CLIP = "/heroes/duo-hello.mp4";
+const TALK = ["pere-talking-1", "pere-talking-2", "titi-talking-1", "titi-talking-2"];
+const ACT = [
+  "pere-hello", "pere-breathing", "pere-sleepy", "pere-counting", "pere-thinking", "pere-clap", "pere-listening",
+  "titi-cheer", "titi-cheer-2", "titi-silly", "titi-crosscrawl", "titi-dance", "titi-counting-jumps", "titi-freeze",
+  "titi-oops", "titi-listening", "duo-highfive", "duo-peekaboo",
+];
+const recent: string[] = []; // action shots just played go to the back of the line (one child, one line)
 
-function heroClip(text: string): string {
+const shuffled = <T,>(a: T[]) => [...a].sort(() => Math.random() - 0.5);
+
+function heroShots(text: string): string[] {
   const t = text.toLowerCase();
-  const pick = (names: string[]) => `/heroes/${names[Math.floor(Math.random() * names.length)]}.mp4`;
-  if (["respira", "breath", "barriga", "belly", "calma", "calm"].some((w) => t.includes(w))) return pick(["pere-breathing"]);
-  if (["rodilla", "knee", "salta", "jump", "simon"].some((w) => t.includes(w))) return pick(["titi-crosscrawl", "titi-cheer"]);
-  if (["adiós", "adios", "bye", "hasta mañana", "see you"].some((w) => t.includes(w))) return pick(["duo-goodbye"]);
-  if (["noche", "night", "dormir", "sleep", "sueño"].some((w) => t.includes(w))) return pick(["pere-sleepy"]);
-  return pick(["duo-hello", "pere-hello", "titi-cheer", "titi-silly"]);
+  const has = (ws: string[]) => ws.some((w) => t.includes(w));
+  const one = (ns: string[]) => [ns[Math.floor(Math.random() * ns.length)]];
+  let lead: string[] = [];
+  if (has(["adiós", "adios", "bye", "hasta mañana", "see you"])) lead = ["duo-goodbye"];
+  else if (has(["respira", "breath", "barriga", "belly", "calma", "calm"])) lead = ["pere-breathing"];
+  else if (has(["noche", "night", "dormir", "sleep", "sueño"])) lead = ["pere-sleepy"];
+  else if (has(["baila", "dance", "música", "music"])) lead = ["titi-dance"];
+  else if (has(["rodilla", "knee", "salta", "jump", "simon"])) lead = ["titi-crosscrawl"];
+  else if (has(["muy bien", "bravo", "excelente", "great job", "well done", "perfecto"])) lead = one(["duo-highfive", "pere-clap"]);
+  else if (has(["cuenta", "contar", "count", "uno, dos", "one, two"])) lead = one(["pere-counting", "titi-counting-jumps"]);
+  else if (has(["congela", "estatua", "freeze", "statue"])) lead = ["titi-freeze"];
+  else if (has(["ups", "oops", "me equivoqu", "mistake", "error"])) lead = ["titi-oops"];
+  else if (has(["dónde está", "donde esta", "where is", "escondid", "peekaboo", "cucú"])) lead = ["duo-peekaboo"];
+  else if (has(["repite", "repeat", "dime", "tell me", "escucha", "listen"])) lead = one(["pere-listening", "titi-listening"]);
+  else if (has(["piensa", "adivina", "think", "guess"])) lead = ["pere-thinking"];
+  // least recently played first; the lead counts as just played so it is not shown twice in one turn
+  const seen = [...recent, ...lead];
+  const age = new Map(seen.map((n, i) => [n, seen.length - 1 - i])); // 0 = most recent
+  const act = shuffled(ACT).sort((a, b) => (age.get(b) ?? 1e6) - (age.get(a) ?? 1e6));
+  const talk = shuffled(TALK);
+  const mix = act.flatMap((a, i) => [talk[i % talk.length], a]);
+  recent.push(...lead, ...act.slice(0, 2)); // the first two action shots are the ones a 10–20 s line actually reaches
+  while (recent.length > 12) recent.shift();
+  return [...lead, ...mix].map((n) => `/heroes/${n}.mp4`);
 }
 
 function toAudioUrl(base64: string): string {
@@ -33,7 +62,9 @@ const Classroom = () => {
   const { user, loading } = useAuth();
   const [turns, setTurns] = useState<Turn[]>([]);
   const [reply, setReply] = useState("");
-  const [clip, setClip] = useState(IDLE_CLIP);
+  const [playlist, setPlaylist] = useState<string[]>([IDLE_CLIP]);
+  const [shot, setShot] = useState(0);
+  const idle = () => { setPlaylist([IDLE_CLIP]); setShot(0); };
   const [busy, setBusy] = useState(false);
   const [recording, setRecording] = useState(false);
   const [stars, setStars] = useState(0);
@@ -46,11 +77,11 @@ const Classroom = () => {
   const speak = async (text: string) => {
     const { data, error } = await supabase.functions.invoke("generate-voice", { body: { text, voice: "es", userId: user?.id } });
     const b64 = data?.audioContent || data?.audioBase64;
-    if (error || !b64) return; // the words stay on screen even when the voice fails
+    if (error || !b64) { idle(); return; } // the words stay on screen even when the voice fails
     audio.current?.pause();
     const a = new Audio(toAudioUrl(b64));
     audio.current = a;
-    a.onended = () => setClip(IDLE_CLIP);
+    a.onended = idle;
     await a.play().catch(() => undefined);
   };
 
@@ -64,7 +95,8 @@ const Classroom = () => {
       if (error || !text) throw new Error(data?.error || error?.message || "no answer");
       setTurns((t) => [...t, { role: "user", content: childSays }, { role: "assistant", content: text }]);
       setReply(text);
-      setClip(heroClip(text));
+      setPlaylist(heroShots(text));
+      setShot(0);
       if (countsAsStar) setStars((s) => s + 1);
       await speak(text);
     } catch (e) {
@@ -134,10 +166,11 @@ const Classroom = () => {
       </div>
 
       <video
-        key={clip}
-        src={clip}
+        key={`${playlist[shot]}-${shot}`}
+        src={playlist[shot]}
         autoPlay
-        loop
+        loop={playlist.length === 1}
+        onEnded={() => setShot((i) => (i + 1) % playlist.length)}
         muted
         playsInline
         className="w-full max-w-[520px] aspect-square rounded-[2rem] shadow-2xl border-8 border-white/80 object-cover"
