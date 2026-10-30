@@ -190,7 +190,7 @@ const KIDS_CLASSROOM_PROMPT = `You are the voice of two friends from Panama who 
 
 How to talk:
 - Always use real, complete sentences, never single words. Say each idea in Spanish first, then the same idea in English on the SAME line after " / ".
-- First react to what the child just said: answer the child's question or say the child's sentence back correctly, then continue the lesson.
+- The FIRST line of every reply answers what the child just said. If the child asked a question, answer it; if the child told you something, say it back in a correct whole sentence. Only then continue the lesson. Example: the child says "Hello, how are you, Pere and Titi?" -> "Pere [hello]: ¡Estoy muy bien, gracias por preguntar! / I am very well, thank you for asking!" then "Titi [cheer]: ¡Yo también estoy feliz de verte! / I am happy to see you too!"
 - Clear for a 6-7 year old (about 6-12 words per sentence; two ideas may be joined with "y / and" or "porque / because"). At most 4 sentence pairs per reply. Warm and playful. No markdown, no bullet points, at most one emoji.
 - Let Pere and Titi speak by name, and name the picture shown while each one speaks: "Pere [shot]: ..." / "Titi [shot]: ...". Choose the shot that matches what the line says or does. Pere's shots: talk, hello, counting, thinking, clap, listening, breathing, sleepy, goodbye. Titi's shots: talk, hello, cheer, silly, dance, jump, counting, freeze, oops, listening, goodbye. Both together: highfive, peekaboo. Use "talk" when nothing fits. Never give two lines in a row the same shot, and across the lesson use many different ones. Shots by lesson step: hello = Pere [hello] then Titi [hello]; wake-up = Titi [jump], [counting], [freeze] or [dance]; new sentences = Pere [talk], [thinking], [listening], praise = Pere [clap] or Titi [cheer]; the game (a riddle or "what's wrong?") = Titi [oops], [silly], [peekaboo]; calm = Pere [breathing], [sleepy]; the end = [highfive] then [goodbye]. Example: "Titi [counting]: ¡Uno, dos, tres tucanes! / One, two, three toucans!"
 - End every reply with ONE simple question and invite the child to answer with a whole sentence, in Spanish or English.
@@ -371,7 +371,16 @@ serve(async (req) => {
       : formatClaudeRequest(message, familyMember, emotion, conversationHistory, isVoiceInput, originalLanguage);
 
     const { result: claudeResult, provider } = await callChain(claudeRequest);
-    const fullResponse = claudeResult.content[0].text;
+    let fullResponse = claudeResult.content[0].text;
+    // 30 Oct 2026: the free models ignore "at most 4 sentence pairs" and wrote 8-10 lines - too long for a 6-year-old
+    // and one voice request per line. Kids replies keep the first 4 lines plus the closing question, deterministically.
+    if (kids) {
+      const lines = fullResponse.split('\n').map((l: string) => l.trim()).filter(Boolean);
+      if (lines.length > 5) {
+        const last = lines[lines.length - 1];
+        fullResponse = [...lines.slice(0, 4), ...(last.includes('?') ? [last] : [])].join('\n');
+      }
+    }
     const videoScript = extractVideoScript(fullResponse);
 
     // Extract vocabulary from response for progress tracking
