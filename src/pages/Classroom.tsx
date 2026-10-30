@@ -14,6 +14,7 @@ type Turn = { role: "user" | "assistant"; content: string };
 type Line = { who: "pere" | "titi"; clip: string; chars: number; text: string };
 
 const IDLE_CLIP = "/heroes/duo-hello.mp4";
+const GREETING_CLIP = "/heroes/kids-greeting.mp4"; // the heroes' own voiced hello (the Telegram /kids clip) opens the class
 const TALK = { pere: ["pere-talking-1", "pere-talking-2"], titi: ["titi-talking-1", "titi-talking-2"] };
 const SHOT_CLIPS: Record<"pere" | "titi", Record<string, string>> = {
   pere: { hello: "pere-hello", counting: "pere-counting", thinking: "pere-thinking", clap: "pere-clap", listening: "pere-listening",
@@ -30,6 +31,11 @@ const SHOT_ALIASES: Record<string, string> = {
   excited: "cheer", cheering: "cheer", dancing: "dance", music: "dance", hide: "peekaboo", surprise: "peekaboo",
 };
 const recent: string[] = []; // clips just played go to the back of the line
+// Twins: the same picture twice in a row gives way to its twin (own hero only), so every clip gets its turn (30 Oct 2026).
+const SHOT_ALT: Record<string, string> = {
+  "titi-cheer": "titi-cheer-2", "titi-cheer-2": "titi-cheer", "pere-hello": "duo-hello", "duo-hello": "pere-hello",
+  "pere-talking-1": "pere-talking-2", "pere-talking-2": "pere-talking-1", "titi-talking-1": "titi-talking-2", "titi-talking-2": "titi-talking-1",
+};
 
 /** The lesson words that pick a picture when the tutor gave no tag (same list as the bot). */
 function clipFromWords(who: "pere" | "titi", t: string, first: boolean, last: boolean): string | null {
@@ -52,9 +58,11 @@ function pickClip(who: "pere" | "titi", text: string, shot: string | null, first
   const tag = SHOT_ALIASES[shot ?? ""] ?? shot ?? "";
   let name = tag && tag !== "talk" ? SHOT_CLIPS[who][tag] ?? null : null;
   if (!name && tag !== "talk") name = clipFromWords(who, text.toLowerCase(), first, last);
-  if (name === "titi-cheer" && recent.includes("titi-cheer") && !recent.includes("titi-cheer-2")) name = "titi-cheer-2";
+  const alt = name ? SHOT_ALT[name] : undefined;
+  if (name && alt && recent[recent.length - 1] === name && !alt.startsWith(who === "pere" ? "titi-" : "pere-")) name = alt; // never the other hero alone
   if (!name) {
-    const age = new Map(recent.map((n, i) => [n, recent.length - 1 - i])); // 0 = most recent
+    const age = new Map<string, number>();
+    recent.forEach((n, i) => age.set(n, recent.length - 1 - i)); // 0 = most recent; a clip played twice keeps its newest age
     name = [...TALK[who]].sort(() => Math.random() - 0.5).sort((a, b) => (age.get(b) ?? 1e6) - (age.get(a) ?? 1e6))[0];
   }
   recent.push(name);
@@ -94,11 +102,33 @@ const Classroom = () => {
   const [busy, setBusy] = useState(false);
   const [recording, setRecording] = useState(false);
   const [stars, setStars] = useState(0);
+  const [greeting, setGreeting] = useState(false);
+  const greetingDone = useRef<Promise<void> | null>(null);
+  const greetingEnded = useRef<(() => void) | null>(null);
+  const known = useRef<string[]>([]); // whole sentences the child said in earlier lessons (this browser) - the words come back and grow
   const recorder = useRef<MediaRecorder | null>(null);
   const chunks = useRef<Blob[]>([]);
   const audio = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => () => { audio.current?.pause(); }, []);
+
+  // Stars and known sentences survive a reload (Buddy.ai keeps the child's progress; 30 Oct 2026). Per parent account, this browser.
+  useEffect(() => {
+    if (!user?.id) return;
+    try {
+      setStars(Math.max(0, parseInt(localStorage.getItem(`classroom-stars-${user.id}`) ?? "0", 10) || 0));
+      const k = JSON.parse(localStorage.getItem(`classroom-known-${user.id}`) ?? "[]");
+      known.current = Array.isArray(k) ? k.filter((x) => typeof x === "string").slice(-20) : [];
+    } catch { /* a bad entry just starts fresh */ }
+  }, [user?.id]);
+  useEffect(() => {
+    if (user?.id) try { localStorage.setItem(`classroom-stars-${user.id}`, String(stars)); } catch { /* storage full or blocked */ }
+  }, [stars, user?.id]);
+  const remember = (said: string) => {
+    if (said.trim().split(/\s+/).length < 4) return; // a whole sentence, not a word
+    known.current = [...known.current.filter((s) => s !== said), said].slice(-20);
+    if (user?.id) try { localStorage.setItem(`classroom-known-${user.id}`, JSON.stringify(known.current)); } catch { /* ignore */ }
+  };
 
   const voiceFor = async (text: string, hero?: "pere" | "titi"): Promise<string | null> => {
     const { data, error } = await supabase.functions.invoke("generate-voice", { body: { text, voice: "es", userId: user?.id, hero } });
@@ -146,12 +176,13 @@ const Classroom = () => {
     setBusy(true);
     try {
       const { data, error } = await supabase.functions.invoke("espaluz-chat", {
-        body: { message: childSays, isVoiceInput: true, kids: { history: turns.slice(-10) } },
+        body: { message: childSays, isVoiceInput: true, kids: { history: turns.slice(-10), known: known.current } },
       });
       const text: string = data?.response || "";
       if (error || !text) throw new Error(data?.error || error?.message || "no answer");
       setTurns((t) => [...t, { role: "user", content: childSays }, { role: "assistant", content: text }]);
       setReply(stripShotTags(text));
+      if (greetingDone.current) { await greetingDone.current; greetingDone.current = null; setGreeting(false); } // let the hello finish
       const spoken = heroLines(text);
       setLines(spoken);
       setShot(0);
@@ -187,6 +218,7 @@ const Classroom = () => {
           toast.error("No te escuché bien. / I didn't hear you. Try again!");
           return;
         }
+        remember(heard);
         await talk(heard, true);
       };
       recorder.current = r;
@@ -224,12 +256,14 @@ const Classroom = () => {
       </div>
 
       <video
-        key={`${lines[shot]?.clip ?? IDLE_CLIP}-${shot}`}
-        src={lines[shot]?.clip ?? IDLE_CLIP}
+        key={greeting ? GREETING_CLIP : `${lines[shot]?.clip ?? IDLE_CLIP}-${shot}`}
+        src={greeting ? GREETING_CLIP : lines[shot]?.clip ?? IDLE_CLIP}
         autoPlay
-        loop
-        muted
+        loop={!greeting}
+        muted={!greeting}
         playsInline
+        onEnded={() => greetingEnded.current?.()}
+        onError={() => greetingEnded.current?.()}
         className="w-full max-w-[520px] aspect-square rounded-[2rem] shadow-2xl border-8 border-white/80 object-cover"
       />
 
@@ -241,7 +275,16 @@ const Classroom = () => {
 
       {turns.length === 0 ? (
         <Button size="lg" className="rounded-full text-2xl h-20 px-10 shadow-xl" disabled={busy || loading}
-          onClick={() => talk("¡Hola Pere y Titi! Quiero empezar la clase. / Hello Pere and Titi! I want to start the class.", false)}>
+          onClick={() => {
+            // Pere and Titi say hello at once, in their own voices, while the first lesson line is being written.
+            greetingDone.current = new Promise<void>((done) => {
+              const finish = () => { greetingEnded.current = null; done(); };
+              greetingEnded.current = finish;
+              setTimeout(finish, 25000);
+            });
+            setGreeting(true);
+            talk("¡Hola Pere y Titi! Quiero empezar la clase. / Hello Pere and Titi! I want to start the class.", false);
+          }}>
           <Play className="w-8 h-8 mr-2" /> ¡Empezar! / Start!
         </Button>
       ) : (

@@ -191,7 +191,7 @@ const KIDS_CLASSROOM_PROMPT = `You are the voice of two friends from Panama who 
 How to talk:
 - Always use real, complete sentences, never single words. Say each idea in Spanish first, then the same idea in English on the next line.
 - Short and clear for a 5-7 year old (about 5-10 words per sentence). At most 4 sentence pairs per reply. Warm and playful. No markdown, no bullet points, at most one emoji.
-- Let Pere and Titi speak by name, and name the picture shown while each one speaks: "Pere [shot]: ..." / "Titi [shot]: ...". Choose the shot that matches what the line says or does. Pere's shots: talk, hello, counting, thinking, clap, listening, breathing, sleepy, goodbye. Titi's shots: talk, cheer, silly, dance, jump, counting, freeze, oops, listening, goodbye. Both together: highfive, peekaboo. Use "talk" when nothing fits. Example: "Titi [counting]: ¡Uno, dos, tres tucanes! / One, two, three toucans!"
+- Let Pere and Titi speak by name, and name the picture shown while each one speaks: "Pere [shot]: ..." / "Titi [shot]: ...". Choose the shot that matches what the line says or does. Pere's shots: talk, hello, counting, thinking, clap, listening, breathing, sleepy, goodbye. Titi's shots: talk, hello, cheer, silly, dance, jump, counting, freeze, oops, listening, goodbye. Both together: highfive, peekaboo. Use "talk" when nothing fits. Never give two lines in a row the same shot, and across the lesson use many different ones. Shots by lesson step: hello = Pere [hello] then Titi [hello]; wake-up = Titi [jump], [counting], [freeze] or [dance]; new sentences = Pere [talk], [thinking], [listening], praise = Pere [clap] or Titi [cheer]; the game = Titi [oops], [silly], [peekaboo]; calm = Pere [breathing], [sleepy]; the end = [highfive] then [goodbye]. Example: "Titi [counting]: ¡Uno, dos, tres tucanes! / One, two, three toucans!"
 - End every reply with ONE simple question and invite the child to answer with a whole sentence, in Spanish or English.
 - If the child makes a mistake, praise the try and say the correct whole sentence once; never say "wrong".
 
@@ -345,8 +345,15 @@ serve(async (req) => {
       ];
     }).flat().filter(msg => msg.content) || [];
 
+    // Sentences the child said in earlier lessons come back first (Buddy.ai: tiny vocabulary, repeated and grown; 30 Oct 2026).
+    const known: string[] = Array.isArray(kids?.known)
+      ? kids.known.filter((s: unknown) => typeof s === 'string').map((s: string) => s.trim().slice(0, 120)).filter(Boolean).slice(-20)
+      : [];
+    const kidsSystem = KIDS_CLASSROOM_PROMPT + (known.length
+      ? `\n\nSentences the child already said in earlier lessons: ${known.map((s) => `"${s}"`).join(' · ')}. Open by inviting the child to say one of them again and praise, then teach new ones (the same words come back and grow).`
+      : '');
     const claudeRequest = kids
-      ? { max_tokens: 500, temperature: 0.7, system: KIDS_CLASSROOM_PROMPT,
+      ? { max_tokens: 500, temperature: 0.7, system: kidsSystem,
           messages: [...(Array.isArray(kids.history) ? kids.history.slice(-10) : []), { role: 'user', content: message }] }
       : formatClaudeRequest(message, familyMember, emotion, conversationHistory, isVoiceInput, originalLanguage);
 
