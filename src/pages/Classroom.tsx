@@ -75,7 +75,11 @@ function heroLines(text: string): Line[] {
   const raw: { who: "pere" | "titi"; shot: string | null; text: string }[] = [];
   for (const line of text.split("\n")) {
     const m = line.trim().match(/^[^\w]*(pere|titi)\s*(?:\[\s*([a-z][a-z -]*?)\s*\])?\s*:\s*(.*)$/i);
-    if (m) raw.push({ who: m[1].toLowerCase() as "pere" | "titi", shot: m[2]?.toLowerCase().trim() || null, text: m[3] });
+    const prev = raw[raw.length - 1];
+    // 30 Oct 2026: "Pere: es" then "Pere: en" on the next line is ONE sentence pair, not two turns (8 lines -> 8 voice
+    // requests at once -> Replicate throttled every one -> silence). Join it to the line it translates.
+    if (m && prev && prev.who === m[1].toLowerCase() && !prev.text.includes(" / ")) prev.text += " / " + m[3].trim();
+    else if (m) raw.push({ who: m[1].toLowerCase() as "pere" | "titi", shot: m[2]?.toLowerCase().trim() || null, text: m[3] });
     else if (raw.length && line.trim()) raw[raw.length - 1].text += " " + line.trim();
   }
   if (!raw.length) raw.push({ who: "pere", shot: null, text });
@@ -105,11 +109,34 @@ function bubbles(reply: string): Bubble[] {
     const en = cut >= 0 ? body.slice(cut + 3).trim() : "";
     if (!es) continue;
     const prev = out[out.length - 1];
+    if (m && prev && prev.who === who && !prev.en && cut < 0) { prev.en = es; continue; } // "Pere: es" + "Pere: en" = one bubble
     if (!m && prev && prev.who === who && who !== "ask") { prev.es += ` ${es}`; prev.en = [prev.en, en].filter(Boolean).join(" "); continue; }
     out.push({ who, es, en });
     if (who !== "ask") last = who;
   }
   return out;
+}
+
+/** The free fallback voice (30 Oct 2026): the browser's own speech, Spanish half in a Spanish voice, English half in an
+ *  English one; Pere low and slow, Titi high and quick. Used only when the hero voice could not be made. */
+function browserSay(text: string, who: "pere" | "titi"): Promise<void> {
+  const synth = typeof window !== "undefined" ? window.speechSynthesis : undefined;
+  if (!synth) return Promise.resolve();
+  const parts = text.split(" / ").map((p) => p.trim()).filter(Boolean);
+  return new Promise<void>((done) => {
+    synth.cancel();
+    let left = parts.length;
+    if (!left) return done();
+    const safety = setTimeout(done, 30000);
+    parts.forEach((p, i) => {
+      const u = new SpeechSynthesisUtterance(p);
+      u.lang = i === 0 && parts.length > 1 ? "es-ES" : /[¿¡ñáéíóú]/i.test(p) ? "es-ES" : "en-US";
+      u.rate = who === "pere" ? 0.85 : 1.05;
+      u.pitch = who === "pere" ? 0.8 : 1.5;
+      u.onend = u.onerror = () => { if (--left === 0) { clearTimeout(safety); done(); } };
+      synth.speak(u);
+    });
+  });
 }
 
 function toAudioUrl(base64: string): string {
@@ -177,25 +204,18 @@ const Classroom = () => {
   // 28 Oct 2026: Pere and Titi speak their own lines in their own voices (the Telegram bot's MiniMax voices, via
   // generate-voice `hero`), the picture of each line on screen while it is said. If any line has no hero voice,
   // the whole reply is read in the usual single voice and the pictures follow the words by their share of the time.
-  const speak = async (text: string, spoken: Line[]) => {
-    const urls = await Promise.all(spoken.map((l) => voiceFor(l.text, l.who)));
-    if (spoken.length && urls.every((u): u is string => !!u)) {
-      for (let i = 0; i < spoken.length; i++) {
-        setShot(i);
-        await play(urls[i]);
-      }
-      idle();
-      return;
+  // 30 Oct 2026: one voice request at a time, the next fetched while this line plays. Replicate allows a burst of 1
+  // while its balance is under $5, and the old Promise.all sent every line at once -> all throttled -> OpenAI (no
+  // credits) -> silence. A line without a hero voice is read by the browser's own free voice, so the child always hears it.
+  const speak = async (_text: string, spoken: Line[]) => {
+    let next = spoken.length ? voiceFor(spoken[0].text, spoken[0].who) : null;
+    for (let i = 0; i < spoken.length; i++) {
+      const url = await next;
+      next = i + 1 < spoken.length ? voiceFor(spoken[i + 1].text, spoken[i + 1].who) : null;
+      setShot(i);
+      if (url) await play(url);
+      else await browserSay(spoken[i].text, spoken[i].who);
     }
-    const whole = await voiceFor(text);
-    if (!whole) { idle(); return; } // the words stay on screen even when the voice fails
-    const total = spoken.reduce((n, l) => n + l.chars, 0);
-    await play(whole, (a) => {
-      if (!a.duration) return;
-      let acc = 0;
-      const i = spoken.findIndex((l) => (acc += l.chars) / total > a.currentTime / a.duration);
-      setShot(Math.max(0, i === -1 ? spoken.length - 1 : i));
-    });
     idle();
   };
 
@@ -252,6 +272,7 @@ const Classroom = () => {
       r.start();
       setRecording(true);
       audio.current?.pause();
+      window.speechSynthesis?.cancel();
     } catch {
       toast.error("Necesitamos el micrófono. / We need the microphone.");
     }
