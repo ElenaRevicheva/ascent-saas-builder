@@ -31,10 +31,21 @@ const SHOT_ALIASES: Record<string, string> = {
   excited: "cheer", cheering: "cheer", dancing: "dance", music: "dance", hide: "peekaboo", surprise: "peekaboo",
 };
 const recent: string[] = []; // clips just played go to the back of the line
-// Twins: the same picture twice in a row gives way to its twin (own hero only), so every clip gets its turn (30 Oct 2026).
-const SHOT_ALT: Record<string, string> = {
-  "titi-cheer": "titi-cheer-2", "titi-cheer-2": "titi-cheer", "pere-hello": "duo-hello", "duo-hello": "pere-hello",
-  "pere-talking-1": "pere-talking-2", "pere-talking-2": "pere-talking-1", "titi-talking-1": "titi-talking-2", "titi-talking-2": "titi-talking-1",
+// 30 Oct 2026 (Elena: "are you sure images are rotated? we have 25"): the twin swap fired only on back-to-back repeats
+// (bot log: 14 of 25 clips in 34 lines, two clips 9x each). Now a clip seen in the last 6 gives way to the least-recently
+// seen look-alike that fits the same kind of line (own hero or both). Same table as the bot's HERO_SHOT_FAMILY.
+const SHOT_FAMILY: Record<string, string[]> = {
+  "pere-hello": ["duo-hello", "pere-talking-1", "pere-talking-2"], "duo-hello": ["pere-hello", "duo-highfive"],
+  "titi-cheer": ["titi-cheer-2", "titi-dance", "titi-silly"], "titi-cheer-2": ["titi-cheer", "titi-dance", "titi-silly"],
+  "pere-clap": ["duo-highfive", "pere-talking-2"], "duo-highfive": ["pere-clap", "titi-cheer-2"],
+  "pere-talking-1": ["pere-talking-2", "pere-thinking", "pere-listening"], "pere-talking-2": ["pere-talking-1", "pere-thinking", "pere-listening"],
+  "titi-talking-1": ["titi-talking-2", "titi-listening", "titi-silly"], "titi-talking-2": ["titi-talking-1", "titi-listening", "titi-silly"],
+  "pere-listening": ["pere-thinking", "pere-talking-2"], "pere-thinking": ["pere-listening", "pere-talking-1"],
+  "titi-listening": ["titi-talking-1", "titi-talking-2"],
+  "titi-crosscrawl": ["titi-counting-jumps", "titi-dance", "titi-freeze"], "titi-dance": ["titi-crosscrawl", "titi-cheer-2"],
+  "titi-counting-jumps": ["titi-crosscrawl"], "pere-counting": ["pere-thinking"],
+  "titi-silly": ["titi-oops", "titi-cheer"], "titi-oops": ["titi-silly"], "titi-freeze": ["titi-crosscrawl"],
+  "pere-breathing": ["pere-sleepy"], "pere-sleepy": ["pere-breathing"], "duo-peekaboo": ["titi-silly"],
 };
 
 /** The lesson words that pick a picture when the tutor gave no tag (same list as the bot). */
@@ -58,11 +69,12 @@ function pickClip(who: "pere" | "titi", text: string, shot: string | null, first
   const tag = SHOT_ALIASES[shot ?? ""] ?? shot ?? "";
   let name = tag && tag !== "talk" ? SHOT_CLIPS[who][tag] ?? null : null;
   if (!name && tag !== "talk") name = clipFromWords(who, text.toLowerCase(), first, last);
-  const alt = name ? SHOT_ALT[name] : undefined;
-  if (name && alt && recent[recent.length - 1] === name && !alt.startsWith(who === "pere" ? "titi-" : "pere-")) name = alt; // never the other hero alone
+  const age = new Map<string, number>();
+  recent.forEach((n, i) => age.set(n, recent.length - 1 - i)); // 0 = most recent; a clip played twice keeps its newest age
+  if (name && SHOT_FAMILY[name] && (age.get(name) ?? 1e6) < 6) {
+    name = [name, ...SHOT_FAMILY[name]].reduce((best, c) => ((age.get(c) ?? 1e6) > (age.get(best) ?? 1e6) ? c : best));
+  }
   if (!name) {
-    const age = new Map<string, number>();
-    recent.forEach((n, i) => age.set(n, recent.length - 1 - i)); // 0 = most recent; a clip played twice keeps its newest age
     name = [...TALK[who]].sort(() => Math.random() - 0.5).sort((a, b) => (age.get(b) ?? 1e6) - (age.get(a) ?? 1e6))[0];
   }
   recent.push(name);
