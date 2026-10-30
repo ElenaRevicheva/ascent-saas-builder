@@ -85,6 +85,33 @@ function heroLines(text: string): Line[] {
 /** The tag is for the picture only; the child reads "Pere: ...". */
 const stripShotTags = (text: string) => text.replace(/\b(pere|titi)\s*\[[^\]\n]*\]\s*:/gi, "$1:");
 
+/** A round, chunky face made for children's reading (loaded in index.html); system fonts if it is blocked. */
+const KID_FONT = '"Baloo 2", "Nunito", ui-rounded, "Segoe UI", system-ui, sans-serif';
+
+type Bubble = { who: "pere" | "titi" | "ask"; es: string; en: string };
+
+/** The reply as speech bubbles: "Pere: es / en" -> Pere's bubble; an unnamed question -> the yellow question card. */
+function bubbles(reply: string): Bubble[] {
+  const out: Bubble[] = [];
+  let last: Bubble["who"] = "pere";
+  for (const raw of reply.split("\n")) {
+    const line = raw.replace(/\*\*/g, "").trim();
+    if (!line || /^\[VIDEO SCRIPT/i.test(line)) continue;
+    const m = line.match(/^(pere|titi)\s*:\s*(.*)$/i);
+    const who: Bubble["who"] = m ? (m[1].toLowerCase() as "pere" | "titi") : line.includes("?") ? "ask" : last;
+    const body = m ? m[2] : line;
+    const cut = body.indexOf(" / ");
+    const es = (cut >= 0 ? body.slice(0, cut) : body).trim();
+    const en = cut >= 0 ? body.slice(cut + 3).trim() : "";
+    if (!es) continue;
+    const prev = out[out.length - 1];
+    if (!m && prev && prev.who === who && who !== "ask") { prev.es += ` ${es}`; prev.en = [prev.en, en].filter(Boolean).join(" "); continue; }
+    out.push({ who, es, en });
+    if (who !== "ask") last = who;
+  }
+  return out;
+}
+
 function toAudioUrl(base64: string): string {
   const bin = atob(base64.replace(/^data:audio\/[^;]+;base64,/, ""));
   const bytes = new Uint8Array(bin.length);
@@ -268,8 +295,31 @@ const Classroom = () => {
       />
 
       {reply && (
-        <div className="w-full max-w-[640px] bg-white/92 rounded-3xl px-6 py-4 shadow-lg text-lg leading-relaxed whitespace-pre-line">
-          {reply}
+        // 30 Oct 2026 (Elena: "words are black and not visible, not juicy for kids"): `bg-white/92` is not a Tailwind
+        // step, so the box had NO background. Now each hero speaks in his own colour bubble, Spanish big, English under it.
+        <div className="w-full max-w-[680px] flex flex-col gap-3" style={{ fontFamily: KID_FONT }}>
+          {bubbles(reply).map((b, i) => {
+            const now = lines[shot]?.who === b.who && lines[shot]?.text.includes(b.es.slice(0, 12));
+            return (
+              <div key={i} className={`flex items-start gap-3 ${b.who === "titi" ? "flex-row-reverse text-right" : ""}`}>
+                {b.who !== "ask" && (
+                  <div className={`shrink-0 w-14 h-14 rounded-full grid place-items-center text-3xl shadow-lg border-4 border-white
+                    ${b.who === "titi" ? "bg-orange-400" : "bg-lime-500"}`}>{b.who === "titi" ? "🐒" : "🦥"}</div>
+                )}
+                <div className={`flex-1 rounded-[1.75rem] px-5 py-3 shadow-xl border-4 border-white transition-transform duration-300
+                  ${b.who === "titi" ? "bg-orange-100" : b.who === "ask" ? "bg-yellow-200 text-center" : "bg-lime-100"}
+                  ${now ? "scale-[1.03] ring-4 ring-yellow-300" : ""}`}>
+                  {b.who !== "ask" && (
+                    <div className={`text-sm font-extrabold uppercase tracking-wide ${b.who === "titi" ? "text-orange-600" : "text-lime-700"}`}>
+                      {b.who === "titi" ? "Titi" : "Pere"}
+                    </div>
+                  )}
+                  <div className="text-2xl font-bold leading-snug text-slate-900">{b.es}</div>
+                  {b.en && <div className="text-lg font-semibold leading-snug text-slate-600 mt-1">{b.en}</div>}
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 

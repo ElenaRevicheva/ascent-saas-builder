@@ -48,45 +48,45 @@ serve(async (req) => {
       throw new Error('No audio data provided');
     }
 
-    const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
-    if (!openaiApiKey) {
-      console.error('OPENAI_API_KEY not configured');
-      throw new Error('OPENAI_API_KEY not configured');
-    }
-
     console.log(`Processing voice message in language: ${language || 'auto-detect'}`);
     console.log(`Audio data length: ${audio.length} characters`);
 
     // Process audio in chunks
     const binaryAudio = processBase64Chunks(audio);
     console.log(`Processed binary audio length: ${binaryAudio.length} bytes`);
-    
-    // Prepare form data
-    const formData = new FormData();
-    const blob = new Blob([binaryAudio], { type: 'audio/webm' });
-    formData.append('file', blob, 'audio.webm');
-    formData.append('model', 'whisper-1');
-    
-    if (language) {
-      formData.append('language', language);
+
+    // 30 Oct 2026: OpenAI has no credits since 23 Oct (Whisper 429 insufficient_quota -> every classroom answer was
+    // "I didn't hear you"). Free first, the fleet's order rule: Groq's Whisper (same model family, free tier), then
+    // OpenAI. A provider without a secret is skipped; a failing one hands over to the next.
+    const providers: [string, string | undefined, string, string][] = [
+      ['groq', Deno.env.get('GROQ_API_KEY'), 'https://api.groq.com/openai/v1/audio/transcriptions', 'whisper-large-v3-turbo'],
+      ['groq', Deno.env.get('GROQ_API_KEY'), 'https://api.groq.com/openai/v1/audio/transcriptions', 'whisper-large-v3'],
+      ['openai', Deno.env.get('OPENAI_API_KEY'), 'https://api.openai.com/v1/audio/transcriptions', 'whisper-1'],
+    ];
+    const errors: string[] = [];
+    let result: any = null;
+    for (const [name, key, url, model] of providers) {
+      if (!key) continue;
+      const formData = new FormData();
+      formData.append('file', new Blob([binaryAudio], { type: 'audio/webm' }), 'audio.webm');
+      formData.append('model', model);
+      if (language) {
+        formData.append('language', language);
+      }
+      const response = await fetch(url, { method: 'POST', headers: { 'Authorization': `Bearer ${key}` }, body: formData });
+      if (!response.ok) {
+        const why = `${name} ${model}: ${response.status} ${(await response.text()).slice(0, 200)}`;
+        console.error('Whisper provider failed, trying the next:', why);
+        errors.push(why);
+        continue;
+      }
+      result = await response.json();
+      console.log(`transcribed by ${name} ${model}`);
+      break;
     }
-
-    // Send to OpenAI Whisper
-    const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openaiApiKey}`,
-      },
-      body: formData,
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('OpenAI Whisper API error:', errorText);
-      throw new Error(`Whisper API error: ${response.status} ${errorText}`);
+    if (!result) {
+      throw new Error(errors.length ? `Whisper API error: ${errors.join(' | ')}` : 'No speech-to-text provider configured (GROQ_API_KEY or OPENAI_API_KEY)');
     }
-
-    const result = await response.json();
     console.log('Transcription result:', result.text);
 
     return new Response(
