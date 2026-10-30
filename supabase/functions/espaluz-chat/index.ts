@@ -221,9 +221,20 @@ async function callClaude(apiKey: string, request: any): Promise<any> {
 // 28 Oct 2026 23:30 UTC: Groq's free tier counts tokens PER MODEL per day (gpt-oss-120b: 200k TPD, used 199,668 ->
 // 429, and with Gemini unset and Anthropic dry the classroom said "could not answer"). So Groq is a waterfall of
 // models, each with its own daily budget; a model that is rate-limited, decommissioned or unknown is skipped.
+// 30 Oct 2026: the llama/qwen3-32b ids were RETIRED by Groq (404 "does not exist") and gpt-oss-120b hit its 200k daily
+// cap, so the waterfall was empty and the classroom said "could not answer". Only ids Groq lists today (GET /models).
 const GROQ_MODELS = (Deno.env.get('GROQ_MODELS') || Deno.env.get('GROQ_MODEL') ||
-  'openai/gpt-oss-120b,meta-llama/llama-4-scout-17b-16e-instruct,llama-3.3-70b-versatile,openai/gpt-oss-20b,qwen/qwen3-32b,llama-3.1-8b-instant')
+  'openai/gpt-oss-120b,openai/gpt-oss-20b,qwen/qwen3.8-27b')
   .split(',').map((m) => m.trim()).filter(Boolean);
+
+/** Groq's models all THINK before they answer; with a small budget they think it all away and return "" (the bot learned
+ *  this on 16 Aug, llm_chain.py). gpt-oss: think briefly + room to answer. qwen: hide the thinking; its free tier allows
+ *  only 1000 output tokens per minute, so it gets exactly that. Verified 30 Oct with the real classroom prompt. */
+function groqParams(model: string, maxTokens: number): Record<string, unknown> {
+  if (model.startsWith('openai/gpt-oss')) return { max_tokens: Math.max(maxTokens, 2000), reasoning_effort: 'low' };
+  if (model.startsWith('qwen/')) return { max_tokens: 1000, reasoning_format: 'hidden' };
+  return { max_tokens: maxTokens };
+}
 const GEMINI_MODEL = Deno.env.get('GEMINI_MODEL') || 'gemini-2.5-flash';
 
 async function callGroq(apiKey: string, request: any): Promise<any> {
@@ -232,7 +243,7 @@ async function callGroq(apiKey: string, request: any): Promise<any> {
     const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${apiKey}`, 'content-type': 'application/json', 'User-Agent': 'espaluz-chat/1.0' },
-      body: JSON.stringify({ model, max_tokens: request.max_tokens, temperature: request.temperature,
+      body: JSON.stringify({ model, ...groqParams(model, request.max_tokens), temperature: request.temperature,
                              messages: [{ role: 'system', content: request.system }, ...request.messages] }),
     });
     if (!r.ok) {
