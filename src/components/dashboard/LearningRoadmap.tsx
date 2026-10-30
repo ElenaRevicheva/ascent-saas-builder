@@ -73,7 +73,7 @@ export const LearningRoadmap = () => {
     },
     {
       id: 'kids-classroom',
-      title: "Pere and Titi's Classroom (kids 5-7)",
+      title: "Pere and Titi's Classroom (kids 6-7)",
       description: 'A calm sloth and a playful tamarin teach your child real Spanish and English sentences by voice, with games and praise.',
       icon: Smile,
       action: 'Open the Classroom',
