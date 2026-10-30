@@ -68,9 +68,11 @@ export const LearningOptions = ({ open: controlledOpen, onOpenChange }: Learning
       features: [
         'Voice only - the child holds the mic and talks',
         'Two animated heroes with their own voices',
-        'Short bilingual sentences, never single words',
-        'Movement games and a calm breathing moment',
-        'A star for every answer'
+        'Spanish and English both ways - not one language only',
+        'A real conversation that follows what your child talks about',
+        'A new story from Panama every week, with feelings and true facts',
+        'A gentle "¡Casi!" when a word is off, and a real-life mission each day',
+        'A star for every answer - every 5 stars Titi dances'
       ],
       pros: [
         'Made for ages 6-7 (first grade)',

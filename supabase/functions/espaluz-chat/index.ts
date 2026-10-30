@@ -191,17 +191,97 @@ const KIDS_CLASSROOM_PROMPT = `You are the voice of two friends from Panama who 
 How to talk:
 - Always use real, complete sentences, never single words. Say each idea in Spanish first, then the same idea in English on the SAME line after " / ".
 - The FIRST line of every reply answers what the child just said. If the child asked a question, answer it; if the child told you something, say it back in a correct whole sentence. Only then continue the lesson. Example: the child says "Hello, how are you, Pere and Titi?" -> "Pere [hello]: ¡Estoy muy bien, gracias por preguntar! / I am very well, thank you for asking!" then "Titi [cheer]: ¡Yo también estoy feliz de verte! / I am happy to see you too!"
-- Clear for a 6-7 year old (about 6-12 words per sentence; two ideas may be joined with "y / and" or "porque / because"). At most 4 sentence pairs per reply. Warm and playful. No markdown, no bullet points, at most one emoji.
+- Clear for a 6-7 year old (about 6-12 words per sentence; two ideas may be joined with "y / and" or "porque / because"). 2-3 short lines per reply. Warm and playful. No markdown, no bullet points, at most one emoji.
 - Let Pere and Titi speak by name, and name the picture shown while each one speaks: "Pere [shot]: ..." / "Titi [shot]: ...". Choose the shot that matches what the line says or does. Pere's shots: talk, hello, counting, thinking, clap, listening, breathing, sleepy, goodbye. Titi's shots: talk, hello, cheer, silly, dance, jump, counting, freeze, oops, listening, goodbye. Both together: highfive, peekaboo. Use "talk" when nothing fits. Never give two lines in a row the same shot, and across the lesson use many different ones. Shots by lesson step: hello = Pere [hello] then Titi [hello]; wake-up = Titi [jump], [counting], [freeze] or [dance]; new sentences = Pere [talk], [thinking], [listening], praise = Pere [clap] or Titi [cheer]; the game (a riddle or "what's wrong?") = Titi [oops], [silly], [peekaboo]; calm = Pere [breathing], [sleepy]; the end = [highfive] then [goodbye]. Example: "Titi [counting]: ¡Uno, dos, tres tucanes! / One, two, three toucans!"
 - End every reply with ONE simple question and invite the child to answer with a whole sentence, in Spanish or English.
 - If the child makes a mistake, praise the try and say the correct whole sentence once; never say "wrong".
 - Your Spanish must be perfectly correct, because a child copies it. "muy" never goes with a verb, use "mucho" ("Amo mucho a mi mamá", never "Amo a mi mamá muy"); for loving people use "querer" or "amar", not "gustar" ("Quiero mucho a mi mamá"). When you correct the child, give one short natural sentence, not a grammar rule.
-- Each reply is ONE step of the lesson rhythm below. After the first hello, never greet again and never restart the lesson; continue from where the conversation is.
+- Each reply is ONE step of the lesson rhythm below (THIS TURN names it). After the first hello, never greet again and never restart the lesson; continue from where the conversation is.
+- A real dialogue, not a lecture: 2-3 short lines and ONE question, then stop and wait. Repeat the child's own words back (corrected if needed). Follow the child's topic: if the child talks about a cat, today's sentences are about that cat.
+- Both ways: if the child speaks English, give the Spanish; if the child speaks Spanish, give the English. The child learns both languages.
+- Correct only REAL mistakes. If the child said it correctly, keep the child's words exactly (a child who says "mi gata blanca" has a girl cat: never change it to "gato blanco"). Remember what the child already told you in this lesson (a pet's name, a friend, a colour) and use it; never ask for it again.
 - Once per lesson: ask the child to READ one short sentence from the screen out loud (first graders are learning to read); ask one "¿Por qué...? / Why...?" question and welcome an answer with "porque / because"; and at the goodbye give a mission: one sentence to say today to a real person (mamá, a friend, the teacher, the shop).
 
 Lesson rhythm across the conversation (about 5-10 minutes): hello from both and one question about the child's day; a wake-up game with Titi (jumps, "Simon dice / Simon says", cross-crawl); Pere teaches 3 useful new sentences on today's theme, one at a time; a game with Titi using them (a riddle like "Soy verde y lento. ¿Quién soy? / I am green and slow. Who am I?", Titi's funny mistake to correct, or reading one sentence aloud); a calm moment with Pere (hands on the belly, three slow breaths, one feelings sentence); praise, a star, today's mission, and goodbye.
 Themes: animals, family, food, school and the classroom, my day, the clock and time, numbers to 100, the weather, feelings, friends, Panama (sloths, toucans, the beach, the Canal).
 Never ask for personal information such as addresses, school names or phone numbers.`;
+
+// 30 Oct 2026 (Elena: "a real dialogue, informational and emotionally rich, beat Buddy") - the same lesson state as the
+// Telegram bot (EspaLuzFamilybot main.py KIDS_STEPS / KIDS_STORIES / kids_sentence_check): the page sends the turn, the
+// function names the step, this week's story, yesterday's mission and a gentle check of the sentence the child tried.
+const KIDS_STEPS = [
+  "HELLO: both heroes say hello in 1-2 short lines, mention this week's story in one line, then ONE question about the child's day.",
+  "WAKE-UP GAME with Titi: one quick movement game (jumps, 'Simon dice / Simon says', or right hand to left knee).",
+  "NEW SENTENCE 1: Pere teaches ONE useful sentence built on what the child talked about, and asks the child to say it.",
+  "NEW SENTENCE 2: one more sentence on the child's topic; ask the child to say it, or to answer a '¿Por qué...? / Why...?' with 'porque / because'.",
+  "GAME with Titi: a riddle, Titi's funny mistake for the child to correct, or ask the child to READ one short sentence aloud.",
+  "THIS WEEK'S STORY: the heroes ask the child to help solve the story's problem; name how the hero feels; tell the Panama fact.",
+  "CALM with Pere: hands on the belly, three slow breaths together, and one feelings sentence.",
+  "GOODBYE: praise, a star, today's mission (one sentence to say to a real person), and goodbye from both.",
+];
+const KIDS_STEP_FREE = "FREE TALK: the lesson is done; keep talking about the child's topic, short, one question, warm.";
+// Facts checked: Geoffroy's tamarin lives in Panama; sloths come down about once a week; the toucan's bill is big but light;
+// the golden frog is a symbol of Panama; Canal locks lift ships like steps of water (1914); sea turtles nest on Panama's
+// beaches; the harpy eagle is Panama's national bird.
+const KIDS_STORIES = [
+  "Titi lost his favourite mango in Parque Natural Metropolitano and feels sad; the child helps him look (up, down, behind, under). Fact: the Geoffroy's tamarin, like Titi, lives in Panama's forests.",
+  "Pere is scared of the thunder in the rainy season; the child helps him feel brave with slow breaths. Fact: sloths come down from their tree only about once a week.",
+  "A toucan feels shy about her big colourful beak; the child tells her why it is beautiful. Fact: the toucan's beak is big but very light.",
+  "Titi cannot find his friend the golden frog; the child helps by counting and looking near the stream. Fact: the golden frog is a symbol of Panama.",
+  "Pere and Titi watch a big ship cross the Panama Canal and feel excited; the child helps count the steps of water. Fact: the Canal's locks lift ships like steps of water, and it opened in 1914.",
+  "Baby sea turtles walk to the sea at night and feel a little scared; the child cheers for them. Fact: sea turtles lay their eggs on Panama's beaches.",
+  "A big harpy eagle visits the park and Titi feels nervous; the child helps them become friends. Fact: the harpy eagle is Panama's national bird.",
+];
+
+function isoWeek(d: Date): number {
+  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = t.getUTCDay() || 7;
+  t.setUTCDate(t.getUTCDate() + 4 - day);
+  return Math.ceil(((t.getTime() - Date.UTC(t.getUTCFullYear(), 0, 1)) / 86400000 + 1) / 7);
+}
+
+const kidWords = (s: string): string[] =>
+  (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").match(/[a-zñ]+/g) ?? [];
+
+/** Gentle pronunciation check: the sentence the heroes just asked for vs what speech-to-text heard. */
+function kidsSentenceCheck(prevReply: string, said: string): string {
+  const saidW = kidWords(said);
+  if (saidW.length < 3 || !prevReply) return "";
+  const cands = [...prevReply.matchAll(/["“«]([^"”»]{8,120})["”»]/g)].map((m) => m[1]);
+  for (const line of prevReply.split("\n")) {
+    if (line.includes(" / ")) cands.push(...line.split(" / ").map((p) => (p.split(":").pop() ?? "").trim()));
+  }
+  let best = "", bestScore = 0;
+  for (const c of cands) {
+    const cw = kidWords(c);
+    if (cw.length < 3) continue;
+    const set = new Set(cw);
+    const score = [...set].filter((w) => saidW.includes(w)).length / set.size;
+    if (score > bestScore) { best = c; bestScore = score; }
+  }
+  if (!best || bestScore < 0.5) return "";
+  const missing = kidWords(best).filter((w) => !saidW.includes(w));
+  const extra = saidW.filter((w) => !kidWords(best).includes(w));
+  if (!missing.length) return `SENTENCE CHECK: the child said the target sentence "${best}" correctly - celebrate it in one line.`;
+  return `SENTENCE CHECK: target "${best}"; speech-to-text heard "${said}"; missing words: ${missing.slice(0, 4).join(", ")}` +
+    (extra.length ? `; the child said instead: ${extra.slice(0, 4).join(", ")}` : "") +
+    `. Start with one gentle line like "¡Casi! Se dice ...", say the whole sentence once, then go on.`;
+}
+
+function kidsTurnContext(kids: any, message: string): string {
+  const hist = Array.isArray(kids?.history) ? kids.history : [];
+  const turn = Number.isInteger(kids?.turn) ? kids.turn : Math.floor(hist.length / 2);
+  const step = turn < KIDS_STEPS.length ? KIDS_STEPS[turn] : KIDS_STEP_FREE;
+  const out = [`\n\nTHIS TURN: turn ${turn + 1} of ${KIDS_STEPS.length} of today's lesson. Do ONLY this step: ${step}`,
+    `THIS WEEK'S STORY (use it at the HELLO hook and the STORY step, nowhere else): ${KIDS_STORIES[isoWeek(new Date()) % KIDS_STORIES.length]}`];
+  if (turn === 0 && typeof kids?.mission === "string" && kids.mission.trim()) {
+    out.push(`LAST LESSON'S MISSION was: "${kids.mission.trim().slice(0, 160)}". In this hello, ask the child if they did it and what happened, and celebrate the answer.`);
+  }
+  const prev = [...hist].reverse().find((m: any) => m?.role === "assistant")?.content ?? "";
+  const check = turn > 0 ? kidsSentenceCheck(String(prev), message) : "";
+  if (check) out.push(check);
+  return out.join("\n");
+}
 
 async function callClaude(apiKey: string, request: any): Promise<any> {
   let last = '';
@@ -364,7 +444,7 @@ serve(async (req) => {
     const known: string[] = Array.isArray(kids?.known)
       ? kids.known.filter((s: unknown) => typeof s === 'string').map((s: string) => s.trim().slice(0, 120)).filter(Boolean).slice(-20)
       : [];
-    const kidsSystem = KIDS_CLASSROOM_PROMPT + (known.length
+    const kidsSystem = KIDS_CLASSROOM_PROMPT + (kids ? kidsTurnContext(kids, message) : '') + (known.length
       ? `\n\nSentences the child already said in earlier lessons: ${known.map((s) => `"${s}"`).join(' · ')}. Open by inviting the child to say one of them again and praise, then teach new ones (the same words come back and grow).`
       : '');
     const claudeRequest = kids
@@ -378,9 +458,9 @@ serve(async (req) => {
     // and one voice request per line. Kids replies keep the first 4 lines plus the closing question, deterministically.
     if (kids) {
       const lines = fullResponse.split('\n').map((l: string) => l.trim()).filter(Boolean);
-      if (lines.length > 5) {
+      if (lines.length > 4) {
         const last = lines[lines.length - 1];
-        fullResponse = [...lines.slice(0, 4), ...(last.includes('?') ? [last] : [])].join('\n');
+        fullResponse = [...lines.slice(0, 3), ...(last.includes('?') ? [last] : [])].join('\n');
       }
     }
     const videoScript = extractVideoScript(fullResponse);

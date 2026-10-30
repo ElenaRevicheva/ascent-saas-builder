@@ -14,6 +14,8 @@ type Turn = { role: "user" | "assistant"; content: string };
 type Line = { who: "pere" | "titi"; clip: string; chars: number; text: string };
 
 const IDLE_CLIP = "/heroes/duo-hello.mp4";
+const DANCE_CLIP = "/heroes/titi-dance.mp4"; // every 5 stars Titi dances for the child (30 Oct 2026)
+const today = () => new Date().toISOString().slice(0, 10);
 const GREETING_CLIP = "/heroes/kids-greeting.mp4"; // the heroes' own voiced hello (the Telegram /kids clip) opens the class
 const TALK = { pere: ["pere-talking-1", "pere-talking-2"], titi: ["titi-talking-1", "titi-talking-2"] };
 const SHOT_CLIPS: Record<"pere" | "titi", Record<string, string>> = {
@@ -169,6 +171,8 @@ const Classroom = () => {
   const [recording, setRecording] = useState(false);
   const [stars, setStars] = useState(0);
   const [greeting, setGreeting] = useState(false);
+  const [reward, setReward] = useState(0); // >0 = Titi's star dance on screen (the star count it celebrates)
+  const mission = useRef<{ text: string; day: string } | null>(null); // last lesson's mission, asked about the next day
   const greetingDone = useRef<Promise<void> | null>(null);
   const greetingEnded = useRef<(() => void) | null>(null);
   const known = useRef<string[]>([]); // whole sentences the child said in earlier lessons (this browser) - the words come back and grow
@@ -185,6 +189,8 @@ const Classroom = () => {
       setStars(Math.max(0, parseInt(localStorage.getItem(`classroom-stars-${user.id}`) ?? "0", 10) || 0));
       const k = JSON.parse(localStorage.getItem(`classroom-known-${user.id}`) ?? "[]");
       known.current = Array.isArray(k) ? k.filter((x) => typeof x === "string").slice(-20) : [];
+      const m = JSON.parse(localStorage.getItem(`classroom-mission-${user.id}`) ?? "null");
+      mission.current = m && typeof m.text === "string" ? m : null;
     } catch { /* a bad entry just starts fresh */ }
   }, [user?.id]);
   useEffect(() => {
@@ -231,11 +237,40 @@ const Classroom = () => {
     idle();
   };
 
+  /** The goodbye's mission is kept for the next lesson's hello; once asked about, it is cleared. */
+  const saveMission = (text: string, firstTurn: boolean) => {
+    if (!user?.id) return;
+    let m = mission.current;
+    if (firstTurn && m && m.day !== today()) m = null;
+    const line = text.split("\n").find((l) => /misi[oó]n|mission/i.test(l));
+    if (line) {
+      const q = line.match(/["“«]([^"”»]{5,120})["”»]/);
+      m = { text: (q ? q[1] : stripShotTags(line).replace(/^.*?:\s*/, "")).slice(0, 160), day: today() };
+    }
+    mission.current = m;
+    try { localStorage.setItem(`classroom-mission-${user.id}`, JSON.stringify(m)); } catch { /* ignore */ }
+  };
+
+  /** Every 5 stars: Titi's dance clip fills the screen and both heroes cheer (the reward is a hero moment, not a number). */
+  const celebrate = async (n: number) => {
+    setReward(n);
+    await Promise.all([
+      browserSay(`¡${n} estrellas! ¡Titi baila para ti! / ${n} stars! Titi dances for you!`, "titi"),
+      new Promise((r) => setTimeout(r, 5500)),
+    ]);
+    setReward(0);
+  };
+
   const talk = async (childSays: string, countsAsStar: boolean) => {
     setBusy(true);
     try {
       const { data, error } = await supabase.functions.invoke("espaluz-chat", {
-        body: { message: childSays, isVoiceInput: true, kids: { history: turns.slice(-10), known: known.current } },
+        // 30 Oct 2026: the lesson step comes from the turn count (no guessing, no re-greeting); yesterday's mission is
+        // asked about in today's hello.
+        body: { message: childSays, isVoiceInput: true, kids: {
+          history: turns.slice(-10), known: known.current, turn: Math.floor(turns.length / 2),
+          mission: turns.length === 0 && mission.current && mission.current.day !== today() ? mission.current.text : undefined,
+        } },
       });
       const text: string = data?.response || "";
       if (error || !text) throw new Error(data?.error || error?.message || "no answer");
@@ -246,7 +281,9 @@ const Classroom = () => {
       setLines(spoken);
       setShot(0);
       if (countsAsStar) setStars((s) => s + 1);
+      saveMission(text, turns.length === 0);
       await speak(stripShotTags(text), spoken);
+      if (countsAsStar && (stars + 1) % 5 === 0) await celebrate(stars + 1);
     } catch (e) {
       toast.error("Pere y Titi no pudieron contestar. / Pere and Titi could not answer. Try again!");
       console.error("classroom talk failed", e);
@@ -316,8 +353,8 @@ const Classroom = () => {
       </div>
 
       <video
-        key={greeting ? GREETING_CLIP : `${lines[shot]?.clip ?? IDLE_CLIP}-${shot}`}
-        src={greeting ? GREETING_CLIP : lines[shot]?.clip ?? IDLE_CLIP}
+        key={reward ? `dance-${reward}` : greeting ? GREETING_CLIP : `${lines[shot]?.clip ?? IDLE_CLIP}-${shot}`}
+        src={reward ? DANCE_CLIP : greeting ? GREETING_CLIP : lines[shot]?.clip ?? IDLE_CLIP}
         autoPlay
         loop={!greeting}
         muted={!greeting}
@@ -326,6 +363,13 @@ const Classroom = () => {
         onError={() => greetingEnded.current?.()}
         className="w-full max-w-[520px] aspect-square rounded-[2rem] shadow-2xl border-8 border-white/80 object-cover"
       />
+
+      {reward > 0 && (
+        <div className="rounded-full bg-yellow-300 border-4 border-white shadow-2xl px-8 py-3 text-2xl font-extrabold text-slate-900 animate-bounce"
+          style={{ fontFamily: KID_FONT }}>
+          🌟 ¡{reward} estrellas! Titi baila para ti 🐒💃
+        </div>
+      )}
 
       {reply && (
         // 30 Oct 2026 (Elena: "words are black and not visible, not juicy for kids"): `bg-white/92` is not a Tailwind
