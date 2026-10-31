@@ -210,7 +210,7 @@ Never ask for personal information such as addresses, school names or phone numb
 // Telegram bot (EspaLuzFamilybot main.py KIDS_STEPS / KIDS_STORIES / kids_sentence_check): the page sends the turn, the
 // function names the step, this week's story, yesterday's mission and a gentle check of the sentence the child tried.
 const KIDS_STEPS = [
-  "HELLO: both heroes say hello in 1-2 short lines, mention this week's story in one line, then ONE question about the child's day.",
+  "HELLO: both heroes say hello in 1-2 short lines; if a list of EARLIER LESSONS is above, the first line brings back ONE happy thing from it (\"La última vez me dijiste que...\"); mention this week's story in one line, then ONE question about the child's day.",
   "WAKE-UP GAME with Titi: one quick movement game (jumps, 'Simon dice / Simon says', or right hand to left knee).",
   "NEW SENTENCE 1: Pere teaches ONE useful sentence built on what the child talked about, and asks the child to say it.",
   "NEW SENTENCE 2: one more sentence on the child's topic; ask the child to say it, or to answer a '¿Por qué...? / Why...?' with 'porque / because'.",
@@ -305,6 +305,60 @@ function kidsHeard(message: string): string {
     "Always: if her words contain something untrue, never repeat it as true - say the correct version simply (\"Las " +
     "paletas son dulces, pero tienen mucho azúcar. / Lollipops are sweet, but they have a lot of sugar.\"). The recording " +
     "may hold two voices (the child and an adult helping): answer the CHILD's part.\n";
+}
+
+// 31 Oct 2026 (Elena: "evolving on the go with memory" - step 3 of the 9 days): every lesson started from zero. Her own
+// words from EARLIER lessons are already stored - classroom turns here, and Telegram kids turns synced by the bot
+// (submit-progress, family_role 'alisa') - so the heroes get a small card of them, like a friend who remembers.
+const KIDS_STARTER = /quiero empezar la clase|i want to start the class/i;
+// A hard moment is never brought back at a hello (eval 31 Oct: Grok opened a new lesson with "la última vez me dijiste
+// que tu mamá está pegando"). Enforced here in code, not left to the model. Twin: main.py _KIDS_HARD.
+const KIDS_HARD = /peg|golpe|\bhit|grit|yell|scold|rega[nñ]|castig|punish|llor|\bcry|cried|triste|\bsad\b|miedo|scared|asust|duele|hurt|enoj|angry|frustr/i;
+const firstLine = (reply: string): string =>
+  (reply.split('\n').map((l) => l.trim()).find(Boolean) ?? '').replace(/^[^:\[]*(\[[^\]]*\])?:\s*/, '').split(' / ')[0].slice(0, 120);
+
+async function kidsMemoryCard(supabase: any, userId: string, hist: any[]): Promise<string> {
+  const { data, error } = await supabase
+    .from('learning_sessions')
+    .select('session_type, content, created_at')
+    .eq('user_id', userId)
+    .in('session_type', ['classroom', 'conversation'])
+    // Replies before step 2 (31 Oct 12:47 UTC) misread her ("Starberry" -> a sentence about animals), and the eval
+    // showed the heroes "remembering" those misreadings. Memory starts from the turns made under the fixed rules.
+    .gte('created_at', '2026-10-31T12:47:00Z')
+    .order('created_at', { ascending: false })
+    .limit(80);
+  if (error || !Array.isArray(data)) return '';
+  const now = new Set(hist.filter((m: any) => m?.role === 'user').map((m: any) => String(m.content ?? '').trim()));
+  const said: string[] = [];
+  let mission = '';
+  for (const row of data) {
+    const c = row.content || {};
+    if (row.session_type === 'conversation' && c.family_role !== 'alisa') continue; // a parent's own chat stays out
+    const words = String(c.user_message ?? '').trim();
+    const reply = String(c.ai_response ?? c.bot_response ?? '');
+    if (now.has(words)) continue; // this lesson is already in the conversation
+    const understood = firstLine(reply);
+    if (KIDS_HARD.test(words) || KIDS_HARD.test(understood) || /no te escuch|didn't hear/i.test(understood)) continue;
+    // An "understanding" that only echoes her words means nobody understood her (eval: "te viene un perezoso").
+    if (understood && kidWords(understood).join(' ').includes(kidWords(words).join(' '))) continue;
+    const item = understood ? `"${words.slice(0, 120)}" -> you understood: "${understood}"` : `"${words.slice(0, 120)}"`;
+    if (words && !KIDS_STARTER.test(words) && !words.startsWith('/') && !said.some((s) => s.startsWith(`"${words.slice(0, 120)}"`))) said.push(item);
+    if (!mission) {
+      const line = reply.split('\n').find((l: string) => /misi[oó]n|mission/i.test(l));
+      if (line) mission = line.replace(/^.*?\]:\s*/, '').slice(0, 160);
+    }
+    if (said.length >= 10) break;
+  }
+  if (!said.length && !mission) return '';
+  return '\n\nWHAT THE CHILD TOLD YOU IN EARLIER LESSONS (her own words, newest first; speech-to-text may be imperfect):\n' +
+    said.map((s) => `- ${s}`).join('\n') +
+    (mission ? `\nLast mission you gave: "${mission}" - at the hello, ask if she did it.` : '') +
+    "\nUse this like a friend who remembers: at the hello bring back ONE happy, clearly understood thing (a favourite " +
+    "thing, a pet, a wish, something she likes doing) taken ONLY from this list, in simple words (\"La última vez me " +
+    "dijiste que ... ¿Todavía? / Last time you told me ... Still?\"), and later use " +
+    "what she told you instead of asking again. Skip anything that does not make sense, never bring back anything sad " +
+    "or about being scolded, and never invent a memory that is not in this list.";
 }
 
 function kidsTurnContext(kids: any, message: string): string {
@@ -524,8 +578,9 @@ serve(async (req) => {
     const known: string[] = Array.isArray(kids?.known)
       ? kids.known.filter((s: unknown) => typeof s === 'string').map((s: string) => s.trim().slice(0, 120)).filter(Boolean).slice(-20)
       : [];
+    const memory = kids ? await kidsMemoryCard(supabase, userId, Array.isArray(kids.history) ? kids.history : []) : '';
     // The turn instruction (with the child's own words) goes LAST: the model weighs the end of the prompt most.
-    const kidsSystem = KIDS_CLASSROOM_PROMPT + (known.length
+    const kidsSystem = KIDS_CLASSROOM_PROMPT + memory + (known.length
       ? `\n\nSentences the child already said in earlier lessons: ${known.map((s) => `"${s}"`).join(' · ')}. At the hello, invite the child to say one of them again and praise, then teach new ones (the same words come back and grow).`
       : '') + (kids ? kidsTurnContext(kids, message) : '');
     const claudeRequest = kids
