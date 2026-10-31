@@ -145,6 +145,12 @@ serve(async (req) => {
           if (confidence(alt) > confidence(result)) result = { ...alt, language: lang };
         }
         console.log(`language "${detected}" is not ES/EN/RU -> kept ${result.language} (confidence ${confidence(result).toFixed(2)})`);
+        // 31 Oct 15:41: detected "icelandic", the best retry scored -1.17 and was still garble ("A couple of menes have
+        // a guest of Elin Láttú"), which the heroes then treated as a real sentence. Unsure in every language = not heard.
+        if (confidence(result) < -1.0) {
+          console.log(`no language is confident -> treated as not heard: ${String(result.text).slice(0, 120)}`);
+          result.text = '';
+        }
       }
       break;
     }

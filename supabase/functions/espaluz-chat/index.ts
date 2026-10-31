@@ -307,7 +307,11 @@ function kidsHeard(message: string): string {
     "again?\") and stop there: skip the lesson step below. If part of it makes sense, answer that part.\n" +
     "Always: if her words contain something untrue, never repeat it as true - say the correct version simply (\"Las " +
     "paletas son dulces, pero tienen mucho azúcar. / Lollipops are sweet, but they have a lot of sugar.\"). The recording " +
-    "may hold two voices (the child and an adult helping): answer the CHILD's part.\n";
+    "may hold two voices (the child and an adult helping): answer the CHILD's part.\n" +
+    // 31 Oct 2026 (15:43): Elena said "estamos manejando en el auto y mi hija no puede saltar" and the heroes told her
+    // she "felt worried that Lisa might get hurt", as if a six-year-old had said it.
+    "If the words are an ADULT talking about the child (\"mi hija\", \"my daughter\", \"mamá aquí\"), it is the parent: " +
+    "thank them in one short line, do what they ask, then turn back to the child by name.\n";
 }
 
 // 31 Oct 2026 (Elena: "evolving on the go with memory" - step 3 of the 9 days): every lesson started from zero. Her own
@@ -316,7 +320,13 @@ function kidsHeard(message: string): string {
 const KIDS_STARTER = /quiero empezar la clase|i want to start the class/i;
 // A hard moment is never brought back at a hello (eval 31 Oct: Grok opened a new lesson with "la última vez me dijiste
 // que tu mamá está pegando"). Enforced here in code, not left to the model. Twin: main.py _KIDS_HARD.
-const KIDS_HARD = /peg|golpe|\bhit|grit|yell|scold|rega[nñ]|castig|punish|llor|\bcry|cried|triste|\bsad\b|miedo|scared|asust|duele|hurt|enoj|angry|frustr/i;
+const KIDS_HARD = /peg|golpe|\bhit|grit|yell|scold|rega[nñ]|castig|punish|llor|\bcry|cried|triste|\bsad\b|miedo|scared|asust|duele|hurt|enoj|angry|frustr|sangr|blood|lastim|herid|accident/i;
+// A parent speaking into the lesson is not the child's memory (31 Oct 15:43: "mi hija ... no puede saltar").
+const KIDS_ADULT = /\bmi hij[oa]\b|\bmy (daughter|son)\b|\bmam[aá] aqu[ií]\b|\bsoy (la|su) mam[aá]\b/i;
+// 31 Oct 2026 (15:39-15:43): Alisa was in the car; Titi asked her to hop like a bunny, she said she could not ("me puede
+// abrir la cabeza"), and the next reply still had no idea. Once the lesson hears she cannot move, every later step is a
+// sit-still one - kept in code from the whole lesson history, not left to the model's memory of one turn.
+const KIDS_STILL = /\b(auto|carro|coche|car|bus|taxi|avi[oó]n|plane|manejando|driving)\b|no (puedo|puede) (saltar|moverme|levantarme)|can'?t (jump|move|stand)/i;
 const firstLine = (reply: string): string =>
   (reply.split('\n').map((l) => l.trim()).find(Boolean) ?? '').replace(/^[^:\[]*(\[[^\]]*\])?:\s*/, '').split(' / ')[0].slice(0, 120);
 
@@ -342,7 +352,7 @@ async function kidsMemoryCard(supabase: any, userId: string, hist: any[]): Promi
     const reply = String(c.ai_response ?? c.bot_response ?? '');
     if (now.has(words)) continue; // this lesson is already in the conversation
     const understood = firstLine(reply);
-    if (KIDS_HARD.test(words) || KIDS_HARD.test(understood) || /no te escuch|didn't hear/i.test(understood)) continue;
+    if (KIDS_HARD.test(words) || KIDS_HARD.test(understood) || KIDS_ADULT.test(words) || /no te escuch|didn't hear/i.test(understood)) continue;
     // An "understanding" that only echoes her words means nobody understood her (eval: "te viene un perezoso").
     if (understood && kidWords(understood).join(' ').includes(kidWords(words).join(' '))) continue;
     const item = understood ? `"${words.slice(0, 120)}" -> you understood: "${understood}"` : `"${words.slice(0, 120)}"`;
@@ -411,6 +421,11 @@ function kidsTurnContext(kids: any, message: string): string {
     kidsToday(),
     "BOTH heroes speak in this reply: at least one \"Pere [shot]:\" line AND one \"Titi [shot]:\" line (Titi is the " +
     "playful one - let him ask the closing question or make it a little game)."];
+  if ([...hist.filter((m: any) => m?.role === "user").map((m: any) => String(m?.content ?? "")), message].some((s) => KIDS_STILL.test(s))) {
+    out.push("SHE CANNOT MOVE RIGHT NOW (in a car or told you she can't jump): for the rest of this lesson NO jumping, " +
+      "hopping, standing or running games - use sit-still games instead (veo veo / I spy a colour out of the window, " +
+      "count the cars, soft clapping, a riddle, finger counting). Never ask her to jump again in this lesson.");
+  }
   if (turn === 0 && typeof kids?.mission === "string" && kids.mission.trim()) {
     out.push(`LAST LESSON'S MISSION was: "${kids.mission.trim().slice(0, 160)}". In this hello, ask the child if they did it and what happened, and celebrate the answer.`);
   }
