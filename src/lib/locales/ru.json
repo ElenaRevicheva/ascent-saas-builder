@@ -47,7 +47,7 @@
   "actions": {
     "title": "Начать обучение",
     "subtitle": "Подключитесь к EspaLuz и практикуйтесь с семьей",
-    "connectTelegram": "Подключить Telegram бота",
+    "connectTelegram": "Подключить Telegram / WhatsApp",
     "whatsappPremium": "WhatsApp (Премиум) 💫",
     "whatsappChat": "Чат WhatsApp 💬"
   },
@@ -84,7 +84,7 @@
     "loadingBots": "Загрузка подключенных ботов...",
     "noBots": "Боты еще не подключены",
     "getStarted": "Сгенерируйте код подключения ниже для начала",
-    "connectTelegram": "Подключить Telegram бота",
+    "connectTelegram": "Подключить Telegram / WhatsApp",
     "generateCode": "Сгенерируйте код подключения для связи вашего аккаунта Telegram с EspaLuz",
     "codeExpires": "Код подключения истекает через 10 минут. Используйте его быстро!",
     "yourCode": "Ваш код подключения:",

@@ -47,7 +47,7 @@
   "actions": {
     "title": "Comenzar a Aprender",
     "subtitle": "Conéctate con EspaLuz y practica con tu familia",
-    "connectTelegram": "Conectar Bot de Telegram",
+    "connectTelegram": "Conectar Telegram / WhatsApp",
     "whatsappPremium": "WhatsApp (Premium) 💫",
     "whatsappChat": "Chat de WhatsApp 💬"
   },
@@ -84,7 +84,7 @@
     "loadingBots": "Cargando bots conectados...",
     "noBots": "Aún no hay bots conectados",
     "getStarted": "Genera un código de conexión abajo para comenzar",
-    "connectTelegram": "Conectar Bot de Telegram",
+    "connectTelegram": "Conectar Telegram / WhatsApp",
     "generateCode": "Genera un código de conexión para vincular tu cuenta de Telegram con EspaLuz",
     "codeExpires": "El código de conexión expira en 10 minutos. ¡Úsalo rápidamente!",
     "yourCode": "Tu código de conexión:",

@@ -53,7 +53,7 @@ export const LearningOptions = ({ open: controlledOpen, onOpenChange }: Learning
         'Natural messaging experience',
         'Works on any device'
       ],
-      action: 'Connect Telegram Bot',
+      action: 'Connect Telegram / WhatsApp',
       actionLink: '/connect-bot',
       actionType: 'link',
       gradient: 'from-blue-500 to-cyan-500',
