@@ -22,26 +22,36 @@ serve(async (req) => {
   const secret = Deno.env.get('ESPALUZ_BOT_SECRET');
   if (!secret || req.headers.get('x-espaluz-bot-secret') !== secret) return json({ error: 'unauthorized' }, 401);
   try {
-    const { telegram_user_id, mode, since } = await req.json();
+    const { telegram_user_id, mode, since, platform: asked } = await req.json();
     const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
     // 31 Oct 2026 (step 4, the parent report): the bot asks for the recent classroom turns of every Telegram-linked
     // family and assembles the after-lesson report itself, by code. At most 48 h back, at most 300 turns.
+    // 31 Oct 2026 (WhatsApp parity step 5): EspaLuz WhatsApp asks with platform 'whatsapp'. Each lesson is reported on
+    // ONE channel: a WhatsApp lesson on WhatsApp, a web lesson on Telegram - or on WhatsApp when the family has no
+    // Telegram link. `user_key` is the platform id (Telegram user id, or the hashed WhatsApp id).
     if (mode === 'lessons') {
+      const platform = asked === 'whatsapp' ? 'whatsapp' : 'telegram';
       const from = new Date(Math.max(Date.parse(since) || 0, Date.now() - 48 * 3600 * 1000)).toISOString();
       const { data: links } = await db.from('connected_bots').select('user_id, platform_user_id, connected_at')
-        .eq('platform', 'telegram').eq('is_active', true).order('connected_at', { ascending: false });
-      const families: { telegram_user_id: string; turns: { at: string; said: string; reply: string }[] }[] = [];
+        .eq('platform', platform).eq('is_active', true).order('connected_at', { ascending: false });
+      const families: { telegram_user_id: string; user_key: string; turns: { at: string; said: string; reply: string }[] }[] = [];
       const seen = new Set<string>();
       for (const l of links ?? []) {
-        if (seen.has(l.platform_user_id)) continue; // a Telegram account belongs to its newest link only
+        if (seen.has(l.platform_user_id)) continue; // an account belongs to its newest link only
         seen.add(l.platform_user_id);
+        let sources = ['web'];
+        if (platform === 'whatsapp') {
+          const { data: tg } = await db.from('connected_bots').select('id').eq('user_id', l.user_id)
+            .eq('platform', 'telegram').eq('is_active', true).limit(1);
+          sources = tg?.length ? ['whatsapp'] : ['whatsapp', 'web'];
+        }
         const { data: rows } = await db.from('learning_sessions').select('content, created_at')
-          .eq('user_id', l.user_id).eq('session_type', 'classroom').gte('created_at', from)
+          .eq('user_id', l.user_id).eq('session_type', 'classroom').in('source', sources).gte('created_at', from)
           .order('created_at', { ascending: true }).limit(300);
-        if (rows?.length) families.push({ telegram_user_id: l.platform_user_id, turns: rows.map((r: any) => ({
+        if (rows?.length) families.push({ telegram_user_id: l.platform_user_id, user_key: l.platform_user_id, turns: rows.map((r: any) => ({
           at: r.created_at, said: String(r.content?.user_message ?? '').slice(0, 300), reply: String(r.content?.ai_response ?? '').slice(0, 1500) })) });
       }
-      console.log(`kids-memory lessons: ${families.length} families with turns since ${from}`);
+      console.log(`kids-memory lessons (${platform}): ${families.length} families with turns since ${from}`);
       return json({ families });
     }
     if (!telegram_user_id) return json({ error: 'telegram_user_id is required' }, 400);
