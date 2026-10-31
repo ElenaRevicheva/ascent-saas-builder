@@ -176,6 +176,15 @@ const Classroom = () => {
   const greetingDone = useRef<Promise<void> | null>(null);
   const greetingEnded = useRef<(() => void) | null>(null);
   const known = useRef<string[]>([]); // whole sentences the child said in earlier lessons (this browser) - the words come back and grow
+  // 31 Oct 2026 (Elena: "every time I press Empezar, Pere explains again that he speaks despacito"): the recorded
+  // introduction plays only for a child who has never had a lesson on this account (any device). After that the class
+  // opens with the heroes' short hello, which brings back something she told them last time.
+  const [metBefore, setMetBefore] = useState(false);
+  useEffect(() => {
+    if (!user?.id) return;
+    supabase.from("learning_sessions").select("id").eq("user_id", user.id).eq("session_type", "classroom").limit(1)
+      .then(({ data }) => setMetBefore(Boolean(data?.length)));
+  }, [user?.id]);
   const recorder = useRef<MediaRecorder | null>(null);
   const chunks = useRef<Blob[]>([]);
   const audio = useRef<HTMLAudioElement | null>(null);
@@ -403,13 +412,15 @@ const Classroom = () => {
       {turns.length === 0 ? (
         <Button size="lg" className="rounded-full text-2xl h-20 px-10 shadow-xl" disabled={busy || loading}
           onClick={() => {
-            // Pere and Titi say hello at once, in their own voices, while the first lesson line is being written.
-            greetingDone.current = new Promise<void>((done) => {
-              const finish = () => { greetingEnded.current = null; done(); };
-              greetingEnded.current = finish;
-              setTimeout(finish, 25000);
-            });
-            setGreeting(true);
+            // First lesson ever: Pere and Titi introduce themselves in their own voices while the first line is written.
+            if (!metBefore) {
+              greetingDone.current = new Promise<void>((done) => {
+                const finish = () => { greetingEnded.current = null; done(); };
+                greetingEnded.current = finish;
+                setTimeout(finish, 25000);
+              });
+              setGreeting(true);
+            }
             talk("¡Hola Pere y Titi! Quiero empezar la clase. / Hello Pere and Titi! I want to start the class.", false);
           }}>
           <Play className="w-8 h-8 mr-2" /> ¡Empezar! / Start!
