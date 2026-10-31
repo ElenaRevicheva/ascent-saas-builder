@@ -65,15 +65,22 @@ serve(async (req) => {
     ];
     const errors: string[] = [];
     let result: any = null;
-    for (const [name, key, url, model] of providers) {
-      if (!key) continue;
+    // verbose_json returns the detected language and per-segment confidence (avg_logprob).
+    const send = (key: string, url: string, model: string, lang?: string) => {
       const formData = new FormData();
       formData.append('file', new Blob([binaryAudio], { type: 'audio/webm' }), 'audio.webm');
       formData.append('model', model);
-      if (language) {
-        formData.append('language', language);
-      }
-      const response = await fetch(url, { method: 'POST', headers: { 'Authorization': `Bearer ${key}` }, body: formData });
+      formData.append('response_format', 'verbose_json');
+      if (lang) formData.append('language', lang);
+      return fetch(url, { method: 'POST', headers: { 'Authorization': `Bearer ${key}` }, body: formData });
+    };
+    const confidence = (r: any): number => {
+      const segs = Array.isArray(r?.segments) ? r.segments : [];
+      return segs.length ? segs.reduce((s: number, x: any) => s + (x.avg_logprob ?? -9), 0) / segs.length : -9;
+    };
+    for (const [name, key, url, model] of providers) {
+      if (!key) continue;
+      const response = await send(key, url, model, language);
       if (!response.ok) {
         const why = `${name} ${model}: ${response.status} ${(await response.text()).slice(0, 200)}`;
         console.error('Whisper provider failed, trying the next:', why);
@@ -82,6 +89,19 @@ serve(async (req) => {
       }
       result = await response.json();
       console.log(`transcribed by ${name} ${model}`);
+      // 31 Oct 2026: auto-detect heard a child's Spanish/English as Portuguese ("Eu me espethe muito em branco") and
+      // the tutor answered the garble. The families speak Spanish, English or Russian: any other detected language is
+      // re-transcribed as Spanish and as English, and the more confident of the three wins.
+      const detected = String(result.language || '').toLowerCase();
+      if (!language && detected && !['spanish', 'english', 'russian', 'es', 'en', 'ru'].includes(detected)) {
+        for (const lang of ['es', 'en']) {
+          const again = await send(key, url, model, lang);
+          if (!again.ok) continue;
+          const alt = await again.json();
+          if (confidence(alt) > confidence(result)) result = { ...alt, language: lang };
+        }
+        console.log(`language "${detected}" is not ES/EN/RU -> kept ${result.language} (confidence ${confidence(result).toFixed(2)})`);
+      }
       break;
     }
     if (!result) {

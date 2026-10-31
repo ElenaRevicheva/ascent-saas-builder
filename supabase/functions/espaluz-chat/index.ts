@@ -243,23 +243,32 @@ function isoWeek(d: Date): number {
 const kidWords = (s: string): string[] =>
   (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").match(/[a-zñ]+/g) ?? [];
 
-/** Gentle pronunciation check: the sentence the heroes just asked for vs what speech-to-text heard. */
+// Words too common to prove she was repeating a sentence (31 Oct 2026: "I woke up very early … I want to ride my
+// bicycle" matched the target "I feel very happy" on "i" + "very" = 50%, and the tutor answered "¡Casi! Se dice…").
+const KID_STOP = new Set(("i you he she it we they a an the to of and or is am are was very so my your me yo tu el la " +
+  "los las un una y o es soy eres muy mi me te se de del que en con por para lo le no si").split(" "));
+const kidContent = (s: string): string[] => kidWords(s).filter((w) => !KID_STOP.has(w));
+const ASKED_TO_REPEAT = /repite|repeat|dime|d[ií]lo|say it|can you say|puedes decir|ahora t[uú]|now you|lee |read /i;
+
+/** Gentle pronunciation check: the sentence the heroes just asked for vs what speech-to-text heard. It runs only when
+ *  the heroes asked her to repeat or read, and only on real (non-stopword) words: 3+ shared and 70%+ of the target. */
 function kidsSentenceCheck(prevReply: string, said: string): string {
   const saidW = kidWords(said);
-  if (saidW.length < 3 || !prevReply) return "";
+  if (saidW.length < 3 || !prevReply || !ASKED_TO_REPEAT.test(prevReply)) return "";
   const cands = [...prevReply.matchAll(/["“«]([^"”»]{8,120})["”»]/g)].map((m) => m[1]);
   for (const line of prevReply.split("\n")) {
     if (line.includes(" / ")) cands.push(...line.split(" / ").map((p) => (p.split(":").pop() ?? "").trim()));
   }
+  const saidC = kidContent(said);
   let best = "", bestScore = 0;
   for (const c of cands) {
-    const cw = kidWords(c);
-    if (cw.length < 3) continue;
-    const set = new Set(cw);
-    const score = [...set].filter((w) => saidW.includes(w)).length / set.size;
-    if (score > bestScore) { best = c; bestScore = score; }
+    const set = new Set(kidContent(c));
+    if (set.size < 2) continue;
+    const shared = [...set].filter((w) => saidC.includes(w)).length;
+    const score = shared / set.size;
+    if (shared >= Math.min(3, set.size) && score > bestScore) { best = c; bestScore = score; }
   }
-  if (!best || bestScore < 0.5) return "";
+  if (!best || bestScore < 0.7) return "";
   const missing = kidWords(best).filter((w) => !saidW.includes(w));
   const extra = saidW.filter((w) => !kidWords(best).includes(w));
   if (!missing.length) return `SENTENCE CHECK: the child said the target sentence "${best}" correctly - celebrate it in one line.`;
@@ -272,6 +281,23 @@ function kidsSentenceCheck(prevReply: string, said: string): string {
 // about Parque Metropolitano and got the scheduled toucan hello, asked where the toucan lives and got Simon says.
 const KID_QUESTION = /\?|¿|^\s*(where|what|why|how|who|which|when|can you|could you|tell me|do you|is it|are there|dónde|donde|qué|por qué|cómo|cuál|quién|cuándo|cuéntame|cuentame)(?![\wáéíóúñ])/i;
 
+// 31 Oct 2026 (Alisa's re-test): the per-turn step came LAST in the prompt and never quoted the child, so the small
+// free model followed the step and forgot "answer the child first" written far above. She answered the heroes' own
+// question with "Starberry" and got a new sentence about sloths; a garbled transcript ("Ana, Ana, me viene perezoso")
+// was praised as "you say it perfectly". Every turn now opens with her exact words and what to do with them.
+function kidsHeard(message: string): string {
+  return `\n\nTHE CHILD JUST SAID (speech-to-text, may be imperfect): "${message.trim().slice(0, 300)}"\n` +
+    "YOUR FIRST LINE reacts to exactly these words, before anything else:\n" +
+    "- An answer to your last question (even one word, like \"Starberry\") -> say it back as a whole, correct sentence in " +
+    "both languages and praise it (\"¡Tu fruta favorita es la fresa! / Your favourite fruit is the strawberry!\"); that " +
+    "sentence is the one to practise now.\n" +
+    "- Her own idea or a refusal (\"I don't want to jump, I want to ride my bicycle\") -> follow HER idea warmly and fit " +
+    "the lesson into it (\"¡Vamos en bici! / Let's ride our bikes!\").\n" +
+    "- Words that do not make sense together -> do NOT guess what she meant and do NOT praise it: say kindly that you did " +
+    "not hear well and ask her to say it again (\"No te escuché bien. ¿Me lo dices otra vez? / I didn't hear you well. " +
+    "Can you say it again?\") and STOP there: no game, no new sentence, wait for her.\n";
+}
+
 function kidsTurnContext(kids: any, message: string): string {
   const hist = Array.isArray(kids?.history) ? kids.history : [];
   const raw = Number.isInteger(kids?.turn) ? kids.turn : Math.floor(hist.length / 2);
@@ -280,15 +306,17 @@ function kidsTurnContext(kids: any, message: string): string {
   const turn = raw > 0 ? Math.max(1, raw - held) : 0;
   const step = turn < KIDS_STEPS.length ? KIDS_STEPS[turn] : KIDS_STEP_FREE;
   const story = KIDS_STORIES[isoWeek(new Date()) % KIDS_STORIES.length];
+  const heard = turn > 0 ? kidsHeard(message) : "";
   if (KID_QUESTION.test(message.trim())) {
     const hello = turn === 0 ? "Say hello in a few words inside the first line, then " : "";
-    return [`\n\nTHIS TURN: the child ASKED A QUESTION. ${hello}ANSWER IT FIRST, truly and simply, for a 6-7 year old: ` +
+    return [heard + `\nTHIS TURN: the child ASKED A QUESTION. ${hello}ANSWER IT FIRST, truly and simply, for a 6-7 year old: ` +
       "2-3 short lines with one real fact (if you are not sure of a fact, say what you do know - never invent). " +
       "Stay on THEIR topic; do not start a game, a story or a new lesson step this turn. " +
-      `End with ONE question back about what they asked. (The lesson continues next turn with: ${step})`,
+      `End with ONE question about the SAME topic they asked about. (The lesson continues next turn with: ${step})`,
       ...(turn === 0 ? [`THIS WEEK'S STORY (only if it is about what they asked; otherwise ignore it): ${story}`] : [])].join("\n");
   }
-  const out = [`\n\nTHIS TURN: turn ${turn + 1} of ${KIDS_STEPS.length} of today's lesson. Do ONLY this step: ${step}`,
+  const out = [heard + `\nTHEN, this turn's lesson step (turn ${turn + 1} of ${KIDS_STEPS.length}), built on what she just said and only ` +
+    `if it fits after your first line - her idea always wins over the plan: ${step}`,
     `THIS WEEK'S STORY (use it at the HELLO hook and the STORY step, nowhere else; if the child already chose a topic, their topic wins): ${story}`];
   if (turn === 0 && typeof kids?.mission === "string" && kids.mission.trim()) {
     out.push(`LAST LESSON'S MISSION was: "${kids.mission.trim().slice(0, 160)}". In this hello, ask the child if they did it and what happened, and celebrate the answer.`);
@@ -308,7 +336,9 @@ async function callClaude(apiKey: string, request: any): Promise<any> {
       body: JSON.stringify({ ...request, model }),
     });
     if (r.ok) return await r.json();
-    last = `${model}: ${r.status} ${(await r.text()).slice(0, 200)}`;
+    const body = (await r.text()).slice(0, 200);
+    last = `${model}: ${r.status} ${body}`;
+    if (/credit balance/i.test(body)) break; // no credit: every Claude model will say the same, hand over at once
     if (r.status !== 404 && r.status !== 400) break; // only a missing/retired model is worth the next one
   }
   throw new Error(`Claude API error: ${last}`);
@@ -336,9 +366,29 @@ function groqParams(model: string, maxTokens: number): Record<string, unknown> {
 }
 const GEMINI_MODEL = Deno.env.get('GEMINI_MODEL') || 'gemini-2.5-flash';
 
-async function callGroq(apiKey: string, request: any): Promise<any> {
+// 31 Oct 2026: gpt-oss-120b's free daily tokens were spent by midday and every classroom turn fell to gpt-oss-20b, the
+// weakest model. Grok (xAI API, ~$0.0002 a reply, the bots' llm_chain uses it) now sits between the strong Groq model
+// and the small ones.
+const GROQ_STRONG = GROQ_MODELS.slice(0, 1);
+const GROQ_SMALL = GROQ_MODELS.slice(1);
+const XAI_MODEL = Deno.env.get('XAI_MODEL') || 'grok-4.20-0309-non-reasoning';
+
+async function callGrok(apiKey: string, request: any): Promise<any> {
+  const r = await fetch('https://api.x.ai/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${apiKey}`, 'content-type': 'application/json' },
+    body: JSON.stringify({ model: XAI_MODEL, max_tokens: request.max_tokens, temperature: request.temperature,
+                           messages: [{ role: 'system', content: request.system }, ...request.messages] }),
+  });
+  if (!r.ok) throw new Error(`Grok ${XAI_MODEL}: ${r.status} ${(await r.text()).slice(0, 200)}`);
+  const text = (await r.json()).choices?.[0]?.message?.content;
+  if (!text) throw new Error('Grok: empty answer');
+  return { content: [{ text }], model: XAI_MODEL };
+}
+
+async function callGroq(apiKey: string, request: any, models: string[] = GROQ_MODELS): Promise<any> {
   const errors: string[] = [];
-  for (const model of GROQ_MODELS) {
+  for (const model of models) {
     const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${apiKey}`, 'content-type': 'application/json', 'User-Agent': 'espaluz-chat/1.0' },
@@ -377,12 +427,17 @@ async function callGemini(apiKey: string, request: any): Promise<any> {
   return { content: [{ text }] };
 }
 
-/** First provider that answers wins: Gemini → Groq → Claude. A provider without a secret is skipped, not an error. */
+/** First provider that answers wins, PAID FIRST (Elena, 31 Oct 2026: "when credits are topped up, use the paid layer
+ *  to the maximum"): Claude refuses in a split second when the org has no credit and then hands over, so a top-up is
+ *  used automatically with nothing to switch. Then Gemini, the strong free Groq model, Grok, and the small Groq models
+ *  last. A provider without a secret is skipped, not an error. */
 async function callChain(request: any): Promise<{ result: any; provider: string }> {
   const chain: [string, string | undefined, (k: string, r: any) => Promise<any>][] = [
-    ['gemini', Deno.env.get('GEMINI_API_KEY'), callGemini],
-    ['groq', Deno.env.get('GROQ_API_KEY'), callGroq],
     ['claude', Deno.env.get('ANTHROPIC_API_KEY'), callClaude],
+    ['gemini', Deno.env.get('GEMINI_API_KEY'), callGemini],
+    ['groq', Deno.env.get('GROQ_API_KEY'), (k, r) => callGroq(k, r, GROQ_STRONG)],
+    ['grok', Deno.env.get('XAI_API_KEY'), callGrok],
+    ['groq-small', Deno.env.get('GROQ_API_KEY'), (k, r) => callGroq(k, r, GROQ_SMALL)],
   ];
   const errors: string[] = [];
   for (const [name, key, fn] of chain) {
@@ -460,9 +515,10 @@ serve(async (req) => {
     const known: string[] = Array.isArray(kids?.known)
       ? kids.known.filter((s: unknown) => typeof s === 'string').map((s: string) => s.trim().slice(0, 120)).filter(Boolean).slice(-20)
       : [];
-    const kidsSystem = KIDS_CLASSROOM_PROMPT + (kids ? kidsTurnContext(kids, message) : '') + (known.length
-      ? `\n\nSentences the child already said in earlier lessons: ${known.map((s) => `"${s}"`).join(' · ')}. Open by inviting the child to say one of them again and praise, then teach new ones (the same words come back and grow).`
-      : '');
+    // The turn instruction (with the child's own words) goes LAST: the model weighs the end of the prompt most.
+    const kidsSystem = KIDS_CLASSROOM_PROMPT + (known.length
+      ? `\n\nSentences the child already said in earlier lessons: ${known.map((s) => `"${s}"`).join(' · ')}. At the hello, invite the child to say one of them again and praise, then teach new ones (the same words come back and grow).`
+      : '') + (kids ? kidsTurnContext(kids, message) : '');
     const claudeRequest = kids
       ? { max_tokens: 500, temperature: 0.7, system: kidsSystem,
           messages: [...(Array.isArray(kids.history) ? kids.history.slice(-10) : []), { role: 'user', content: message }] }
