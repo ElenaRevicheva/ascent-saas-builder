@@ -268,12 +268,28 @@ function kidsSentenceCheck(prevReply: string, said: string): string {
     `. Start with one gentle line like "¡Casi! Se dice ...", say the whole sentence once, then go on.`;
 }
 
+// A question from the child outranks the lesson plan (31 Oct 2026, twin of the bot's kids_asked_question): Alisa asked
+// about Parque Metropolitano and got the scheduled toucan hello, asked where the toucan lives and got Simon says.
+const KID_QUESTION = /\?|¿|^\s*(where|what|why|how|who|which|when|can you|could you|tell me|do you|is it|are there|dónde|donde|qué|por qué|cómo|cuál|quién|cuándo|cuéntame|cuentame)(?![\wáéíóúñ])/i;
+
 function kidsTurnContext(kids: any, message: string): string {
   const hist = Array.isArray(kids?.history) ? kids.history : [];
-  const turn = Number.isInteger(kids?.turn) ? kids.turn : Math.floor(hist.length / 2);
+  const raw = Number.isInteger(kids?.turn) ? kids.turn : Math.floor(hist.length / 2);
+  // The page counts every exchange; a turn spent answering her question does not move the lesson on.
+  const held = hist.filter((m: any) => m?.role === "user" && KID_QUESTION.test(String(m?.content ?? ""))).length;
+  const turn = raw > 0 ? Math.max(1, raw - held) : 0;
   const step = turn < KIDS_STEPS.length ? KIDS_STEPS[turn] : KIDS_STEP_FREE;
+  const story = KIDS_STORIES[isoWeek(new Date()) % KIDS_STORIES.length];
+  if (KID_QUESTION.test(message.trim())) {
+    const hello = turn === 0 ? "Say hello in a few words inside the first line, then " : "";
+    return [`\n\nTHIS TURN: the child ASKED A QUESTION. ${hello}ANSWER IT FIRST, truly and simply, for a 6-7 year old: ` +
+      "2-3 short lines with one real fact (if you are not sure of a fact, say what you do know - never invent). " +
+      "Stay on THEIR topic; do not start a game, a story or a new lesson step this turn. " +
+      `End with ONE question back about what they asked. (The lesson continues next turn with: ${step})`,
+      ...(turn === 0 ? [`THIS WEEK'S STORY (only if it is about what they asked; otherwise ignore it): ${story}`] : [])].join("\n");
+  }
   const out = [`\n\nTHIS TURN: turn ${turn + 1} of ${KIDS_STEPS.length} of today's lesson. Do ONLY this step: ${step}`,
-    `THIS WEEK'S STORY (use it at the HELLO hook and the STORY step, nowhere else): ${KIDS_STORIES[isoWeek(new Date()) % KIDS_STORIES.length]}`];
+    `THIS WEEK'S STORY (use it at the HELLO hook and the STORY step, nowhere else; if the child already chose a topic, their topic wins): ${story}`];
   if (turn === 0 && typeof kids?.mission === "string" && kids.mission.trim()) {
     out.push(`LAST LESSON'S MISSION was: "${kids.mission.trim().slice(0, 160)}". In this hello, ask the child if they did it and what happened, and celebrate the answer.`);
   }
