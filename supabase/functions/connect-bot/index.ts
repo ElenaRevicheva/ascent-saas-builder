@@ -17,15 +17,25 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const { code, telegram_user_id, telegram_username } = await req.json();
-    console.log('Connect bot request:', { code, telegram_user_id, telegram_username });
+    const { code, telegram_user_id, telegram_username, whatsapp_user_id } = await req.json();
+    // 31 Oct 2026 (Elena: "everything in Telegram must be possible in WhatsApp - in LATAM WhatsApp is the winner"): the
+    // WhatsApp bot links with `connect CODE` too. It sends a one-way hash of the phone number, never the number.
+    const platform = whatsapp_user_id ? 'whatsapp' : 'telegram';
+    const platformUserId = String(whatsapp_user_id ?? telegram_user_id ?? '');
+    if (!code || !platformUserId) {
+      return new Response(JSON.stringify({ error: 'code and a platform user id are required' }), {
+        status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    console.log('Connect bot request:', { code, platform, telegram_username });
 
     // Find valid connection code
     const { data: connectionCode, error: codeError } = await supabase
       .from('bot_connection_codes')
       .select('*')
       .eq('code', code.toUpperCase())
-      .eq('platform', 'telegram')
+      // The web page's code works for either app: it is a one-time secret of the parent's account.
+      .in('platform', ['telegram', 'whatsapp'])
       .gt('expires_at', new Date().toISOString())
       .is('used_at', null)
       .single();
@@ -49,9 +59,9 @@ serve(async (req) => {
       .from('connected_bots')
       .upsert({
         user_id: connectionCode.user_id,
-        platform: 'telegram',
-        platform_user_id: telegram_user_id.toString(),
-        platform_username: telegram_username,
+        platform,
+        platform_user_id: platformUserId,
+        platform_username: platform === 'telegram' ? telegram_username : null,
         is_active: true,
         connected_at: new Date().toISOString(),
         last_activity: new Date().toISOString()

@@ -69,8 +69,12 @@ const ConnectBot = () => {
     }
   };
 
-  const generateConnectionCode = async () => {
+  // 31 Oct 2026 (Elena: "in LATAM WhatsApp is the winner"): the same one-time code links EspaLuz WhatsApp; the button
+  // opens WhatsApp with "connect CODE" already typed to the EspaLuz number (the public one on the home page).
+  const [codePlatform, setCodePlatform] = useState<'telegram' | 'whatsapp'>('telegram');
+  const generateConnectionCode = async (platform: 'telegram' | 'whatsapp' = 'telegram') => {
     if (!user) return;
+    setCodePlatform(platform);
     
     setLoading(true);
     try {
@@ -87,7 +91,7 @@ const ConnectBot = () => {
         .insert({
           user_id: user.id,
           code: generatedCode,
-          platform: 'telegram',
+          platform,
           expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString() // 10 minutes
         })
         .select()
@@ -97,13 +101,17 @@ const ConnectBot = () => {
       
       setConnectionCode(codeData);
       
-      // Send the code to Telegram bot
-      const telegramUrl = `https://t.me/EspaLuzFamily_bot?start=${generatedCode}`;
-      window.open(telegramUrl, '_blank');
+      // Send the code to the bot: Telegram's /start carries it; on WhatsApp the parent just presses Send.
+      const botUrl = platform === 'whatsapp'
+        ? `https://wa.me/50766623757?text=${encodeURIComponent(`connect ${generatedCode}`)}`
+        : `https://t.me/EspaLuzFamily_bot?start=${generatedCode}`;
+      window.open(botUrl, '_blank');
       
       toast({
         title: t('connectBot.title'),
-        description: "Connection code generated and sent to Telegram bot!"
+        description: platform === 'whatsapp'
+          ? "WhatsApp is open with your code - just press Send."
+          : "Connection code generated and sent to Telegram bot!"
       });
     } catch (error) {
       console.error('Error generating connection code:', error);
@@ -215,9 +223,9 @@ const ConnectBot = () => {
           {/* Connection Code Generation */}
           <Card>
             <CardHeader>
-              <CardTitle>Connect Telegram Bot</CardTitle>
+              <CardTitle>Connect Telegram or WhatsApp</CardTitle>
               <CardDescription>
-                Generate a connection code to link your Telegram account with EspaLuz
+                Generate a connection code to link your Telegram or WhatsApp with EspaLuz
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -252,7 +260,9 @@ const ConnectBot = () => {
                   <Alert>
                     <MessageSquare className="h-4 w-4" />
                     <AlertDescription>
-                      Your connection code has been sent to our Telegram bot <strong>@EspaLuzFamily_bot</strong>. Check your Telegram for further instructions.
+                      {codePlatform === 'whatsapp'
+                        ? <>WhatsApp opened with <strong>connect {connectionCode.code}</strong> to EspaLuz. Just press Send. (Or type it yourself to +507 6662-3757.)</>
+                        : <>Your connection code has been sent to our Telegram bot <strong>@EspaLuzFamily_bot</strong>. Check your Telegram for further instructions.</>}
                     </AlertDescription>
                   </Alert>
                 </div>
@@ -270,7 +280,7 @@ const ConnectBot = () => {
 
               <div className="flex gap-2">
                 <Button 
-                  onClick={generateConnectionCode} 
+                  onClick={() => generateConnectionCode('telegram')} 
                   disabled={loading}
                   className="flex-1"
                 >
@@ -282,9 +292,17 @@ const ConnectBot = () => {
                   ) : (
                     <>
                       <Bot className="h-4 w-4 mr-2" />
-                      Generate Connection Code
+                      Telegram
                     </>
                   )}
+                </Button>
+                <Button
+                  onClick={() => generateConnectionCode('whatsapp')}
+                  disabled={loading}
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                >
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  WhatsApp
                 </Button>
                 
                 {connectionCode && (
