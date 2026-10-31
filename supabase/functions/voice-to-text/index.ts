@@ -1,5 +1,46 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
+
+// 31 Oct 2026 (Elena: "hear her better"): Whisper listened blind and wrote a 6-year-old's answers as "Starberry",
+// "Eu me espethe muito em branco" (Portuguese), "Ana, Ana, me viene perezoso". Whisper takes a `prompt` - text that
+// tells it what to expect - and we never sent one. During a classroom lesson the hint is the heroes' last question
+// (like a teacher who knows what she just asked); otherwise a neutral language hint.
+async function whisperHint(authHeader: string | null): Promise<string> {
+  const base = 'Spanish and English, sometimes Russian. ';
+  if (!authHeader) return base;
+  try {
+    const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!,
+                                  { global: { headers: { Authorization: authHeader } } });
+    const { data } = await supabase.from('learning_sessions').select('content, created_at')
+      .eq('session_type', 'classroom').order('created_at', { ascending: false }).limit(1);
+    const row = data?.[0];
+    if (!row || Date.now() - new Date(row.created_at).getTime() > 20 * 60 * 1000) return base;
+    const lines = String(row.content?.ai_response ?? '').split('\n')
+      .map((l: string) => l.replace(/^[^:\[]*(\[[^\]]*\])?:\s*/, '').trim()).filter(Boolean);
+    const question = [...lines].reverse().find((l) => l.includes('?')) ?? lines[lines.length - 1] ?? '';
+    return `A 6-year-old girl answers Pere and Titi in Spanish or English. They just asked: ${question.slice(0, 200)}`;
+  } catch (_) {
+    return base;
+  }
+}
+
+// With a hint and near-silence Whisper can "hear" the hint itself. A transcript made only of hint words is dropped,
+// and the page then says "No te escuché bien".
+const words = (s: string) => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').match(/[a-zñа-яё]+/g) ?? [];
+function echoesHint(text: string, hint: string): boolean {
+  const t = words(text);
+  if (t.length < 3) return false;
+  const h = new Set(words(hint));
+  return t.filter((w) => h.has(w)).length / t.length > 0.8;
+}
+// Whisper's known phantoms on silence or noise. Measured 31 Oct on Groq whisper-large-v3-turbo: 3 s of pure silence ->
+// "Thank you." (no hint) / "you" (hint); pink noise -> "I'm not sure." (hint). Groq reports no_speech_prob 0 and the
+// phantom's avg_logprob is no worse than real speech, so only the text can tell. A bare "gracias" is NOT on the list:
+// a child may really say it.
+const PHANTOMS = new Set(['thank you', 'you', 'thanks for watching', 'thank you for watching', 'im not sure', 'i m not sure',
+  'subtitles by the amara org community', 'gracias por ver el video', 'subtitulos realizados por la comunidad de amara org', '']);
+const isPhantom = (text: string) => PHANTOMS.has(words(text).join(' '));
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -65,12 +106,15 @@ serve(async (req) => {
     ];
     const errors: string[] = [];
     let result: any = null;
+    const hint = await whisperHint(req.headers.get('Authorization'));
     // verbose_json returns the detected language and per-segment confidence (avg_logprob).
     const send = (key: string, url: string, model: string, lang?: string) => {
       const formData = new FormData();
       formData.append('file', new Blob([binaryAudio], { type: 'audio/webm' }), 'audio.webm');
       formData.append('model', model);
       formData.append('response_format', 'verbose_json');
+      formData.append('prompt', hint);
+      formData.append('temperature', '0');
       if (lang) formData.append('language', lang);
       return fetch(url, { method: 'POST', headers: { 'Authorization': `Bearer ${key}` }, body: formData });
     };
@@ -107,6 +151,11 @@ serve(async (req) => {
     if (!result) {
       throw new Error(errors.length ? `Whisper API error: ${errors.join(' | ')}` : 'No speech-to-text provider configured (GROQ_API_KEY or OPENAI_API_KEY)');
     }
+    if (echoesHint(result.text, hint) || isPhantom(result.text)) {
+      console.log(`transcript is a silence phantom or only repeats the hint -> treated as silence: ${String(result.text).slice(0, 120)}`);
+      result.text = '';
+    }
+    console.log(`hint: ${hint.slice(0, 160)}`);
     console.log('Transcription result:', result.text);
 
     return new Response(
