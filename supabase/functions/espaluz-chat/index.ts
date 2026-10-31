@@ -334,6 +334,10 @@ const KIDS_STILL = /\b(auto|carro|coche|car|bus|taxi|avi[oó]n|plane|manejando|d
 // ends the lesson turn in code: a short goodbye, no game, no question.
 const KIDS_EMERGENCY = /terremoto|sismo|temblor|earthquake|incendio|\bfire\b|emergencia|emergency|inundaci|\bflood|hurac[aá]n|hurricane/i;
 const KIDS_BYE = /\b(ciao|chao|adi[oó]s|bye|goodbye|hasta luego|hasta mañana|pausa|pause|not a good time|no es buen momento|tenemos que irnos|we have to go|me tengo que ir)\b/i;
+// 31 Oct 2026 (18:36-18:38): "Ya paro de hablar", "no me escuchan dos veces", "Titi no paran de hablar ... que no
+// hablen" - she asked three times for less talk and got 3-4 lines and "¿Por qué te gusta parar de hablar?". Asking
+// for quiet gets ONE line and no question that turn, and every later reply in the lesson stays at two lines.
+const KIDS_QUIET = /(paro|parar|paren|para|paran) de hablar|no hablen|que no hable|hablan? (mucho|tanto|demasiado)|c[aá]llate|c[aá]llense|silencio|stop talking|be quiet|talk(ing)? too much/i;
 const firstLine = (reply: string): string =>
   (reply.split('\n').map((l) => l.trim()).find(Boolean) ?? '').replace(/^[^:\[]*(\[[^\]]*\])?:\s*/, '').split(' / ')[0].slice(0, 120);
 
@@ -421,6 +425,11 @@ function kidsTurnContext(kids: any, message: string): string {
     return `\n\nTHE FAMILY WANTS TO STOP NOW: "${message.trim().slice(0, 200)}"\nTHIS TURN OVERRIDES EVERY RULE ABOVE: ` +
       "no game, no new sentence, no question. Two short warm goodbye lines, one from each hero (Pere [goodbye], Titi " +
       "[goodbye]), saying you will be happy to continue next time.";
+  }
+  if (KIDS_QUIET.test(message)) {
+    return `\n\nSHE ASKED YOU TO TALK LESS: "${message.trim().slice(0, 200)}"\nTHIS TURN OVERRIDES EVERY RULE ABOVE: ` +
+      "exactly ONE short line from Pere, no question, no game, no new sentence: \"Pere [listening]: Vale, ahora te " +
+      "escucho yo. / Okay, now I am listening to you.\" Never ask why she wants quiet.";
   }
   if (KID_QUESTION.test(message.trim())) {
     const hello = turn === 0 ? "Say hello in a few words inside the first line, then " : "";
@@ -720,6 +729,15 @@ serve(async (req) => {
       // A stop or an emergency gets goodbye lines only - the base prompt's "end with a question" must not leak in.
       else if (KIDS_EMERGENCY.test(message) || KIDS_BYE.test(message)) {
         fullResponse = fullResponse.split('\n').filter((l: string) => l.trim() && !l.includes('?')).slice(0, 2).join('\n') || fullResponse;
+      }
+      else if (KIDS_QUIET.test(message)) {
+        fullResponse = lines.find((l: string) => !l.includes('?')) ?? 'Pere [listening]: Vale, ahora te escucho yo. / Okay, now I am listening to you.';
+      }
+      // Once she asked for quiet, the rest of the lesson stays short: one line and at most one question.
+      else if ((Array.isArray(kids.history) ? kids.history : []).some((m: any) => m?.role === 'user' && KIDS_QUIET.test(String(m?.content ?? '')))) {
+        const short = fullResponse.split('\n').map((l: string) => l.trim()).filter(Boolean);
+        const q = short.find((l: string) => l.includes('?'));
+        fullResponse = [short.find((l: string) => !l.includes('?')) ?? short[0], ...(q ? [q] : [])].join('\n');
       }
     }
     const videoScript = extractVideoScript(fullResponse);
