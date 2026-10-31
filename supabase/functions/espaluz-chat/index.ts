@@ -290,15 +290,18 @@ function kidsHeard(message: string): string {
     "YOUR FIRST LINE reacts to exactly these words, before anything else. Check these in order:\n" +
     // 31 Oct 2026 (Alisa: "mi mamá está pegando porque estoy chupando una paleta"): the heroes echoed her words, then
     // said "Simon dice, salta" - and repeated "las paletas no son dulces" as true.
-    "1. A feeling or something hard (scolded, sad, scared, hurt, missing someone) -> name the feeling kindly " +
+    "1. A feeling she names or clearly shows, or something hard that happened (scolded, sad, scared, hurt, missing " +
+    "someone) -> name the feeling kindly. Not wanting to play is NOT sadness (that is 3); never tell her she feels " +
+    "something she did not say. " +
     "(\"Parece que te sentiste triste cuando mamá se enojó. / It sounds like you felt sad when mom got upset.\"), ask ONE " +
     "gentle question about how she feels, and stay with her: THIS TURN HAS NO GAME AND NO NEW SENTENCE, skip the lesson " +
     "step below. Use soft words; never repeat a frightening word like \"pegar / hit\" back to her.\n" +
     "2. An answer to your last question (even one word, like \"Starberry\") -> say it back as a whole, correct sentence in " +
     "both languages and praise it (\"¡Tu fruta favorita es la fresa! / Your favourite fruit is the strawberry!\"); that " +
     "sentence is the one to practise now.\n" +
-    "3. Her own idea or a refusal (\"I don't want to jump, I want to ride my bicycle\") -> follow HER idea warmly and fit " +
-    "the lesson into it (\"¡Vamos en bici! / Let's ride our bikes!\").\n" +
+    "3. Her own idea, topic or a refusal (\"I don't want to jump, I want to ride my bicycle\"; \"no quiero jugar... " +
+    "Halloween\") -> follow HER idea warmly and fit the lesson into it (\"¡Vamos en bici! / Let's ride our bikes!\", " +
+    "\"¡Hoy es Halloween! ¿De qué te vas a disfrazar? / Today is Halloween! What will you dress up as?\").\n" +
     "4. Only if NO part of it makes sense -> do NOT guess and do NOT praise it: say kindly that you did not hear well and " +
     "ask her to say it again (\"No te escuché bien. ¿Me lo dices otra vez? / I didn't hear you well. Can you say it " +
     "again?\") and stop there: skip the lesson step below. If part of it makes sense, answer that part.\n" +
@@ -361,6 +364,24 @@ async function kidsMemoryCard(supabase: any, userId: string, hist: any[]): Promi
     "or about being scolded, and never invent a memory that is not in this list.";
 }
 
+// Today in Panama, and the day's holiday when there is one (she said "Halloween" on 31 Oct and was told she seemed
+// sad). Dates checked: 3 Nov separation from Colombia (1903), 4 Nov flag day, 5 Nov Colón day, 10 Nov first cry of
+// independence in La Villa de Los Santos, 28 Nov independence from Spain (1821), 8 Dec Mother's Day in Panama.
+const KIDS_HOLIDAYS: Record<string, string> = {
+  '10-31': 'Halloween', '11-02': 'Día de los Difuntos',
+  '11-03': 'Día de la Separación de Panamá de Colombia (1903) - school parades with drums and flags',
+  '11-04': 'Día de la Bandera de Panamá', '11-05': 'Día de Colón', '11-10': 'Primer Grito de Independencia en La Villa de Los Santos',
+  '11-28': 'Independencia de Panamá de España (1821)', '12-08': 'Día de las Madres en Panamá', '12-24': 'Nochebuena',
+  '12-25': 'Navidad', '12-31': 'Fin de Año', '01-01': 'Año Nuevo',
+};
+function kidsToday(): string {
+  const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Panama', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
+  const md = `${parts.find((p) => p.type === 'month')?.value}-${parts.find((p) => p.type === 'day')?.value}`;
+  const day = new Intl.DateTimeFormat('es-PA', { timeZone: 'America/Panama', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
+  const h = KIDS_HOLIDAYS[md];
+  return `TODAY in Panama: ${day}${h ? ` - ${h}. If she brings it up (or it fits), talk about it happily and teach a sentence about it.` : '.'}`;
+}
+
 function kidsTurnContext(kids: any, message: string): string {
   const hist = Array.isArray(kids?.history) ? kids.history : [];
   const raw = Number.isInteger(kids?.turn) ? kids.turn : Math.floor(hist.length / 2);
@@ -376,11 +397,20 @@ function kidsTurnContext(kids: any, message: string): string {
       "2-3 short lines with one real fact (if you are not sure of a fact, say what you do know - never invent). " +
       "Stay on THEIR topic; do not start a game, a story or a new lesson step this turn. " +
       `End with ONE question about the SAME topic they asked about. (The lesson continues next turn with: ${step})`,
-      ...(turn === 0 ? [`THIS WEEK'S STORY (only if it is about what they asked; otherwise ignore it): ${story}`] : [])].join("\n");
+      ...(turn === 0 ? [`THIS WEEK'S STORY (only if it is about what they asked; otherwise ignore it): ${story}`] : []),
+      kidsToday(), "BOTH heroes speak in this reply: at least one \"Pere [shot]:\" line AND one \"Titi [shot]:\" line."].join("\n");
   }
+  // 31 Oct 2026 (Alisa's lesson 13:46-13:51): the story rode along on EVERY turn, so "quiero jugar un poquitito" became
+  // the toucan again and again, and Titi fell silent for three replies. The story now appears only at the hello and on
+  // its own step; both heroes speak every turn; the heroes know today's date and Panama's real holidays.
   const out = [heard + `\nTHEN, this turn's lesson step (turn ${turn + 1} of ${KIDS_STEPS.length}), built on what she just said and only ` +
     `if it fits after your first line (skip it after 1 or 4 above) - her idea always wins over the plan: ${step}`,
-    `THIS WEEK'S STORY (use it at the HELLO hook and the STORY step, nowhere else; if the child already chose a topic, their topic wins): ${story}`];
+    ...(turn === 0 || step.startsWith("THIS WEEK'S STORY")
+      ? [`THIS WEEK'S STORY (one line at the hello; the whole story only on its own step; if the child already chose a topic, their topic wins): ${story}`]
+      : []),
+    kidsToday(),
+    "BOTH heroes speak in this reply: at least one \"Pere [shot]:\" line AND one \"Titi [shot]:\" line (Titi is the " +
+    "playful one - let him ask the closing question or make it a little game)."];
   if (turn === 0 && typeof kids?.mission === "string" && kids.mission.trim()) {
     out.push(`LAST LESSON'S MISSION was: "${kids.mission.trim().slice(0, 160)}". In this hello, ask the child if they did it and what happened, and celebrate the answer.`);
   }
