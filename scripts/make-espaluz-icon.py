@@ -1,8 +1,7 @@
 """The EspaLuz mark (31 Oct 2026). Elena: the AIdeazz "AZ" icon "is not appropriate here ... design smth unique like we
 did for atlas page"; then the speech bubble with an "ñ" was "ugly - not visible what it is about - maybe do something
-like sun with rays of light". So: Luz = a golden sun with eight bold rays on the hero title's orange -> pink -> purple
-gradient - long and short rays in turn, like a sunburst, and no face (a tilde mouth read as a worried face). Bold
-enough to read as a sun at 16 px. One geometry, drawn twice: public/espaluz-icon.svg, and favicon.ico /
+like sun with rays of light", then "more stylish - yellow and purple". So: Luz = a golden sun with twelve tapered
+rays, long and short in turn, on AIdeazz purple (the Atlas mark's palette). Still reads as a sun at 16 px. One geometry, drawn twice: public/espaluz-icon.svg, and favicon.ico /
 favicon-32.png / apple-touch-icon.png drawn with Pillow at 8x and scaled down, so all of them match.
 Run from the repo root: python scripts/make-espaluz-icon.py
 """
@@ -10,14 +9,21 @@ import math
 
 from PIL import Image, ImageDraw
 
-STOPS = ["#f97316", "#ec4899", "#a855f7"]  # the hero headline's gradient
-SUN_IN, SUN_OUT, RAY = "#fef08a", "#f59e0b", "#fff7c2"
-C, R_SUN, RAY_IN, RAY_W = 32, 14, 19.5, 5.5
-RAYS = [(C + RAY_IN * math.cos(a), C + RAY_IN * math.sin(a), C + out * math.cos(a), C + out * math.sin(a))
-        for a, out in ((i * math.pi / 4 - math.pi / 2, 26 if i % 2 == 0 else 24) for i in range(8))]
+STOPS = ["#8b5cf6", "#6d28d9", "#4c1d95"]  # AIdeazz purple, light to deep (the Atlas mark's palette)
+SUN_IN, SUN_OUT, RAY = "#fef08a", "#facc15", "#facc15"  # AIdeazz yellow
+C, R_SUN, RAY_IN = 32, 12.5, 16.5
+# Twelve tapered rays, long and short in turn: a sunburst, sharper and more refined than rounded sticks.
+RAYS = []
+for i in range(12):
+    a = i * math.pi / 6 - math.pi / 2
+    out, half = (27.5, 2.3) if i % 2 == 0 else (24, 1.8)
+    nx, ny = -math.sin(a), math.cos(a)
+    bx, by = C + RAY_IN * math.cos(a), C + RAY_IN * math.sin(a)
+    RAYS.append([(bx + nx * half, by + ny * half), (C + out * math.cos(a), C + out * math.sin(a)), (bx - nx * half, by - ny * half)])
 
 SVG = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <!-- EspaLuz: Luz = a golden sun with long and short rays on the hero title's orange-pink-purple gradient. Made by scripts/make-espaluz-icon.py - edit there, not here. -->
+  <!-- EspaLuz: Luz = a golden sun with twelve tapered rays on AIdeazz purple (yellow + purple, like the Atlas mark).
+       Made by scripts/make-espaluz-icon.py - edit there, not here. -->
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="{STOPS[0]}"/><stop offset="0.5" stop-color="{STOPS[1]}"/><stop offset="1" stop-color="{STOPS[2]}"/>
@@ -25,8 +31,8 @@ SVG = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64"
     <radialGradient id="s" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="{SUN_IN}"/><stop offset="1" stop-color="{SUN_OUT}"/></radialGradient>
   </defs>
   <rect x="2" y="2" width="60" height="60" rx="15" fill="url(#g)"/>
-  <g stroke="{RAY}" stroke-width="{RAY_W}" stroke-linecap="round">
-{chr(10).join(f'    <line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}"/>' for x1, y1, x2, y2 in RAYS)}
+  <g fill="{RAY}" stroke="{RAY}" stroke-width="0.8" stroke-linejoin="round">
+{chr(10).join('    <polygon points="' + ' '.join(f'{x:.1f},{y:.1f}' for x, y in r) + '"/>' for r in RAYS)}
   </g>
   <circle cx="{C}" cy="{C}" r="{R_SUN}" fill="url(#s)"/>
 </svg>
@@ -66,8 +72,8 @@ def draw(size):
         for x, y in (pts[0], pts[-1]):
             d.ellipse([x - r, y - r, x + r, y + r], fill=color)
 
-    for x1, y1, x2, y2 in RAYS:
-        stroke([(x1, y1), (x2, y2)], RAY, RAY_W)
+    for r in RAYS:
+        d.polygon([(x * k, y * k) for x, y in r], fill=RAY)
     # the sun: a radial gradient from the upper left, like the SVG
     sun = Image.new("RGBA", (big, big), (0, 0, 0, 0))
     sp = sun.load()
@@ -88,7 +94,7 @@ if __name__ == "__main__":
         f.write(SVG)
     draw(32).save("public/favicon-32.png")
     # iOS paints transparent corners black and rounds the icon itself, so the touch icon is full-bleed.
-    touch = Image.new("RGBA", (180, 180), "#ec4899")
+    touch = Image.new("RGBA", (180, 180), "#6d28d9")
     touch.alpha_composite(draw(180))
     touch.convert("RGB").save("public/apple-touch-icon.png")
     draw(64).save("public/favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
