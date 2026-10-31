@@ -35,3 +35,8 @@ verify_jwt = true
 
 [functions.update-bot-activity]
 verify_jwt = true
+
+# 31 Oct 2026: the bot's read of Alisa's web lessons. JWT on (the bot sends the anon key, as for submit-progress) AND
+# the function itself refuses any call without ESPALUZ_BOT_SECRET.
+[functions.kids-memory]
+verify_jwt = true
