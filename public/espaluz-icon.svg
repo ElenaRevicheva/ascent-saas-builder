@@ -1,14 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <!-- EspaLuz: a speech bubble with an "ñ" whose tilde is a ray of golden light (Español + Luz), on the hero title's
-       orange-pink-purple gradient. Made by scripts/make-espaluz-icon.py - edit there, not here. -->
+  <!-- EspaLuz: Luz = a golden sun with long and short rays on the hero title's orange-pink-purple gradient. Made by scripts/make-espaluz-icon.py - edit there, not here. -->
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#f97316"/><stop offset="0.5" stop-color="#ec4899"/><stop offset="1" stop-color="#a855f7"/>
     </linearGradient>
+    <radialGradient id="s" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#fef08a"/><stop offset="1" stop-color="#f59e0b"/></radialGradient>
   </defs>
   <rect x="2" y="2" width="60" height="60" rx="15" fill="url(#g)"/>
-  <path d="M22 11 H45 Q55 11 55 21 V36 Q55 46 45 46 H25 L15 55 L17 45 Q9 43 9 35 V21 Q9 11 19 11 Z" fill="#fff"/>
-  <path d="M23 41 V29 M23 34 Q23 28 32 28 Q41 28 41 34 V41" fill="none" stroke="#6d28d9" stroke-width="5.5"
-        stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M22 22 Q26.5 16.5 31 20 Q35.5 23.5 42 18" fill="none" stroke="#f59e0b" stroke-width="4.5" stroke-linecap="round"/>
+  <g stroke="#fff7c2" stroke-width="5.5" stroke-linecap="round">
+    <line x1="32.0" y1="12.5" x2="32.0" y2="6.0"/>
+    <line x1="45.8" y1="18.2" x2="49.0" y2="15.0"/>
+    <line x1="51.5" y1="32.0" x2="58.0" y2="32.0"/>
+    <line x1="45.8" y1="45.8" x2="49.0" y2="49.0"/>
+    <line x1="32.0" y1="51.5" x2="32.0" y2="58.0"/>
+    <line x1="18.2" y1="45.8" x2="15.0" y2="49.0"/>
+    <line x1="12.5" y1="32.0" x2="6.0" y2="32.0"/>
+    <line x1="18.2" y1="18.2" x2="15.0" y2="15.0"/>
+  </g>
+  <circle cx="32" cy="32" r="14" fill="url(#s)"/>
 </svg>
