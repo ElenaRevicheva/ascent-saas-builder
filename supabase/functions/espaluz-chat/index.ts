@@ -287,15 +287,24 @@ const KID_QUESTION = /\?|¿|^\s*(where|what|why|how|who|which|when|can you|could
 // was praised as "you say it perfectly". Every turn now opens with her exact words and what to do with them.
 function kidsHeard(message: string): string {
   return `\n\nTHE CHILD JUST SAID (speech-to-text, may be imperfect): "${message.trim().slice(0, 300)}"\n` +
-    "YOUR FIRST LINE reacts to exactly these words, before anything else:\n" +
-    "- An answer to your last question (even one word, like \"Starberry\") -> say it back as a whole, correct sentence in " +
+    "YOUR FIRST LINE reacts to exactly these words, before anything else. Check these in order:\n" +
+    // 31 Oct 2026 (Alisa: "mi mamá está pegando porque estoy chupando una paleta"): the heroes echoed her words, then
+    // said "Simon dice, salta" - and repeated "las paletas no son dulces" as true.
+    "1. A feeling or something hard (scolded, sad, scared, hurt, missing someone) -> name the feeling kindly " +
+    "(\"Parece que te sentiste triste cuando mamá se enojó. / It sounds like you felt sad when mom got upset.\"), ask ONE " +
+    "gentle question about how she feels, and stay with her: THIS TURN HAS NO GAME AND NO NEW SENTENCE, skip the lesson " +
+    "step below. Use soft words; never repeat a frightening word like \"pegar / hit\" back to her.\n" +
+    "2. An answer to your last question (even one word, like \"Starberry\") -> say it back as a whole, correct sentence in " +
     "both languages and praise it (\"¡Tu fruta favorita es la fresa! / Your favourite fruit is the strawberry!\"); that " +
     "sentence is the one to practise now.\n" +
-    "- Her own idea or a refusal (\"I don't want to jump, I want to ride my bicycle\") -> follow HER idea warmly and fit " +
+    "3. Her own idea or a refusal (\"I don't want to jump, I want to ride my bicycle\") -> follow HER idea warmly and fit " +
     "the lesson into it (\"¡Vamos en bici! / Let's ride our bikes!\").\n" +
-    "- Words that do not make sense together -> do NOT guess what she meant and do NOT praise it: say kindly that you did " +
-    "not hear well and ask her to say it again (\"No te escuché bien. ¿Me lo dices otra vez? / I didn't hear you well. " +
-    "Can you say it again?\") and STOP there: no game, no new sentence, wait for her.\n";
+    "4. Only if NO part of it makes sense -> do NOT guess and do NOT praise it: say kindly that you did not hear well and " +
+    "ask her to say it again (\"No te escuché bien. ¿Me lo dices otra vez? / I didn't hear you well. Can you say it " +
+    "again?\") and stop there: skip the lesson step below. If part of it makes sense, answer that part.\n" +
+    "Always: if her words contain something untrue, never repeat it as true - say the correct version simply (\"Las " +
+    "paletas son dulces, pero tienen mucho azúcar. / Lollipops are sweet, but they have a lot of sugar.\"). The recording " +
+    "may hold two voices (the child and an adult helping): answer the CHILD's part.\n";
 }
 
 function kidsTurnContext(kids: any, message: string): string {
@@ -316,7 +325,7 @@ function kidsTurnContext(kids: any, message: string): string {
       ...(turn === 0 ? [`THIS WEEK'S STORY (only if it is about what they asked; otherwise ignore it): ${story}`] : [])].join("\n");
   }
   const out = [heard + `\nTHEN, this turn's lesson step (turn ${turn + 1} of ${KIDS_STEPS.length}), built on what she just said and only ` +
-    `if it fits after your first line - her idea always wins over the plan: ${step}`,
+    `if it fits after your first line (skip it after 1 or 4 above) - her idea always wins over the plan: ${step}`,
     `THIS WEEK'S STORY (use it at the HELLO hook and the STORY step, nowhere else; if the child already chose a topic, their topic wins): ${story}`];
   if (turn === 0 && typeof kids?.mission === "string" && kids.mission.trim()) {
     out.push(`LAST LESSON'S MISSION was: "${kids.mission.trim().slice(0, 160)}". In this hello, ask the child if they did it and what happened, and celebrate the answer.`);
