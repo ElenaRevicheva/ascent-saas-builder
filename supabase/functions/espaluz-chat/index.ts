@@ -320,13 +320,18 @@ function kidsHeard(message: string): string {
 const KIDS_STARTER = /quiero empezar la clase|i want to start the class/i;
 // A hard moment is never brought back at a hello (eval 31 Oct: Grok opened a new lesson with "la última vez me dijiste
 // que tu mamá está pegando"). Enforced here in code, not left to the model. Twin: main.py _KIDS_HARD.
-const KIDS_HARD = /peg|golpe|\bhit|grit|yell|scold|rega[nñ]|castig|punish|llor|\bcry|cried|triste|\bsad\b|miedo|scared|asust|duele|hurt|enoj|angry|frustr|sangr|blood|lastim|herid|accident/i;
+const KIDS_HARD = /peg|golpe|\bhit|grit|yell|scold|rega[nñ]|castig|punish|llor|\bcry|cried|triste|\bsad\b|miedo|scared|asust|duele|hurt|enoj|angry|frustr|sangr|blood|lastim|herid|accident|terremoto|sismo|temblor|earthquake/i;
 // A parent speaking into the lesson is not the child's memory (31 Oct 15:43: "mi hija ... no puede saltar").
 const KIDS_ADULT = /\bmi hij[oa]\b|\bmy (daughter|son)\b|\bmam[aá] aqu[ií]\b|\bsoy (la|su) mam[aá]\b/i;
 // 31 Oct 2026 (15:39-15:43): Alisa was in the car; Titi asked her to hop like a bunny, she said she could not ("me puede
 // abrir la cabeza"), and the next reply still had no idea. Once the lesson hears she cannot move, every later step is a
 // sit-still one - kept in code from the whole lesson history, not left to the model's memory of one turn.
 const KIDS_STILL = /\b(auto|carro|coche|car|bus|taxi|avi[oó]n|plane|manejando|driving)\b|no (puedo|puede) (saltar|moverme|levantarme)|can'?t (jump|move|stand)/i;
+// 31 Oct 2026 (16:00): "there is an earthquake in our area ... let us take a pause. Ciao Pere Titi!" got a breathing
+// exercise, "how do you feel now?", and then "Es un terremoto hoy, sí". A family that says stop, or an emergency,
+// ends the lesson turn in code: a short goodbye, no game, no question.
+const KIDS_EMERGENCY = /terremoto|sismo|temblor|earthquake|incendio|\bfire\b|emergencia|emergency|inundaci|\bflood|hurac[aá]n|hurricane/i;
+const KIDS_BYE = /\b(ciao|chao|adi[oó]s|bye|goodbye|hasta luego|hasta mañana|pausa|pause|not a good time|no es buen momento|tenemos que irnos|we have to go|me tengo que ir)\b/i;
 const firstLine = (reply: string): string =>
   (reply.split('\n').map((l) => l.trim()).find(Boolean) ?? '').replace(/^[^:\[]*(\[[^\]]*\])?:\s*/, '').split(' / ')[0].slice(0, 120);
 
@@ -401,6 +406,17 @@ function kidsTurnContext(kids: any, message: string): string {
   const step = turn < KIDS_STEPS.length ? KIDS_STEPS[turn] : KIDS_STEP_FREE;
   const story = KIDS_STORIES[isoWeek(new Date()) % KIDS_STORIES.length];
   const heard = turn > 0 ? kidsHeard(message) : "";
+  if (KIDS_EMERGENCY.test(message)) {
+    return `\n\nSOMEONE SAID THERE IS AN EMERGENCY: "${message.trim().slice(0, 200)}"\nTHIS TURN OVERRIDES EVERY RULE ABOVE: ` +
+      "no lesson, no game, no breathing exercise, no question, and never confirm or describe the emergency. Exactly two " +
+      "calm lines: \"Pere [talk]: Quédate cerca de tu mamá y haz lo que ella dice. / Stay close to your mom and do what she " +
+      "says.\" and \"Titi [goodbye]: Aquí te esperamos cuando vuelvas. / We will be here when you come back.\"";
+  }
+  if (KIDS_BYE.test(message)) {
+    return `\n\nTHE FAMILY WANTS TO STOP NOW: "${message.trim().slice(0, 200)}"\nTHIS TURN OVERRIDES EVERY RULE ABOVE: ` +
+      "no game, no new sentence, no question. Two short warm goodbye lines, one from each hero (Pere [goodbye], Titi " +
+      "[goodbye]), saying you will be happy to continue next time.";
+  }
   if (KID_QUESTION.test(message.trim())) {
     const hello = turn === 0 ? "Say hello in a few words inside the first line, then " : "";
     return [heard + `\nTHIS TURN: the child ASKED A QUESTION. ${hello}ANSWER IT FIRST, truly and simply, for a 6-7 year old: ` +
@@ -642,6 +658,13 @@ serve(async (req) => {
       if (lines.length > 4) {
         const last = lines[lines.length - 1];
         fullResponse = [...lines.slice(0, 3), ...(last.includes('?') ? [last] : [])].join('\n');
+      }
+      // 31 Oct 2026 (15:56): "No te escuché bien. ¿Me lo dices otra vez?" was followed in the same reply by "¡Salta
+      // tres veces!" and a question about "the phone" she never said. Not heard = ask again, and nothing else.
+      if (/no te escuch/i.test(lines[0] ?? '')) fullResponse = lines[0];
+      // A stop or an emergency gets goodbye lines only - the base prompt's "end with a question" must not leak in.
+      else if (KIDS_EMERGENCY.test(message) || KIDS_BYE.test(message)) {
+        fullResponse = fullResponse.split('\n').filter((l: string) => l.trim() && !l.includes('?')).slice(0, 2).join('\n') || fullResponse;
       }
     }
     const videoScript = extractVideoScript(fullResponse);

@@ -157,6 +157,12 @@ serve(async (req) => {
     if (!result) {
       throw new Error(errors.length ? `Whisper API error: ${errors.join(' | ')}` : 'No speech-to-text provider configured (GROQ_API_KEY or OPENAI_API_KEY)');
     }
+    // 31 Oct 15:56: "Man, að mér kom úr teléfón" (icelandic, retry -0.82, above the -1.0 cut). Letters that exist in
+    // none of the families' languages prove the transcript is garble, whatever the confidence says.
+    if (/[ðþæøå]/i.test(String(result.text))) {
+      console.log(`transcript has letters from no family language -> treated as not heard: ${String(result.text).slice(0, 120)}`);
+      result.text = '';
+    }
     if (echoesHint(result.text, hint) || isPhantom(result.text)) {
       console.log(`transcript is a silence phantom or only repeats the hint -> treated as silence: ${String(result.text).slice(0, 120)}`);
       result.text = '';
