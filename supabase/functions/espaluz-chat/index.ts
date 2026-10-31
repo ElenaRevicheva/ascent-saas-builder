@@ -322,7 +322,9 @@ const KIDS_STARTER = /quiero empezar la clase|i want to start the class/i;
 // que tu mamá está pegando"). Enforced here in code, not left to the model. Twin: main.py _KIDS_HARD.
 const KIDS_HARD = /peg|golpe|\bhit|grit|yell|scold|rega[nñ]|castig|punish|llor|\bcry|cried|triste|\bsad\b|miedo|scared|asust|duele|hurt|enoj|angry|frustr|sangr|blood|lastim|herid|accident|terremoto|sismo|temblor|earthquake/i;
 // A parent speaking into the lesson is not the child's memory (31 Oct 15:43: "mi hija ... no puede saltar").
-const KIDS_ADULT = /\bmi hij[oa]\b|\bmy (daughter|son)\b|\bmam[aá] aqu[ií]\b|\bsoy (la|su) mam[aá]\b/i;
+// 31 Oct 17:31: "It's Alisa's mom now, Elena. Alisa doesn't want to brush her teeth" was not caught: the heroes told
+// the mother "it sounds like you feel worried". Twins: kids-memory KIDS_ADULT, main.py _KIDS_ADULT.
+const KIDS_ADULT = /\bmi hij[oa]\b|\bmy (daughter|son)\b|\bmam[aá] aqu[ií]\b|\bsoy (la|su) mam[aá]\b|\b(it'?s|this is|soy|habla) [^.!?]{0,20}\b(mom|mum|mother|mam[aá])\b|\balisa'?s (mom|mum|mother)\b|\balisa (has|had|is|was|does|doesn'?t|did|didn'?t|promised|no quiere|quiere|tiene|est[aá])\b/i;
 // 31 Oct 2026 (15:39-15:43): Alisa was in the car; Titi asked her to hop like a bunny, she said she could not ("me puede
 // abrir la cabeza"), and the next reply still had no idea. Once the lesson hears she cannot move, every later step is a
 // sit-still one - kept in code from the whole lesson history, not left to the model's memory of one turn.
@@ -405,7 +407,10 @@ function kidsTurnContext(kids: any, message: string): string {
   const turn = raw > 0 ? Math.max(1, raw - held) : 0;
   const step = turn < KIDS_STEPS.length ? KIDS_STEPS[turn] : KIDS_STEP_FREE;
   const story = KIDS_STORIES[isoWeek(new Date()) % KIDS_STORIES.length];
-  const heard = turn > 0 ? kidsHeard(message) : "";
+  const heard = turn > 0 ? kidsHeard(message) + (KIDS_ADULT.test(message)
+    ? "THIS MESSAGE IS FROM THE PARENT, not the child: first line thanks the parent by role (\"¡Gracias, mamá! / " +
+      "Thank you, mom!\"), never tell the parent how they feel; do what the parent asks, then turn to the child by name.\n"
+    : "") : "";
   if (KIDS_EMERGENCY.test(message)) {
     return `\n\nSOMEONE SAID THERE IS AN EMERGENCY: "${message.trim().slice(0, 200)}"\nTHIS TURN OVERRIDES EVERY RULE ABOVE: ` +
       "no lesson, no game, no breathing exercise, no question, and never confirm or describe the emergency. Exactly two " +
