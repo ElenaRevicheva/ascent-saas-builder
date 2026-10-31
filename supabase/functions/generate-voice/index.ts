@@ -12,7 +12,9 @@ const corsHeaders = {
 // goes silent because of the heroes.
 const HERO_VOICES: Record<string, { voice_id: string; pitch: number; speed: number; emotion: string }> = {
   pere: { voice_id: "Spanish_Rudolph", pitch: -2, speed: 0.82, emotion: "calm" },
-  titi: { voice_id: "Spanish_AnimeCharacter", pitch: 3, speed: 1.15, emotion: "happy" },
+  // 31 Oct 2026 (Alisa: "Titi habla muy rápido, no puedo intentarlo"): 1.15 plus a high cartoon pitch was too fast for a
+  // six-year-old to repeat. 0.9 keeps him playful and lets her follow. Twin: main.py TITI_SPEED default.
+  titi: { voice_id: "Spanish_AnimeCharacter", pitch: 3, speed: 0.9, emotion: "happy" },
 };
 
 serve(async (req) => {
