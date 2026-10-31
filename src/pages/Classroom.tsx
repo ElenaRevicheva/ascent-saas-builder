@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Mic, Square, Star, Play } from "lucide-react";
+import { Mic, Square, Star, Play, Camera } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,6 +16,37 @@ type Line = { who: "pere" | "titi"; clip: string; chars: number; text: string };
 const IDLE_CLIP = "/heroes/duo-hello.mp4";
 const DANCE_CLIP = "/heroes/titi-dance.mp4"; // every 5 stars Titi dances for the child (30 Oct 2026)
 const today = () => new Date().toISOString().slice(0, 10);
+// 31 Oct 2026 (Elena: "stars and stickers, like Buddy"): every 5 stars earn the next sticker of Panama, named in both
+// languages, so the reward is also two new words. Derived from the star count, so nothing extra is stored.
+const STICKERS: { e: string; es: string; en: string }[] = [
+  { e: "🦥", es: "el perezoso", en: "the sloth" }, { e: "🐒", es: "el mono tití", en: "the tamarin monkey" },
+  { e: "🦜", es: "el tucán", en: "the toucan" }, { e: "🐸", es: "la rana dorada", en: "the golden frog" },
+  { e: "🐢", es: "la tortuga marina", en: "the sea turtle" }, { e: "🦅", es: "el águila harpía", en: "the harpy eagle" },
+  { e: "🚢", es: "el barco del Canal", en: "the Canal ship" }, { e: "🏖️", es: "la playa", en: "the beach" },
+  { e: "🥭", es: "el mango", en: "the mango" }, { e: "🌺", es: "la flor", en: "the flower" },
+  { e: "🦋", es: "la mariposa", en: "the butterfly" }, { e: "🐬", es: "el delfín", en: "the dolphin" },
+  { e: "🌈", es: "el arcoíris", en: "the rainbow" }, { e: "🍍", es: "la piña", en: "the pineapple" },
+  { e: "🐋", es: "la ballena", en: "the whale" }, { e: "🌋", es: "el volcán Barú", en: "the Barú volcano" },
+];
+const stickerFor = (n: number) => STICKERS[(n - 1) % STICKERS.length]; // n = 1st, 2nd... sticker
+
+/** A photo from the tablet's camera or gallery, made small (longest side 1024 px, JPEG) before it is sent. */
+function shrinkPhoto(file: File): Promise<{ b64: string; url: string }> {
+  return new Promise((ok, fail) => {
+    const img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, 1024 / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+      c.getContext("2d")?.drawImage(img, 0, 0, c.width, c.height);
+      const url = c.toDataURL("image/jpeg", 0.8);
+      URL.revokeObjectURL(img.src);
+      ok({ b64: url.split(",")[1] || "", url });
+    };
+    img.onerror = () => fail(new Error("not an image"));
+    img.src = URL.createObjectURL(file);
+  });
+}
 const GREETING_CLIP = "/heroes/kids-greeting.mp4"; // the heroes' own voiced hello (the Telegram /kids clip) opens the class
 const TALK = { pere: ["pere-talking-1", "pere-talking-2"], titi: ["titi-talking-1", "titi-talking-2"] };
 const SHOT_CLIPS: Record<"pere" | "titi", Record<string, string>> = {
@@ -172,6 +203,8 @@ const Classroom = () => {
   const [stars, setStars] = useState(0);
   const [greeting, setGreeting] = useState(false);
   const [reward, setReward] = useState(0); // >0 = Titi's star dance on screen (the star count it celebrates)
+  const [photo, setPhoto] = useState<string | null>(null); // the photo she is showing, on screen for that turn only
+  const photoInput = useRef<HTMLInputElement | null>(null);
   const mission = useRef<{ text: string; day: string } | null>(null); // last lesson's mission, asked about the next day
   const greetingDone = useRef<Promise<void> | null>(null);
   const greetingEnded = useRef<(() => void) | null>(null);
@@ -194,8 +227,14 @@ const Classroom = () => {
   // Stars and known sentences survive a reload (Buddy.ai keeps the child's progress; 30 Oct 2026). Per parent account, this browser.
   useEffect(() => {
     if (!user?.id) return;
+    // 31 Oct 2026: stars were kept per browser, so the tablet and the laptop showed different counts. Every answer she
+    // gives is a saved classroom turn; the stars are those turns (the "start" button is not one), on any device.
+    supabase.from("learning_sessions").select("id", { count: "exact", head: true })
+      .eq("user_id", user.id).eq("session_type", "classroom")
+      .not("content->>user_message", "ilike", "%quiero empezar la clase%")
+      .then(({ count, error }) => { if (!error && typeof count === "number") setStars((s) => Math.max(s, count)); });
     try {
-      setStars(Math.max(0, parseInt(localStorage.getItem(`classroom-stars-${user.id}`) ?? "0", 10) || 0));
+      setStars((s) => Math.max(s, parseInt(localStorage.getItem(`classroom-stars-${user.id}`) ?? "0", 10) || 0));
       const k = JSON.parse(localStorage.getItem(`classroom-known-${user.id}`) ?? "[]");
       known.current = Array.isArray(k) ? k.filter((x) => typeof x === "string").slice(-20) : [];
       const m = JSON.parse(localStorage.getItem(`classroom-mission-${user.id}`) ?? "null");
@@ -263,27 +302,31 @@ const Classroom = () => {
   /** Every 5 stars: Titi's dance clip fills the screen and both heroes cheer (the reward is a hero moment, not a number). */
   const celebrate = async (n: number) => {
     setReward(n);
+    const s = stickerFor(Math.floor(n / 5));
     await Promise.all([
-      browserSay(`¡${n} estrellas! ¡Titi baila para ti! / ${n} stars! Titi dances for you!`, "titi"),
+      browserSay(`¡${n} estrellas! Tu nuevo sticker: ${s.es}. / ${n} stars! Your new sticker: ${s.en}.`, "titi"),
       new Promise((r) => setTimeout(r, 5500)),
     ]);
     setReward(0);
   };
 
-  const talk = async (childSays: string, countsAsStar: boolean) => {
+  const talk = async (childSays: string, countsAsStar: boolean, image?: string) => {
     setBusy(true);
+    if (!image) setPhoto(null);
     try {
       const { data, error } = await supabase.functions.invoke("espaluz-chat", {
         // 30 Oct 2026: the lesson step comes from the turn count (no guessing, no re-greeting); yesterday's mission is
         // asked about in today's hello.
         body: { message: childSays, isVoiceInput: true, kids: {
-          history: turns.slice(-10), known: known.current, turn: Math.floor(turns.length / 2),
+          history: turns.slice(-10), known: known.current, turn: Math.floor(turns.length / 2), image,
           mission: turns.length === 0 && mission.current && mission.current.day !== today() ? mission.current.text : undefined,
         } },
       });
       const text: string = data?.response || "";
       if (error || !text) throw new Error(data?.error || error?.message || "no answer");
-      setTurns((t) => [...t, { role: "user", content: childSays }, { role: "assistant", content: text }]);
+      // A photo turn comes back as "📷 (foto: ...)", so the next turns still know what she showed.
+      const said: string = typeof data?.userMessage === "string" && data.userMessage ? data.userMessage : childSays;
+      setTurns((t) => [...t, { role: "user", content: said }, { role: "assistant", content: text }]);
       setReply(stripShotTags(text));
       if (greetingDone.current) { await greetingDone.current; greetingDone.current = null; setGreeting(false); } // let the hello finish
       const spoken = heroLines(text);
@@ -341,6 +384,19 @@ const Classroom = () => {
     setRecording(false);
   };
 
+  const showPhoto = async (file: File | undefined) => {
+    if (!file) return;
+    try {
+      const { b64, url } = await shrinkPhoto(file);
+      setPhoto(url);
+      await talk("📷 ¡Mira mi foto! / Look at my photo!", true, b64);
+    } catch {
+      toast.error("No pude abrir la foto. / I could not open the photo.");
+    } finally {
+      if (photoInput.current) photoInput.current.value = "";
+    }
+  };
+
   if (!loading && !user) {
     return (
       <div className="min-h-screen bg-cover bg-center flex items-start justify-center p-4 pt-6 md:pt-10" style={{ backgroundImage: "url(/classroom/classroom-cover.jpg)" }}>
@@ -355,10 +411,15 @@ const Classroom = () => {
 
   return (
     <div className="min-h-screen bg-cover bg-center flex flex-col items-center p-4 gap-4" style={{ backgroundImage: "url(/classroom/classroom-c.jpg)" }}>
-      <div className="flex items-center gap-1 bg-white/85 rounded-full px-4 py-2 shadow min-h-[44px]" aria-label={`${stars} stars`}>
-        {Array.from({ length: Math.max(stars, 1) }).map((_, i) => (
-          <Star key={i} className={i < stars ? "w-7 h-7 fill-yellow-400 text-yellow-500" : "w-7 h-7 text-yellow-300"} />
+      <div className="flex flex-wrap items-center justify-center gap-2 bg-white/85 rounded-full px-4 py-2 shadow min-h-[44px] max-w-full"
+        aria-label={`${stars} stars, ${Math.floor(stars / 5)} stickers`} style={{ fontFamily: KID_FONT }}>
+        <Star className="w-7 h-7 fill-yellow-400 text-yellow-500" />
+        <span className="text-2xl font-extrabold text-slate-900">{stars}</span>
+        {Math.floor(stars / 5) > 0 && <span className="mx-1 h-7 w-px bg-slate-300" />}
+        {Array.from({ length: Math.floor(stars / 5) }, (_, i) => i + 1).slice(-10).map((n) => (
+          <span key={n} title={`${stickerFor(n).es} / ${stickerFor(n).en}`} className="text-3xl leading-none">{stickerFor(n).e}</span>
         ))}
+        {Math.floor(stars / 5) > 10 && <span className="text-lg font-bold text-slate-600">+{Math.floor(stars / 5) - 10}</span>}
       </div>
 
       <video
@@ -376,8 +437,14 @@ const Classroom = () => {
       {reward > 0 && (
         <div className="rounded-full bg-yellow-300 border-4 border-white shadow-2xl px-8 py-3 text-2xl font-extrabold text-slate-900 animate-bounce"
           style={{ fontFamily: KID_FONT }}>
-          🌟 ¡{reward} estrellas! Titi baila para ti 🐒💃
+          🌟 ¡{reward} estrellas! Nuevo sticker: <span className="text-4xl align-middle">{stickerFor(Math.floor(reward / 5)).e}</span>{" "}
+          {stickerFor(Math.floor(reward / 5)).es} / {stickerFor(Math.floor(reward / 5)).en}
         </div>
+      )}
+
+      {photo && (
+        <img src={photo} alt="La foto de la niña / The child's photo"
+          className="max-h-48 max-w-[80%] rounded-2xl border-4 border-white shadow-xl object-contain" />
       )}
 
       {reply && (
@@ -426,6 +493,18 @@ const Classroom = () => {
           <Play className="w-8 h-8 mr-2" /> ¡Empezar! / Start!
         </Button>
       ) : (
+        <div className="flex items-center gap-6">
+        <input ref={photoInput} type="file" accept="image/*" className="hidden" onChange={(e) => showPhoto(e.target.files?.[0])} />
+        <button
+          onClick={() => photoInput.current?.click()}
+          disabled={busy || recording}
+          className={`w-20 h-20 rounded-full shadow-2xl flex flex-col items-center justify-center text-white text-sm font-bold transition
+            ${busy || recording ? "bg-gray-400" : "bg-sky-500 hover:bg-sky-600"}`}
+          aria-label="Photo"
+        >
+          <Camera className="w-8 h-8" />
+          <span className="mt-0.5">Foto</span>
+        </button>
         <button
           onClick={recording ? stopRecording : startRecording}
           disabled={busy && !recording}
@@ -436,6 +515,7 @@ const Classroom = () => {
           {recording ? <Square className="w-12 h-12" /> : <Mic className="w-12 h-12" />}
           <span className="mt-1">{recording ? "Listo / Done" : busy ? "…" : "Habla / Talk"}</span>
         </button>
+        </div>
       )}
     </div>
   );

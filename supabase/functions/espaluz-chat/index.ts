@@ -551,6 +551,38 @@ async function callGemini(apiKey: string, request: any): Promise<any> {
   return { content: [{ text }] };
 }
 
+// 31 Oct 2026 (Elena: "photos in the web classroom, like Telegram"): the child shows a toy, a drawing or her lunch and
+// the heroes talk about it. Same order as the bot's process_photo: paid first (Claude refuses in a split second when
+// dry), then Grok vision on the key we already have. Groq lists no vision model today. The photo itself is never
+// stored; only the one-line description goes into the lesson (and from there into her memory).
+const PHOTO_PROMPT = "A 6-year-old girl is showing this photo to her Spanish tutors. In ONE short English sentence, say " +
+  "what is in it (objects, toys, animals, food, a drawing; colours). Never name or describe a real person: say only " +
+  "'a person'. No guesses about where it was taken.";
+async function describePhoto(b64: string): Promise<string> {
+  const claudeKey = Deno.env.get('ANTHROPIC_API_KEY');
+  if (claudeKey) {
+    try {
+      const r = await callClaude(claudeKey, { max_tokens: 120, messages: [{ role: 'user', content: [
+        { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } }, { type: 'text', text: PHOTO_PROMPT }] }] });
+      const t = r?.content?.[0]?.text?.trim();
+      if (t) { console.log('photo read by claude'); return t; }
+    } catch (e) { console.error('photo claude failed, trying grok:', (e as Error).message); }
+  }
+  const xaiKey = Deno.env.get('XAI_API_KEY');
+  if (!xaiKey) throw new Error('no vision provider');
+  const r = await fetch('https://api.x.ai/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${xaiKey}`, 'content-type': 'application/json' },
+    body: JSON.stringify({ model: XAI_MODEL, max_tokens: 120, messages: [{ role: 'user', content: [
+      { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${b64}` } }, { type: 'text', text: PHOTO_PROMPT }] }] }),
+  });
+  if (!r.ok) throw new Error(`Grok vision ${r.status}: ${(await r.text()).slice(0, 160)}`);
+  const t = (await r.json()).choices?.[0]?.message?.content?.trim();
+  if (!t) throw new Error('Grok vision: empty answer');
+  console.log('photo read by grok');
+  return t;
+}
+
 /** First provider that answers wins, PAID FIRST (Elena, 31 Oct 2026: "when credits are topped up, use the paid layer
  *  to the maximum"): Claude refuses in a split second when the org has no credit and then hands over, so a top-up is
  *  used automatically with nothing to switch. Then Gemini, the strong free Groq model, Grok, and the small Groq models
@@ -604,10 +636,24 @@ serve(async (req) => {
 
     const userId = user.id;
     
-    const { message, isVoiceInput, originalLanguage, kids } = await req.json();
-    
+    const body = await req.json();
+    const { isVoiceInput, originalLanguage, kids } = body;
+    let message: string = body.message;
+
     if (!message) {
       throw new Error('Message is required');
+    }
+
+    let photoDescription = '';
+    if (kids && typeof kids.image === 'string' && kids.image.length > 100) {
+      if (kids.image.length > 2_000_000) throw new Error('Photo too large');
+      try {
+        photoDescription = (await describePhoto(kids.image)).replace(/\s+/g, ' ').slice(0, 300);
+        message = `📷 (foto: ${photoDescription})`;
+      } catch (e) {
+        console.error('photo could not be read:', (e as Error).message);
+        message = '📷 (foto que no se pudo ver / a photo that could not be seen)';
+      }
     }
 
     console.log(`Processing message for user ${userId}: ${message}`);
@@ -643,7 +689,11 @@ serve(async (req) => {
     // The turn instruction (with the child's own words) goes LAST: the model weighs the end of the prompt most.
     const kidsSystem = KIDS_CLASSROOM_PROMPT + memory + (known.length
       ? `\n\nSentences the child already said in earlier lessons: ${known.map((s) => `"${s}"`).join(' · ')}. At the hello, invite the child to say one of them again and praise, then teach new ones (the same words come back and grow).`
-      : '') + (kids ? kidsTurnContext(kids, message) : '');
+      : '') + (kids ? kidsTurnContext(kids, message) : '') + (kids && message.startsWith('📷') ? (photoDescription
+        ? `\nSHE IS SHOWING YOU A PHOTO: ${photoDescription}\nTalk about what is in it with real curiosity first (name ` +
+          "the thing and its colour in Spanish and English), then build this turn's sentence from it. Never comment on a " +
+          "person in it."
+        : "\nShe tried to show you a photo but you could not see it: say so kindly in one line and ask her to tell you what is in it.") : '');
     const claudeRequest = kids
       ? { max_tokens: 500, temperature: 0.7, system: kidsSystem,
           messages: [...(Array.isArray(kids.history) ? kids.history.slice(-10) : []), { role: 'user', content: message }] }
@@ -717,6 +767,7 @@ serve(async (req) => {
     return new Response(JSON.stringify({
       response: fullResponse,
       provider,
+      userMessage: message, // a photo turn comes back as its description, so the page's history knows what was shown
       videoScript,
       familyMember: familyMember.name,
       familyMemberRole: familyMember.role,
