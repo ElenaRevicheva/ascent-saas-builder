@@ -638,19 +638,38 @@ serve(async (req) => {
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: authHeader } }
-    });
+    const body = await req.json();
 
-    // Verify user authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      throw new Error('Unauthorized');
+    // 31 Oct 2026 (WhatsApp parity step 2): EspaLuz WhatsApp runs Pere and Titi through THIS function, so the kids
+    // rules live in one place instead of drifting copies. The bot proves itself with ESPALUZ_BOT_SECRET (fails closed)
+    // and names the family by the hashed WhatsApp id that `connect CODE` stored; only kids lessons go this way.
+    const botSecret = Deno.env.get('ESPALUZ_BOT_SECRET');
+    const fromBot = !!botSecret && req.headers.get('x-espaluz-bot-secret') === botSecret;
+    let supabase: any;
+    let userId: string;
+    if (fromBot) {
+      if (!body.kids || typeof body.whatsapp_user_id !== 'string') throw new Error('Unauthorized');
+      supabase = createClient(supabaseUrl, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+      const { data: link } = await supabase.from('connected_bots').select('user_id')
+        .eq('platform', 'whatsapp').eq('platform_user_id', body.whatsapp_user_id).eq('is_active', true)
+        .order('connected_at', { ascending: false }).limit(1);
+      if (!link?.[0]?.user_id) {
+        return new Response(JSON.stringify({ error: 'not linked' }), { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
+      userId = link[0].user_id;
+    } else {
+      supabase = createClient(supabaseUrl, supabaseAnonKey, {
+        global: { headers: { Authorization: authHeader } }
+      });
+
+      // Verify user authentication
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) {
+        throw new Error('Unauthorized');
+      }
+      userId = user.id;
     }
 
-    const userId = user.id;
-    
-    const body = await req.json();
     const { isVoiceInput, originalLanguage, kids } = body;
     let message: string = body.message;
 
@@ -756,7 +775,7 @@ serve(async (req) => {
         .insert({
           user_id: userId,
           session_type: kids ? 'classroom' : 'chat',
-          source: 'web',
+          source: fromBot ? 'whatsapp' : 'web',
           content: {
             user_message: message,
             ai_response: fullResponse,
