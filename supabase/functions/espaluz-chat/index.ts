@@ -324,7 +324,8 @@ const KIDS_HARD = /peg|golpe|\bhit|grit|yell|scold|rega[nñ]|castig|punish|llor|
 // A parent speaking into the lesson is not the child's memory (31 Oct 15:43: "mi hija ... no puede saltar").
 // 31 Oct 17:31: "It's Alisa's mom now, Elena. Alisa doesn't want to brush her teeth" was not caught: the heroes told
 // the mother "it sounds like you feel worried". Twins: kids-memory KIDS_ADULT, main.py _KIDS_ADULT.
-const KIDS_ADULT = /\bmi hij[oa]\b|\bmy (daughter|son)\b|\bmam[aá] aqu[ií]\b|\bsoy (la|su) mam[aá]\b|\b(it'?s|this is|soy|habla) [^.!?]{0,20}\b(mom|mum|mother|mam[aá])\b|\balisa'?s (mom|mum|mother)\b|\balisa (has|had|is|was|does|doesn'?t|did|didn'?t|promised|no quiere|quiere|tiene|est[aá])\b/i;
+// 1 Nov 2026: "It is mother of Alisa" was missed - "it is" and "(mother|mamá) (of|de) alisa" added.
+const KIDS_ADULT = /\bmi hij[oa]\b|\bmy (daughter|son)\b|\bmam[aá] aqu[ií]\b|\bsoy (la|su) mam[aá]\b|\b(it'?s|it is|this is|soy|habla) [^.!?]{0,20}\b(mom|mum|mother|mam[aá])\b|\balisa'?s (mom|mum|mother)\b|\b(mom|mum|mother|mam[aá]) (of|de) alisa\b|\balisa (has|had|is|was|does|doesn'?t|did|didn'?t|promised|no quiere|quiere|tiene|est[aá])\b/i;
 // 31 Oct 2026 (15:39-15:43): Alisa was in the car; Titi asked her to hop like a bunny, she said she could not ("me puede
 // abrir la cabeza"), and the next reply still had no idea. Once the lesson hears she cannot move, every later step is a
 // sit-still one - kept in code from the whole lesson history, not left to the model's memory of one turn.
@@ -643,20 +644,25 @@ serve(async (req) => {
     // 31 Oct 2026 (WhatsApp parity step 2): EspaLuz WhatsApp runs Pere and Titi through THIS function, so the kids
     // rules live in one place instead of drifting copies. The bot proves itself with ESPALUZ_BOT_SECRET (fails closed)
     // and names the family by the hashed WhatsApp id that `connect CODE` stored; only kids lessons go this way.
+    // 1 Nov 2026 (ONE_FAMILY_MEMORY_PLAN Phase 3, Elena: "it should be one brain"): EspaLuz Telegram goes the same way,
+    // named by its Telegram user id. A family that never linked the web is a GUEST (`guest: true`, Telegram): the same
+    // Pere and Titi, but no memory card and nothing saved - there is no family account to keep it in.
     const botSecret = Deno.env.get('ESPALUZ_BOT_SECRET');
     const fromBot = !!botSecret && req.headers.get('x-espaluz-bot-secret') === botSecret;
+    const botPlatform = !fromBot ? null : typeof body.telegram_user_id === 'string' ? 'telegram'
+      : typeof body.whatsapp_user_id === 'string' ? 'whatsapp' : null;
     let supabase: any;
-    let userId: string;
+    let userId: string | null;
     if (fromBot) {
-      if (!body.kids || typeof body.whatsapp_user_id !== 'string') throw new Error('Unauthorized');
+      if (!body.kids || !botPlatform) throw new Error('Unauthorized');
       supabase = createClient(supabaseUrl, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
       const { data: link } = await supabase.from('connected_bots').select('user_id')
-        .eq('platform', 'whatsapp').eq('platform_user_id', body.whatsapp_user_id).eq('is_active', true)
-        .order('connected_at', { ascending: false }).limit(1);
-      if (!link?.[0]?.user_id) {
+        .eq('platform', botPlatform).eq('platform_user_id', botPlatform === 'telegram' ? body.telegram_user_id : body.whatsapp_user_id)
+        .eq('is_active', true).order('connected_at', { ascending: false }).limit(1);
+      userId = link?.[0]?.user_id ?? null;
+      if (!userId && !body.guest) {
         return new Response(JSON.stringify({ error: 'not linked' }), { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
       }
-      userId = link[0].user_id;
     } else {
       supabase = createClient(supabaseUrl, supabaseAnonKey, {
         global: { headers: { Authorization: authHeader } }
@@ -689,16 +695,16 @@ serve(async (req) => {
       }
     }
 
-    console.log(`Processing message for user ${userId}: ${message}`);
+    console.log(userId ? `Processing message for user ${userId}: ${message}` : `Processing ${botPlatform} guest kids turn`);
 
-    const familyMembers = await getFamilyMembers(supabase, userId);
+    const familyMembers = userId ? await getFamilyMembers(supabase, userId) : [];
     const familyMember = await detectFamilyMember(message, familyMembers);
     const emotion = detectEmotion(message);
     
     console.log(`Detected family member: ${familyMember.name} (${familyMember.role}), emotion: ${emotion.emotion}`);
 
     // Get conversation history
-    const { data: sessions } = await supabase
+    const { data: sessions } = kids ? { data: [] } : await supabase
       .from('learning_sessions')
       .select('content')
       .eq('user_id', userId)
@@ -718,7 +724,7 @@ serve(async (req) => {
     const known: string[] = Array.isArray(kids?.known)
       ? kids.known.filter((s: unknown) => typeof s === 'string').map((s: string) => s.trim().slice(0, 120)).filter(Boolean).slice(-20)
       : [];
-    const memory = kids ? await kidsMemoryCard(supabase, userId, Array.isArray(kids.history) ? kids.history : []) : '';
+    const memory = kids && userId ? await kidsMemoryCard(supabase, userId, Array.isArray(kids.history) ? kids.history : []) : '';
     // The turn instruction (with the child's own words) goes LAST: the model weighs the end of the prompt most.
     const kidsSystem = KIDS_CLASSROOM_PROMPT + memory + (known.length
       ? `\n\nSentences the child already said in earlier lessons: ${known.map((s) => `"${s}"`).join(' · ')}. At the hello, invite the child to say one of them again and praise, then teach new ones (the same words come back and grow).`
@@ -768,14 +774,14 @@ serve(async (req) => {
       .map(match => match.replace(/\*\*/g, ''))
       .filter(word => word.length > 2 && !word.includes(':'));
 
-    // Save to learning sessions
-    try {
+    // Save to learning sessions (a guest turn has no family account, so nothing is kept)
+    if (userId) try {
       const { error: sessionError } = await supabase
         .from('learning_sessions')
         .insert({
           user_id: userId,
           session_type: kids ? 'classroom' : 'chat',
-          source: fromBot ? 'whatsapp' : 'web',
+          source: botPlatform ?? 'web',
           content: {
             user_message: message,
             ai_response: fullResponse,
@@ -809,6 +815,7 @@ serve(async (req) => {
     return new Response(JSON.stringify({
       response: fullResponse,
       provider,
+      linked: !!userId, // a bot uses this to tell a linked family (memory + server stars) from a guest
       userMessage: message, // a photo turn comes back as its description, so the page's history knows what was shown
       videoScript,
       familyMember: familyMember.name,

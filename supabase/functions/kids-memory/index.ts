@@ -9,7 +9,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
 
 const KIDS_STARTER = /quiero empezar la clase|i want to start the class/i;
 const KIDS_HARD = /peg|golpe|\bhit|grit|yell|scold|rega[nñ]|castig|punish|llor|\bcry|cried|triste|\bsad\b|miedo|scared|asust|duele|hurt|enoj|angry|frustr|sangr|blood|lastim|herid|accident|terremoto|sismo|temblor|earthquake/i;
-const KIDS_ADULT = /\bmi hij[oa]\b|\bmy (daughter|son)\b|\bmam[aá] aqu[ií]\b|\bsoy (la|su) mam[aá]\b|\b(it'?s|this is|soy|habla) [^.!?]{0,20}\b(mom|mum|mother|mam[aá])\b|\balisa'?s (mom|mum|mother)\b|\balisa (has|had|is|was|does|doesn'?t|did|didn'?t|promised|no quiere|quiere|tiene|est[aá])\b/i;
+const KIDS_ADULT = /\bmi hij[oa]\b|\bmy (daughter|son)\b|\bmam[aá] aqu[ií]\b|\bsoy (la|su) mam[aá]\b|\b(it'?s|it is|this is|soy|habla) [^.!?]{0,20}\b(mom|mum|mother|mam[aá])\b|\balisa'?s (mom|mum|mother)\b|\b(mom|mum|mother|mam[aá]) (of|de) alisa\b|\balisa (has|had|is|was|does|doesn'?t|did|didn'?t|promised|no quiere|quiere|tiene|est[aá])\b/i;
 const kidWords = (s: string): string[] =>
   (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').match(/[a-zñ]+/g) ?? [];
 const firstLine = (reply: string): string =>
@@ -26,9 +26,11 @@ serve(async (req) => {
     const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
     // 1 Nov 2026 (WhatsApp parity step 6): the child's stars on WhatsApp are the SAME number as in the web classroom -
     // every saved classroom answer, web or WhatsApp, minus the "start the class" turns (twin of Classroom.tsx's count).
+    // 1 Nov 2026 (Phase 3, one brain): Telegram asks too, by its Telegram user id.
     if (mode === 'stars') {
+      const tg = telegram_user_id != null && telegram_user_id !== '';
       const { data: link } = await db.from('connected_bots').select('user_id')
-        .eq('platform', 'whatsapp').eq('platform_user_id', String(whatsapp_user_id ?? '')).eq('is_active', true)
+        .eq('platform', tg ? 'telegram' : 'whatsapp').eq('platform_user_id', String(tg ? telegram_user_id : whatsapp_user_id ?? '')).eq('is_active', true)
         .order('connected_at', { ascending: false }).limit(1);
       if (!link?.[0]?.user_id) return json({ linked: false, stars: 0 });
       const { count, error } = await db.from('learning_sessions').select('id', { count: 'exact', head: true })
@@ -47,22 +49,24 @@ serve(async (req) => {
       const from = new Date(Math.max(Date.parse(since) || 0, Date.now() - 48 * 3600 * 1000)).toISOString();
       const { data: links } = await db.from('connected_bots').select('user_id, platform_user_id, connected_at')
         .eq('platform', platform).eq('is_active', true).order('connected_at', { ascending: false });
-      const families: { telegram_user_id: string; user_key: string; turns: { at: string; said: string; reply: string }[] }[] = [];
+      const families: { telegram_user_id: string; user_key: string; turns: { at: string; said: string; reply: string; src: string }[] }[] = [];
       const seen = new Set<string>();
       for (const l of links ?? []) {
         if (seen.has(l.platform_user_id)) continue; // an account belongs to its newest link only
         seen.add(l.platform_user_id);
-        let sources = ['web'];
+        // 1 Nov 2026 (Phase 3): Telegram lessons now run on the kids brain and are saved as source 'telegram'.
+        let sources = ['telegram', 'web'];
         if (platform === 'whatsapp') {
           const { data: tg } = await db.from('connected_bots').select('id').eq('user_id', l.user_id)
             .eq('platform', 'telegram').eq('is_active', true).limit(1);
           sources = tg?.length ? ['whatsapp'] : ['whatsapp', 'web'];
         }
-        const { data: rows } = await db.from('learning_sessions').select('content, created_at')
+        const { data: rows } = await db.from('learning_sessions').select('content, created_at, source')
           .eq('user_id', l.user_id).eq('session_type', 'classroom').in('source', sources).gte('created_at', from)
           .order('created_at', { ascending: true }).limit(300);
         if (rows?.length) families.push({ telegram_user_id: l.platform_user_id, user_key: l.platform_user_id, turns: rows.map((r: any) => ({
-          at: r.created_at, said: String(r.content?.user_message ?? '').slice(0, 300), reply: String(r.content?.ai_response ?? '').slice(0, 1500) })) });
+          at: r.created_at, said: String(r.content?.user_message ?? '').slice(0, 300), reply: String(r.content?.ai_response ?? '').slice(0, 1500),
+          src: String(r.source ?? 'web') })) });
       }
       console.log(`kids-memory lessons (${platform}): ${families.length} families with turns since ${from}`);
       return json({ families });
