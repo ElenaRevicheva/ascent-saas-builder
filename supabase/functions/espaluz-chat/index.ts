@@ -229,18 +229,18 @@ const KIDS_STEP_FREE = "FREE TALK: the lesson is done; keep talking about the ch
 // docs/espaluz/KIDS_CLASS_PATH_1ST_GRADE_DRAFT.md. Two classes per unit; the unit is worked out from her saved class
 // starts (content.class_start), no new table. Pere keeps the classic path, Titi twists it, she judges.
 const KIDS_CLASS_UNITS = [
-  { theme: "Yo y mi familia / Me and my family", es: "the vowels a e i o u", en: "the sounds s, a, t, p and the words I, my", num: "count to 10", talk: "she tells who is in her family" },
-  { theme: "Mi escuela / My school", es: "syllables ma me mi mo mu and pa pe pi po pu", en: "the sounds i, n, m, d and the words the, is", num: "numbers to 20: read them, what comes before and after", talk: "retell something with a beginning, a middle and an end" },
-  { theme: "Mi cuerpo y mis sentimientos / My body and feelings", es: "syllables sa se si so su and la le li lo lu", en: "the sounds g, o, c, k and 'I am', 'I feel'", num: "adding by counting on, within 10", talk: "she names a feeling and says why, with 'porque / because'" },
-  { theme: "Los animales / Animals", es: "syllables with t and n (ta te ti to tu, na ne ni no nu)", en: "the sounds ck, e, u, r and the words can, see", num: "take away by counting back, within 10", talk: "a little rhyme or a sentence pattern she can repeat and change" },
-  { theme: "La comida / Food", es: "syllables with d and soft r (da de di do du, ra re ri ro ru)", en: "the sounds h, b, f, l and the words like, want", num: "doubles and counting by 2s", talk: "ask and answer '¿Te gusta...? / Do you like...?'" },
-  { theme: "Mi casa / My home", es: "syllables ca co cu, que qui, ga go gu", en: "short words cat, pig, dog, sun", num: "numbers to 20: more and less", talk: "she describes her room" },
-  { theme: "Los colores y la ropa / Colours and clothes", es: "syllables with f, b and v", en: "blending three-sound words (c-a-t, cat)", num: "adding within 20", talk: "she says what she is wearing today" },
-  { theme: "La hora y mi día / Time and my day", es: "ll, ñ and ch (llama, niño, chocolate)", en: "the sounds sh, ch, th", num: "telling time: o'clock and half past", talk: "her day in order: first, then, last" },
-  { theme: "En la tienda / At the shop", es: "joining syllables into whole words", en: "the words go, we, you, here", num: "money: coins and simple shopping", talk: "pretend to buy a mango at the shop" },
-  { theme: "Mi ciudad / My town", es: "short sentences of 3-5 words", en: "reading a two-line sentence", num: "subtracting within 20", talk: "simple directions: left, right, straight on" },
-  { theme: "Fiestas y cuentos / Holidays and stories", es: "reading a mini-story of 2-3 lines", en: "reading a mini-story of 2 lines", num: "counting in tens: 10, 20, 30...", talk: "she changes the end of a story" },
-  { theme: "Mis amigos / My friends", es: "her own sentence, said aloud as if she wrote it", en: "her own sentence in English", num: "a review game with everything so far", talk: "she tells a short story of her own" },
+  { theme: "Yo y mi familia / Me and my family", trace: ["a", "e", "i", "o", "u"], es: "the vowels a e i o u", en: "the sounds s, a, t, p and the words I, my", num: "count to 10", talk: "she tells who is in her family" },
+  { theme: "Mi escuela / My school", trace: ["ma", "me", "mi", "pa", "pe"], es: "syllables ma me mi mo mu and pa pe pi po pu", en: "the sounds i, n, m, d and the words the, is", num: "numbers to 20: read them, what comes before and after", talk: "retell something with a beginning, a middle and an end" },
+  { theme: "Mi cuerpo y mis sentimientos / My body and feelings", trace: ["sa", "se", "la", "le", "li"], es: "syllables sa se si so su and la le li lo lu", en: "the sounds g, o, c, k and 'I am', 'I feel'", num: "adding by counting on, within 10", talk: "she names a feeling and says why, with 'porque / because'" },
+  { theme: "Los animales / Animals", trace: ["ta", "te", "na", "ne", "no"], es: "syllables with t and n (ta te ti to tu, na ne ni no nu)", en: "the sounds ck, e, u, r and the words can, see", num: "take away by counting back, within 10", talk: "a little rhyme or a sentence pattern she can repeat and change" },
+  { theme: "La comida / Food", trace: ["da", "de", "ra", "re", "ro"], es: "syllables with d and soft r (da de di do du, ra re ri ro ru)", en: "the sounds h, b, f, l and the words like, want", num: "doubles and counting by 2s", talk: "ask and answer '¿Te gusta...? / Do you like...?'" },
+  { theme: "Mi casa / My home", trace: ["ca", "co", "cu", "ga", "go"], es: "syllables ca co cu, que qui, ga go gu", en: "short words cat, pig, dog, sun", num: "numbers to 20: more and less", talk: "she describes her room" },
+  { theme: "Los colores y la ropa / Colours and clothes", trace: ["fa", "fe", "ba", "be", "va"], es: "syllables with f, b and v", en: "blending three-sound words (c-a-t, cat)", num: "adding within 20", talk: "she says what she is wearing today" },
+  { theme: "La hora y mi día / Time and my day", trace: ["lla", "ña", "cha", "che", "chi"], es: "ll, ñ and ch (llama, niño, chocolate)", en: "the sounds sh, ch, th", num: "telling time: o'clock and half past", talk: "her day in order: first, then, last" },
+  { theme: "En la tienda / At the shop", trace: ["mamá", "papá", "sol", "mesa", "casa"], es: "joining syllables into whole words", en: "the words go, we, you, here", num: "money: coins and simple shopping", talk: "pretend to buy a mango at the shop" },
+  { theme: "Mi ciudad / My town", trace: ["yo soy", "mi casa", "me gusta"], es: "short sentences of 3-5 words", en: "reading a two-line sentence", num: "subtracting within 20", talk: "simple directions: left, right, straight on" },
+  { theme: "Fiestas y cuentos / Holidays and stories", trace: ["luna", "gato", "pato", "oso"], es: "reading a mini-story of 2-3 lines", en: "reading a mini-story of 2 lines", num: "counting in tens: 10, 20, 30...", talk: "she changes the end of a story" },
+  { theme: "Mis amigos / My friends", trace: ["hola", "amigo", "amiga", "gracias"], es: "her own sentence, said aloud as if she wrote it", en: "her own sentence in English", num: "a review game with everything so far", talk: "she tells a short story of her own" },
 ];
 function kidsClassSteps(u: typeof KIDS_CLASS_UNITS[number]): string[] {
   return [
@@ -249,7 +249,8 @@ function kidsClassSteps(u: typeof KIDS_CLASS_UNITS[number]): string[] {
       "she does not read yet in Spanish or English): show at most 3 letters or syllables, big and alone on ONE short line " +
       "(\"ma  me  mi\"); Pere says each SOUND slowly, she says it after him, then she tries to read ONE by herself; Titi " +
       `reads one WRONG on purpose so she catches him; then she TRACES one letter with her finger in the air or on paper (she ` +
-      `already traces letters and numbers). Spanish leads (she speaks it fluently); never long text. English sounds today: ` +
+      `already traces letters and numbers; on the tablet she traces it on the pad - when she says "✏️ Tracé ...", praise ` +
+      `that ONE thing and ask her to SAY it aloud once: expressing herself comes first, one step at a time). Spanish leads (she speaks it fluently); never long text. English sounds today: ` +
       `${u.en} (one or two, said aloud - English is still new for her).`,
     `WORDS OF THE CLASS (${u.theme}): Pere teaches ONE useful sentence the classic way (Spanish / English); Titi offers a ` +
       "funnier or different version; let her choose and say it (\"¿Quién tiene razón, Pere o Titi?\").",
@@ -967,6 +968,8 @@ serve(async (req) => {
       provider,
       linked: !!userId, // a bot uses this to tell a linked family (memory + server stars) from a guest
       classUnit: classUnit >= 0 ? classUnit + 1 : null, // 1-12 in a class; a guest's bot keeps its own count
+      // 1 Nov 2026: what the web tracing pad shows in a class (the unit's letters / syllables / words, in order).
+      trace: classUnit >= 0 ? KIDS_CLASS_UNITS[classUnit].trace : null,
       userMessage: message, // a photo turn comes back as its description, so the page's history knows what was shown
       videoScript,
       familyMember: familyMember.name,

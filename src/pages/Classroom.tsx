@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { FeatureGate } from "@/components/FeatureGate";
+import TracePad from "@/components/kids/TracePad";
 
 // Pere + Titi's classroom (22 Oct 2026): the dashboard chat's voice loop (voice-to-text -> espaluz-chat -> generate-voice)
 // in kids mode, with the heroes' clips as the avatar. 28 Oct 2026 (Elena: the picture must match what the line says, and
@@ -314,6 +315,9 @@ const Classroom = () => {
   // 1 Nov 2026 (Elena: "also classes, like regular kids of 6-7"): "¡Clase!" runs the first-grade class path (the kids
   // brain's CLASS mode); "¡Empezar!" stays the free conversation.
   const classMode = useRef(false);
+  // 1 Nov 2026: in a class the brain sends the unit's letters / syllables / words to trace on the tablet pad.
+  const [traceTargets, setTraceTargets] = useState<string[]>([]);
+  const [showTrace, setShowTrace] = useState(false);
 
   const talk = async (childSays: string, countsAsStar: boolean, image?: string) => {
     setBusy(true);
@@ -333,6 +337,7 @@ const Classroom = () => {
       // A photo turn comes back as "📷 (foto: ...)", so the next turns still know what she showed.
       const said: string = typeof data?.userMessage === "string" && data.userMessage ? data.userMessage : childSays;
       setTurns((t) => [...t, { role: "user", content: said }, { role: "assistant", content: text }]);
+      if (classMode.current && Array.isArray(data?.trace) && data.trace.length) setTraceTargets(data.trace);
       setReply(stripShotTags(text));
       if (greetingDone.current) { await greetingDone.current; greetingDone.current = null; setGreeting(false); } // let the hello finish
       const spoken = heroLines(text);
@@ -509,7 +514,27 @@ const Classroom = () => {
         </Button>
         </div>
       ) : (
+        <>
+        {showTrace && traceTargets.length > 0 && (
+          <TracePad
+            targets={traceTargets}
+            onClose={() => setShowTrace(false)}
+            onTraced={(text) => { if (!busy) talk(`✏️ Tracé "${text}" / I traced "${text}"`, true); }}
+          />
+        )}
         <div className="flex items-center gap-6">
+        {classMode.current && traceTargets.length > 0 && (
+          <button
+            onClick={() => setShowTrace((s) => !s)}
+            disabled={recording}
+            className={`w-20 h-20 rounded-full shadow-2xl flex flex-col items-center justify-center text-white text-sm font-bold transition
+              ${recording ? "bg-gray-400" : "bg-amber-500 hover:bg-amber-600"}`}
+            aria-label="Trace"
+          >
+            <span className="text-3xl leading-none">✏️</span>
+            <span className="mt-0.5">Trazar</span>
+          </button>
+        )}
         <input ref={photoInput} type="file" accept="image/*" className="hidden" onChange={(e) => showPhoto(e.target.files?.[0])} />
         <button
           onClick={() => photoInput.current?.click()}
@@ -532,6 +557,7 @@ const Classroom = () => {
           <span className="mt-1">{recording ? "Listo / Done" : busy ? "…" : "Habla / Talk"}</span>
         </button>
         </div>
+        </>
       )}
     </div>
   );
