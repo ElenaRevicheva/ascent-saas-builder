@@ -22,8 +22,21 @@ serve(async (req) => {
   const secret = Deno.env.get('ESPALUZ_BOT_SECRET');
   if (!secret || req.headers.get('x-espaluz-bot-secret') !== secret) return json({ error: 'unauthorized' }, 401);
   try {
-    const { telegram_user_id, mode, since, platform: asked } = await req.json();
+    const { telegram_user_id, mode, since, platform: asked, whatsapp_user_id } = await req.json();
     const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+    // 1 Nov 2026 (WhatsApp parity step 6): the child's stars on WhatsApp are the SAME number as in the web classroom -
+    // every saved classroom answer, web or WhatsApp, minus the "start the class" turns (twin of Classroom.tsx's count).
+    if (mode === 'stars') {
+      const { data: link } = await db.from('connected_bots').select('user_id')
+        .eq('platform', 'whatsapp').eq('platform_user_id', String(whatsapp_user_id ?? '')).eq('is_active', true)
+        .order('connected_at', { ascending: false }).limit(1);
+      if (!link?.[0]?.user_id) return json({ linked: false, stars: 0 });
+      const { count, error } = await db.from('learning_sessions').select('id', { count: 'exact', head: true })
+        .eq('user_id', link[0].user_id).eq('session_type', 'classroom')
+        .not('content->>user_message', 'ilike', '%quiero empezar la clase%');
+      if (error) throw error;
+      return json({ linked: true, stars: count ?? 0 });
+    }
     // 31 Oct 2026 (step 4, the parent report): the bot asks for the recent classroom turns of every Telegram-linked
     // family and assembles the after-lesson report itself, by code. At most 48 h back, at most 300 turns.
     // 31 Oct 2026 (WhatsApp parity step 5): EspaLuz WhatsApp asks with platform 'whatsapp'. Each lesson is reported on
