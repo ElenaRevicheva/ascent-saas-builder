@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { MessageSquare, Send, Bot, User, Heart, Volume2, Play, Video, Pause, Mic, MicOff, Square, Crown, Info, Star } from 'lucide-react';
+import { MessageSquare, Send, Bot, User, Heart, Volume2, Play, Video, Pause, Mic, MicOff, Square, Crown, Info, Star, Camera, ImagePlus } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
@@ -15,11 +15,13 @@ import { useFreeMessages } from '@/hooks/useFreeMessages';
 import SubscriptionFlow from '@/components/SubscriptionFlow';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import avatarImage from '@/assets/avatar-teacher.jpg';
+import { shrinkPhoto } from '@/lib/shrinkPhoto';
 
 interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
   content: string;
+  imageUrl?: string; // a photo she took or picked (shown in her bubble, never stored)
   videoScript?: string;
   familyMember?: string;
   emotion?: string;
@@ -49,6 +51,8 @@ export const ChatWithEspaluz = ({ onUpgradeClick }: ChatWithEspaluzProps) => {
   } = useFreeMessages();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
+  const cameraInput = useRef<HTMLInputElement | null>(null);
+  const galleryInput = useRef<HTMLInputElement | null>(null);
   const [loading, setLoading] = useState(false);
   const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
   const [loadingMedia, setLoadingMedia] = useState<{[key: string]: 'voice' | 'video' | null}>({});
@@ -151,8 +155,21 @@ export const ChatWithEspaluz = ({ onUpgradeClick }: ChatWithEspaluzProps) => {
     return text.substring(startIndex + startTag.length, endIndex).trim();
   };
 
-  const sendMessage = async () => {
-    if (!input.trim() || loading) return;
+  // 1 Nov 2026 (Elena: "use the camera to make photos and send them at once, not just attach images", web like
+  // WhatsApp and Telegram): a photo is sent the moment it is taken, with whatever she had typed as her question.
+  const sendPhoto = async (file: File | undefined) => {
+    if (cameraInput.current) cameraInput.current.value = '';
+    if (galleryInput.current) galleryInput.current.value = '';
+    if (!file || loading) return;
+    try {
+      await sendMessage(await shrinkPhoto(file));
+    } catch {
+      toast.error('No pude abrir la foto. / I could not open the photo.');
+    }
+  };
+
+  const sendMessage = async (photo?: { b64: string; url: string }) => {
+    if ((!input.trim() && !photo) || loading) return;
     
     // Check free message limitations for non-authenticated users
     if (!user) {
@@ -166,7 +183,8 @@ export const ChatWithEspaluz = ({ onUpgradeClick }: ChatWithEspaluzProps) => {
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       role: 'user',
-      content: input.trim(),
+      content: input.trim() || (photo ? '📷' : ''),
+      imageUrl: photo?.url,
       timestamp: new Date()
     };
 
@@ -187,6 +205,7 @@ export const ChatWithEspaluz = ({ onUpgradeClick }: ChatWithEspaluzProps) => {
       const { data, error } = await supabase.functions.invoke('espaluz-chat', {
         body: {
           message: userMessage.content,
+          image: photo?.b64,
           userId: user?.id || 'free-trial-user', // Use placeholder ID for free trial users
           systemPrompt: `You are EspaLuz, a bilingual Spanish-English AI tutor. Your responses should be warm, encouraging, and educational.
 
@@ -887,6 +906,7 @@ The video script will be used to generate an avatar video with synchronized audi
                         : 'bg-muted'
                     }`}
                   >
+                    {message.imageUrl && <img src={message.imageUrl} alt="📷" className="rounded-lg max-h-56 mb-2" />}
                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                   </div>
                   
@@ -1164,8 +1184,22 @@ The video script will be used to generate an avatar video with synchronized audi
             rows={2}
             disabled={loading || isRecording}
           />
+          <input ref={cameraInput} type="file" accept="image/*" capture="environment" className="hidden"
+            onChange={(e) => sendPhoto(e.target.files?.[0])} />
+          <input ref={galleryInput} type="file" accept="image/*" className="hidden"
+            onChange={(e) => sendPhoto(e.target.files?.[0])} />
+          <div className="flex flex-col gap-1 self-end">
+            <Button onClick={() => cameraInput.current?.click()} disabled={loading || isRecording} size="sm" variant="outline"
+              aria-label="Camera" title="Foto / Photo">
+              <Camera className="h-4 w-4" />
+            </Button>
+            <Button onClick={() => galleryInput.current?.click()} disabled={loading || isRecording} size="sm" variant="outline"
+              aria-label="Gallery" title="Galería / Gallery">
+              <ImagePlus className="h-4 w-4" />
+            </Button>
+          </div>
           <Button
-            onClick={sendMessage}
+            onClick={() => sendMessage()}
             disabled={!input.trim() || loading || isRecording}
             size="sm"
             className="bg-[hsl(var(--espaluz-primary))] hover:bg-[hsl(var(--espaluz-primary))]/90 self-end"

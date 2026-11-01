@@ -742,12 +742,17 @@ async function callGemini(apiKey: string, request: any): Promise<any> {
 const PHOTO_PROMPT = "A 6-year-old girl is showing this photo to her Spanish tutors. In ONE short English sentence, say " +
   "what is in it (objects, toys, animals, food, a drawing; colours). Never name or describe a real person: say only " +
   "'a person'. No guesses about where it was taken.";
-async function describePhoto(b64: string): Promise<string> {
+// 1 Nov 2026 (Elena: "the camera in the grown-up web chat too, like WhatsApp and Telegram"): a parent photographs a
+// menu, a sign, a school note or a form. The bots' process_photo reads the text first, so this prompt does the same.
+const ADULT_PHOTO_PROMPT = "A Spanish learner in Panama took this photo to ask their tutor about it. First copy any " +
+  "written text in it exactly as written (Spanish or English, keep line breaks). Then say in one or two English sentences " +
+  "what the photo shows. Never name or describe a real person: say only 'a person'.";
+async function describePhoto(b64: string, prompt = PHOTO_PROMPT, maxTokens = 120): Promise<string> {
   const claudeKey = Deno.env.get('ANTHROPIC_API_KEY');
   if (claudeKey) {
     try {
-      const r = await callClaude(claudeKey, { max_tokens: 120, messages: [{ role: 'user', content: [
-        { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } }, { type: 'text', text: PHOTO_PROMPT }] }] });
+      const r = await callClaude(claudeKey, { max_tokens: maxTokens, messages: [{ role: 'user', content: [
+        { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } }, { type: 'text', text: prompt }] }] });
       const t = r?.content?.[0]?.text?.trim();
       if (t) { console.log('photo read by claude'); return t; }
     } catch (e) { console.error('photo claude failed, trying grok:', (e as Error).message); }
@@ -757,8 +762,8 @@ async function describePhoto(b64: string): Promise<string> {
   const r = await fetch('https://api.x.ai/v1/chat/completions', {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${xaiKey}`, 'content-type': 'application/json' },
-    body: JSON.stringify({ model: XAI_MODEL, max_tokens: 120, messages: [{ role: 'user', content: [
-      { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${b64}` } }, { type: 'text', text: PHOTO_PROMPT }] }] }),
+    body: JSON.stringify({ model: XAI_MODEL, max_tokens: maxTokens, messages: [{ role: 'user', content: [
+      { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${b64}` } }, { type: 'text', text: prompt }] }] }),
     signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
   });
   if (!r.ok) throw new Error(`Grok vision ${r.status}: ${(await r.text()).slice(0, 160)}`);
@@ -863,6 +868,22 @@ serve(async (req) => {
       } catch (e) {
         console.error('photo could not be read:', (e as Error).message);
         message = '📷 (foto que no se pudo ver / a photo that could not be seen)';
+      }
+    }
+
+    // Grown-up web chat photo (camera or gallery): what it shows and any text in it go into her message, so the tutor
+    // explains the menu or sign in the usual teaching style. Same rules as the kids photo: the image is never stored.
+    if (!kids && !fromBot && typeof body.image === 'string' && body.image.length > 100) {
+      if (body.image.length > 2_000_000) throw new Error('Photo too large');
+      const asked = message.trim();
+      try {
+        photoDescription = (await describePhoto(body.image, ADULT_PHOTO_PROMPT, 500)).trim().slice(0, 1500);
+        message = `📷 (foto: ${photoDescription})${asked ? `
+${asked}` : ''}`;
+      } catch (e) {
+        console.error('adult photo could not be read:', (e as Error).message);
+        message = `📷 (foto que no se pudo ver / a photo that could not be seen)${asked ? `
+${asked}` : ''}`;
       }
     }
 

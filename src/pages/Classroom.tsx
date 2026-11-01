@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { FeatureGate } from "@/components/FeatureGate";
 import TracePad from "@/components/kids/TracePad";
+import { shrinkPhoto } from "@/lib/shrinkPhoto";
 
 // Pere + Titi's classroom (22 Oct 2026): the dashboard chat's voice loop (voice-to-text -> espaluz-chat -> generate-voice)
 // in kids mode, with the heroes' clips as the avatar. 28 Oct 2026 (Elena: the picture must match what the line says, and
@@ -32,23 +33,6 @@ const STICKERS: { e: string; es: string; en: string }[] = [
 ];
 const stickerFor = (n: number) => STICKERS[(n - 1) % STICKERS.length]; // n = 1st, 2nd... sticker
 
-/** A photo from the tablet's camera or gallery, made small (longest side 1024 px, JPEG) before it is sent. */
-function shrinkPhoto(file: File): Promise<{ b64: string; url: string }> {
-  return new Promise((ok, fail) => {
-    const img = new Image();
-    img.onload = () => {
-      const k = Math.min(1, 1024 / Math.max(img.width, img.height));
-      const c = document.createElement("canvas");
-      c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
-      c.getContext("2d")?.drawImage(img, 0, 0, c.width, c.height);
-      const url = c.toDataURL("image/jpeg", 0.8);
-      URL.revokeObjectURL(img.src);
-      ok({ b64: url.split(",")[1] || "", url });
-    };
-    img.onerror = () => fail(new Error("not an image"));
-    img.src = URL.createObjectURL(file);
-  });
-}
 const GREETING_CLIP = "/heroes/kids-greeting.mp4"; // the heroes' own voiced hello (the Telegram /kids clip) opens the class
 const TALK = { pere: ["pere-talking-1", "pere-talking-2"], titi: ["titi-talking-1", "titi-talking-2"] };
 const SHOT_CLIPS: Record<"pere" | "titi", Record<string, string>> = {
