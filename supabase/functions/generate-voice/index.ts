@@ -153,8 +153,27 @@ async function generateHeroVoice(hero: string, text: string): Promise<string> {
   return bytesToBase64(new Uint8Array(await audio.arrayBuffer()));
 }
 
-// One line in a free Gemini voice (Interactions API, unary = a whole WAV file; 16 kHz keeps a line small).
+// 1 Nov 2026 19:58 UTC: Google's free tier allows only 10 voice lines A DAY per TTS model ("limit: 10 requests per day
+// on Free Tier", 429) - one lesson needs 20-30. Each model has its own allowance, so the free step is itself a
+// waterfall of models: a spent one (429) or one this API does not serve hands over to the next, then Replicate.
+const GEMINI_TTS_MODELS = (Deno.env.get('GEMINI_TTS_MODELS') || Deno.env.get('GEMINI_TTS_MODEL') ||
+  'gemini-3.8-flash-lite-tts,gemini-3.8-flash-tts,gemini-3.1-flash-tts-preview,gemini-2.5-flash-preview-tts')
+  .split(',').map((m) => m.trim()).filter(Boolean);
+
+// One line in a free Gemini voice (Interactions API, unary = a whole WAV file).
 async function generateGeminiVoice(who: string, text: string, testVoice = '', testStyle = '', testModel = ''): Promise<string> {
+  const errors: string[] = [];
+  for (const model of testModel ? [testModel] : GEMINI_TTS_MODELS) {
+    try {
+      return await geminiVoiceOnce(model, who, text, testVoice, testStyle);
+    } catch (e) {
+      errors.push(`${model}: ${(e as Error).message.slice(0, 120)}`);
+    }
+  }
+  throw new Error(errors.join(' || '));
+}
+
+async function geminiVoiceOnce(model: string, who: string, text: string, testVoice: string, testStyle: string): Promise<string> {
   const g = { voice: testVoice || GEMINI_HEROES[who].voice, style: testStyle || GEMINI_HEROES[who].style };
   const spoken = text.replace(/\s*\/\s*/g, '. ').slice(0, 900); // "Hola. / Hello." pauses between languages, never says "slash"
   const r = await fetch('https://generativelanguage.googleapis.com/v1beta/interactions', {
@@ -162,7 +181,7 @@ async function generateGeminiVoice(who: string, text: string, testVoice = '', te
     headers: { 'x-goog-api-key': Deno.env.get('GEMINI_TTS_API_KEY')!, 'Content-Type': 'application/json' },
     signal: AbortSignal.timeout(VOICE_TIMEOUT_MS),
     body: JSON.stringify({
-      model: testModel || (Deno.env.get('GEMINI_TTS_MODEL') ?? 'gemini-3.8-flash-lite-tts'),
+      model,
       input: [{ type: 'user_input', content: [{ type: 'text', text: spoken,
         annotations: [{ type: 'speech_metadata', style: g.style }] }] }],
       response_format: { type: 'audio', mime_type: 'audio/wav', sample_rate: 16000 },
