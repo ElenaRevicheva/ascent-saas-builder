@@ -80,7 +80,7 @@ export const FeatureGate = ({
         <CardDescription>
           {isTrialActive 
             ? `This feature is available during your free trial. ${trialDaysLeft} days remaining.`
-            : 'Upgrade to Standard plan to access this feature'
+            : 'Your free trial has ended - EspaLuz Family unlocks it again'
           }
         </CardDescription>
       </CardHeader>
@@ -91,11 +91,10 @@ export const FeatureGate = ({
               Get unlimited access to:
             </p>
             <ul className="text-sm text-left space-y-1 max-w-xs mx-auto">
-              <li>• Unlimited AI conversations</li>
-              <li>• Advanced personality modes</li>
-              <li>• Voice & avatar videos</li>
-              <li>• Progress analytics</li>
-              <li>• Priority support</li>
+              <li>• Pere & Titi's kids classroom</li>
+              <li>• A parent report after every lesson</li>
+              <li>• Unlimited bilingual chat and voice</li>
+              <li>• One family on WhatsApp, Telegram and the web</li>
             </ul>
           </div>
         )}
@@ -103,11 +102,11 @@ export const FeatureGate = ({
         <div className="space-y-2">
           <Link to="/#pricing">
             <Button variant="hero" className="w-full">
-              {isTrialActive ? 'Upgrade to Continue' : 'Upgrade to Standard'}
+              {isTrialActive ? 'Upgrade to Continue' : 'Get EspaLuz Family'}
             </Button>
           </Link>
           <p className="text-xs text-muted-foreground">
-            Only $11/month • Cancel anytime
+            $11/month by PayPal (first charge 2 weeks after you subscribe) • or $11 for 30 days with PágueloFácil: type pagar in EspaLuz WhatsApp
           </p>
         </div>
       </CardContent>

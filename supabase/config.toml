@@ -40,3 +40,7 @@ verify_jwt = true
 # the function itself refuses any call without ESPALUZ_BOT_SECRET.
 [functions.kids-memory]
 verify_jwt = true
+
+# 1 Nov 2026: the one payment truth (Oracle) writes the web's paid status here. JWT on AND ESPALUZ_BOT_SECRET required.
+[functions.payment-mirror]
+verify_jwt = true

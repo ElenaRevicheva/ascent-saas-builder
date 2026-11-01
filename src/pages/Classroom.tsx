@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { FeatureGate } from "@/components/FeatureGate";
 
 // Pere + Titi's classroom (22 Oct 2026): the dashboard chat's voice loop (voice-to-text -> espaluz-chat -> generate-voice)
 // in kids mode, with the heroes' clips as the avatar. 28 Oct 2026 (Elena: the picture must match what the line says, and
@@ -521,4 +522,12 @@ const Classroom = () => {
   );
 };
 
-export default Classroom;
+// 1 Nov 2026 (payment truth phase 4): the classroom is the part families pay for - open during the 14-day free trial,
+// then for families the one payment truth marks paid (PayPal or PágueloFácil, mirrored from Oracle every 10 minutes).
+const PaidClassroom = () => (
+  <FeatureGate feature="kids_classroom">
+    <Classroom />
+  </FeatureGate>
+);
+
+export default PaidClassroom;
