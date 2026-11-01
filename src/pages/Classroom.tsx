@@ -228,6 +228,7 @@ const Classroom = () => {
   const [reward, setReward] = useState(0); // >0 = Titi's star dance on screen (the star count it celebrates)
   const [photo, setPhoto] = useState<string | null>(null); // the photo she is showing, on screen for that turn only
   const photoInput = useRef<HTMLInputElement | null>(null);
+  const galleryInput = useRef<HTMLInputElement | null>(null);
   const mission = useRef<{ text: string; day: string } | null>(null); // last lesson's mission, asked about the next day
   const greetingDone = useRef<Promise<void> | null>(null);
   const greetingEnded = useRef<(() => void) | null>(null);
@@ -437,6 +438,7 @@ const Classroom = () => {
       toast.error("No pude abrir la foto. / I could not open the photo.");
     } finally {
       if (photoInput.current) photoInput.current.value = "";
+      if (galleryInput.current) galleryInput.current.value = "";
     }
   };
 
@@ -567,7 +569,20 @@ const Classroom = () => {
             <span className="mt-0.5">Trazar</span>
           </button>
         )}
-        <input ref={photoInput} type="file" accept="image/*" className="hidden" onChange={(e) => showPhoto(e.target.files?.[0])} />
+        {/* 1 Nov 2026 (Elena: "use the camera to make photos and send them at once, not just attach images"): Foto opens
+            the tablet's camera straight away (capture); the photo goes to Pere and Titi the moment she takes it. The
+            small 🖼️ button keeps the gallery for a picture she already has. */}
+        <input ref={photoInput} type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => showPhoto(e.target.files?.[0])} />
+        <input ref={galleryInput} type="file" accept="image/*" className="hidden" onChange={(e) => showPhoto(e.target.files?.[0])} />
+        <button
+          onClick={() => galleryInput.current?.click()}
+          disabled={busy || recording}
+          className={`w-12 h-12 rounded-full shadow-xl flex items-center justify-center text-2xl transition
+            ${busy || recording ? "bg-gray-300" : "bg-sky-100 hover:bg-sky-200"}`}
+          aria-label="Gallery"
+        >
+          🖼️
+        </button>
         <button
           onClick={() => photoInput.current?.click()}
           disabled={busy || recording}
