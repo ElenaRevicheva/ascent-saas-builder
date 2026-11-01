@@ -780,7 +780,11 @@ async function describePhoto(b64: string, prompt = PHOTO_PROMPT, maxTokens = 120
 async function callChain(request: any): Promise<{ result: any; provider: string }> {
   const chain: [string, string | undefined, (k: string, r: any) => Promise<any>][] = [
     ['claude', Deno.env.get('ANTHROPIC_API_KEY'), callClaude],
-    ['gemini', Deno.env.get('GEMINI_API_KEY'), callGemini],
+    // 1 Nov 2026 (Elena: "sure, wire the Gemini free tier"): GEMINI_API_KEY was never set here, so this step was skipped
+    // on every turn (Alisa's 63 turns went Claude -> Groq 429 -> Grok). The free no-billing key the voices use now
+    // answers first; a paid GEMINI_API_KEY, if one is ever added, is tried right after it. Model from GEMINI_MODEL.
+    ['gemini', Deno.env.get('GEMINI_TTS_API_KEY'), callGemini],
+    ['gemini-paid', Deno.env.get('GEMINI_API_KEY'), callGemini],
     ['groq', Deno.env.get('GROQ_API_KEY'), (k, r) => callGroq(k, r, GROQ_STRONG)],
     ['grok', Deno.env.get('XAI_API_KEY'), callGrok],
     ['groq-small', Deno.env.get('GROQ_API_KEY'), (k, r) => callGroq(k, r, GROQ_SMALL)],
