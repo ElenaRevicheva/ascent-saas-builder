@@ -16,12 +16,21 @@ interface Props {
   onClose: () => void;
 }
 
-// 1 Nov 2026 (Alisa, first test: "I want to trace numbers, not letters"): she chooses letters or numbers.
+// 1 Nov 2026 (Alisa, first test: "I want to trace numbers, not letters"): she chooses letters, numbers or - Elena,
+// same day - short sentences. Sentences come in pairs with the same meaning, Spanish first and then English, so she
+// writes one idea in both languages (Cambridge Pre A1 Starters themes: feelings, family, home, greetings). Each is
+// under 20 characters so the heroes' "✏️ Tracé" turn still recognises it.
 const NUMBERS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+const SENTENCES = ["Te quiero", "I love you", "Yo soy feliz", "I am happy", "Me gusta el sol", "I like the sun",
+  "Buenos días", "Good morning", "Mi casa es bonita", "My home is nice"];
+type Mode = "letters" | "numbers" | "sentences";
+const MODES: { mode: Mode; label: string }[] = [
+  { mode: "letters", label: "🔤 Letras" }, { mode: "numbers", label: "🔢 Números" }, { mode: "sentences", label: "💬 Frases" },
+];
 
 export default function TracePad({ targets: letters, onTraced, onClose }: Props) {
-  const [numbers, setNumbers] = useState(false);
-  const targets = numbers ? NUMBERS : letters;
+  const [mode, setMode] = useState<Mode>("letters");
+  const targets = mode === "numbers" ? NUMBERS : mode === "sentences" ? SENTENCES : letters;
   const canvas = useRef<HTMLCanvasElement>(null);
   const mask = useRef<Uint8Array>(new Uint8Array(0)); // 1 = the letter is here
   const hit = useRef<Uint8Array>(new Uint8Array(0)); // 1 = her finger passed here
@@ -35,7 +44,16 @@ export default function TracePad({ targets: letters, onTraced, onClose }: Props)
   const gw = Math.ceil(W / CELL);
   const gh = Math.ceil(H / CELL);
 
-  const fontFor = (t: string) => `bold ${t.length <= 2 ? 300 : t.length <= 4 ? 210 : 140}px ${FONT}`;
+  // Big for a letter, smaller for a word; a sentence shrinks until it fits the pad with a margin.
+  const fontFor = (t: string, ctx: CanvasRenderingContext2D) => {
+    let size = t.length <= 2 ? 300 : t.length <= 4 ? 210 : 140;
+    ctx.font = `bold ${size}px ${FONT}`;
+    while (ctx.measureText(t).width > W - 60 && size > 50) {
+      size -= 6;
+      ctx.font = `bold ${size}px ${FONT}`;
+    }
+    return ctx.font;
+  };
 
   const reset = useCallback(() => {
     const c = canvas.current;
@@ -45,7 +63,7 @@ export default function TracePad({ targets: letters, onTraced, onClose }: Props)
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, W, H);
-    ctx.font = fontFor(target);
+    const font = fontFor(target, ctx);
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "#e2e8f0";
@@ -61,7 +79,7 @@ export default function TracePad({ targets: letters, onTraced, onClose }: Props)
     off.height = H;
     const o = off.getContext("2d");
     if (!o) return;
-    o.font = fontFor(target);
+    o.font = font;
     o.textAlign = "center";
     o.textBaseline = "middle";
     o.fillStyle = "#000";
@@ -155,12 +173,16 @@ export default function TracePad({ targets: letters, onTraced, onClose }: Props)
 
   return (
     <div className="w-full max-w-3xl mx-auto bg-white/95 rounded-3xl shadow-2xl p-4 border-4 border-amber-300">
-      <div className="flex items-center justify-between mb-2">
-        <div className="text-xl font-bold text-slate-700">✏️ Traza / Trace: <span className="text-3xl">{target}</span></div>
-        <button onClick={() => { setNumbers((n) => !n); setIndex(0); }}
-          className="rounded-full bg-sky-100 hover:bg-sky-200 px-4 py-2 text-lg font-bold">
-          {numbers ? "🔤 Letras / Letters" : "🔢 Números / Numbers"}
-        </button>
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+        <div className="text-xl font-bold text-slate-700">✏️ Traza / Trace: <span className="text-2xl">{target}</span></div>
+        <div className="flex gap-1">
+          {MODES.map((m) => (
+            <button key={m.mode} onClick={() => { setMode(m.mode); setIndex(0); }}
+              className={`rounded-full px-3 py-2 text-base font-bold ${mode === m.mode ? "bg-sky-400 text-white" : "bg-sky-100 hover:bg-sky-200"}`}>
+              {m.label}
+            </button>
+          ))}
+        </div>
         <button onClick={onClose} className="text-2xl px-3" aria-label="Cerrar / Close">✖️</button>
       </div>
       <canvas
