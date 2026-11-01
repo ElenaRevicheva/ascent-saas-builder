@@ -176,15 +176,20 @@ async function generateGeminiVoice(who: string, text: string, testVoice = '', te
 async function geminiVoiceOnce(model: string, who: string, text: string, testVoice: string, testStyle: string): Promise<string> {
   const g = { voice: testVoice || GEMINI_HEROES[who].voice, style: testStyle || GEMINI_HEROES[who].style };
   const spoken = text.replace(/\s*\/\s*/g, '. ').slice(0, 900); // "Hola. / Hello." pauses between languages, never says "slash"
+  // Measured 1 Nov: 3.1 refuses an audio/wav request (it returns raw PCM, wrapped below); 2.5 refuses style
+  // annotations, so its style goes in the text as a direction it reads but does not speak.
+  const v38 = /3\.8/.test(model);
+  const legacy = /2\.5/.test(model);
   const r = await fetch('https://generativelanguage.googleapis.com/v1beta/interactions', {
     method: 'POST',
     headers: { 'x-goog-api-key': Deno.env.get('GEMINI_TTS_API_KEY')!, 'Content-Type': 'application/json' },
     signal: AbortSignal.timeout(VOICE_TIMEOUT_MS),
     body: JSON.stringify({
       model,
-      input: [{ type: 'user_input', content: [{ type: 'text', text: spoken,
-        annotations: [{ type: 'speech_metadata', style: g.style }] }] }],
-      response_format: { type: 'audio', mime_type: 'audio/wav', sample_rate: 16000 },
+      input: [{ type: 'user_input', content: [legacy
+        ? { type: 'text', text: `Say it ${g.style}: ${spoken}` }
+        : { type: 'text', text: spoken, annotations: [{ type: 'speech_metadata', style: g.style }] }] }],
+      response_format: v38 ? { type: 'audio', mime_type: 'audio/wav', sample_rate: 16000 } : { type: 'audio' },
       generation_config: { speech_config: [{ voice: g.voice }] },
     }),
   });
@@ -193,7 +198,23 @@ async function geminiVoiceOnce(model: string, who: string, text: string, testVoi
   const audio = (j.steps ?? []).filter((s: any) => s.type === 'model_output')
     .flatMap((s: any) => s.content ?? []).filter((c: any) => c.type === 'audio').pop();
   if (!audio?.data) throw new Error('Gemini TTS: no audio in the answer');
-  return audio.data;
+  const mime = String(audio.mime_type ?? audio.mimeType ?? 'audio/wav');
+  if (/wav/i.test(mime)) return audio.data;
+  const rate = Number(mime.match(/rate=(\d+)/)?.[1] ?? 24000);
+  return bytesToBase64(pcmToWav(Uint8Array.from(atob(audio.data), (c) => c.charCodeAt(0)), rate));
+}
+
+// Raw 16-bit mono PCM -> a WAV file (44-byte RIFF header), so every player and ffmpeg can read it.
+function pcmToWav(pcm: Uint8Array, rate: number): Uint8Array {
+  const out = new Uint8Array(44 + pcm.length);
+  const v = new DataView(out.buffer);
+  const tag = (o: number, t: string) => { for (let i = 0; i < 4; i++) out[o + i] = t.charCodeAt(i); };
+  tag(0, 'RIFF'); v.setUint32(4, 36 + pcm.length, true); tag(8, 'WAVE'); tag(12, 'fmt ');
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, rate, true);
+  v.setUint32(28, rate * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+  tag(36, 'data'); v.setUint32(40, pcm.length, true);
+  out.set(pcm, 44);
+  return out;
 }
 
 // Generate voice using OpenAI TTS
