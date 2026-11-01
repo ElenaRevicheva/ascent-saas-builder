@@ -19,8 +19,8 @@ interface PricingPlan {
 
 const Pricing = () => {
   // 1 Nov 2026 (Elena): the page tells the same truth as the bots - 14 days free, then ONE price, $11/month by PayPal
-  // or PágueloFácil. The "Premium - Coming Soon" card promised things that do not exist (developer API, 24/7 support,
-  // 5+ users) and made a parent wait instead of pay; removed. Features listed = what is built and live.
+  // or PágueloFácil. The old Premium card promised things that do not exist (developer API, 24/7 support, 5+ users);
+  // it now lists only features being built on what works. Family-plan features listed = what is built and live.
   const plans: PricingPlan[] = [
     {
       name: "Free Trial",
@@ -58,6 +58,26 @@ const Pricing = () => {
       comingSoon: false,
       merchantId: "P8TXABNT28ZXG",
       bonus: "🎁 First PayPal charge 2 weeks after you subscribe"
+    },
+    {
+      // 1 Nov 2026 (Elena): Premium comes back as a roadmap the family can look forward to - only features we are
+      // really building on what already works (the kids brain, family memory, parent reports, practical help,
+      // conversation mode, hero videos). No dates, no price, no "AI miracles".
+      name: "Premium",
+      price: "Coming Soon",
+      description: "In development - built step by step on what EspaLuz already does. Real features, no promises we can't keep.",
+      features: [
+        "🗣️ Talk together: you and your child in one conversation - Pere & Titi know who is speaking and help you both",
+        "🧠 Deeper family memory - each child's words, friends, pets and missions remembered for months, on every channel",
+        "📄 A monthly progress report card (PDF) - sentences learned, missions done, next month's focus",
+        "👧👦 Brothers and sisters - lessons for ages 3-5, 6-7 and 8-10 in one family",
+        "👵 Grandparents in the family plan - Spanish and English, with Russian help",
+        "🇵🇦 Panama life helper - school notes, doctor visits, bank and immigration wording, photo of a document → explained",
+        "🎬 New Pere & Titi adventures in real Panama places"
+      ],
+      popular: false,
+      paypal: false,
+      comingSoon: true
     }
   ];
 
@@ -75,7 +95,7 @@ const Pricing = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
             <Card 
               key={index} 
