@@ -31,6 +31,10 @@ const GEMINI_HEROES: Record<string, { voice: string; style: string }> = {
   usual: { voice: Deno.env.get('GEMINI_USUAL_VOICE') ?? 'Sulafat', style: 'warm, kind and clear, like a good teacher' },
 };
 
+// 1 Nov 2026 (Elena: "if one fails, the next available must answer at once"): no voice call had a time limit, so a
+// provider that hangs instead of failing kept the child waiting. Each now gives up after VOICE_TIMEOUT_MS.
+const VOICE_TIMEOUT_MS = Number(Deno.env.get('VOICE_TIMEOUT_MS') || 20000);
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -107,7 +111,7 @@ async function generateHeroVoice(hero: string, text: string): Promise<string> {
   const headers = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'Prefer': 'wait=60' };
   const body = { input: { text: spoken, voice_id: v.voice_id, pitch: v.pitch, speed: v.speed, emotion: v.emotion,
                           language_boost: 'Automatic', audio_format: 'mp3', sample_rate: 32000 } };
-  let r = await fetch('https://api.replicate.com/v1/models/minimax/speech-2.6-hd/predictions', { method: 'POST', headers, body: JSON.stringify(body) });
+  let r = await fetch('https://api.replicate.com/v1/models/minimax/speech-2.6-hd/predictions', { method: 'POST', headers, body: JSON.stringify(body), signal: AbortSignal.timeout(VOICE_TIMEOUT_MS) });
   if (r.status === 429) { // low-balance accounts get ~6 requests a minute
     await new Promise((res) => setTimeout(res, 11000));
     r = await fetch('https://api.replicate.com/v1/models/minimax/speech-2.6-hd/predictions', { method: 'POST', headers, body: JSON.stringify(body) });
@@ -133,6 +137,7 @@ async function generateGeminiVoice(who: string, text: string): Promise<string> {
   const r = await fetch('https://generativelanguage.googleapis.com/v1beta/interactions', {
     method: 'POST',
     headers: { 'x-goog-api-key': Deno.env.get('GEMINI_TTS_API_KEY')!, 'Content-Type': 'application/json' },
+    signal: AbortSignal.timeout(VOICE_TIMEOUT_MS),
     body: JSON.stringify({
       model: Deno.env.get('GEMINI_TTS_MODEL') ?? 'gemini-3.8-flash-lite-tts',
       input: [{ type: 'user_input', content: [{ type: 'text', text: spoken,
@@ -169,6 +174,7 @@ async function generateOpenAIVoice(text: string): Promise<string> {
       response_format: 'mp3',
       speed: 0.9 // Slightly slower for better clarity
     }),
+    signal: AbortSignal.timeout(VOICE_TIMEOUT_MS),
   });
 
   if (!response.ok) {

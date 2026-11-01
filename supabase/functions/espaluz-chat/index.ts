@@ -617,6 +617,7 @@ async function callClaude(apiKey: string, request: any): Promise<any> {
       method: 'POST',
       headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
       body: JSON.stringify({ ...request, model }),
+      signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
     });
     if (r.ok) return await r.json();
     const body = (await r.text()).slice(0, 200);
@@ -647,7 +648,8 @@ function groqParams(model: string, maxTokens: number): Record<string, unknown> {
   if (model.startsWith('qwen/')) return { max_tokens: 1000, reasoning_format: 'hidden' };
   return { max_tokens: maxTokens };
 }
-const GEMINI_MODEL = Deno.env.get('GEMINI_MODEL') || 'gemini-2.5-flash';
+// 1 Nov 2026: gemini-2.5-* answer 404 "no longer available to new users"; Google's own example uses the -latest alias.
+const GEMINI_MODEL = Deno.env.get('GEMINI_MODEL') || 'gemini-flash-latest';
 
 // 31 Oct 2026: gpt-oss-120b's free daily tokens were spent by midday and every classroom turn fell to gpt-oss-20b, the
 // weakest model. Grok (xAI API, ~$0.0002 a reply, the bots' llm_chain uses it) now sits between the strong Groq model
@@ -662,6 +664,7 @@ async function callGrok(apiKey: string, request: any): Promise<any> {
     headers: { 'Authorization': `Bearer ${apiKey}`, 'content-type': 'application/json' },
     body: JSON.stringify({ model: XAI_MODEL, max_tokens: request.max_tokens, temperature: request.temperature,
                            messages: [{ role: 'system', content: request.system }, ...request.messages] }),
+    signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
   });
   if (!r.ok) throw new Error(`Grok ${XAI_MODEL}: ${r.status} ${(await r.text()).slice(0, 200)}`);
   const text = (await r.json()).choices?.[0]?.message?.content;
@@ -677,7 +680,8 @@ async function callGroq(apiKey: string, request: any, models: string[] = GROQ_MO
       headers: { 'Authorization': `Bearer ${apiKey}`, 'content-type': 'application/json', 'User-Agent': 'espaluz-chat/1.0' },
       body: JSON.stringify({ model, ...groqParams(model, request.max_tokens), temperature: request.temperature,
                              messages: [{ role: 'system', content: request.system }, ...request.messages] }),
-    });
+      signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
+    }).catch((e) => ({ ok: false, status: 0, text: async () => String(e) } as any));
     if (!r.ok) {
       const why = `Groq ${model}: ${r.status} ${(await r.text()).slice(0, 160)}`;
       errors.push(why);
@@ -693,6 +697,26 @@ async function callGroq(apiKey: string, request: any, models: string[] = GROQ_MO
   throw new Error(errors.join(' || '));
 }
 
+// 1 Nov 2026 (Elena: "if I top up OpenAI or Claude or any model in the waterfall, the next available one must answer at
+// once"): OpenAI was missing from this chain (the bots' llm_chain has it, last, gpt-4o), so an OpenAI top-up was never
+// used here. And no call had a time limit: a provider that hangs instead of failing froze the child's turn until the
+// platform killed it. Now every call gives up after PROVIDER_TIMEOUT_MS and the next provider answers.
+const PROVIDER_TIMEOUT_MS = Number(Deno.env.get('PROVIDER_TIMEOUT_MS') || 25000);
+const OPENAI_CHAIN_MODEL = Deno.env.get('OPENAI_CHAIN_MODEL') || 'gpt-4o';
+async function callOpenAI(apiKey: string, request: any): Promise<any> {
+  const r = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${apiKey}`, 'content-type': 'application/json' },
+    body: JSON.stringify({ model: OPENAI_CHAIN_MODEL, max_tokens: request.max_tokens, temperature: request.temperature,
+                           messages: [{ role: 'system', content: request.system }, ...request.messages] }),
+    signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
+  });
+  if (!r.ok) throw new Error(`OpenAI ${OPENAI_CHAIN_MODEL}: ${r.status} ${(await r.text()).slice(0, 200)}`);
+  const text = (await r.json()).choices?.[0]?.message?.content;
+  if (!text) throw new Error('OpenAI: empty answer');
+  return { content: [{ text }], model: OPENAI_CHAIN_MODEL };
+}
+
 async function callGemini(apiKey: string, request: any): Promise<any> {
   const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`, {
     method: 'POST',
@@ -702,6 +726,7 @@ async function callGemini(apiKey: string, request: any): Promise<any> {
       contents: request.messages.map((m: any) => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] })),
       generationConfig: { maxOutputTokens: request.max_tokens, temperature: request.temperature },
     }),
+    signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
   });
   if (!r.ok) throw new Error(`Gemini ${GEMINI_MODEL}: ${r.status} ${(await r.text()).slice(0, 200)}`);
   const j = await r.json();
@@ -734,6 +759,7 @@ async function describePhoto(b64: string): Promise<string> {
     headers: { 'Authorization': `Bearer ${xaiKey}`, 'content-type': 'application/json' },
     body: JSON.stringify({ model: XAI_MODEL, max_tokens: 120, messages: [{ role: 'user', content: [
       { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${b64}` } }, { type: 'text', text: PHOTO_PROMPT }] }] }),
+    signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
   });
   if (!r.ok) throw new Error(`Grok vision ${r.status}: ${(await r.text()).slice(0, 160)}`);
   const t = (await r.json()).choices?.[0]?.message?.content?.trim();
@@ -753,6 +779,7 @@ async function callChain(request: any): Promise<{ result: any; provider: string 
     ['groq', Deno.env.get('GROQ_API_KEY'), (k, r) => callGroq(k, r, GROQ_STRONG)],
     ['grok', Deno.env.get('XAI_API_KEY'), callGrok],
     ['groq-small', Deno.env.get('GROQ_API_KEY'), (k, r) => callGroq(k, r, GROQ_SMALL)],
+    ['openai', Deno.env.get('OPENAI_API_KEY'), callOpenAI],
   ];
   const errors: string[] = [];
   for (const [name, key, fn] of chain) {
