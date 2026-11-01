@@ -18,7 +18,7 @@ const HERO_VOICES: Record<string, { voice_id: string; pitch: number; speed: numb
 };
 
 // 1 Nov 2026 (Elena: "go free" - Replicate is $0.10 per 1,000 characters, ~$0.40-0.80 a lesson, and ran dry at 17:41
-// UTC): the FREE voice answers first - Gemini TTS on a key whose Google project has NO billing (free tier; Elena
+// UTC): the FREE voice answered first (since 22:20 UTC second, after Replicate - see the chain below) - Gemini TTS on a key whose Google project has NO billing (free tier; Elena
 // accepted that Google may use these lines to improve its products). Secret GEMINI_TTS_API_KEY - deliberately not
 // GEMINI_API_KEY, the fleet's prepaid key that answers 402. Without it, or on any failure (daily free limit, 402),
 // the old chain answers: Replicate hero voice -> OpenAI -> the page's own device voice. Nothing was switched off.
@@ -84,21 +84,25 @@ serve(async (req) => {
     let base64Audio = '';
     let spokenBy = 'openai-nova';
     let mimeType = 'audio/mpeg';
-    if (Deno.env.get('GEMINI_TTS_API_KEY')) {
+    // 1 Nov 2026 22:20 UTC (Elena: "Replicate should sit first because I liked these voices; when credits are out it
+    // immediately falls back to the chain; when topped up it is used again"): the paid MiniMax voices she loves answer
+    // first, then the free Gemini voices, then OpenAI, then the device. Every line tries every provider afresh - nothing
+    // remembers a failure - so a top-up anywhere is picked up on the very next line, with no code change.
+    if (hero && HERO_VOICES[hero] && Deno.env.get('REPLICATE_API_TOKEN')) {
+      try {
+        base64Audio = await generateHeroVoice(hero, cleanedText);
+        spokenBy = `minimax-${hero}`;
+      } catch (heroError) {
+        console.error(`hero voice ${hero} failed, trying the free voice:`, heroError);
+      }
+    }
+    if (!base64Audio && Deno.env.get('GEMINI_TTS_API_KEY')) {
       try {
         base64Audio = await generateGeminiVoice(hero && GEMINI_HEROES[hero] ? hero : 'usual', cleanedText);
         spokenBy = `gemini-${hero || 'usual'}`;
         mimeType = 'audio/wav';
       } catch (geminiError) {
         console.error(`free gemini voice failed, trying the next voice:`, geminiError);
-      }
-    }
-    if (!base64Audio && hero && HERO_VOICES[hero] && Deno.env.get('REPLICATE_API_TOKEN')) {
-      try {
-        base64Audio = await generateHeroVoice(hero, cleanedText);
-        spokenBy = `minimax-${hero}`;
-      } catch (heroError) {
-        console.error(`hero voice ${hero} failed, using the usual voice:`, heroError);
       }
     }
     if (!base64Audio) {
