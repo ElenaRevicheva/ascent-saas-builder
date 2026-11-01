@@ -153,7 +153,8 @@ export default function TracePad({ targets: letters, onTraced, onClose }: Props)
       ctx.strokeStyle = colour;
       // 1 Nov 2026 (Elena, Lenovo Tab Pen: "the handwriting is very large, make it thin"): a pen draws a thin,
       // pressure-sensitive line like a real pencil; a finger gets a medium marker. Coverage (mark) is unchanged.
-      ctx.lineWidth = e.pointerType === "pen" ? 4 + 8 * (e.pressure || 0.5) : 16;
+      // 22:15 UTC, after testing ("still not thin, impossible to use"): thinner again - pen 2-6 px, finger 10 px.
+      ctx.lineWidth = e.pointerType === "pen" ? 2 + 4 * (e.pressure || 0.5) : 10;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
       ctx.beginPath();

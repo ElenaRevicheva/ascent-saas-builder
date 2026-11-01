@@ -31,11 +31,18 @@ async function whisperHint(authHeader: string | null): Promise<string> {
 // With a hint and near-silence Whisper can "hear" the hint itself. A transcript made only of hint words is dropped,
 // and the page then says "No te escuché bien".
 const words = (s: string) => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').match(/[a-zñа-яё]+/g) ?? [];
+// 1 Nov 2026 22:09 UTC (tracing: "¡Lo escribiste: I love you! ¡Ahora dilo!" - Alisa said "I love you!", Whisper heard
+// it exactly, and this filter dropped it, because the right answer is made of the question's own words). An echo
+// replays most of the QUESTION; a child repeating the phrase she was asked to say covers only a small part of it. So a
+// transcript is an echo only if it is all hint words AND it reproduces at least 60% of the question's distinct words.
 function echoesHint(text: string, hint: string): boolean {
   const t = words(text);
   if (t.length < 3) return false;
   const h = new Set(words(hint));
-  return t.filter((w) => h.has(w)).length / t.length > 0.8;
+  if (t.filter((w) => h.has(w)).length / t.length <= 0.8) return false;
+  const q = new Set(words(hint.split('They just asked:')[1] ?? hint));
+  const said = new Set(t);
+  return q.size > 0 && [...q].filter((w) => said.has(w)).length / q.size >= 0.6;
 }
 // Whisper's known phantoms on silence or noise. Measured 31 Oct on Groq whisper-large-v3-turbo: 3 s of pure silence ->
 // "Thank you." (no hint) / "you" (hint); pink noise -> "I'm not sure." (hint). Groq reports no_speech_prob 0 and the
