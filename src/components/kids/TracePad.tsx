@@ -16,7 +16,12 @@ interface Props {
   onClose: () => void;
 }
 
-export default function TracePad({ targets, onTraced, onClose }: Props) {
+// 1 Nov 2026 (Alisa, first test: "I want to trace numbers, not letters"): she chooses letters or numbers.
+const NUMBERS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+
+export default function TracePad({ targets: letters, onTraced, onClose }: Props) {
+  const [numbers, setNumbers] = useState(false);
+  const targets = numbers ? NUMBERS : letters;
   const canvas = useRef<HTMLCanvasElement>(null);
   const mask = useRef<Uint8Array>(new Uint8Array(0)); // 1 = the letter is here
   const hit = useRef<Uint8Array>(new Uint8Array(0)); // 1 = her finger passed here
@@ -152,6 +157,10 @@ export default function TracePad({ targets, onTraced, onClose }: Props) {
     <div className="w-full max-w-3xl mx-auto bg-white/95 rounded-3xl shadow-2xl p-4 border-4 border-amber-300">
       <div className="flex items-center justify-between mb-2">
         <div className="text-xl font-bold text-slate-700">✏️ Traza / Trace: <span className="text-3xl">{target}</span></div>
+        <button onClick={() => { setNumbers((n) => !n); setIndex(0); }}
+          className="rounded-full bg-sky-100 hover:bg-sky-200 px-4 py-2 text-lg font-bold">
+          {numbers ? "🔤 Letras / Letters" : "🔢 Números / Numbers"}
+        </button>
         <button onClick={onClose} className="text-2xl px-3" aria-label="Cerrar / Close">✖️</button>
       </div>
       <canvas

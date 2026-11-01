@@ -6,6 +6,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
 // "Eu me espethe muito em branco" (Portuguese), "Ana, Ana, me viene perezoso". Whisper takes a `prompt` - text that
 // tells it what to expect - and we never sent one. During a classroom lesson the hint is the heroes' last question
 // (like a teacher who knows what she just asked); otherwise a neutral language hint.
+// Letters that exist in none of the families' languages (Spanish, English, Russian): the transcript is garble.
+const GARBLE = /[ðþæøå]/i;
+
 async function whisperHint(authHeader: string | null): Promise<string> {
   const base = 'Spanish and English, sometimes Russian. ';
   if (!authHeader) return base;
@@ -138,11 +141,20 @@ serve(async (req) => {
       // re-transcribed as Spanish and as English, and the more confident of the three wins.
       const detected = String(result.language || '').toLowerCase();
       if (!language && detected && !['spanish', 'english', 'russian', 'es', 'en', 'ru'].includes(detected)) {
-        for (const lang of ['es', 'en']) {
-          const again = await send(key, url, model, lang);
-          if (!again.ok) continue;
-          const alt = await again.json();
-          if (confidence(alt) > confidence(result)) result = { ...alt, language: lang };
+        // 1 Nov 2026 17:55 (Alisa: "quiero hacer números, no letras" came back as icelandic "Ég kira þess að numeiru…"
+        // at -0.68 and was dropped as not heard): a transcript in real family letters beats a garbled one whatever the
+        // confidence, and if the fast model is still garbled or unsure, Groq's full whisper-large-v3 tries too.
+        const better = (a: any, b: any) => (GARBLE.test(String(a?.text)) !== GARBLE.test(String(b?.text))
+          ? !GARBLE.test(String(a?.text)) : confidence(a) > confidence(b));
+        const models = name === 'groq' && model !== 'whisper-large-v3' ? [model, 'whisper-large-v3'] : [model];
+        for (const m of models) {
+          if (m !== model && !GARBLE.test(String(result.text)) && confidence(result) >= -0.5) break;
+          for (const lang of ['es', 'en']) {
+            const again = await send(key, url, m, lang);
+            if (!again.ok) continue;
+            const alt = await again.json();
+            if (better(alt, result)) result = { ...alt, language: lang };
+          }
         }
         console.log(`language "${detected}" is not ES/EN/RU -> kept ${result.language} (confidence ${confidence(result).toFixed(2)})`);
         // 31 Oct 15:41: detected "icelandic", the best retry scored -1.17 and was still garble ("A couple of menes have
@@ -159,7 +171,7 @@ serve(async (req) => {
     }
     // 31 Oct 15:56: "Man, að mér kom úr teléfón" (icelandic, retry -0.82, above the -1.0 cut). Letters that exist in
     // none of the families' languages prove the transcript is garble, whatever the confidence says.
-    if (/[ðþæøå]/i.test(String(result.text))) {
+    if (GARBLE.test(String(result.text))) {
       console.log(`transcript has letters from no family language -> treated as not heard: ${String(result.text).slice(0, 120)}`);
       result.text = '';
     }
