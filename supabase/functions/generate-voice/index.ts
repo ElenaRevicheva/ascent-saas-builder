@@ -24,10 +24,14 @@ const HERO_VOICES: Record<string, { voice_id: string; pitch: number; speed: numb
 // the old chain answers: Replicate hero voice -> OpenAI -> the page's own device voice. Nothing was switched off.
 // Pere: slow, calm, wise; Titi: quick, playful (voices from Google's prebuilt list; env overrides).
 const GEMINI_HEROES: Record<string, { voice: string; style: string }> = {
+  // 1 Nov 2026 20:05 UTC: Elena chose these by ear ("Pere D and Titi D fit well") - the cartoon kids-TV directions on
+  // gemini-3.8-flash-tts (samples in cto-aipa docs/espaluz/voice-samples/*_D_*.wav).
   pere: { voice: Deno.env.get('GEMINI_PERE_VOICE') ?? 'Sadaltager',
-          style: 'slow, calm and warm, like a wise old sloth telling a small child something important' },
+          style: "a cozy cartoon grandpa sloth in a children's TV show: slow, soft and smiling, a little sleepy, gentle " +
+                 "and wise, like reading a bedtime story to a six-year-old" },
   titi: { voice: Deno.env.get('GEMINI_TITI_VOICE') ?? 'Puck',
-          style: 'playful, cheeky and full of energy, like a happy little monkey, but clear enough for a six-year-old' },
+          style: "a funny cartoon monkey in a children's TV show: giggly, bouncy, surprised and very expressive, a bright " +
+                 "and playful voice with little laughs, but clear and not too fast so a six-year-old can repeat" },
   usual: { voice: Deno.env.get('GEMINI_USUAL_VOICE') ?? 'Sulafat', style: 'warm, kind and clear, like a good teacher' },
 };
 
@@ -157,7 +161,7 @@ async function generateHeroVoice(hero: string, text: string): Promise<string> {
 // on Free Tier", 429) - one lesson needs 20-30. Each model has its own allowance, so the free step is itself a
 // waterfall of models: a spent one (429) or one this API does not serve hands over to the next, then Replicate.
 const GEMINI_TTS_MODELS = (Deno.env.get('GEMINI_TTS_MODELS') || Deno.env.get('GEMINI_TTS_MODEL') ||
-  'gemini-3.8-flash-lite-tts,gemini-3.8-flash-tts,gemini-3.1-flash-tts-preview,gemini-2.5-flash-preview-tts')
+  'gemini-3.8-flash-tts,gemini-3.8-flash-lite-tts,gemini-3.1-flash-tts-preview,gemini-2.5-flash-preview-tts')
   .split(',').map((m) => m.trim()).filter(Boolean);
 
 // One line in a free Gemini voice (Interactions API, unary = a whole WAV file).
@@ -176,10 +180,10 @@ async function generateGeminiVoice(who: string, text: string, testVoice = '', te
 async function geminiVoiceOnce(model: string, who: string, text: string, testVoice: string, testStyle: string): Promise<string> {
   const g = { voice: testVoice || GEMINI_HEROES[who].voice, style: testStyle || GEMINI_HEROES[who].style };
   const spoken = text.replace(/\s*\/\s*/g, '. ').slice(0, 900); // "Hola. / Hello." pauses between languages, never says "slash"
-  // Measured 1 Nov: 3.1 refuses an audio/wav request (it returns raw PCM, wrapped below); 2.5 refuses style
-  // annotations, so its style goes in the text as a direction it reads but does not speak.
+  // Measured 1 Nov: 3.1 and 2.5 refuse an audio/wav request (raw PCM comes back, wrapped below) and refuse style
+  // annotations, so their style goes in the text as a direction they read but do not speak.
   const v38 = /3\.8/.test(model);
-  const legacy = /2\.5/.test(model);
+  const legacy = !v38;
   const r = await fetch('https://generativelanguage.googleapis.com/v1beta/interactions', {
     method: 'POST',
     headers: { 'x-goog-api-key': Deno.env.get('GEMINI_TTS_API_KEY')!, 'Content-Type': 'application/json' },
