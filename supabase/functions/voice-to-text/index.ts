@@ -2,13 +2,13 @@ import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
 
+// Letters that exist in none of the families' languages (Spanish, English, Russian): the transcript is garble.
+const GARBLE = /[ðþæøå]/i;
+
 // 31 Oct 2026 (Elena: "hear her better"): Whisper listened blind and wrote a 6-year-old's answers as "Starberry",
 // "Eu me espethe muito em branco" (Portuguese), "Ana, Ana, me viene perezoso". Whisper takes a `prompt` - text that
 // tells it what to expect - and we never sent one. During a classroom lesson the hint is the heroes' last question
 // (like a teacher who knows what she just asked); otherwise a neutral language hint.
-// Letters that exist in none of the families' languages (Spanish, English, Russian): the transcript is garble.
-const GARBLE = /[ðþæøå]/i;
-
 async function whisperHint(authHeader: string | null): Promise<string> {
   const base = 'Spanish and English, sometimes Russian. ';
   if (!authHeader) return base;
