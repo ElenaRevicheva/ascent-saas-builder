@@ -211,7 +211,7 @@ Never ask for personal information such as addresses, school names or phone numb
 // function names the step, this week's story, yesterday's mission and a gentle check of the sentence the child tried.
 const KIDS_STEPS = [
   "HELLO: both heroes say hello in 1-2 short lines; if a list of EARLIER LESSONS is above, the first line brings back ONE happy thing from it (\"La última vez me dijiste que...\"); mention this week's story in one line, then ONE question about the child's day.",
-  "WAKE-UP GAME with Titi: one quick movement game (jumps, 'Simon dice / Simon says', or right hand to left knee).",
+  "WAKE-UP GAME with Titi: one quick movement game (jumps, 'Simon dice / Simon says', right hand to left knee, 'rojo salta, azul congela / red jump, blue freeze', or drawing a big sideways 8 in the air with one finger).",
   "NEW SENTENCE 1: Pere teaches ONE useful sentence built on what the child talked about, and asks the child to say it.",
   "NEW SENTENCE 2: one more sentence on the child's topic; ask the child to say it, or to answer a '¿Por qué...? / Why...?' with 'porque / because'.",
   "GAME with Titi: a riddle, Titi's funny mistake for the child to correct, or ask the child to READ one short sentence aloud.",

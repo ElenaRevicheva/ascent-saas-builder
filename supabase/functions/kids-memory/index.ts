@@ -15,6 +15,20 @@ const kidWords = (s: string): string[] =>
 const firstLine = (reply: string): string =>
   (reply.split('\n').map((l) => l.trim()).find(Boolean) ?? '').replace(/^[^:\[]*(\[[^\]]*\])?:\s*/, '').split(' / ')[0].slice(0, 120);
 
+// 1 Nov 2026 (Elena: "not just Buddy.ai but the neuro app" = Leaply Kids): the habit Leaply sells is a short daily game
+// the parent does WITH the child. One game a day, the same for every channel (the bots put it in the parent report and
+// the daily reminder). Plain movement and calm games - no health claims.
+const TOGETHER = [
+  "Cross-crawl: right hand to left knee, left hand to right knee, 10 times, counting in Spanish (uno, dos, tres…).",
+  "Rojo salta, azul congela: you call a colour - on \"rojo\" she jumps, on \"azul\" she freezes like a statue.",
+  "Lazy 8: draw a big sideways 8 in the air with one finger, slowly, 5 times with each hand, saying \"ocho\".",
+  "Balloon breaths: hands on the belly, breathe in like a balloon, out slowly, 3 times - then \"Me siento tranquila / I feel calm\".",
+  "Flamingo: stand on one foot and count to 10 in Spanish, then the other foot.",
+  "Simón dice: 3 commands in Spanish (\"Simón dice: toca tu nariz\", \"…salta dos veces\", \"…aplaude\").",
+  "Espejo / mirror: copy each other's slow moves for one minute, then each says one feeling (\"Estoy feliz\").",
+];
+const panamaDay = (offset = 0): number => Math.floor((Date.now() - 5 * 3600 * 1000) / 86400000) + offset; // UTC-5, no DST
+
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
 
@@ -49,27 +63,31 @@ serve(async (req) => {
       const from = new Date(Math.max(Date.parse(since) || 0, Date.now() - 48 * 3600 * 1000)).toISOString();
       const { data: links } = await db.from('connected_bots').select('user_id, platform_user_id, connected_at')
         .eq('platform', platform).eq('is_active', true).order('connected_at', { ascending: false });
-      const families: { telegram_user_id: string; user_key: string; turns: { at: string; said: string; reply: string; src: string }[] }[] = [];
+      const families: { telegram_user_id: string; user_key: string; has_telegram: boolean; turns: { at: string; said: string; reply: string; src: string }[] }[] = [];
       const seen = new Set<string>();
       for (const l of links ?? []) {
         if (seen.has(l.platform_user_id)) continue; // an account belongs to its newest link only
         seen.add(l.platform_user_id);
         // 1 Nov 2026 (Phase 3): Telegram lessons now run on the kids brain and are saved as source 'telegram'.
         let sources = ['telegram', 'web'];
+        let hasTelegram = platform === 'telegram';
         if (platform === 'whatsapp') {
           const { data: tg } = await db.from('connected_bots').select('id').eq('user_id', l.user_id)
             .eq('platform', 'telegram').eq('is_active', true).limit(1);
-          sources = tg?.length ? ['whatsapp'] : ['whatsapp', 'web'];
+          hasTelegram = !!tg?.length;
+          sources = hasTelegram ? ['whatsapp'] : ['whatsapp', 'web'];
         }
         const { data: rows } = await db.from('learning_sessions').select('content, created_at, source')
           .eq('user_id', l.user_id).eq('session_type', 'classroom').in('source', sources).gte('created_at', from)
           .order('created_at', { ascending: true }).limit(300);
-        if (rows?.length) families.push({ telegram_user_id: l.platform_user_id, user_key: l.platform_user_id, turns: rows.map((r: any) => ({
+        // has_telegram: the daily ritual goes to ONE channel too - Telegram when the family has it.
+        if (rows?.length) families.push({ telegram_user_id: l.platform_user_id, user_key: l.platform_user_id, has_telegram: hasTelegram, turns: rows.map((r: any) => ({
           at: r.created_at, said: String(r.content?.user_message ?? '').slice(0, 300), reply: String(r.content?.ai_response ?? '').slice(0, 1500),
           src: String(r.source ?? 'web') })) });
       }
       console.log(`kids-memory lessons (${platform}): ${families.length} families with turns since ${from}`);
-      return json({ families });
+      return json({ families, together_today: TOGETHER[panamaDay() % TOGETHER.length],
+                    together_tomorrow: TOGETHER[panamaDay(1) % TOGETHER.length] });
     }
     if (!telegram_user_id) return json({ error: 'telegram_user_id is required' }, 400);
     const { data: link } = await db.from('connected_bots').select('user_id')
