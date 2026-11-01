@@ -354,6 +354,11 @@ const KIDS_SR_DAYS = [1, 3, 7, 14, 30];
 // or a request to stop (all measured in her 31 Oct lessons).
 const KIDS_ABOUT_ME = /\b(me encanta|me encantan|me gusta|me gustan|mi|mis|tengo|voy a|quiero|quer[ií]a|yo|i|my|i'?m|i have|i like|i love|i want)\b/i;
 const KIDS_NOT_MEMORY = /\bno (quiero|puedo|veo|escucho|me gusta)|\b(don'?t|can'?t) |pantalla|screen|link|r[aá]pido|pausa|pause|hablar|talk/i;
+// What she said she does NOT want ("Yo no quiero hablar sobre Tucán", 1 Nov 00:18 - and the next hello brought the
+// toucan story again). Kept for 7 days: the topic leaves the story and the heroes never bring it up.
+const KIDS_DISLIKE = /no quiero (?:hablar|escuchar|o[ií]r)\s+(?:sobre|de|del|acerca de)\s+(?:el |la |los |las |un |una )?([a-záéíóúñü]+)|don'?t want to (?:hear|talk) about (?:the |a )?([a-z]+)/i;
+const STORY_WORD: Record<string, string> = { tucan: 'toucan', perezoso: 'sloth', rana: 'frog', tortuga: 'turtle',
+  tortugas: 'turtle', aguila: 'eagle', canal: 'canal', barco: 'ship', mango: 'mango', trueno: 'thunder' };
 const panamaDay = (ms: number) => new Date(ms - 5 * 3600 * 1000).toISOString().slice(0, 10); // UTC-5, no DST
 type KidTurn = { at: number; words: string; understood: string };
 type KidMemory = { words: string; understood: string; firstAt: number; lastAt: number; days: number; content: string[] };
@@ -393,7 +398,9 @@ function kidsDueMemory(turns: KidTurn[], nowMs: number): KidMemory | null {
   return { ...pick, days: pick.daySet.size };
 }
 
-async function kidsMemoryCard(supabase: any, userId: string, hist: any[]): Promise<string> {
+type KidsMemory = { card: string; hello: string; avoid: string[] };
+
+async function kidsMemoryCard(supabase: any, userId: string, hist: any[]): Promise<KidsMemory> {
   const { data, error } = await supabase
     .from('learning_sessions')
     .select('session_type, content, created_at')
@@ -404,16 +411,22 @@ async function kidsMemoryCard(supabase: any, userId: string, hist: any[]): Promi
     .gte('created_at', '2026-10-31T12:47:00Z')
     .order('created_at', { ascending: false })
     .limit(300);
-  if (error || !Array.isArray(data)) return '';
+  if (error || !Array.isArray(data)) return { card: '', hello: '', avoid: [] };
   const now = new Set(hist.filter((m: any) => m?.role === 'user').map((m: any) => String(m.content ?? '').trim()));
   const said: string[] = [];
   const turns: KidTurn[] = [];
+  const avoid: string[] = [];
   let mission = '';
   for (const row of data) {
     const c = row.content || {};
     if (row.session_type === 'conversation' && c.family_role !== 'alisa') continue; // a parent's own chat stays out
     const words = String(c.user_message ?? '').trim();
     const reply = String(c.ai_response ?? c.bot_response ?? '');
+    const dislike = KIDS_DISLIKE.exec(words);
+    if (dislike && Date.now() - Date.parse(row.created_at) < 7 * 86400000) {
+      const topic = kidWords(dislike[1] || dislike[2] || '')[0];
+      if (topic && !avoid.includes(topic)) avoid.push(topic);
+    }
     if (now.has(words)) continue; // this lesson is already in the conversation
     const understood = firstLine(reply);
     if (KIDS_HARD.test(words) || KIDS_HARD.test(understood) || KIDS_ADULT.test(words) || /no te escuch|didn't hear/i.test(understood)) continue;
@@ -430,25 +443,33 @@ async function kidsMemoryCard(supabase: any, userId: string, hist: any[]): Promi
       if (line) mission = line.replace(/^.*?\]:\s*/, '').slice(0, 160);
     }
   }
-  if (!said.length && !mission) return '';
+  const dislikes = avoid.length
+    ? `\nSHE TOLD YOU SHE DOES NOT WANT to hear about: ${avoid.join(', ')}. Never bring it up in this lesson.` : '';
+  if (!said.length && !mission) return { card: '', hello: dislikes, avoid };
   const due = kidsDueMemory(turns, Date.now());
   const ago = due ? Math.max(1, Math.round((Date.now() - due.lastAt) / 86400000)) : 0;
-  return '\n\nWHAT THE CHILD TOLD YOU IN EARLIER LESSONS (her own words, newest first; speech-to-text may be imperfect):\n' +
+  const card = '\n\nWHAT THE CHILD TOLD YOU IN EARLIER LESSONS (her own words, newest first; speech-to-text may be imperfect):\n' +
     said.map((s) => `- ${s}`).join('\n') +
     (mission ? `\nLast mission you gave: "${mission}" - at the hello, ask if she did it.` : '') +
-    (due
-      ? `\n\nTODAY'S MEMORY GAME (her own sentence from ${ago} day${ago > 1 ? 's' : ''} ago; this is the ONLY memory you ` +
-        `bring back at the hello): she said "${due.words}"${due.understood ? ` (you understood: "${due.understood}")` : ''}.\n` +
-        "Do NOT say it for her. Titi gets it wrong on purpose in one funny line, with one wrong detail (\"¿Tú me dijiste " +
-        "que te gustan los tiburones, verdad? / You told me you like sharks, right?\") and lets her correct him, so SHE " +
-        "says it. If she does, one line of real praise and add ONE new word to her sentence. If she does not remember, " +
-        "Pere gives only the first two or three words as a hint, once, and then you go on happily - never a test, " +
-        "never \"repeat after me\", never twice in one lesson."
-      : "\nUse this like a friend who remembers: at the hello bring back ONE happy, clearly understood thing (a favourite " +
-        "thing, a pet, a wish, something she likes doing) taken ONLY from this list, in simple words (\"La última vez me " +
-        "dijiste que ... ¿Todavía? / Last time you told me ... Still?\")") +
+    (due ? '' :
+      "\nUse this like a friend who remembers: at the hello bring back ONE happy, clearly understood thing (a favourite " +
+      "thing, a pet, a wish, something she likes doing) taken ONLY from this list, in simple words (\"La última vez me " +
+      "dijiste que ... ¿Todavía? / Last time you told me ... Still?\")") +
     "\nLater in the lesson, use what she told you instead of asking again. Skip anything that does not make sense, never bring " +
     "back anything sad or about being scolded, and never invent a memory that is not in this list.";
+  // The memory game goes LAST in the prompt at the hello (1 Nov test: placed in the card above, the model ignored it
+  // and used another memory).
+  const hello = dislikes + (due
+    ? `\n\nTHIS HELLO IS A MEMORY GAME (her own sentence from ${ago} day${ago > 1 ? 's' : ''} ago - the ONLY memory you bring ` +
+      `back today): she said "${due.words}"${due.understood ? ` (you understood: "${due.understood}")` : ''}.\n` +
+      "Pere says hello in a few words. Then TITI gets her sentence wrong on purpose in one funny line, changing ONE " +
+      "detail (for \"me encantan los conejos\": \"Titi [silly]: ¿Tú me dijiste que te encantan los tiburones, verdad? / " +
+      "You told me you love sharks, right?\"), so SHE corrects him and says it herself. Do NOT say her sentence for her. " +
+      "If she corrects him: one line of real praise and add ONE new word to her sentence. If she does not remember: Pere " +
+      "gives only the first two or three words as a hint, once, then go on happily. Never a test, never \"repeat after " +
+      "me\". This replaces the usual hello question."
+    : '');
+  return { card, hello, avoid };
 }
 
 // Today in Panama, and the day's holiday when there is one (she said "Halloween" on 31 Oct and was told she seemed
@@ -469,14 +490,20 @@ function kidsToday(): string {
   return `TODAY in Panama: ${day}${h ? ` - ${h}. If she brings it up (or it fits), talk about it happily and teach a sentence about it.` : '.'}`;
 }
 
-function kidsTurnContext(kids: any, message: string): string {
+function kidsTurnContext(kids: any, message: string, avoid: string[] = []): string {
   const hist = Array.isArray(kids?.history) ? kids.history : [];
   const raw = Number.isInteger(kids?.turn) ? kids.turn : Math.floor(hist.length / 2);
   // The page counts every exchange; a turn spent answering her question does not move the lesson on.
   const held = hist.filter((m: any) => m?.role === "user" && KID_QUESTION.test(String(m?.content ?? ""))).length;
   const turn = raw > 0 ? Math.max(1, raw - held) : 0;
-  const step = turn < KIDS_STEPS.length ? KIDS_STEPS[turn] : KIDS_STEP_FREE;
-  const story = KIDS_STORIES[isoWeek(new Date()) % KIDS_STORIES.length];
+  const weekStory = KIDS_STORIES[isoWeek(new Date()) % KIDS_STORIES.length];
+  // A story about a topic she said she does not want is dropped (and its step becomes free talk on her topic).
+  const storyWords = kidWords(weekStory);
+  const storyOff = avoid.some((a) => storyWords.includes(a) || storyWords.includes(STORY_WORD[a] ?? ''));
+  const story = storyOff ? "(no story this week - she does not want it; follow HER topic)" : weekStory;
+  const planned = turn < KIDS_STEPS.length ? KIDS_STEPS[turn] : KIDS_STEP_FREE;
+  const step = storyOff && planned.startsWith("THIS WEEK'S STORY") ? KIDS_STEP_FREE
+    : storyOff && turn === 0 ? planned.replace(/; mention this week's story in one line/, '') : planned;
   const heard = turn > 0 ? kidsHeard(message) + (KIDS_ADULT.test(message)
     ? "THIS MESSAGE IS FROM THE PARENT, not the child: first line thanks the parent by role (\"¡Gracias, mamá! / " +
       "Thank you, mom!\"), never tell the parent how they feel; do what the parent asks, then turn to the child by name.\n"
@@ -789,11 +816,16 @@ serve(async (req) => {
     const known: string[] = Array.isArray(kids?.known)
       ? kids.known.filter((s: unknown) => typeof s === 'string').map((s: string) => s.trim().slice(0, 120)).filter(Boolean).slice(-20)
       : [];
-    const memory = kids && userId ? await kidsMemoryCard(supabase, userId, Array.isArray(kids.history) ? kids.history : []) : '';
-    // The turn instruction (with the child's own words) goes LAST: the model weighs the end of the prompt most.
-    const kidsSystem = KIDS_CLASSROOM_PROMPT + memory + (known.length
+    const memory = kids && userId ? await kidsMemoryCard(supabase, userId, Array.isArray(kids.history) ? kids.history : [])
+      : { card: '', hello: '', avoid: [] as string[] };
+    const isHello = kids && (Number.isInteger(kids.turn) ? kids.turn : Math.floor((Array.isArray(kids.history) ? kids.history.length : 0) / 2)) === 0;
+    // The turn instruction (with the child's own words) goes LAST: the model weighs the end of the prompt most - and at
+    // the hello, the memory game (her own sentence coming back, spaced repetition) goes after it.
+    const kidsSystem = KIDS_CLASSROOM_PROMPT + memory.card + (known.length
       ? `\n\nSentences the child already said in earlier lessons: ${known.map((s) => `"${s}"`).join(' · ')}. At the hello, invite the child to say one of them again and praise, then teach new ones (the same words come back and grow).`
-      : '') + (kids ? kidsTurnContext(kids, message) : '') + (kids && message.startsWith('📷') ? (photoDescription
+      : '') + (kids ? kidsTurnContext(kids, message, memory.avoid) : '') +
+      (isHello ? memory.hello : (memory.hello.startsWith('\nSHE TOLD YOU') ? memory.hello.split('\n\nTHIS HELLO')[0] : '')) +
+      (kids && message.startsWith('📷') ? (photoDescription
         ? `\nSHE IS SHOWING YOU A PHOTO: ${photoDescription}\nTalk about what is in it with real curiosity first (name ` +
           "the thing and its colour in Spanish and English), then build this turn's sentence from it. Never comment on a " +
           "person in it."
