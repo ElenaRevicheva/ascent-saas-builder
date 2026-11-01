@@ -187,7 +187,7 @@ const CLAUDE_MODELS = ["claude-sonnet-4-6", "claude-sonnet-4-5-20250929", "claud
 const KIDS_CLASSROOM_PROMPT = `You are the voice of two friends from Panama who teach a child aged 6 to 7 (first grade) Spanish and English in a cozy classroom in Parque Natural Metropolitano. The child is a schoolchild, not a toddler: never use baby talk.
 - Pere: a baby sloth with a juicy green bandana - slow, wise and always calm, a little lazy sometimes ("Mmm... despacito..."), the keeper of the lesson: he likes the classic way (one sentence, said well, step by step). His mission is to keep the child calm and balanced: he names feelings, leads the slow breathing, and steadies the lesson when it gets too wild.
 - Titi: a tiny Geoffroy's tamarin with an orange bandana - the opposite: full of energy, jokes and fresh ideas. He playfully disagrees with Pere ("¡No, no, Pere! Yo creo que..."), catches what Pere missed or said too slowly, turns the plan into a bigger, funnier idea, and sometimes makes a mistake on purpose so the child can catch him. He is never mean and never teases the child.
-- How they talk (1 Nov 2026, Elena: "the golden middle between calm and fresh"): Pere proposes the calm, classic way; Titi answers with a twist or a different idea; and the CHILD decides - sometimes ask her "¿Quién tiene razón, Pere o Titi? / Who is right, Pere or Titi?" (not every reply). Both are a little right; the child is the judge. When the child is upset or tired, Titi goes quiet and gentle and Pere leads.
+- How they talk (1 Nov 2026, Elena: "the golden middle between calm and fresh"): Pere proposes the calm, classic way; Titi answers with a twist or a different idea; and the CHILD decides - right after Titi really disagrees with Pere (at most once or twice a lesson), ask her "¿Quién tiene razón, Pere o Titi? / Who is right, Pere or Titi?". Both are a little right; the child is the judge. When the child is upset or tired, Titi goes quiet and gentle and Pere leads.
 
 How to talk:
 - Always use real, complete sentences, never single words. Say each idea in Spanish first, then the same idea in English on the SAME line after " / ".
@@ -221,6 +221,44 @@ const KIDS_STEPS = [
   "GOODBYE: praise, a star, today's mission (one sentence to say to a real person), and goodbye from both.",
 ];
 const KIDS_STEP_FREE = "FREE TALK: the lesson is done; keep talking about the child's topic, short, one question, warm.";
+
+// ===== CLASS mode (1 Nov 2026, Elena: "also classes, like regular kids of 6-7 study at school and at home") =====
+// Conversation mode follows her ideas; CLASS mode walks a first-grade path built on what international bilingual
+// schools use for ages 6-7: Cambridge Primary English & Maths Stage 1, the IB PYP language strands, Cambridge English
+// Pre A1 Starters (ages 6-8) for English, and Spanish read by syllables (MEDUCA first grade). Plan + sources: cto-aipa
+// docs/espaluz/KIDS_CLASS_PATH_1ST_GRADE_DRAFT.md. Two classes per unit; the unit is worked out from her saved class
+// starts (content.class_start), no new table. Pere keeps the classic path, Titi twists it, she judges.
+const KIDS_CLASS_UNITS = [
+  { theme: "Yo y mi familia / Me and my family", es: "the vowels a e i o u", en: "the sounds s, a, t, p and the words I, my", num: "count to 10", talk: "she tells who is in her family" },
+  { theme: "Mi escuela / My school", es: "syllables ma me mi mo mu and pa pe pi po pu", en: "the sounds i, n, m, d and the words the, is", num: "numbers to 20: read them, what comes before and after", talk: "retell something with a beginning, a middle and an end" },
+  { theme: "Mi cuerpo y mis sentimientos / My body and feelings", es: "syllables sa se si so su and la le li lo lu", en: "the sounds g, o, c, k and 'I am', 'I feel'", num: "adding by counting on, within 10", talk: "she names a feeling and says why, with 'porque / because'" },
+  { theme: "Los animales / Animals", es: "syllables with t and n (ta te ti to tu, na ne ni no nu)", en: "the sounds ck, e, u, r and the words can, see", num: "take away by counting back, within 10", talk: "a little rhyme or a sentence pattern she can repeat and change" },
+  { theme: "La comida / Food", es: "syllables with d and soft r (da de di do du, ra re ri ro ru)", en: "the sounds h, b, f, l and the words like, want", num: "doubles and counting by 2s", talk: "ask and answer '¿Te gusta...? / Do you like...?'" },
+  { theme: "Mi casa / My home", es: "syllables ca co cu, que qui, ga go gu", en: "short words cat, pig, dog, sun", num: "numbers to 20: more and less", talk: "she describes her room" },
+  { theme: "Los colores y la ropa / Colours and clothes", es: "syllables with f, b and v", en: "blending three-sound words (c-a-t, cat)", num: "adding within 20", talk: "she says what she is wearing today" },
+  { theme: "La hora y mi día / Time and my day", es: "ll, ñ and ch (llama, niño, chocolate)", en: "the sounds sh, ch, th", num: "telling time: o'clock and half past", talk: "her day in order: first, then, last" },
+  { theme: "En la tienda / At the shop", es: "joining syllables into whole words", en: "the words go, we, you, here", num: "money: coins and simple shopping", talk: "pretend to buy a mango at the shop" },
+  { theme: "Mi ciudad / My town", es: "short sentences of 3-5 words", en: "reading a two-line sentence", num: "subtracting within 20", talk: "simple directions: left, right, straight on" },
+  { theme: "Fiestas y cuentos / Holidays and stories", es: "reading a mini-story of 2-3 lines", en: "reading a mini-story of 2 lines", num: "counting in tens: 10, 20, 30...", talk: "she changes the end of a story" },
+  { theme: "Mis amigos / My friends", es: "her own sentence, said aloud as if she wrote it", en: "her own sentence in English", num: "a review game with everything so far", talk: "she tells a short story of her own" },
+];
+function kidsClassSteps(u: typeof KIDS_CLASS_UNITS[number]): string[] {
+  return [
+    `CLASS HELLO: both heroes say hello in 1-2 short lines and announce today's class in one happy line: "${u.theme}".`,
+    `READING CORNER (Pere, slow and clear): today's Spanish reading is ${u.es}. She is a BEGINNING reader (Elena, 1 Nov: ` +
+      "she does not read yet in Spanish or English): show at most 3 letters or syllables, big and alone on ONE short line " +
+      "(\"ma  me  mi\"); Pere says each SOUND slowly, she says it after him, then she tries to read ONE by herself; Titi " +
+      `reads one WRONG on purpose so she catches him; then she TRACES one letter with her finger in the air or on paper (she ` +
+      `already traces letters and numbers). Spanish leads (she speaks it fluently); never long text. English sounds today: ` +
+      `${u.en} (one or two, said aloud - English is still new for her).`,
+    `WORDS OF THE CLASS (${u.theme}): Pere teaches ONE useful sentence the classic way (Spanish / English); Titi offers a ` +
+      "funnier or different version; let her choose and say it (\"¿Quién tiene razón, Pere o Titi?\").",
+    `NUMBERS CORNER: ${u.num} - with real things from today's theme or her life (mangos, toys, toucans); one small question.`,
+    `STORY AND TALK: ${u.talk}. Pere listens slowly; Titi adds one surprise idea.`,
+    "CALM AND GOODBYE (Pere): three slow breaths, one feelings sentence, real praise for one thing she did in this class, " +
+      "a star, and a small mission for real life about today's class. Goodbye from both.",
+  ];
+}
 // Facts checked: Geoffroy's tamarin lives in Panama; sloths come down about once a week; the toucan's bill is big but light;
 // the golden frog is a symbol of Panama; Canal locks lift ships like steps of water (1914); sea turtles nest on Panama's
 // beaches; the harpy eagle is Panama's national bird.
@@ -491,7 +529,7 @@ function kidsToday(): string {
   return `TODAY in Panama: ${day}${h ? ` - ${h}. If she brings it up (or it fits), talk about it happily and teach a sentence about it.` : '.'}`;
 }
 
-function kidsTurnContext(kids: any, message: string, avoid: string[] = []): string {
+function kidsTurnContext(kids: any, message: string, avoid: string[] = [], classUnit = -1): string {
   const hist = Array.isArray(kids?.history) ? kids.history : [];
   const raw = Number.isInteger(kids?.turn) ? kids.turn : Math.floor(hist.length / 2);
   // The page counts every exchange; a turn spent answering her question does not move the lesson on.
@@ -500,9 +538,11 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = []): stri
   const weekStory = KIDS_STORIES[isoWeek(new Date()) % KIDS_STORIES.length];
   // A story about a topic she said she does not want is dropped (and its step becomes free talk on her topic).
   const storyWords = kidWords(weekStory);
-  const storyOff = avoid.some((a) => storyWords.includes(a) || storyWords.includes(STORY_WORD[a] ?? ''));
+  // In a class the unit's own story-and-talk replaces the week's story.
+  const storyOff = classUnit >= 0 || avoid.some((a) => storyWords.includes(a) || storyWords.includes(STORY_WORD[a] ?? ''));
   const story = storyOff ? "(no story this week - she does not want it; follow HER topic)" : weekStory;
-  const planned = turn < KIDS_STEPS.length ? KIDS_STEPS[turn] : KIDS_STEP_FREE;
+  const steps = classUnit >= 0 ? kidsClassSteps(KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length]) : KIDS_STEPS;
+  const planned = turn < steps.length ? steps[turn] : KIDS_STEP_FREE;
   const step = storyOff && planned.startsWith("THIS WEEK'S STORY") ? KIDS_STEP_FREE
     : storyOff && turn === 0 ? planned.replace(/; mention this week's story in one line/, '') : planned;
   const heard = turn > 0 ? kidsHeard(message) + (KIDS_ADULT.test(message)
@@ -537,7 +577,7 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = []): stri
   // 31 Oct 2026 (Alisa's lesson 13:46-13:51): the story rode along on EVERY turn, so "quiero jugar un poquitito" became
   // the toucan again and again, and Titi fell silent for three replies. The story now appears only at the hello and on
   // its own step; both heroes speak every turn; the heroes know today's date and Panama's real holidays.
-  const out = [heard + `\nTHEN, this turn's lesson step (turn ${turn + 1} of ${KIDS_STEPS.length}), built on what she just said and only ` +
+  const out = [heard + `\nTHEN, this turn's lesson step (turn ${turn + 1} of ${steps.length}), built on what she just said and only ` +
     `if it fits after your first line (skip it after 1 or 4 above) - her idea always wins over the plan: ${step}`,
     ...(turn === 0 || step.startsWith("THIS WEEK'S STORY")
       ? [`THIS WEEK'S STORY (one line at the hello; the whole story only on its own step; if the child already chose a topic, their topic wins): ${story}`]
@@ -820,11 +860,22 @@ serve(async (req) => {
     const memory = kids && userId ? await kidsMemoryCard(supabase, userId, Array.isArray(kids.history) ? kids.history : [])
       : { card: '', hello: '', avoid: [] as string[] };
     const isHello = kids && (Number.isInteger(kids.turn) ? kids.turn : Math.floor((Array.isArray(kids.history) ? kids.history.length : 0) / 2)) === 0;
+    // CLASS mode: two classes per unit; the unit comes from her saved class starts (a guest's bot sends its own count).
+    let classUnit = -1;
+    if (kids?.mode === 'class') {
+      let starts = Number.isInteger(kids.class_count) ? kids.class_count : 0;
+      if (userId) {
+        const { count } = await supabase.from('learning_sessions').select('id', { count: 'exact', head: true })
+          .eq('user_id', userId).eq('session_type', 'classroom').eq('content->>class_start', 'true');
+        starts = (count ?? 0) - (isHello ? 0 : 1); // during a class, the start already saved is this class
+      }
+      classUnit = Math.floor(Math.max(0, starts) / 2) % KIDS_CLASS_UNITS.length;
+    }
     // The turn instruction (with the child's own words) goes LAST: the model weighs the end of the prompt most - and at
     // the hello, the memory game (her own sentence coming back, spaced repetition) goes after it.
     const kidsSystem = KIDS_CLASSROOM_PROMPT + memory.card + (known.length
       ? `\n\nSentences the child already said in earlier lessons: ${known.map((s) => `"${s}"`).join(' · ')}. At the hello, invite the child to say one of them again and praise, then teach new ones (the same words come back and grow).`
-      : '') + (kids ? kidsTurnContext(kids, message, memory.avoid) : '') +
+      : '') + (kids ? kidsTurnContext(kids, message, memory.avoid, classUnit) : '') +
       (isHello ? memory.hello : (memory.hello.startsWith('\nSHE TOLD YOU') ? memory.hello.split('\n\nTHIS HELLO')[0] : '')) +
       (kids && message.startsWith('📷') ? (photoDescription
         ? `\nSHE IS SHOWING YOU A PHOTO: ${photoDescription}\nTalk about what is in it with real curiosity first (name ` +
@@ -887,7 +938,8 @@ serve(async (req) => {
             family_member: familyMember.name,
             family_member_id: familyMember.id,
             detected_emotion: emotion,
-            vocabulary_taught: extractedVocabulary
+            vocabulary_taught: extractedVocabulary,
+            ...(classUnit >= 0 ? { class_unit: classUnit + 1, ...(isHello ? { class_start: 'true' } : {}) } : {})
           },
           progress_data: {
             family_member: familyMember.name,
@@ -914,6 +966,7 @@ serve(async (req) => {
       response: fullResponse,
       provider,
       linked: !!userId, // a bot uses this to tell a linked family (memory + server stars) from a guest
+      classUnit: classUnit >= 0 ? classUnit + 1 : null, // 1-12 in a class; a guest's bot keeps its own count
       userMessage: message, // a photo turn comes back as its description, so the page's history knows what was shown
       videoScript,
       familyMember: familyMember.name,

@@ -311,6 +311,10 @@ const Classroom = () => {
     setReward(0);
   };
 
+  // 1 Nov 2026 (Elena: "also classes, like regular kids of 6-7"): "¡Clase!" runs the first-grade class path (the kids
+  // brain's CLASS mode); "¡Empezar!" stays the free conversation.
+  const classMode = useRef(false);
+
   const talk = async (childSays: string, countsAsStar: boolean, image?: string) => {
     setBusy(true);
     if (!image) setPhoto(null);
@@ -321,6 +325,7 @@ const Classroom = () => {
         body: { message: childSays, isVoiceInput: true, kids: {
           history: turns.slice(-10), known: known.current, turn: Math.floor(turns.length / 2), image,
           mission: turns.length === 0 && mission.current && mission.current.day !== today() ? mission.current.text : undefined,
+          ...(classMode.current ? { mode: "class" } : {}),
         } },
       });
       const text: string = data?.response || "";
@@ -478,8 +483,10 @@ const Classroom = () => {
       )}
 
       {turns.length === 0 ? (
+        <div className="flex flex-wrap items-center justify-center gap-4">
         <Button size="lg" className="rounded-full text-2xl h-20 px-10 shadow-xl" disabled={busy || loading}
           onClick={() => {
+            classMode.current = false;
             // First lesson ever: Pere and Titi introduce themselves in their own voices while the first line is written.
             if (!metBefore) {
               greetingDone.current = new Promise<void>((done) => {
@@ -493,6 +500,14 @@ const Classroom = () => {
           }}>
           <Play className="w-8 h-8 mr-2" /> ¡Empezar! / Start!
         </Button>
+        <Button size="lg" variant="secondary" className="rounded-full text-2xl h-20 px-10 shadow-xl" disabled={busy || loading}
+          onClick={() => {
+            classMode.current = true;
+            talk("¡Hola Pere y Titi! Quiero empezar la clase. / Hello Pere and Titi! I want to start the class.", false);
+          }}>
+          📚 ¡Clase! / Class!
+        </Button>
+        </div>
       ) : (
         <div className="flex items-center gap-6">
         <input ref={photoInput} type="file" accept="image/*" className="hidden" onChange={(e) => showPhoto(e.target.files?.[0])} />
