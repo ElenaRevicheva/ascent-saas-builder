@@ -342,6 +342,57 @@ const KIDS_QUIET = /(paro|parar|paren|para|paran) de hablar|no hablen|que no hab
 const firstLine = (reply: string): string =>
   (reply.split('\n').map((l) => l.trim()).find(Boolean) ?? '').replace(/^[^:\[]*(\[[^\]]*\])?:\s*/, '').split(' / ')[0].slice(0, 120);
 
+// ===== Her own sentences come back: spaced repetition for a 6-7 year old (1 Nov 2026) =====
+// Measured in Alisa's real lessons (31 Oct): she answered 18 of 18 "repeat after me" prompts with her OWN ideas instead.
+// Drills do not work for her; what she says about her own life does (the generation / self-reference effect). So the
+// items are HER sentences, they come back after 1, 3, 7, 14, 30 days (expanding intervals), and they come back as a
+// game at the hello - Titi guesses wrong on purpose and she corrects him, saying it herself (retrieval, not repetition).
+// No new store: the schedule is computed from the saved lessons. Any later lesson day on which she says the same idea
+// again (even unprompted) counts as a recall and pushes the next return further away.
+const KIDS_SR_DAYS = [1, 3, 7, 14, 30];
+// Only happy, meaningful sentences of hers come back - never a refusal, a complaint about the screen or the talking,
+// or a request to stop (all measured in her 31 Oct lessons).
+const KIDS_ABOUT_ME = /\b(me encanta|me encantan|me gusta|me gustan|mi|mis|tengo|voy a|quiero|quer[ií]a|yo|i|my|i'?m|i have|i like|i love|i want)\b/i;
+const KIDS_NOT_MEMORY = /\bno (quiero|puedo|veo|escucho|me gusta)|\b(don'?t|can'?t) |pantalla|screen|link|r[aá]pido|pausa|pause|hablar|talk/i;
+const panamaDay = (ms: number) => new Date(ms - 5 * 3600 * 1000).toISOString().slice(0, 10); // UTC-5, no DST
+type KidTurn = { at: number; words: string; understood: string };
+type KidMemory = { words: string; understood: string; firstAt: number; lastAt: number; days: number; content: string[] };
+
+function kidsDueMemory(turns: KidTurn[], nowMs: number): KidMemory | null {
+  const items: (KidMemory & { daySet: Set<string> })[] = [];
+  for (const t of [...turns].sort((a, b) => a.at - b.at)) {
+    const cw = [...new Set(kidContent(t.words))];
+    if (cw.length < 3) continue; // "sí", "hola Titi" are not memories
+    // A memory is something she told about HERSELF ("me encantan los conejos", "voy a vestirme de conejo") - not a
+    // question she asked the heroes, not a line nobody could understand.
+    if (/[?¿]/.test(t.words) || !KIDS_ABOUT_ME.test(t.words)) continue;
+    const same = items.find((it) => {
+      const shared = it.content.filter((w) => cw.includes(w)).length;
+      return shared / Math.min(it.content.length, cw.length) >= 0.6;
+    });
+    if (same) {
+      same.daySet.add(panamaDay(t.at));
+      same.lastAt = t.at;
+    } else {
+      items.push({ words: t.words, understood: t.understood, firstAt: t.at, lastAt: t.at, days: 1, content: cw,
+                   daySet: new Set([panamaDay(t.at)]) });
+    }
+  }
+  // Due = waited at least the full interval. Among the due ones the richest, most personal sentences come first ("me
+  // encantan los conejos" beats "quiero jugar"), and the game rotates through the top three day by day, so the same
+  // sentence never comes back two days running when she did not pick it up.
+  const due = items
+    .filter((it) => it.daySet.size <= KIDS_SR_DAYS.length && panamaDay(it.lastAt) !== panamaDay(nowMs) &&
+                    nowMs - it.lastAt >= KIDS_SR_DAYS[it.daySet.size - 1] * 86400000)
+    .map((it) => ({ it, rich: Math.min(it.content.length, 8) +
+      (/me encanta|me gusta|\bmi\b|tengo|voy a|favorit|love|like|\bmy\b|\bi have\b/i.test(it.words) ? 3 : 0) }))
+    .sort((a, b) => b.rich - a.rich || a.it.firstAt - b.it.firstAt)
+    .slice(0, 3);
+  if (!due.length) return null;
+  const pick = due[Math.floor(nowMs / 86400000) % due.length].it;
+  return { ...pick, days: pick.daySet.size };
+}
+
 async function kidsMemoryCard(supabase: any, userId: string, hist: any[]): Promise<string> {
   const { data, error } = await supabase
     .from('learning_sessions')
@@ -352,10 +403,11 @@ async function kidsMemoryCard(supabase: any, userId: string, hist: any[]): Promi
     // showed the heroes "remembering" those misreadings. Memory starts from the turns made under the fixed rules.
     .gte('created_at', '2026-10-31T12:47:00Z')
     .order('created_at', { ascending: false })
-    .limit(80);
+    .limit(300);
   if (error || !Array.isArray(data)) return '';
   const now = new Set(hist.filter((m: any) => m?.role === 'user').map((m: any) => String(m.content ?? '').trim()));
   const said: string[] = [];
+  const turns: KidTurn[] = [];
   let mission = '';
   for (const row of data) {
     const c = row.content || {};
@@ -367,23 +419,36 @@ async function kidsMemoryCard(supabase: any, userId: string, hist: any[]): Promi
     if (KIDS_HARD.test(words) || KIDS_HARD.test(understood) || KIDS_ADULT.test(words) || /no te escuch|didn't hear/i.test(understood)) continue;
     // An "understanding" that only echoes her words means nobody understood her (eval: "te viene un perezoso").
     if (understood && kidWords(understood).join(' ').includes(kidWords(words).join(' '))) continue;
+    if (!words || KIDS_STARTER.test(words) || words.startsWith('/')) continue;
+    if (!KIDS_QUIET.test(words) && !KIDS_NOT_MEMORY.test(words)) {
+      turns.push({ at: Date.parse(row.created_at), words: words.slice(0, 160), understood });
+    }
     const item = understood ? `"${words.slice(0, 120)}" -> you understood: "${understood}"` : `"${words.slice(0, 120)}"`;
-    if (words && !KIDS_STARTER.test(words) && !words.startsWith('/') && !said.some((s) => s.startsWith(`"${words.slice(0, 120)}"`))) said.push(item);
+    if (said.length < 10 && !said.some((s) => s.startsWith(`"${words.slice(0, 120)}"`))) said.push(item);
     if (!mission) {
       const line = reply.split('\n').find((l: string) => /misi[oó]n|mission/i.test(l));
       if (line) mission = line.replace(/^.*?\]:\s*/, '').slice(0, 160);
     }
-    if (said.length >= 10) break;
   }
   if (!said.length && !mission) return '';
+  const due = kidsDueMemory(turns, Date.now());
+  const ago = due ? Math.max(1, Math.round((Date.now() - due.lastAt) / 86400000)) : 0;
   return '\n\nWHAT THE CHILD TOLD YOU IN EARLIER LESSONS (her own words, newest first; speech-to-text may be imperfect):\n' +
     said.map((s) => `- ${s}`).join('\n') +
     (mission ? `\nLast mission you gave: "${mission}" - at the hello, ask if she did it.` : '') +
-    "\nUse this like a friend who remembers: at the hello bring back ONE happy, clearly understood thing (a favourite " +
-    "thing, a pet, a wish, something she likes doing) taken ONLY from this list, in simple words (\"La última vez me " +
-    "dijiste que ... ¿Todavía? / Last time you told me ... Still?\"), and later use " +
-    "what she told you instead of asking again. Skip anything that does not make sense, never bring back anything sad " +
-    "or about being scolded, and never invent a memory that is not in this list.";
+    (due
+      ? `\n\nTODAY'S MEMORY GAME (her own sentence from ${ago} day${ago > 1 ? 's' : ''} ago; this is the ONLY memory you ` +
+        `bring back at the hello): she said "${due.words}"${due.understood ? ` (you understood: "${due.understood}")` : ''}.\n` +
+        "Do NOT say it for her. Titi gets it wrong on purpose in one funny line, with one wrong detail (\"¿Tú me dijiste " +
+        "que te gustan los tiburones, verdad? / You told me you like sharks, right?\") and lets her correct him, so SHE " +
+        "says it. If she does, one line of real praise and add ONE new word to her sentence. If she does not remember, " +
+        "Pere gives only the first two or three words as a hint, once, and then you go on happily - never a test, " +
+        "never \"repeat after me\", never twice in one lesson."
+      : "\nUse this like a friend who remembers: at the hello bring back ONE happy, clearly understood thing (a favourite " +
+        "thing, a pet, a wish, something she likes doing) taken ONLY from this list, in simple words (\"La última vez me " +
+        "dijiste que ... ¿Todavía? / Last time you told me ... Still?\")") +
+    "\nLater in the lesson, use what she told you instead of asking again. Skip anything that does not make sense, never bring " +
+    "back anything sad or about being scolded, and never invent a memory that is not in this list.";
 }
 
 // Today in Panama, and the day's holiday when there is one (she said "Halloween" on 31 Oct and was told she seemed
