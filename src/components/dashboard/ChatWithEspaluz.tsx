@@ -284,7 +284,7 @@ The video script will be used to generate an avatar video with synchronized audi
   };
 
   // Enhanced base64 to audio blob conversion
-  const base64ToAudioBlob = (base64Audio: string): Blob => {
+  const base64ToAudioBlob = (base64Audio: string, mimeType = 'audio/mpeg'): Blob => {
     try {
       // Remove data URL prefix if present
       const base64Data = base64Audio.replace(/^data:audio\/[^;]+;base64,/, '');
@@ -298,7 +298,7 @@ The video script will be used to generate an avatar video with synchronized audi
       }
       
       // Create blob with proper MIME type
-      return new Blob([bytes], { type: 'audio/mpeg' });
+      return new Blob([bytes], { type: mimeType }); // 1 Nov 2026: the free Gemini voice is WAV
     } catch (error) {
       console.error('❌ Error converting base64 to blob:', error);
       throw new Error('Failed to create audio blob');
@@ -367,7 +367,7 @@ The video script will be used to generate an avatar video with synchronized audi
       } else if (data.audioContent || data.audioBase64) {
         // OpenAI format: audioContent or old format: base64 audio data
         const base64Data = data.audioContent || data.audioBase64;
-        const audioBlob = base64ToAudioBlob(base64Data);
+        const audioBlob = base64ToAudioBlob(base64Data, data.mimeType || 'audio/mpeg');
         audioUrl = URL.createObjectURL(audioBlob);
         console.log('✅ Converted base64 to blob URL');
       } else {

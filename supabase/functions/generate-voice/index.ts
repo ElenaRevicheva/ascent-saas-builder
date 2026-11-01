@@ -17,6 +17,20 @@ const HERO_VOICES: Record<string, { voice_id: string; pitch: number; speed: numb
   titi: { voice_id: "Spanish_AnimeCharacter", pitch: 3, speed: 0.9, emotion: "happy" },
 };
 
+// 1 Nov 2026 (Elena: "go free" - Replicate is $0.10 per 1,000 characters, ~$0.40-0.80 a lesson, and ran dry at 17:41
+// UTC): the FREE voice answers first - Gemini TTS on a key whose Google project has NO billing (free tier; Elena
+// accepted that Google may use these lines to improve its products). Secret GEMINI_TTS_API_KEY - deliberately not
+// GEMINI_API_KEY, the fleet's prepaid key that answers 402. Without it, or on any failure (daily free limit, 402),
+// the old chain answers: Replicate hero voice -> OpenAI -> the page's own device voice. Nothing was switched off.
+// Pere: slow, calm, wise; Titi: quick, playful (voices from Google's prebuilt list; env overrides).
+const GEMINI_HEROES: Record<string, { voice: string; style: string }> = {
+  pere: { voice: Deno.env.get('GEMINI_PERE_VOICE') ?? 'Sadaltager',
+          style: 'slow, calm and warm, like a wise old sloth telling a small child something important' },
+  titi: { voice: Deno.env.get('GEMINI_TITI_VOICE') ?? 'Puck',
+          style: 'playful, cheeky and full of energy, like a happy little monkey, but clear enough for a six-year-old' },
+  usual: { voice: Deno.env.get('GEMINI_USUAL_VOICE') ?? 'Sulafat', style: 'warm, kind and clear, like a good teacher' },
+};
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -38,7 +52,17 @@ serve(async (req) => {
 
     let base64Audio = '';
     let spokenBy = 'openai-nova';
-    if (hero && HERO_VOICES[hero] && Deno.env.get('REPLICATE_API_TOKEN')) {
+    let mimeType = 'audio/mpeg';
+    if (Deno.env.get('GEMINI_TTS_API_KEY')) {
+      try {
+        base64Audio = await generateGeminiVoice(hero && GEMINI_HEROES[hero] ? hero : 'usual', cleanedText);
+        spokenBy = `gemini-${hero || 'usual'}`;
+        mimeType = 'audio/wav';
+      } catch (geminiError) {
+        console.error(`free gemini voice failed, trying the next voice:`, geminiError);
+      }
+    }
+    if (!base64Audio && hero && HERO_VOICES[hero] && Deno.env.get('REPLICATE_API_TOKEN')) {
       try {
         base64Audio = await generateHeroVoice(hero, cleanedText);
         spokenBy = `minimax-${hero}`;
@@ -54,7 +78,7 @@ serve(async (req) => {
     const response = {
       success: true,
       audioContent: base64Audio,
-      mimeType: 'audio/mpeg',
+      mimeType,
       spokenBy,
       processedText: cleanedText.length > 0 ? cleanedText.substring(0, 100) + '...' : ''
     };
@@ -100,6 +124,29 @@ async function generateHeroVoice(hero: string, text: string): Promise<string> {
   const audio = await fetch(out);
   if (!audio.ok) throw new Error(`audio download ${audio.status}`);
   return bytesToBase64(new Uint8Array(await audio.arrayBuffer()));
+}
+
+// One line in a free Gemini voice (Interactions API, unary = a whole WAV file; 16 kHz keeps a line small).
+async function generateGeminiVoice(who: string, text: string): Promise<string> {
+  const g = GEMINI_HEROES[who];
+  const spoken = text.replace(/\s*\/\s*/g, '. ').slice(0, 900); // "Hola. / Hello." pauses between languages, never says "slash"
+  const r = await fetch('https://generativelanguage.googleapis.com/v1beta/interactions', {
+    method: 'POST',
+    headers: { 'x-goog-api-key': Deno.env.get('GEMINI_TTS_API_KEY')!, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: Deno.env.get('GEMINI_TTS_MODEL') ?? 'gemini-3.8-flash-lite-tts',
+      input: [{ type: 'user_input', content: [{ type: 'text', text: spoken,
+        annotations: [{ type: 'speech_metadata', style: g.style }] }] }],
+      response_format: { type: 'audio', mime_type: 'audio/wav', sample_rate: 16000 },
+      generation_config: { speech_config: [{ voice: g.voice }] },
+    }),
+  });
+  if (!r.ok) throw new Error(`Gemini TTS ${r.status}: ${(await r.text()).slice(0, 200)}`);
+  const j = await r.json();
+  const audio = (j.steps ?? []).filter((s: any) => s.type === 'model_output')
+    .flatMap((s: any) => s.content ?? []).filter((c: any) => c.type === 'audio').pop();
+  if (!audio?.data) throw new Error('Gemini TTS: no audio in the answer');
+  return audio.data;
 }
 
 // Generate voice using OpenAI TTS

@@ -207,11 +207,11 @@ function browserSay(text: string, who: "pere" | "titi"): Promise<void> {
   });
 }
 
-function toAudioUrl(base64: string): string {
+function toAudioUrl(base64: string, mimeType = "audio/mpeg"): string {
   const bin = atob(base64.replace(/^data:audio\/[^;]+;base64,/, ""));
   const bytes = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-  return URL.createObjectURL(new Blob([bytes], { type: "audio/mpeg" }));
+  return URL.createObjectURL(new Blob([bytes], { type: mimeType })); // 1 Nov 2026: the free Gemini voice is WAV
 }
 
 const Classroom = () => {
@@ -276,7 +276,7 @@ const Classroom = () => {
   const voiceFor = async (text: string, hero?: "pere" | "titi"): Promise<string | null> => {
     const { data, error } = await supabase.functions.invoke("generate-voice", { body: { text, voice: "es", userId: user?.id, hero } });
     const b64 = data?.audioContent || data?.audioBase64;
-    return error || !b64 ? null : toAudioUrl(b64);
+    return error || !b64 ? null : toAudioUrl(b64, data?.mimeType || "audio/mpeg");
   };
 
   const play = (url: string, onTime?: (a: HTMLAudioElement) => void) =>
