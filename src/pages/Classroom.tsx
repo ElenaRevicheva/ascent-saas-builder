@@ -166,6 +166,24 @@ function bubbles(reply: string): Bubble[] {
 
 /** The free fallback voice (30 Oct 2026): the browser's own speech, Spanish half in a Spanish voice, English half in an
  *  English one; Pere low and slow, Titi high and quick. Used only when the hero voice could not be made. */
+// 1 Nov 2026 (Elena: "go free" - the Replicate hero voices cost ~$0.40-0.80 a lesson): the free voice is now the
+// default, so it picks the device's best voice instead of its first one: a Latin American Spanish voice for Panama
+// (es-US / es-MX / es-419, then any es), and the most natural-sounding engine the device has (Google, Neural,
+// Natural, Enhanced, Premium). Nothing leaves the device.
+const NICE_VOICE = /google|neural|natural|enhanced|premium|siri/i;
+function pickVoice(lang: "es" | "en"): SpeechSynthesisVoice | undefined {
+  const all = typeof window !== "undefined" ? window.speechSynthesis?.getVoices() ?? [] : [];
+  const prefer = lang === "es" ? ["es-US", "es-MX", "es-419", "es-PA", "es-CO", "es-ES"] : ["en-US", "en-GB"];
+  const ofLang = all.filter((v) => v.lang.replace("_", "-").toLowerCase().startsWith(lang));
+  const rank = (v: SpeechSynthesisVoice) => {
+    const at = prefer.findIndex((p) => v.lang.replace("_", "-").toLowerCase() === p.toLowerCase());
+    return (NICE_VOICE.test(v.name) ? 0 : 100) + (at < 0 ? prefer.length : at) + (v.localService ? 0 : 1);
+  };
+  return [...ofLang].sort((a, b) => rank(a) - rank(b))[0];
+}
+// Some browsers (Chrome on Android) list their voices only after a moment.
+if (typeof window !== "undefined" && window.speechSynthesis) window.speechSynthesis.getVoices();
+
 function browserSay(text: string, who: "pere" | "titi"): Promise<void> {
   const synth = typeof window !== "undefined" ? window.speechSynthesis : undefined;
   if (!synth) return Promise.resolve();
@@ -177,7 +195,10 @@ function browserSay(text: string, who: "pere" | "titi"): Promise<void> {
     const safety = setTimeout(done, 30000);
     parts.forEach((p, i) => {
       const u = new SpeechSynthesisUtterance(p);
-      u.lang = i === 0 && parts.length > 1 ? "es-ES" : /[¿¡ñáéíóú]/i.test(p) ? "es-ES" : "en-US";
+      const es = i === 0 && parts.length > 1 ? true : /[¿¡ñáéíóú]/i.test(p);
+      const v = pickVoice(es ? "es" : "en");
+      u.lang = v?.lang ?? (es ? "es-US" : "en-US");
+      if (v) u.voice = v;
       u.rate = who === "pere" ? 0.85 : 1.05;
       u.pitch = who === "pere" ? 0.8 : 1.5;
       u.onend = u.onerror = () => { if (--left === 0) { clearTimeout(safety); done(); } };
