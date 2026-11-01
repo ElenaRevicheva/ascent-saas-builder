@@ -47,7 +47,7 @@ serve(async (req) => {
     // 1 Nov 2026 (Elena: "more options - Titi more playful, Pere more kids style"): a PRIVATE voice lab for choosing
     // voices by ear. Only callers holding the bots' secret may use it; the free key never leaves this function.
     // { voiceLab: "list", filters: {language_code: [...], pitch: [...], persona: [...], search: "..."} } -> catalog;
-    // { voiceLab: "try", text, testVoice, testStyle } -> one WAV line in that voice and style.
+    // { voiceLab: "try", text, testVoice, testStyle, testModel } -> one WAV line in that voice, style and model.
     if (body.voiceLab) {
       const secret = Deno.env.get('ESPALUZ_BOT_SECRET');
       if (!secret || req.headers.get('x-espaluz-bot-secret') !== secret) throw new Error('Unauthorized');
@@ -61,7 +61,7 @@ serve(async (req) => {
         return new Response(await r.text(), { status: r.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
       }
       const audio = await generateGeminiVoice('usual', cleanTextForTTS(String(text ?? '')),
-        String(body.testVoice ?? ''), String(body.testStyle ?? ''));
+        String(body.testVoice ?? ''), String(body.testStyle ?? ''), String(body.testModel ?? ''));
       return new Response(JSON.stringify({ audioContent: audio, mimeType: 'audio/wav' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
@@ -154,7 +154,7 @@ async function generateHeroVoice(hero: string, text: string): Promise<string> {
 }
 
 // One line in a free Gemini voice (Interactions API, unary = a whole WAV file; 16 kHz keeps a line small).
-async function generateGeminiVoice(who: string, text: string, testVoice = '', testStyle = ''): Promise<string> {
+async function generateGeminiVoice(who: string, text: string, testVoice = '', testStyle = '', testModel = ''): Promise<string> {
   const g = { voice: testVoice || GEMINI_HEROES[who].voice, style: testStyle || GEMINI_HEROES[who].style };
   const spoken = text.replace(/\s*\/\s*/g, '. ').slice(0, 900); // "Hola. / Hello." pauses between languages, never says "slash"
   const r = await fetch('https://generativelanguage.googleapis.com/v1beta/interactions', {
@@ -162,7 +162,7 @@ async function generateGeminiVoice(who: string, text: string, testVoice = '', te
     headers: { 'x-goog-api-key': Deno.env.get('GEMINI_TTS_API_KEY')!, 'Content-Type': 'application/json' },
     signal: AbortSignal.timeout(VOICE_TIMEOUT_MS),
     body: JSON.stringify({
-      model: Deno.env.get('GEMINI_TTS_MODEL') ?? 'gemini-3.8-flash-lite-tts',
+      model: testModel || (Deno.env.get('GEMINI_TTS_MODEL') ?? 'gemini-3.8-flash-lite-tts'),
       input: [{ type: 'user_input', content: [{ type: 'text', text: spoken,
         annotations: [{ type: 'speech_metadata', style: g.style }] }] }],
       response_format: { type: 'audio', mime_type: 'audio/wav', sample_rate: 16000 },
