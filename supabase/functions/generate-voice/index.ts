@@ -110,6 +110,9 @@ serve(async (req) => {
       base64Audio = await generateOpenAIVoice(cleanedText);
     }
 
+    // 1 Nov 2026: only failures were logged, so a lesson's logs could not show which voice Alisa actually heard.
+    console.log(`voice spoken by ${spokenBy}`);
+
     const response = {
       success: true,
       audioContent: base64Audio,
