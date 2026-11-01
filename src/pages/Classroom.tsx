@@ -265,6 +265,7 @@ const Classroom = () => {
       audio.current = a;
       if (onTime) a.ontimeupdate = () => onTime(a);
       a.onended = () => done();
+      a.onpause = () => done(); // she pressed Habla while a hero was speaking
       a.onerror = () => done();
       a.play().catch(() => done());
     });
@@ -275,15 +276,24 @@ const Classroom = () => {
   // 30 Oct 2026: one voice request at a time, the next fetched while this line plays. Replicate allows a burst of 1
   // while its balance is under $5, and the old Promise.all sent every line at once -> all throttled -> OpenAI (no
   // credits) -> silence. A line without a hero voice is read by the browser's own free voice, so the child always hears it.
+  // 1 Nov 2026 (Alisa's first tracing test: "they do not give her a chance to speak"): Habla works while the heroes
+  // talk - one tap silences them and she speaks.
+  const hush = useRef(false);
+  const [speaking, setSpeaking] = useState(false);
   const speak = async (_text: string, spoken: Line[]) => {
+    hush.current = false;
+    setSpeaking(true);
     let next = spoken.length ? voiceFor(spoken[0].text, spoken[0].who) : null;
     for (let i = 0; i < spoken.length; i++) {
       const url = await next;
+      if (hush.current) break;
       next = i + 1 < spoken.length ? voiceFor(spoken[i + 1].text, spoken[i + 1].who) : null;
       setShot(i);
       if (url) await play(url);
       else await browserSay(spoken[i].text, spoken[i].who);
+      if (hush.current) break;
     }
+    setSpeaking(false);
     idle();
   };
 
@@ -346,7 +356,7 @@ const Classroom = () => {
       if (countsAsStar) setStars((s) => s + 1);
       saveMission(text, turns.length === 0);
       await speak(stripShotTags(text), spoken);
-      if (countsAsStar && (stars + 1) % 5 === 0) await celebrate(stars + 1);
+      if (countsAsStar && (stars + 1) % 5 === 0 && !hush.current) await celebrate(stars + 1);
     } catch (e) {
       toast.error("Pere y Titi no pudieron contestar. / Pere and Titi could not answer. Try again!");
       console.error("classroom talk failed", e);
@@ -383,6 +393,7 @@ const Classroom = () => {
       recorder.current = r;
       r.start();
       setRecording(true);
+      hush.current = true;
       audio.current?.pause();
       window.speechSynthesis?.cancel();
     } catch {
@@ -548,13 +559,13 @@ const Classroom = () => {
         </button>
         <button
           onClick={recording ? stopRecording : startRecording}
-          disabled={busy && !recording}
+          disabled={busy && !recording && !speaking}
           className={`w-32 h-32 rounded-full shadow-2xl flex flex-col items-center justify-center text-white text-lg font-bold transition
-            ${recording ? "bg-red-500 animate-pulse" : busy ? "bg-gray-400" : "bg-green-500 hover:bg-green-600"}`}
+            ${recording ? "bg-red-500 animate-pulse" : busy && !speaking ? "bg-gray-400" : "bg-green-500 hover:bg-green-600"}`}
           aria-label={recording ? "Stop" : "Talk"}
         >
           {recording ? <Square className="w-12 h-12" /> : <Mic className="w-12 h-12" />}
-          <span className="mt-1">{recording ? "Listo / Done" : busy ? "…" : "Habla / Talk"}</span>
+          <span className="mt-1">{recording ? "Listo / Done" : busy && !speaking ? "…" : "Habla / Talk"}</span>
         </button>
         </div>
         </>

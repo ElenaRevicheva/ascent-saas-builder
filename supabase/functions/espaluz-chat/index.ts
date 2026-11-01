@@ -378,6 +378,9 @@ const KIDS_BYE = /\b(ciao|chao|adi[oó]s|bye|goodbye|hasta luego|hasta mañana|p
 // 31 Oct 2026 (18:36-18:38): "Ya paro de hablar", "no me escuchan dos veces", "Titi no paran de hablar ... que no
 // hablen" - she asked three times for less talk and got 3-4 lines and "¿Por qué te gusta parar de hablar?". Asking
 // for quiet gets ONE line and no question that turn, and every later reply in the lesson stays at two lines.
+// 1 Nov 2026 (Alisa's first tracing test: after each trace both heroes talked on and she had no chance to speak): a
+// "✏️ Tracé" turn from the web tracing pad gets ONE line - praise that letter and give her the turn to say it.
+const KIDS_TRACED = /^✏️ Tracé "([^"]{1,20})"/;
 const KIDS_QUIET = /(paro|parar|paren|para|paran) de hablar|no hablen|que no hable|hablan? (mucho|tanto|demasiado)|c[aá]llate|c[aá]llense|silencio|stop talking|be quiet|talk(ing)? too much/i;
 const firstLine = (reply: string): string =>
   (reply.split('\n').map((l) => l.trim()).find(Boolean) ?? '').replace(/^[^:\[]*(\[[^\]]*\])?:\s*/, '').split(' / ')[0].slice(0, 120);
@@ -560,6 +563,13 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
     return `\n\nTHE FAMILY WANTS TO STOP NOW: "${message.trim().slice(0, 200)}"\nTHIS TURN OVERRIDES EVERY RULE ABOVE: ` +
       "no game, no new sentence, no question. Two short warm goodbye lines, one from each hero (Pere [goodbye], Titi " +
       "[goodbye]), saying you will be happy to continue next time.";
+  }
+  const traced = message.trim().match(KIDS_TRACED);
+  if (traced) {
+    return `\n\nSHE JUST TRACED "${traced[1]}" WITH HER FINGER ON THE TABLET.\nTHIS TURN OVERRIDES EVERY RULE ABOVE: ` +
+      `exactly ONE short line from Pere, no question, no game, no new letter: praise her "${traced[1]}" and give her the ` +
+      `turn to say it, e.g. "Pere [happy]: ¡Qué bonita tu ${traced[1]}! Ahora dila tú. / What a lovely ${traced[1]}! Now ` +
+      "you say it.\" Then stop: she speaks next.";
   }
   if (KIDS_QUIET.test(message)) {
     return `\n\nSHE ASKED YOU TO TALK LESS: "${message.trim().slice(0, 200)}"\nTHIS TURN OVERRIDES EVERY RULE ABOVE: ` +
@@ -904,6 +914,10 @@ serve(async (req) => {
       // A stop or an emergency gets goodbye lines only - the base prompt's "end with a question" must not leak in.
       else if (KIDS_EMERGENCY.test(message) || KIDS_BYE.test(message)) {
         fullResponse = fullResponse.split('\n').filter((l: string) => l.trim() && !l.includes('?')).slice(0, 2).join('\n') || fullResponse;
+      }
+      else if (KIDS_TRACED.test(message.trim())) {
+        const t = message.trim().match(KIDS_TRACED)![1];
+        fullResponse = lines.find((l: string) => !l.includes('?')) ?? `Pere [happy]: ¡Qué bonita tu ${t}! Ahora dila tú. / What a lovely ${t}! Now you say it.`;
       }
       else if (KIDS_QUIET.test(message)) {
         fullResponse = lines.find((l: string) => !l.includes('?')) ?? 'Pere [listening]: Vale, ahora te escucho yo. / Okay, now I am listening to you.';
