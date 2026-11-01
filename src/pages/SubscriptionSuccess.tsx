@@ -113,7 +113,7 @@ const SubscriptionSuccess = () => {
               <CheckCircle className="h-4 w-4 text-green-600" />
               <AlertDescription className="text-green-800">
                 <strong>Subscription Details:</strong><br />
-                Plan: {subscriptionData.planType === 'standard' ? 'EspaLuz Standard' : 'EspaLuz Premium'}<br />
+                Plan: {subscriptionData.planType === 'standard' ? 'EspaLuz Family' : 'EspaLuz Premium'}<br />
                 Email: {subscriptionData.email}<br />
                 Subscription ID: {subscriptionData.subscriptionId}
               </AlertDescription>

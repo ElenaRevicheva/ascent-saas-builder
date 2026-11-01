@@ -650,7 +650,7 @@ const Index = () => {
 
                 <div className="text-center">
                   <p className="text-sm font-medium text-green-700 bg-green-50 py-2 px-4 rounded-lg border border-green-200">
-                    ✨ 1 week free trial guaranteed
+                    ✨ 14 days free · then $11/month
                   </p>
                 </div>
               </div>
@@ -1079,7 +1079,7 @@ const Index = () => {
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="text-center">
-              🚀 Subscribe to EspaLuz Standard!
+              🚀 Subscribe to EspaLuz Family!
             </DialogTitle>
           </DialogHeader>
           <SubscriptionFlow

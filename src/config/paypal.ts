@@ -10,9 +10,11 @@ export const PAYPAL_CONFIG = {
   // PayPal Subscription Plan IDs (you'll create these in PayPal Dashboard)
   plans: {
     standard: {
-      id: 'P-38A73508FY163121MNCJXTYY',
-      name: 'EspaLuz Standard',
-      price: '$7.77/month'
+      // 1 Nov 2026 (Elena): ONE price on every channel - $11/month, first PayPal charge 2 weeks after subscribing.
+      // Families already on the $7.77 plan (P-38A73508FY163121MNCJXTYY) keep it; the payment truth reads both.
+      id: 'P-6GR95409C95293139NFSBJJY',
+      name: 'EspaLuz Family',
+      price: '$11/month'
     },
     premium: {
       id: null, // Set to null until premium plan is created

@@ -107,7 +107,7 @@ export const FeatureGate = ({
             </Button>
           </Link>
           <p className="text-xs text-muted-foreground">
-            Only $7.77/month • Cancel anytime
+            Only $11/month • Cancel anytime
           </p>
         </div>
       </CardContent>

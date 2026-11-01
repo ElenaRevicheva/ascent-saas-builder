@@ -18,62 +18,46 @@ interface PricingPlan {
 }
 
 const Pricing = () => {
+  // 1 Nov 2026 (Elena): the page tells the same truth as the bots - 14 days free, then ONE price, $11/month by PayPal
+  // or PágueloFácil. The "Premium - Coming Soon" card promised things that do not exist (developer API, 24/7 support,
+  // 5+ users) and made a parent wait instead of pay; removed. Features listed = what is built and live.
   const plans: PricingPlan[] = [
     {
       name: "Free Trial",
       price: 0,
-      duration: "20 messages",
-      description: "Try EspaLuz risk-free with 20 free messages",
+      duration: "14 days",
+      description: "14 days free on WhatsApp, Telegram and the web — no card needed",
       features: [
-        "20 free messages to EspaLuz",
+        "🆓 14 days free on WhatsApp, Telegram and the web",
         { label: "¡Conversemos! Chat with EspaLuz right here!", link: "/dashboard#chat" },
+        "💬 Try 20 messages right here, no sign-up",
         "✨ Chat in any language - English, Spanish, or Russian",
         "🌍 Instant translation magic - every word teaches you",
-        "🧠 Smart AI that gets you - context-aware replies",
         "🗣️ Natural pronunciation - AI voices in Spanish & English",
-        "🎬 Avatar video generation with synchronized audio",
         "🎤 Voice recording and transcription"
       ],
       popular: false,
       paypal: false
     },
     {
-      name: "EspaLuz Standard",
-      price: 7.77,
+      name: "EspaLuz Family",
+      price: 11,
       duration: "month",
-      description: "🎯 Full EspaLuz Dashboard Experience - Unlimited Learning!",
+      description: "🎯 The whole family learns Spanish & English - on WhatsApp, Telegram and the web",
       features: [
-        "✨ Everything in Free Trial UNLIMITED",
-        "🚀 Unlimited bilingual chat conversations",
-        "🎧 Unlimited voice generation & audio downloads",
-        "🎬 Unlimited avatar video generation",
-        "🎤 Unlimited voice recording & transcription",
-        "🧠 AI that adapts to YOU - personalized learning",
-        "📈 Complete progress tracking & analytics",
-        "👨‍👩‍👧‍👦 Family member profiles & management"
+        "🦥🐒 Pere & Titi's kids classroom (ages 6-7) - their own voices, games, stars & stickers",
+        "📒 A parent report after every kids lesson + a 2-minute daily game to do together",
+        "📱 One family on WhatsApp, Telegram and the web - every lesson remembered everywhere",
+        "🚀 Unlimited bilingual chat, voice notes and translation",
+        "📷 Photos: show a toy or a menu, EspaLuz talks about it",
+        "👨‍👩‍👧‍👦 Family member profiles",
+        "🇵🇦 Prefer to pay month by month? $11 for 30 days with PágueloFácil - type pagar in EspaLuz WhatsApp or /pagar in Telegram"
       ],
       popular: true,
       paypal: true,
       comingSoon: false,
       merchantId: "P8TXABNT28ZXG",
-      bonus: "🎁 BONUS: 1 week free trial after PayPal onboarding confirmation"
-    },
-    {
-      name: "Premium",
-      price: "Coming Soon",
-      description: "",
-      features: [
-        "✨ Everything in Standard SUPERPOWERED:",
-        "👨‍👩‍👧‍👦 Family squad (5+ users) - Spanish for the whole crew!",
-        "🎯 AI-crafted learning paths - built just for YOU via integration of your EspaLuz progress from WhatsApp or Telegram, analysing and tracking your goals and making your personalized lessons in dashboard",
-        "📊 Pro analytics dashboard - watch your Spanish explode",
-        "📚 Exclusive content vault - premium resources only",
-        "💎 White-glove support - we've got your back 24/7",
-        "⚙️ Developer API access - Spanish learning, your way"
-      ],
-      popular: false,
-      paypal: false,
-      comingSoon: true
+      bonus: "🎁 First PayPal charge 2 weeks after you subscribe"
     }
   ];
 
@@ -91,7 +75,7 @@ const Pricing = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {plans.map((plan, index) => (
             <Card 
               key={index} 
