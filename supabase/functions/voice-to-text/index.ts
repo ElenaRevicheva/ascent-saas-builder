@@ -5,6 +5,53 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
 // Letters that exist in none of the families' languages (Spanish, English, Russian): the transcript is garble.
 const GARBLE = /[ðþæøå]/i;
 
+// 2 Nov 2026 12:34 UTC (Alisa "they don't hear me"): Groq's free tier answered 413 "seconds of audio per hour: Limit
+// 7200" on BOTH Whisper models and OpenAI has no credits, so a 14-second answer had no step left -> 500, not heard.
+// The free Gemini project (GEMINI_TTS_API_KEY, the key the hero voices use; Elena accepted Google's free-tier terms)
+// listens to audio too, so it is the next step after Groq, before OpenAI. Model from the env, never a literal here.
+// 12:52 UTC first live test: gemini-flash-latest answered 503 "high demand". Like the hero voices, the free step is a
+// waterfall of models (comma list in GEMINI_HEAR_MODELS), each tried once before OpenAI.
+const GEMINI_HEAR_MODELS = (Deno.env.get('GEMINI_HEAR_MODELS') || 'gemini-flash-latest,gemini-flash-lite-latest,gemini-pro-latest')
+  .split(',').map((m) => m.trim()).filter(Boolean);
+const GEMINI_HEAR_MODEL = GEMINI_HEAR_MODELS.join(' > ');
+async function geminiTranscribe(key: string, audio: Uint8Array, hint: string, language?: string): Promise<any> {
+  const errs: string[] = [];
+  for (const model of GEMINI_HEAR_MODELS) {
+    try {
+      const out = await geminiTranscribeWith(model, key, audio, hint, language);
+      console.log(`gemini hearing model ${model}`);
+      return out;
+    } catch (e) {
+      errs.push(String((e as Error).message || e).slice(0, 160));
+    }
+  }
+  throw new Error(errs.join(' | '));
+}
+async function geminiTranscribeWith(model: string, key: string, audio: Uint8Array, hint: string, language?: string): Promise<any> {
+  let b64 = '';
+  for (let i = 0; i < audio.length; i += 0x8000) b64 += String.fromCharCode(...audio.subarray(i, i + 0x8000));
+  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+    method: 'POST',
+    headers: { 'x-goog-api-key': key, 'content-type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ role: 'user', parts: [
+        { inline_data: { mime_type: 'audio/webm', data: btoa(b64) } },
+        { text: 'Transcribe exactly what the speaker says, word for word, in the language spoken (Spanish, English or ' +
+                'Russian; often a young child). Do not translate, correct or add anything. If there is no clear speech, ' +
+                'return an empty text. ' + (language ? `The language is ${language}. ` : '') +
+                (hint ? `Context (what the speaker was just asked): ${hint.slice(0, 300)}` : '') },
+      ] }],
+      generationConfig: { temperature: 0, responseMimeType: 'application/json',
+        responseSchema: { type: 'OBJECT', properties: { text: { type: 'STRING' }, language: { type: 'STRING' } }, required: ['text'] } },
+    }),
+    signal: AbortSignal.timeout(12000),  // three models must still fit in a child's turn
+  });
+  if (!r.ok) throw new Error(`gemini ${model}: ${r.status} ${(await r.text()).slice(0, 120)}`);
+  const raw = (await r.json()).candidates?.[0]?.content?.parts?.map((p: any) => p.text).join('') ?? '';
+  const j = JSON.parse(raw || '{}');
+  return { text: String(j.text ?? '').trim(), language: String(j.language ?? language ?? '').toLowerCase() };
+}
+
 // 31 Oct 2026 (Elena: "hear her better"): Whisper listened blind and wrote a 6-year-old's answers as "Starberry",
 // "Eu me espethe muito em branco" (Portuguese), "Ana, Ana, me viene perezoso". Whisper takes a `prompt` - text that
 // tells it what to expect - and we never sent one. During a classroom lesson the hint is the heroes' last question
@@ -93,7 +140,7 @@ serve(async (req) => {
   }
 
   try {
-    const { audio, language } = await req.json();
+    const { audio, language, force } = await req.json();
     
     if (!audio) {
       throw new Error('No audio data provided');
@@ -112,8 +159,15 @@ serve(async (req) => {
     const providers: [string, string | undefined, string, string][] = [
       ['groq', Deno.env.get('GROQ_API_KEY'), 'https://api.groq.com/openai/v1/audio/transcriptions', 'whisper-large-v3-turbo'],
       ['groq', Deno.env.get('GROQ_API_KEY'), 'https://api.groq.com/openai/v1/audio/transcriptions', 'whisper-large-v3'],
+      ['gemini', Deno.env.get('GEMINI_TTS_API_KEY'), '', GEMINI_HEAR_MODEL],
       ['openai', Deno.env.get('OPENAI_API_KEY'), 'https://api.openai.com/v1/audio/transcriptions', 'whisper-1'],
     ];
+    // Private check (bot secret only): `force` names one provider so each step can be proved live, without waiting for
+    // the ones before it to fail. Families never send it.
+    const secret = Deno.env.get('ESPALUZ_BOT_SECRET');
+    if (force && secret && req.headers.get('x-bot-secret') === secret) {
+      providers.splice(0, providers.length, ...providers.filter(([n]) => n === force));
+    }
     const errors: string[] = [];
     let result: any = null;
     const hint = await whisperHint(req.headers.get('Authorization'));
@@ -134,6 +188,18 @@ serve(async (req) => {
     };
     for (const [name, key, url, model] of providers) {
       if (!key) continue;
+      if (name === 'gemini') {
+        try {
+          result = await geminiTranscribe(key, binaryAudio, hint, language);
+          console.log(`transcribed by gemini ${model}`);
+          break;
+        } catch (e) {
+          const why = String((e as Error).message || e).slice(0, 240);
+          console.error('Whisper provider failed, trying the next:', why);
+          errors.push(why);
+          continue;
+        }
+      }
       const response = await send(key, url, model, language);
       if (!response.ok) {
         const why = `${name} ${model}: ${response.status} ${(await response.text()).slice(0, 200)}`;
