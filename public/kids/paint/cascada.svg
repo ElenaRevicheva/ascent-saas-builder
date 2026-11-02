@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>La cascada / The waterfall</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 0 80 L 300 80 L 322 200 L 292 330 L 312 470 L 0 470"/>
+<path d="M 800 60 L 500 60 L 478 190 L 508 320 L 488 470 L 800 470"/>
+<path d="M 300 80 L 500 60"/>
+<path d="M 312 470 L 488 470"/>
+<path d="M 220 470 C 260 550, 540 550, 580 470"/>
+<path d="M 360 105 Q 350 280 365 440"/><path d="M 400 100 Q 412 280 398 445"/><path d="M 440 100 Q 430 280 445 440"/>
+<path d="M 330 490 Q 345 475 360 490"/><path d="M 440 490 Q 455 475 470 490"/>
+
+<g transform="translate(95 600) rotate(-55)"><path d="M 0 0 C 40 -36, 110 -36, 115 0 C 85 30, 40 36, 0 0 Z"/><path d="M 14 0 L 100 0"/></g><g transform="translate(95 600) rotate(-90)"><path d="M 0 0 C 40 -36, 110 -36, 115 0 C 85 30, 40 36, 0 0 Z"/><path d="M 14 0 L 100 0"/></g><g transform="translate(95 600) rotate(-125)"><path d="M 0 0 C 40 -36, 110 -36, 115 0 C 85 30, 40 36, 0 0 Z"/><path d="M 14 0 L 100 0"/></g><g transform="translate(705 600) rotate(-55)"><path d="M 0 0 C 40 -36, 110 -36, 115 0 C 85 30, 40 36, 0 0 Z"/><path d="M 14 0 L 100 0"/></g><g transform="translate(705 600) rotate(-90)"><path d="M 0 0 C 40 -36, 110 -36, 115 0 C 85 30, 40 36, 0 0 Z"/><path d="M 14 0 L 100 0"/></g><g transform="translate(705 600) rotate(-125)"><path d="M 0 0 C 40 -36, 110 -36, 115 0 C 85 30, 40 36, 0 0 Z"/><path d="M 14 0 L 100 0"/></g>
+</g>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>El coatí / The coati</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 40 525 L 760 525"/>
+<ellipse cx="380" cy="340" rx="170" ry="90"/>
+<path d="M 223 305 C 190 270, 150 270, 120 290 L 60 320 C 55 330, 62 338, 72 336 L 130 340 C 165 352, 200 365, 221 372"/>
+<path d="M 181 279 C 172 245, 205 245, 203 288"/>
+<circle cx="165" cy="302" r="9"/><circle cx="166" cy="302" r="4" fill="#111"/>
+<circle cx="62" cy="327" r="7" fill="#111"/>
+<path d="M 260 404 L 255 520 L 285 520 L 290 416"/>
+<path d="M 470 416 L 470 520 L 500 520 L 500 404"/>
+<path d="M 530 298 C 600 250, 620 150, 600 60 C 575 140, 555 230, 500 276"/>
+<path d="M 573 253 L 535 234"/><path d="M 599 195 L 561 181"/><path d="M 607 128 L 581 121"/>
+</g>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>El tucán / The toucan</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="120" y="525" width="560" height="34" rx="17"/>
+<circle cx="330" cy="220" r="70"/>
+<path d="M 265 195 C 200 170, 120 190, 85 255 C 140 262, 210 266, 268 252"/>
+<path d="M 260 222 Q 180 225 85 255"/>
+<circle cx="345" cy="205" r="15"/><circle cx="347" cy="206" r="6" fill="#111"/>
+<path d="M 385 262 C 470 300, 480 420, 420 470 C 380 500, 300 480, 290 420 C 280 360, 270 310, 290 278"/>
+<path d="M 279 338 C 320 360, 360 330, 371 277"/>
+<path d="M 365 335 C 430 345, 452 420, 412 458 C 392 420, 372 382, 365 335 Z"/>
+<path d="M 407 477 L 430 518 L 382 518 L 376 484"/>
+<path d="M 330 482 L 325 525"/><path d="M 350 486 L 352 525"/>
+</g>
+</svg>

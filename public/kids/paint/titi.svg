@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>Titi el tití / Titi the tamarin</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="40" y="478" width="720" height="40" rx="20"/>
+<circle cx="400" cy="200" r="85"/>
+<path d="M 318 180 C 285 160, 280 222, 320 222"/>
+<path d="M 482 180 C 515 160, 520 222, 480 222"/>
+<ellipse cx="400" cy="215" rx="55" ry="60"/>
+<path d="M 370 165 Q 400 105 430 165"/>
+<circle cx="381" cy="205" r="11"/><circle cx="419" cy="205" r="11"/>
+<circle cx="383" cy="206" r="5" fill="#111"/><circle cx="421" cy="206" r="5" fill="#111"/>
+<circle cx="394" cy="232" r="3" fill="#111"/><circle cx="406" cy="232" r="3" fill="#111"/>
+<path d="M 386 250 Q 400 260 414 250"/>
+<path d="M 345 265 C 290 300, 290 470, 400 480 C 510 470, 510 300, 455 265"/>
+<path d="M 312 325 C 262 350, 252 435, 290 466 C 310 478, 334 466, 317 410"/>
+<path d="M 488 325 C 538 350, 548 435, 510 466 C 490 478, 466 466, 483 410"/>
+<path d="M 490 518 C 500 560, 570 565, 640 552 C 668 547, 672 575, 648 582 C 570 598, 470 590, 462 518"/>
+</g>
+</svg>

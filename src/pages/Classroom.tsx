@@ -13,12 +13,16 @@ import { shrinkPhoto } from "@/lib/shrinkPhoto";
 // in kids mode, with the heroes' clips as the avatar. 28 Oct 2026 (Elena: the picture must match what the line says, and
 // a chain of clips "looks repetitive and simulated"): ONE picture per hero line, named by the tutor as "Pere [shot]: ...",
 // else chosen from the lesson words, else that hero's talking clip. The same 25 clips and rules as the EspaLuz Telegram bot.
-type Turn = { role: "user" | "assistant"; content: string };
+// 2 Nov 2026 (Elena: "kid, parent, Pere and Titi all together; they recognize when mother is talking and when Alisa is
+// talking"): a user turn says who spoke. No voice biometrics - the speaker switch next to Habla decides, honestly.
+type Who = "child" | "mama" | "papa";
+type Turn = { role: "user" | "assistant"; content: string; who?: Who };
 type Line = { who: "pere" | "titi"; clip: string; chars: number; text: string };
 
 const IDLE_CLIP = "/heroes/duo-hello.mp4";
 const DANCE_CLIP = "/heroes/titi-dance.mp4"; // every 5 stars Titi dances for the child (30 Oct 2026)
 const today = () => new Date().toISOString().slice(0, 10);
+const PARENT: Record<Exclude<Who, "child">, { e: string; name: string }> = { mama: { e: "👩", name: "Mamá" }, papa: { e: "👨", name: "Papá" } };
 // 31 Oct 2026 (Elena: "stars and stickers, like Buddy"): every 5 stars earn the next sticker of Panama, named in both
 // languages, so the reward is also two new words. Derived from the star count, so nothing extra is stored.
 const STICKERS: { e: string; es: string; en: string }[] = [
@@ -217,6 +221,21 @@ const Classroom = () => {
   const greetingDone = useRef<Promise<void> | null>(null);
   const greetingEnded = useRef<(() => void) | null>(null);
   const known = useRef<string[]>([]); // whole sentences the child said in earlier lessons (this browser) - the words come back and grow
+  // 2 Nov 2026: who talks next (child by default; stays until switched), the child's name from the family on this
+  // account (else "Peque"), and the last thing someone said, shown as a bubble with that person's face.
+  const [who, setWho] = useState<Who>("child");
+  const [childName, setChildName] = useState("Peque");
+  const [said, setSaid] = useState<{ who: Who; text: string } | null>(null);
+  useEffect(() => {
+    if (!user?.id) return;
+    supabase.from("family_members").select("name, role, age").eq("user_id", user.id).eq("is_active", true)
+      .order("created_at", { ascending: true })
+      .then(({ data }) => {
+        const kid = (data ?? []).find((m) => m.role === "child" || (typeof m.age === "number" && m.age <= 12));
+        if (kid?.name?.trim()) setChildName(kid.name.trim().split(/\s+/)[0]);
+      });
+  }, [user?.id]);
+  const nameOf = (w: Who) => (w === "child" ? childName : PARENT[w].name);
   // 31 Oct 2026 (Elena: "every time I press Empezar, Pere explains again that he speaks despacito"): the recorded
   // introduction plays only for a child who has never had a lesson on this account (any device). After that the class
   // opens with the heroes' short hello, which brings back something she told them last time.
@@ -240,6 +259,7 @@ const Classroom = () => {
     supabase.from("learning_sessions").select("id", { count: "exact", head: true })
       .eq("user_id", user.id).eq("session_type", "classroom")
       .not("content->>user_message", "ilike", "%quiero empezar la clase%")
+      .or("content->>speaker.is.null,content->>speaker.neq.parent") // 2 Nov 2026: a parent's turn earns no star
       .then(({ count, error }) => { if (!error && typeof count === "number") setStars((s) => Math.max(s, count)); });
     try {
       setStars((s) => Math.max(s, parseInt(localStorage.getItem(`classroom-stars-${user.id}`) ?? "0", 10) || 0));
@@ -333,17 +353,26 @@ const Classroom = () => {
   const classMode = useRef(false);
   // 1 Nov 2026: in a class the brain sends the unit's letters / syllables / words to trace on the tablet pad.
   const [traceTargets, setTraceTargets] = useState<string[]>([]);
-  const [showTrace, setShowTrace] = useState(false);
+  // 2 Nov 2026 (Elena: "Alisa wants to paint little paintings"): the same pad opens on tracing or on 🎨 painting.
+  const [pad, setPad] = useState<null | "trace" | "paint">(null);
 
-  const talk = async (childSays: string, countsAsStar: boolean, image?: string) => {
+  const talk = async (childSays: string, countsAsStar: boolean, image?: string, speaker: Who = "child") => {
     setBusy(true);
     if (!image) setPhoto(null);
+    const parent = speaker !== "child";
+    if (!/quiero empezar la clase/i.test(childSays)) setSaid({ who: speaker, text: childSays });
     try {
       const { data, error } = await supabase.functions.invoke("espaluz-chat", {
         // 30 Oct 2026: the lesson step comes from the turn count (no guessing, no re-greeting); yesterday's mission is
         // asked about in today's hello.
+        // 2 Nov 2026: the history goes as plain {role, content}; who said each turn rides beside it (`speakers`), and
+        // the lesson step counts only the child's turns - a parent's comment does not move the lesson on.
         body: { message: childSays, isVoiceInput: true, kids: {
-          history: turns.slice(-10), known: known.current, turn: Math.floor(turns.length / 2), image,
+          history: turns.slice(-10).map(({ role, content }) => ({ role, content })), known: known.current, image,
+          turn: turns.filter((t) => t.role === "user" && (t.who ?? "child") === "child").length,
+          speaker: parent ? "parent" : "child", speaker_name: nameOf(speaker), child_name: childName,
+          speakers: turns.slice(-10).map((t) => (t.role === "user"
+            ? { speaker: (t.who ?? "child") === "child" ? "child" : "parent", name: nameOf(t.who ?? "child") } : null)),
           mission: turns.length === 0 && mission.current && mission.current.day !== today() ? mission.current.text : undefined,
           ...(classMode.current ? { mode: "class" } : {}),
         } },
@@ -351,18 +380,19 @@ const Classroom = () => {
       const text: string = data?.response || "";
       if (error || !text) throw new Error(data?.error || error?.message || "no answer");
       // A photo turn comes back as "📷 (foto: ...)", so the next turns still know what she showed.
-      const said: string = typeof data?.userMessage === "string" && data.userMessage ? data.userMessage : childSays;
-      setTurns((t) => [...t, { role: "user", content: said }, { role: "assistant", content: text }]);
+      const heard: string = typeof data?.userMessage === "string" && data.userMessage ? data.userMessage : childSays;
+      if (heard !== childSays) setSaid({ who: speaker, text: heard });
+      setTurns((t) => [...t, { role: "user", content: heard, who: speaker }, { role: "assistant", content: text }]);
       if (classMode.current && Array.isArray(data?.trace) && data.trace.length) setTraceTargets(data.trace);
       setReply(stripShotTags(text));
       if (greetingDone.current) { await greetingDone.current; greetingDone.current = null; setGreeting(false); } // let the hello finish
       const spoken = heroLines(text);
       setLines(spoken);
       setShot(0);
-      if (countsAsStar) setStars((s) => s + 1);
+      if (countsAsStar && !parent) setStars((s) => s + 1);
       saveMission(text, turns.length === 0);
       await speak(stripShotTags(text), spoken);
-      if (countsAsStar && (stars + 1) % 5 === 0 && !hush.current) await celebrate(stars + 1);
+      if (countsAsStar && !parent && (stars + 1) % 5 === 0 && !hush.current) await celebrate(stars + 1);
     } catch (e) {
       toast.error("Pere y Titi no pudieron contestar. / Pere and Titi could not answer. Try again!");
       console.error("classroom talk failed", e);
@@ -372,6 +402,7 @@ const Classroom = () => {
   };
 
   const startRecording = async () => {
+    const speaker = who; // the switch at the moment Habla is pressed names this turn's speaker
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const r = new MediaRecorder(stream);
@@ -386,15 +417,17 @@ const Classroom = () => {
           fr.readAsDataURL(blob);
         });
         setBusy(true);
-        const { data, error } = await supabase.functions.invoke("voice-to-text", { body: { audio: b64 } }); // no language: she mixes ES/EN
+        // No language: she mixes ES/EN. `speaker` (2 Nov 2026): a parent's turn gets an adult hint, not "a 6-year-old girl".
+        const { data, error } = await supabase.functions.invoke("voice-to-text", {
+          body: { audio: b64, speaker: speaker === "child" ? "child" : "parent" } });
         const heard = (data?.text || "").trim();
         if (error || !heard) {
           setBusy(false);
           toast.error("No te escuché bien. / I didn't hear you. Try again!");
           return;
         }
-        remember(heard);
-        await talk(heard, true);
+        if (speaker === "child") remember(heard); // a parent's words never become the child's known sentences
+        await talk(heard, speaker === "child", undefined, speaker);
       };
       recorder.current = r;
       r.start();
@@ -476,6 +509,22 @@ const Classroom = () => {
           className="max-h-48 max-w-[80%] rounded-2xl border-4 border-white shadow-xl object-contain" />
       )}
 
+      {said && (
+        // 2 Nov 2026: what was just said, with the face and name of who said it (the child, Mamá or Papá).
+        <div className="w-full max-w-[680px] flex items-start gap-3 justify-center" style={{ fontFamily: KID_FONT }}>
+          <div className={`shrink-0 w-14 h-14 rounded-full grid place-items-center text-3xl shadow-lg border-4 border-white
+            ${said.who === "child" ? "bg-pink-400" : said.who === "mama" ? "bg-violet-400" : "bg-sky-500"}`}>
+            {said.who === "child" ? "👧" : PARENT[said.who].e}
+          </div>
+          <div className={`rounded-[1.75rem] px-5 py-3 shadow-xl border-4 border-white max-w-[85%]
+            ${said.who === "child" ? "bg-pink-100" : said.who === "mama" ? "bg-violet-100" : "bg-sky-100"}`}>
+            <div className={`text-sm font-extrabold uppercase tracking-wide
+              ${said.who === "child" ? "text-pink-600" : said.who === "mama" ? "text-violet-700" : "text-sky-700"}`}>{nameOf(said.who)}</div>
+            <div className="text-xl font-bold leading-snug text-slate-900">{said.text}</div>
+          </div>
+        </div>
+      )}
+
       {reply && (
         // 30 Oct 2026 (Elena: "words are black and not visible, not juicy for kids"): `bg-white/92` is not a Tailwind
         // step, so the box had NO background. Now each hero speaks in his own colour bubble, Spanish big, English under it.
@@ -533,17 +582,31 @@ const Classroom = () => {
         </div>
       ) : (
         <>
-        {showTrace && traceTargets.length > 0 && (
+        {pad && (
           <TracePad
-            targets={traceTargets}
-            onClose={() => setShowTrace(false)}
+            key={pad}
+            initialMode={pad === "paint" ? "paint" : "letters"}
+            targets={traceTargets.length ? traceTargets : ["a", "e", "i", "o", "u"]}
+            onClose={() => setPad(null)}
             onTraced={(text) => { if (!busy) talk(`✏️ Tracé "${text}" / I traced "${text}"`, true); }}
+            onPainted={(text) => { if (!busy) talk(text, true); }}
           />
         )}
-        <div className="flex items-center gap-6">
+        <div className="flex flex-wrap items-center justify-center gap-6">
+        {/* 2 Nov 2026: painting is open in every lesson, not only in a class. */}
+        <button
+          onClick={() => setPad((p) => (p === "paint" ? null : "paint"))}
+          disabled={recording}
+          className={`w-20 h-20 rounded-full shadow-2xl flex flex-col items-center justify-center text-white text-sm font-bold transition
+            ${recording ? "bg-gray-400" : "bg-fuchsia-500 hover:bg-fuchsia-600"}`}
+          aria-label="Paint"
+        >
+          <span className="text-3xl leading-none">🎨</span>
+          <span className="mt-0.5">Pintar</span>
+        </button>
         {classMode.current && traceTargets.length > 0 && (
           <button
-            onClick={() => setShowTrace((s) => !s)}
+            onClick={() => setPad((p) => (p === "trace" ? null : "trace"))}
             disabled={recording}
             className={`w-20 h-20 rounded-full shadow-2xl flex flex-col items-center justify-center text-white text-sm font-bold transition
               ${recording ? "bg-gray-400" : "bg-amber-500 hover:bg-amber-600"}`}
@@ -581,12 +644,30 @@ const Classroom = () => {
           onClick={recording ? stopRecording : startRecording}
           disabled={busy && !recording && !speaking}
           className={`w-32 h-32 rounded-full shadow-2xl flex flex-col items-center justify-center text-white text-lg font-bold transition
-            ${recording ? "bg-red-500 animate-pulse" : busy && !speaking ? "bg-gray-400" : "bg-green-500 hover:bg-green-600"}`}
-          aria-label={recording ? "Stop" : "Talk"}
+            ${recording ? "bg-red-500 animate-pulse" : busy && !speaking ? "bg-gray-400"
+              : who === "child" ? "bg-green-500 hover:bg-green-600" : "bg-violet-500 hover:bg-violet-600"}`}
+          aria-label={recording ? "Stop" : `Talk - ${nameOf(who)}`}
         >
           {recording ? <Square className="w-12 h-12" /> : <Mic className="w-12 h-12" />}
-          <span className="mt-1">{recording ? "Listo / Done" : busy && !speaking ? "…" : "Habla / Talk"}</span>
+          <span className="mt-1 text-center leading-tight px-2">
+            {recording ? "Listo / Done" : busy && !speaking ? "…" : who === "child" ? "Habla / Talk" : `Habla ${nameOf(who)}`}
+          </span>
         </button>
+        {/* 2 Nov 2026 (Elena: "they recognize when mother is talking and when Alisa is talking"): who talks next. Tap a
+            face before Habla; it stays until someone else is chosen. Pere and Titi answer a parent as a grown-up and
+            bring them into the game; a parent's words never count as the child's sentences or stars. */}
+        <div className="flex flex-col gap-2 bg-white/85 rounded-3xl p-2 shadow-xl" role="radiogroup" aria-label="¿Quién habla? / Who is talking?"
+          style={{ fontFamily: KID_FONT }}>
+          {(["child", "mama", "papa"] as Who[]).map((w) => (
+            <button key={w} role="radio" aria-checked={who === w} disabled={recording} onClick={() => setWho(w)}
+              className={`flex items-center gap-2 rounded-full pl-1 pr-4 min-h-[56px] text-lg font-extrabold transition
+                ${who === w ? (w === "child" ? "bg-pink-400 text-white ring-4 ring-pink-200" : "bg-violet-500 text-white ring-4 ring-violet-200")
+                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"}`}>
+              <span className="w-12 h-12 rounded-full bg-white/90 grid place-items-center text-3xl">{w === "child" ? "👧" : PARENT[w].e}</span>
+              {nameOf(w)}
+            </button>
+          ))}
+        </div>
         </div>
         </>
       )}

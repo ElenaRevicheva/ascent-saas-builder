@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>La rana de ojos rojos / The red-eyed tree frog</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 60 555 C 250 512, 560 512, 740 555 C 560 612, 250 612, 60 555 Z"/>
+<path d="M 95 555 L 705 555"/>
+<ellipse cx="400" cy="340" rx="160" ry="110"/>
+
+<path d="M 270 276 C 240 170, 360 140, 370 232"/>
+<circle cx="315" cy="212" r="22"/>
+<ellipse cx="315" cy="212" rx="6" ry="15" fill="#111"/>
+<path d="M 243 360 C 170 370, 160 450, 220 470 C 250 478, 268 450, 270 404"/>
+<path d="M 290 420 C 280 465, 262 490, 238 500 C 226 506, 230 520, 246 518 C 276 512, 300 488, 325 437"/>
+<g transform="translate(800 0) scale(-1 1)">
+<path d="M 270 276 C 240 170, 360 140, 370 232"/>
+<circle cx="315" cy="212" r="22"/>
+<ellipse cx="315" cy="212" rx="6" ry="15" fill="#111"/>
+<path d="M 243 360 C 170 370, 160 450, 220 470 C 250 478, 268 450, 270 404"/>
+<path d="M 290 420 C 280 465, 262 490, 238 500 C 226 506, 230 520, 246 518 C 276 512, 300 488, 325 437"/></g>
+<path d="M 300 330 Q 400 380 500 330"/>
+<circle cx="385" cy="300" r="4" fill="#111"/><circle cx="415" cy="300" r="4" fill="#111"/>
+</g>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>La mariposa morfo azul / The blue morpho butterfly</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<ellipse cx="400" cy="300" rx="18" ry="120"/>
+<circle cx="400" cy="160" r="20"/>
+
+<path d="M 386 228 C 300 100, 120 90, 110 190 C 100 280, 250 305, 382 302"/>
+<path d="M 382 302 C 260 320, 170 380, 200 460 C 230 530, 340 480, 387 380"/>
+<path d="M 360 252 C 300 165, 182 152, 170 200 C 162 248, 262 280, 362 274 Z"/>
+<path d="M 362 322 C 282 342, 222 392, 240 440 C 258 478, 330 450, 368 378 Z"/>
+<circle cx="140" cy="172" r="8"/><circle cx="128" cy="218" r="7"/><circle cx="214" cy="455" r="7"/>
+<path d="M 392 143 Q 362 85 330 62"/><circle cx="326" cy="58" r="8"/>
+<g transform="translate(800 0) scale(-1 1)">
+<path d="M 386 228 C 300 100, 120 90, 110 190 C 100 280, 250 305, 382 302"/>
+<path d="M 382 302 C 260 320, 170 380, 200 460 C 230 530, 340 480, 387 380"/>
+<path d="M 360 252 C 300 165, 182 152, 170 200 C 162 248, 262 280, 362 274 Z"/>
+<path d="M 362 322 C 282 342, 222 392, 240 440 C 258 478, 330 450, 368 378 Z"/>
+<circle cx="140" cy="172" r="8"/><circle cx="128" cy="218" r="7"/><circle cx="214" cy="455" r="7"/>
+<path d="M 392 143 Q 362 85 330 62"/><circle cx="326" cy="58" r="8"/></g>
+</g>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>La fresa / The strawberry</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 400 200 C 520 170, 600 260, 560 360 C 520 460, 440 520, 400 540 C 360 520, 280 460, 240 360 C 200 260, 280 170, 400 200 Z"/>
+<path d="M 292 208 L 320 255 L 355 225 L 400 270 L 445 225 L 480 255 L 508 208"/>
+<path d="M 392 199 C 390 160, 395 130, 410 110 L 420 116 C 408 135, 404 165, 408 201"/>
+<ellipse cx="330" cy="300" rx="6" ry="10"/><ellipse cx="400" cy="320" rx="6" ry="10"/><ellipse cx="470" cy="300" rx="6" ry="10"/><ellipse cx="300" cy="370" rx="6" ry="10"/><ellipse cx="360" cy="390" rx="6" ry="10"/><ellipse cx="440" cy="390" rx="6" ry="10"/><ellipse cx="500" cy="370" rx="6" ry="10"/><ellipse cx="400" cy="450" rx="6" ry="10"/><ellipse cx="350" cy="450" rx="6" ry="10"/><ellipse cx="450" cy="450" rx="6" ry="10"/><ellipse cx="400" cy="380" rx="6" ry="10"/>
+</g>
+</svg>

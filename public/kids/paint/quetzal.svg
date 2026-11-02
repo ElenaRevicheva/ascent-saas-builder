@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>El quetzal / The quetzal</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="60" y="418" width="680" height="30" rx="15"/>
+<circle cx="380" cy="160" r="55"/>
+<path d="M 345 118 C 350 78, 402 72, 410 113"/>
+<path d="M 327 150 L 298 166 L 330 175"/>
+<circle cx="365" cy="152" r="9"/><circle cx="366" cy="153" r="4" fill="#111"/>
+<path d="M 420 198 C 480 240, 480 360, 420 400 C 380 420, 330 400, 330 340 C 330 280, 330 240, 345 202"/>
+<path d="M 330 285 C 380 300, 410 360, 383 407"/>
+<path d="M 402 232 C 460 262, 465 340, 432 378 C 412 330, 397 282, 402 232 Z"/>
+<path d="M 405 448 C 415 500, 455 555, 505 592 L 532 584 C 482 548, 450 500, 435 448"/>
+<path d="M 455 448 C 480 500, 540 540, 600 572 L 618 556 C 560 524, 512 490, 485 448"/>
+<path d="M 360 410 L 356 418"/><path d="M 395 410 L 398 418"/>
+</g>
+</svg>

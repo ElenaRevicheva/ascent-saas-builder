@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import PaintPad from "@/components/kids/PaintPad";
 
 // 1 Nov 2026 (Elena: "she will be very happy if she can write something, especially on the tablet"): in a class, the
 // child traces today's letter / syllable / word (sent by the kids brain for her unit) with her finger, in colour, like
@@ -14,6 +15,9 @@ interface Props {
   targets: string[];
   onTraced: (text: string) => void;
   onClose: () => void;
+  // 2 Nov 2026: the 🎨 Pintar mode (PaintPad) - "✨ Listo" sends what she painted to Pere and Titi.
+  onPainted?: (text: string) => void;
+  initialMode?: Mode;
 }
 
 // 1 Nov 2026 (Alisa, first test: "I want to trace numbers, not letters"): she chooses letters, numbers or - Elena,
@@ -23,13 +27,14 @@ interface Props {
 const NUMBERS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 const SENTENCES = ["Te quiero", "I love you", "Yo soy feliz", "I am happy", "Me gusta el sol", "I like the sun",
   "Buenos días", "Good morning", "Mi casa es bonita", "My home is nice"];
-type Mode = "letters" | "numbers" | "sentences";
+type Mode = "letters" | "numbers" | "sentences" | "paint";
 const MODES: { mode: Mode; label: string }[] = [
   { mode: "letters", label: "🔤 Letras" }, { mode: "numbers", label: "🔢 Números" }, { mode: "sentences", label: "💬 Frases" },
+  { mode: "paint", label: "🎨 Pintar" },
 ];
 
-export default function TracePad({ targets: letters, onTraced, onClose }: Props) {
-  const [mode, setMode] = useState<Mode>("letters");
+export default function TracePad({ targets: letters, onTraced, onClose, onPainted, initialMode = "letters" }: Props) {
+  const [mode, setMode] = useState<Mode>(initialMode);
   const targets = mode === "numbers" ? NUMBERS : mode === "sentences" ? SENTENCES : letters;
   const canvas = useRef<HTMLCanvasElement>(null);
   const mask = useRef<Uint8Array>(new Uint8Array(0)); // 1 = the letter is here
@@ -101,7 +106,7 @@ export default function TracePad({ targets: letters, onTraced, onClose }: Props)
     setHint("");
   }, [target, gw, gh]);
 
-  useEffect(() => { reset(); }, [reset]);
+  useEffect(() => { reset(); }, [reset, mode]);
 
   const point = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -178,7 +183,9 @@ export default function TracePad({ targets: letters, onTraced, onClose }: Props)
   return (
     <div className="w-full max-w-3xl mx-auto bg-white/95 rounded-3xl shadow-2xl p-4 border-4 border-amber-300">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-        <div className="text-xl font-bold text-slate-700">✏️ Traza / Trace: <span className="text-2xl">{target}</span></div>
+        <div className="text-xl font-bold text-slate-700">
+          {mode === "paint" ? "🎨 Pinta / Paint" : <>✏️ Traza / Trace: <span className="text-2xl">{target}</span></>}
+        </div>
         <div className="flex gap-1">
           {MODES.map((m) => (
             <button key={m.mode} onClick={() => { setMode(m.mode); setIndex(0); }}
@@ -189,6 +196,7 @@ export default function TracePad({ targets: letters, onTraced, onClose }: Props)
         </div>
         <button onClick={onClose} className="text-2xl px-3" aria-label="Cerrar / Close">✖️</button>
       </div>
+      {mode === "paint" ? <PaintPad onPainted={(t) => onPainted?.(t)} /> : <>
       <canvas
         ref={canvas}
         width={W}
@@ -216,6 +224,7 @@ export default function TracePad({ targets: letters, onTraced, onClose }: Props)
           </button>
         )}
       </div>
+      </>}
     </div>
   );
 }

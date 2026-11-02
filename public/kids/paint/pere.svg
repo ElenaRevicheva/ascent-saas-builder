@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>Pere el perezoso / Pere the sloth</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="30" y="60" width="740" height="40" rx="20"/>
+<path d="M 640 60 Q 680 10 730 30 Q 690 70 640 60 Z"/>
+<path d="M 300 60 Q 320 5 380 12 Q 360 55 300 60 Z"/>
+<circle cx="400" cy="220" r="100"/>
+<path d="M 330 292 C 220 330, 230 540, 400 545 C 570 540, 580 330, 470 292"/>
+<path d="M 335 295 Q 400 330 465 295"/>
+<path d="M 380 311 L 400 360 L 420 311"/>
+<ellipse cx="400" cy="228" rx="78" ry="60"/>
+<ellipse cx="365" cy="215" rx="28" ry="18" transform="rotate(-20 365 215)"/>
+<ellipse cx="435" cy="215" rx="28" ry="18" transform="rotate(20 435 215)"/>
+<circle cx="368" cy="214" r="8" fill="#111"/><circle cx="432" cy="214" r="8" fill="#111"/>
+<ellipse cx="400" cy="248" rx="13" ry="8" fill="#111"/>
+<path d="M 380 266 Q 400 282 420 266"/>
+<path d="M 264 362 C 230 300, 200 200, 205 102"/>
+<path d="M 260 431 C 190 400, 150 250, 165 102"/>
+<path d="M 536 362 C 570 300, 600 200, 595 102"/>
+<path d="M 540 431 C 610 400, 650 250, 635 102"/>
+<path d="M 175 100 Q 178 72 196 66"/><path d="M 192 100 Q 196 74 212 70"/>
+<path d="M 625 100 Q 622 72 604 66"/><path d="M 608 100 Q 604 74 588 70"/>
+<path d="M 317 520 C 290 560, 300 590, 340 585 C 370 582, 380 565, 376 543"/>
+<path d="M 483 520 C 510 560, 500 590, 460 585 C 430 582, 420 565, 424 543"/>
+<path d="M 340 420 Q 400 450 460 420"/>
+</g>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>El colibrí / The hummingbird</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="300" cy="250" r="45"/>
+<path d="M 256 240 L 110 262 L 257 262"/>
+<circle cx="290" cy="238" r="8"/><circle cx="291" cy="238" r="3" fill="#111"/>
+<path d="M 335 222 C 420 210, 520 250, 560 300 C 500 330, 400 320, 330 284"/>
+<path d="M 546 285 L 650 250 L 612 300 L 660 345 L 541 308"/>
+<path d="M 414 224 C 400 140, 430 70, 520 40 C 540 110, 520 190, 488 247"/>
+<path d="M 445 205 C 455 150, 475 110, 505 75"/>
+<path d="M 100 262 C 80 220, 55 195, 25 185 L 25 340 C 55 330, 80 305, 100 262 Z"/>
+<path d="M 45 333 Q 70 460 45 600"/>
+<path d="M 52 470 C 90 440, 130 450, 150 480 C 120 490, 85 488, 56 480"/>
+</g>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>La heliconia / The heliconia flower</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="392" y="90" width="16" height="500" rx="8"/>
+<path d="M 392 190 C 330 212, 250 192, 218 128 C 280 156, 350 156, 392 144"/><path d="M 408 260 C 470 282, 550 262, 582 198 C 520 226, 450 226, 408 214"/><path d="M 392 330 C 330 352, 250 332, 218 268 C 280 296, 350 296, 392 284"/><path d="M 408 400 C 470 422, 550 402, 582 338 C 520 366, 450 366, 408 354"/><path d="M 392 470 C 330 492, 250 472, 218 408 C 280 436, 350 436, 392 424"/>
+<path d="M 392 560 C 300 500, 160 500, 70 520 C 160 580, 300 590, 392 575"/>
+<path d="M 408 560 C 500 500, 640 500, 730 520 C 640 580, 500 590, 408 575"/>
+<path d="M 360 560 Q 240 540 110 524"/><path d="M 440 560 Q 560 540 690 524"/>
+</g>
+</svg>
