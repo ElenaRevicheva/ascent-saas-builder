@@ -49,7 +49,8 @@ serve(async (req) => {
       if (!link?.[0]?.user_id) return json({ linked: false, stars: 0 });
       const { count, error } = await db.from('learning_sessions').select('id', { count: 'exact', head: true })
         .eq('user_id', link[0].user_id).eq('session_type', 'classroom')
-        .not('content->>user_message', 'ilike', '%quiero empezar la clase%');
+        .not('content->>user_message', 'ilike', '%quiero empezar la clase%')
+        .or('content->>speaker.is.null,content->>speaker.neq.parent'); // 2 Nov 2026: a parent's turn earns no star (twin of Classroom.tsx)
       if (error) throw error;
       return json({ linked: true, stars: count ?? 0 });
     }

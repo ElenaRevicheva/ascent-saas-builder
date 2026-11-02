@@ -56,9 +56,12 @@ async function geminiTranscribeWith(model: string, key: string, audio: Uint8Arra
 // "Eu me espethe muito em branco" (Portuguese), "Ana, Ana, me viene perezoso". Whisper takes a `prompt` - text that
 // tells it what to expect - and we never sent one. During a classroom lesson the hint is the heroes' last question
 // (like a teacher who knows what she just asked); otherwise a neutral language hint.
-async function whisperHint(authHeader: string | null): Promise<string> {
+// 2 Nov 2026 (Elena: "kid, parent, Pere and Titi all together"): the classroom's speaker switch says who talks this
+// turn. A parent's turn is not a 6-year-old answering, so it gets the neutral adult hint (no child, no last question).
+async function whisperHint(authHeader: string | null, speaker?: string): Promise<string> {
   const base = 'Spanish and English, sometimes Russian. ';
   if (!authHeader) return base;
+  if (speaker === 'parent') return 'An adult (the parent) talks to Pere and Titi, in Spanish or English, sometimes Russian. ';
   try {
     const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!,
                                   { global: { headers: { Authorization: authHeader } } });
@@ -140,7 +143,7 @@ serve(async (req) => {
   }
 
   try {
-    const { audio, language, force } = await req.json();
+    const { audio, language, force, speaker } = await req.json();
     
     if (!audio) {
       throw new Error('No audio data provided');
@@ -170,7 +173,7 @@ serve(async (req) => {
     }
     const errors: string[] = [];
     let result: any = null;
-    const hint = await whisperHint(req.headers.get('Authorization'));
+    const hint = await whisperHint(req.headers.get('Authorization'), speaker);
     // verbose_json returns the detected language and per-segment confidence (avg_logprob).
     const send = (key: string, url: string, model: string, lang?: string) => {
       const formData = new FormData();

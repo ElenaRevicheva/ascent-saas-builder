@@ -273,6 +273,16 @@ const KIDS_STORIES = [
   "A big harpy eagle visits the park and Titi feels nervous; the child helps them become friends. Fact: the harpy eagle is Panama's national bird.",
 ];
 
+// 2 Nov 2026 (Elena: she and Alisa will live two years in Boquete; the paint pad has a Parque Metropolitano set and a
+// Chiriquí set): what the heroes may say about these two places. Only well-established facts, no altitudes, dates or
+// local events. Added to the prompt only when she paints one of these pages or talks about these places.
+const KIDS_PLACES = /boquete|bar[uú]|chiriqu|quetzal|bajareque|colibr[ií]|hummingbird|cascada|waterfall|caf[eé]|coffee|fresa|strawberr|volc[aá]n|volcano|metropolitan|parque natural|ñeque|agouti|coat[ií]|morfo|morpho|heliconia|guayac[aá]n|tuc[aá]n|toucan/i;
+const KIDS_PLACES_FACTS = `
+PANAMA PLACES YOU KNOW (use ONE fact at a time, in simple words, Spanish then English; never add numbers, dates or events that are not here):
+- Parque Natural Metropolitano: a real rainforest inside Panama City - Pere and Titi's home. In it live sloths (perezosos), Geoffroy's tamarins (titís, like Titi), toucans (tucanes), agoutis (ñeques), coatis (coatíes) and blue morpho butterflies (mariposas morfo azul). The guayacán tree is covered in yellow flowers when it blooms; hummingbirds visit heliconia flowers.
+- Chiriquí highlands: Volcán Barú is the highest mountain in Panama; on a clear day, from the top you can see both oceans, the Pacific and the Caribbean. Quetzals, birds with long green tail feathers, live in its cloud forests. Boquete is a mountain town with cool weather and "bajareque", a soft mist that drizzles like tiny rain. Around Boquete there are coffee farms (the coffee grows as red cherries on bushes), many flowers, hummingbirds (colibríes), waterfalls (cascadas) and strawberries (fresas).
+- The family will live in Boquete. Now and then (at most once a lesson, never pushy) you may ask warmly about their life there, e.g. "¿Qué viste hoy en Boquete? / What did you see in Boquete today?" - and if she does not want to talk about it, follow her topic.`;
+
 function isoWeek(d: Date): number {
   const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
   const day = t.getUTCDay() || 7;
@@ -381,6 +391,9 @@ const KIDS_BYE = /\b(ciao|chao|adi[oó]s|bye|goodbye|hasta luego|hasta mañana|p
 // 1 Nov 2026 (Alisa's first tracing test: after each trace both heroes talked on and she had no chance to speak): a
 // "✏️ Tracé" turn from the web tracing pad gets ONE line - praise that letter and give her the turn to say it.
 const KIDS_TRACED = /^✏️ Tracé "([^"]{1,20})"/;
+// 2 Nov 2026 (Elena: "Alisa wants to paint little paintings, not just trace"): the web paint pad's "✨ Listo" sends
+// "🎨 Pinté ..." with the picture's name and the colours she used (no image leaves the tablet).
+const KIDS_PAINTED = /^🎨 Pinté/;
 const KIDS_QUIET = /(paro|parar|paren|para|paran) de hablar|no hablen|que no hable|hablan? (mucho|tanto|demasiado)|c[aá]llate|c[aá]llense|silencio|stop talking|be quiet|talk(ing)? too much/i;
 const firstLine = (reply: string): string =>
   (reply.split('\n').map((l) => l.trim()).find(Boolean) ?? '').replace(/^[^:\[]*(\[[^\]]*\])?:\s*/, '').split(' / ')[0].slice(0, 120);
@@ -463,6 +476,7 @@ async function kidsMemoryCard(supabase: any, userId: string, hist: any[]): Promi
   for (const row of data) {
     const c = row.content || {};
     if (row.session_type === 'conversation' && c.family_role !== 'alisa') continue; // a parent's own chat stays out
+    if (c.speaker === 'parent') continue; // 2 Nov 2026: a parent's turn in the family conversation is not hers
     const words = String(c.user_message ?? '').trim();
     const reply = String(c.ai_response ?? c.bot_response ?? '');
     const dislike = KIDS_DISLIKE.exec(words);
@@ -533,11 +547,39 @@ function kidsToday(): string {
   return `TODAY in Panama: ${day}${h ? ` - ${h}. If she brings it up (or it fits), talk about it happily and teach a sentence about it.` : '.'}`;
 }
 
+// ===== Family conversation (2 Nov 2026, Elena: "kid, parent, Pere and Titi all together; they recognize when mother is
+// talking and when Alisa is talking. Vivid, real, not simulated") =====
+// No voice biometrics: the classroom has a speaker switch (child / Mamá / Papá) next to Habla, and every turn says who
+// spoke (`kids.speaker`, `kids.speaker_name`, `kids.child_name`; `kids.speakers` names each turn of the history). The
+// model sees the turns labelled ("Alisa: ...", "Mamá: ..."). A page without the switch (the bots) sends none of this
+// and nothing changes for it.
+const kidsName = (v: unknown, fallback: string): string =>
+  (typeof v === 'string' ? v.replace(/[^\p{L}\p{M} .'-]/gu, '').trim().slice(0, 24) : '') || fallback;
+type KidsWho = { speaker?: unknown; speaker_name?: unknown; child_name?: unknown;
+  history?: unknown; speakers?: ({ speaker?: unknown; name?: unknown } | null)[] };
+const kidsIsParent = (kids: KidsWho | undefined): boolean => kids?.speaker === 'parent';
+const kidsSpeakerName = (kids: KidsWho | undefined): string =>
+  kidsName(kids?.speaker_name, kidsIsParent(kids) ? 'Mamá' : kidsName(kids?.child_name, ''));
+/** The history as the model sees it: each user turn labelled with who said it, when the page sent the names. */
+function kidsLabelledHistory(kids: KidsWho): { role: string; content: string }[] {
+  const hist: { role?: unknown; content?: unknown }[] = Array.isArray(kids?.history) ? kids.history : [];
+  const who = Array.isArray(kids?.speakers) && kids.speakers.length === hist.length ? kids.speakers : null;
+  return hist.map((m, i) => {
+    const role = m?.role === 'assistant' ? 'assistant' : 'user';
+    const content = String(m?.content ?? '');
+    const name = who && role === 'user' ? kidsName(who[i]?.name, '') : '';
+    return { role, content: name ? `${name}: ${content}` : content };
+  }).slice(-10);
+}
+const kidsFamilyTalk = (kids: KidsWho): boolean => kidsIsParent(kids) ||
+  (Array.isArray(kids?.speakers) && kids.speakers.some((s) => s?.speaker === 'parent'));
+
 function kidsTurnContext(kids: any, message: string, avoid: string[] = [], classUnit = -1): string {
   const hist = Array.isArray(kids?.history) ? kids.history : [];
   const raw = Number.isInteger(kids?.turn) ? kids.turn : Math.floor(hist.length / 2);
   // The page counts every exchange; a turn spent answering her question does not move the lesson on.
-  const held = hist.filter((m: any) => m?.role === "user" && KID_QUESTION.test(String(m?.content ?? ""))).length;
+  const held = hist.filter((m: any, i: number) => m?.role === "user" && kids?.speakers?.[i]?.speaker !== "parent" &&
+    KID_QUESTION.test(String(m?.content ?? ""))).length;
   const turn = raw > 0 ? Math.max(1, raw - held) : 0;
   const weekStory = KIDS_STORIES[isoWeek(new Date()) % KIDS_STORIES.length];
   // A story about a topic she said she does not want is dropped (and its step becomes free talk on her topic).
@@ -564,6 +606,40 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
       "no game, no new sentence, no question. Two short warm goodbye lines, one from each hero (Pere [goodbye], Titi " +
       "[goodbye]), saying you will be happy to continue next time.";
   }
+  const child = kidsName(kids?.child_name, "the child");
+  const childEs = kidsName(kids?.child_name, "peque");
+  const family = kidsFamilyTalk(kids)
+    ? `\nFAMILY CONVERSATION: the child (${child}) and a parent talk with you together; each of their turns above is ` +
+      `labelled with who said it ("${child}: ...", "Mamá: ..."). ${child} is the learner: talk to her as the child and to ` +
+      "the parent as a grown-up. You may bring in what the parent said (\"¡Mamá también lo sabe!\"). Never write those " +
+      "labels yourself: your lines start only with \"Pere [shot]:\" or \"Titi [shot]:\"."
+    : "";
+  if (kidsIsParent(kids)) {
+    const parent = kidsSpeakerName(kids);
+    return `\n\nTHE PARENT IS TALKING NOW, NOT THE CHILD: ${parent} said (speech-to-text, may be imperfect): ` +
+      `"${message.trim().slice(0, 300)}"\nTHIS TURN OVERRIDES THE CHILD RULES ABOVE - a real family conversation, ` +
+      `${child}, ${parent}, Pere and Titi together:\n` +
+      `1. Your FIRST line answers ${parent} warmly and briefly, as one grown-up to another: greet or thank them by role ` +
+      `("¡Hola, ${parent}! / Hi, ${parent}!"), and if they asked something or asked you to do something, answer it or do it. ` +
+      "No baby talk to the parent, never tell the parent how they feel, never praise or correct the parent's words like a pupil's.\n" +
+      `2. When it fits, bring the parent INTO the game in one line: ask ${parent} to say today's sentence too, or ask ` +
+      `${childEs} to teach ${parent} the word ("${childEs}, ¿le enseñas a ${parent.toLowerCase()} cómo se dice? / ${childEs}, ` +
+      `can you teach ${parent} how to say it?").\n` +
+      `3. Your LAST line turns back to ${childEs} by name with ONE short question for her, so she speaks next. Never ` +
+      "leave the child out: at most one line only for the parent.\n" +
+      `4. Keep the lesson going from where it is - no new hello, no restart, no skipping ahead. The lesson step stays: ${step}\n` +
+      "2-3 short lines in total, each idea in Spanish then English after \" / \", and BOTH heroes speak (one \"Pere [shot]:\" " +
+      "and one \"Titi [shot]:\" line)." + family;
+  }
+  const painted = message.trim().match(KIDS_PAINTED);
+  if (painted) {
+    return `\n\nSHE JUST FINISHED A PAINTING ON THE TABLET: "${message.trim().slice(0, 200)}" (you cannot see it; this ` +
+      "is what she painted and the colours she used).\nTHIS TURN OVERRIDES EVERY RULE ABOVE: exactly two short lines, no " +
+      "game, no new lesson step. Pere [clap] admires it and names ONE of her colours in Spanish and English (\"¡Qué bonito " +
+      "tu tucán! Usaste el amarillo. / What a beautiful toucan! You used yellow.\"); Titi [cheer] asks ONE happy question " +
+      "about it (its name, where it lives, why that colour). If the picture is from a place in PANAMA PLACES YOU KNOW, one " +
+      "of the two lines may carry ONE simple fact about it. Never invent details she did not say." + family;
+  }
   const traced = message.trim().match(KIDS_TRACED);
   if (traced) {
     return `\n\nSHE JUST TRACED "${traced[1]}" WITH HER FINGER ON THE TABLET.\nTHIS TURN OVERRIDES EVERY RULE ABOVE: ` +
@@ -583,7 +659,7 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
       "Stay on THEIR topic; do not start a game, a story or a new lesson step this turn. " +
       `End with ONE question about the SAME topic they asked about. (The lesson continues next turn with: ${step})`,
       ...(turn === 0 ? [`THIS WEEK'S STORY (only if it is about what they asked; otherwise ignore it): ${story}`] : []),
-      kidsToday(), "BOTH heroes speak in this reply: at least one \"Pere [shot]:\" line AND one \"Titi [shot]:\" line."].join("\n");
+      kidsToday(), "BOTH heroes speak in this reply: at least one \"Pere [shot]:\" line AND one \"Titi [shot]:\" line." + family].join("\n");
   }
   // 31 Oct 2026 (Alisa's lesson 13:46-13:51): the story rode along on EVERY turn, so "quiero jugar un poquitito" became
   // the toucan again and again, and Titi fell silent for three replies. The story now appears only at the hello and on
@@ -595,7 +671,7 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
       : []),
     kidsToday(),
     "BOTH heroes speak in this reply: at least one \"Pere [shot]:\" line AND one \"Titi [shot]:\" line (Titi is the " +
-    "playful one - let him ask the closing question or make it a little game)."];
+    "playful one - let him ask the closing question or make it a little game)." + family];
   if ([...hist.filter((m: any) => m?.role === "user").map((m: any) => String(m?.content ?? "")), message].some((s) => KIDS_STILL.test(s))) {
     out.push("SHE CANNOT MOVE RIGHT NOW (in a car or told you she can't jump): for the rest of this lesson NO jumping, " +
       "hopping, standing or running games - use sit-still games instead (veo veo / I spy a colour out of the window, " +
@@ -936,7 +1012,12 @@ ${asked}` : ''}`;
     }
     // The turn instruction (with the child's own words) goes LAST: the model weighs the end of the prompt most - and at
     // the hello, the memory game (her own sentence coming back, spaced repetition) goes after it.
-    const kidsSystem = KIDS_CLASSROOM_PROMPT + memory.card + (known.length
+    // 2 Nov 2026: the places' facts ride along when she paints or talks about the park or Chiriquí (this turn or the
+    // last two of hers); before the turn instruction, which stays last.
+    const recent: { role?: unknown; content?: unknown }[] = kids && Array.isArray(kids.history) ? kids.history.slice(-4) : [];
+    const kidsPlaces = kids && [message, ...recent.filter((m) => m?.role === 'user').map((m) => String(m?.content ?? ''))]
+      .some((t) => KIDS_PLACES.test(t));
+    const kidsSystem = KIDS_CLASSROOM_PROMPT + memory.card + (kidsPlaces ? '\n' + KIDS_PLACES_FACTS : '') + (known.length
       ? `\n\nSentences the child already said in earlier lessons: ${known.map((s) => `"${s}"`).join(' · ')}. At the hello, invite the child to say one of them again and praise, then teach new ones (the same words come back and grow).`
       : '') + (kids ? kidsTurnContext(kids, message, memory.avoid, classUnit) : '') +
       (isHello ? memory.hello : (memory.hello.startsWith('\nSHE TOLD YOU') ? memory.hello.split('\n\nTHIS HELLO')[0] : '')) +
@@ -947,7 +1028,9 @@ ${asked}` : ''}`;
         : "\nShe tried to show you a photo but you could not see it: say so kindly in one line and ask her to tell you what is in it.") : '');
     const claudeRequest = kids
       ? { max_tokens: 500, temperature: 0.7, system: kidsSystem,
-          messages: [...(Array.isArray(kids.history) ? kids.history.slice(-10) : []), { role: 'user', content: message }] }
+          // 2 Nov 2026: turns labelled by speaker when the page sends them (family conversation); else as before.
+          messages: [...kidsLabelledHistory(kids),
+                     { role: 'user', content: kids.speaker ? `${kidsSpeakerName(kids) || 'Child'}: ${message}` : message }] }
       : formatClaudeRequest(message, familyMember, emotion, conversationHistory, isVoiceInput, originalLanguage);
 
     const { result: claudeResult, provider } = await callChain(claudeRequest);
@@ -966,6 +1049,9 @@ ${asked}` : ''}`;
       // A stop or an emergency gets goodbye lines only - the base prompt's "end with a question" must not leak in.
       else if (KIDS_EMERGENCY.test(message) || KIDS_BYE.test(message)) {
         fullResponse = fullResponse.split('\n').filter((l: string) => l.trim() && !l.includes('?')).slice(0, 2).join('\n') || fullResponse;
+      }
+      else if (KIDS_PAINTED.test(message.trim()) && !kidsIsParent(kids)) {
+        fullResponse = lines.slice(0, 2).join('\n');
       }
       else if (KIDS_TRACED.test(message.trim())) {
         const t = message.trim().match(KIDS_TRACED)![1];
@@ -999,7 +1085,11 @@ ${asked}` : ''}`;
           session_type: kids ? 'classroom' : 'chat',
           source: botPlatform ?? 'web',
           content: {
-            user_message: message,
+            // 2 Nov 2026: a parent's turn is kept as parent_message, never as user_message - every reader of the child's
+            // sentences (the memory card here, kids-memory for the bots, the spaced repetition) reads user_message.
+            user_message: kids && kidsIsParent(kids) ? '' : message,
+            ...(kids && kids.speaker ? { speaker: kidsIsParent(kids) ? 'parent' : 'child', speaker_name: kidsSpeakerName(kids) } : {}),
+            ...(kids && kidsIsParent(kids) ? { parent_message: message } : {}),
             ai_response: fullResponse,
             video_script: videoScript,
             family_member: familyMember.name,
