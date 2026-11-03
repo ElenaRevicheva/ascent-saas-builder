@@ -397,9 +397,12 @@ const KIDS_BRIDGE = "the heroes stand WITH the parent: one warm line that honour
   "it?\"); if the parent suggested what to say, ask or explain (a feeling, what happened), help the child say it in HER " +
   "own words, gently, in one short sentence she can repeat. Never contradict, correct or override the parent, never tell " +
   "the parent how they feel, and never make the child choose between the heroes and the parent.";
+// Live probe 3 Nov 16:20 (v271): with this text only appended, "your FIRST LINE reacts to her words" won - the heroes
+// paraphrased Mamá ("La mamá te dice que…") or skipped her. So this block now re-orders the first two lines itself.
 const KIDS_COACHED_LINE = "THIS RECORDING HAS TWO VOICES: the parent is coaching the child AND the child speaks. The " +
-  "parent's words are NOT the child's (never praise or correct them as hers). " + KIDS_BRIDGE + " Then react to what " +
-  "the CHILD herself said (usually the part after the parent's words) and go on with the lesson.\n";
+  "parent's words are NOT the child's (never praise or correct them as hers). THIS CHANGES THE ORDER ABOVE: your FIRST " +
+  "line is the parent bridge - " + KIDS_BRIDGE + " Your SECOND line reacts to what the CHILD herself said (usually the " +
+  "part after the parent's words), feelings first as in rule 1. Then go on with the lesson.\n";
 // 31 Oct 2026 (15:39-15:43): Alisa was in the car; Titi asked her to hop like a bunny, she said she could not ("me puede
 // abrir la cabeza"), and the next reply still had no idea. Once the lesson hears she cannot move, every later step is a
 // sit-still one - kept in code from the whole lesson history, not left to the model's memory of one turn.
