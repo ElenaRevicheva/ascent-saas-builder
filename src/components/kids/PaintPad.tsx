@@ -35,6 +35,7 @@ const PAINT_SETS: { title: string; pages: Page[] }[] = [
     { id: "rana", es: "una rana de ojos rojos", en: "a red-eyed tree frog", label: "Rana / Frog" },
     { id: "heliconia", es: "una flor de heliconia", en: "a heliconia flower", label: "Heliconia" },
     { id: "guayacan", es: "un árbol de guayacán", en: "a guayacán tree", label: "Guayacán / Tree" },
+    { id: "iguana", es: "una iguana", en: "an iguana", label: "Iguana" },
   ].map((p) => ({ ...p, place: "del Parque Natural Metropolitano / from the Metropolitan Natural Park" })) },
   { title: "Chiriquí: Volcán Barú y Boquete / Chiriquí: Barú Volcano and Boquete", pages: [
     { id: "baru", es: "el Volcán Barú", en: "Barú Volcano", label: "Volcán Barú" },
@@ -43,7 +44,36 @@ const PAINT_SETS: { title: string; pages: Page[] }[] = [
     { id: "colibri", es: "un colibrí", en: "a hummingbird", label: "Colibrí / Hummingbird" },
     { id: "cascada", es: "una cascada", en: "a waterfall", label: "Cascada / Waterfall" },
     { id: "fresa", es: "una fresa", en: "a strawberry", label: "Fresa / Strawberry" },
+    { id: "orquidea", es: "una orquídea", en: "an orchid", label: "Orquídea / Orchid" },
+    { id: "puente", es: "un puente colgante", en: "a hanging bridge", label: "Puente / Bridge" },
   ].map((p) => ({ ...p, place: "de Chiriquí, Volcán Barú y Boquete / from Chiriquí, Barú Volcano and Boquete" })) },
+  // 3 Nov 2026 (Elena: "more examples - all the Panama flora and fauna, plus unicorns, dinosaurs, heroes"). Each `place`
+  // is one true fact the heroes may tell. Heroes are our own generic ones: no studio's cartoon characters (copyright).
+  { title: "Panamá: mar y selva / Panama: sea and rainforest", pages: [
+    { id: "arpia", es: "un águila arpía", en: "a harpy eagle", label: "Águila arpía / Harpy eagle",
+      place: "el ave nacional de Panamá, de la selva del Darién / Panama's national bird, from the Darién rainforest" },
+    { id: "ranadorada", es: "una rana dorada", en: "a golden frog", label: "Rana dorada / Golden frog",
+      place: "de El Valle de Antón / from El Valle de Antón" },
+    { id: "tortuga", es: "una tortuga marina", en: "a sea turtle", label: "Tortuga / Turtle",
+      place: "de las playas de Panamá / from Panama's beaches" },
+    { id: "ballena", es: "una ballena jorobada", en: "a humpback whale", label: "Ballena / Whale",
+      place: "de las Islas de las Perlas / from the Pearl Islands" },
+    { id: "espiritusanto", es: "la flor del Espíritu Santo", en: "the Holy Ghost orchid", label: "Flor nacional / National flower",
+      place: "la flor nacional de Panamá / Panama's national flower" },
+  ] },
+  { title: "Fantasía / Fantasy", pages: [
+    { id: "unicornio", es: "un unicornio", en: "a unicorn", label: "🦄 Unicornio" },
+    { id: "dinosaurio", es: "un dinosaurio", en: "a dinosaur", label: "🦕 Dinosaurio" },
+    { id: "arcoiris", es: "un arcoíris", en: "a rainbow", label: "🌈 Arcoíris" },
+    { id: "castillo", es: "un castillo", en: "a castle", label: "🏰 Castillo" },
+  ] },
+  { title: "Héroes y aventuras / Heroes and adventures", pages: [
+    { id: "superheroe", es: "una superheroína", en: "a superhero", label: "🦸 Superhéroe" },
+    { id: "cohete", es: "un cohete", en: "a rocket", label: "🚀 Cohete" },
+    { id: "robot", es: "un robot", en: "a robot", label: "🤖 Robot" },
+    { id: "pirata", es: "un barco pirata", en: "a pirate ship", label: "🏴‍☠️ Barco pirata" },
+    { id: "corona", es: "una corona y una varita mágica", en: "a crown and a magic wand", label: "👑 Corona" },
+  ] },
 ];
 const BLANK: Page = { id: "blank", es: "mi propio dibujo", en: "my own picture", label: "⬜ Libre / Free" };
 

@@ -25,8 +25,15 @@ interface Props {
 // writes one idea in both languages (Cambridge Pre A1 Starters themes: feelings, family, home, greetings). Each is
 // under 20 characters so the heroes' "✏️ Tracé" turn still recognises it.
 const NUMBERS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+// 3 Nov 2026 (Elena: "fill the phrases with more, in English and Spanish"): 16 more pairs on the same themes plus
+// Panama, animals, play and manners; still under 20 characters each, no word that changes with the child's gender.
 const SENTENCES = ["Te quiero", "I love you", "Yo soy feliz", "I am happy", "Me gusta el sol", "I like the sun",
-  "Buenos días", "Good morning", "Mi casa es bonita", "My home is nice"];
+  "Buenos días", "Good morning", "Mi casa es bonita", "My home is nice",
+  "Hola, amigo", "Hello, friend", "Gracias", "Thank you", "Por favor", "Please", "Buenas noches", "Good night",
+  "Vamos a jugar", "Let's play", "Me gusta pintar", "I like to paint", "Tengo un perro", "I have a dog",
+  "El mar es azul", "The sea is blue", "Amo a Panamá", "I love Panama", "El perezoso duerme", "The sloth sleeps",
+  "Mi mamá me abraza", "Mom hugs me", "Soy valiente", "I am brave", "Me gusta la fruta", "I like fruit",
+  "Llueve mucho", "It rains a lot", "Te ayudo", "I can help you", "Hoy es mi día", "Today is my day"];
 type Mode = "letters" | "numbers" | "sentences" | "paint";
 const MODES: { mode: Mode; label: string }[] = [
   { mode: "letters", label: "🔤 Letras" }, { mode: "numbers", label: "🔢 Números" }, { mode: "sentences", label: "💬 Frases" },

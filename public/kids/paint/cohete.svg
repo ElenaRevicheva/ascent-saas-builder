@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>El cohete / The rocket</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 400 60 C 340 120, 320 220, 330 390 L 470 390 C 480 220, 460 120, 400 60 Z"/>
+<circle cx="400" cy="200" r="38"/><circle cx="400" cy="200" r="24"/>
+<path d="M 332 300 L 260 400 L 330 390"/><path d="M 468 300 L 540 400 L 470 390"/>
+<path d="M 330 140 C 360 150, 440 150, 470 140"/>
+<path d="M 360 390 C 360 440, 380 470, 400 500 C 420 470, 440 440, 440 390"/>
+<path d="M 380 405 C 382 430, 392 450, 400 465 C 408 450, 418 430, 420 405"/>
+<circle cx="130" cy="120" r="60"/><path d="M 100 95 Q 115 105 105 120"/><circle cx="150" cy="140" r="12"/>
+<path d="M 620 95 L 628 114 L 649 116 L 632 129 L 638 149 L 620 138 L 602 149 L 608 129 L 591 116 L 612 114 Z"/>
+<path d="M 680 298 L 686 312 L 701 313 L 690 323 L 693 338 L 680 330 L 667 338 L 670 323 L 659 313 L 674 312 Z"/>
+<path d="M 130 418 L 136 432 L 151 433 L 140 443 L 143 458 L 130 450 L 117 458 L 120 443 L 109 433 L 124 432 Z"/>
+</g>
+</svg>

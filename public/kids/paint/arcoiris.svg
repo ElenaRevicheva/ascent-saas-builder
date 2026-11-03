@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>El arcoíris / The rainbow</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 90 430 A 310 310 0 0 1 710 430"/>
+<path d="M 140 430 A 260 260 0 0 1 660 430"/>
+<path d="M 190 430 A 210 210 0 0 1 610 430"/>
+<path d="M 240 430 A 160 160 0 0 1 560 430"/>
+<path d="M 290 430 A 110 110 0 0 1 510 430"/>
+<path d="M 90 430 L 290 430 M 510 430 L 710 430"/>
+<path d="M 40 470 C 30 420, 90 395, 120 420 C 135 380, 205 385, 210 430 C 250 425, 260 480, 225 490 L 60 490 C 35 490, 30 475, 40 470 Z"/>
+<path d="M 560 470 C 550 420, 610 395, 640 420 C 655 380, 725 385, 730 430 C 770 425, 780 480, 745 490 L 580 490 C 555 490, 550 475, 560 470 Z"/>
+<circle cx="680" cy="110" r="45"/>
+<path d="M 680 45 L 680 25"/><path d="M 680 175 L 680 195"/><path d="M 615 110 L 595 110"/><path d="M 745 110 L 765 110"/>
+<path d="M 634 64 L 620 50"/><path d="M 726 64 L 740 50"/><path d="M 634 156 L 620 170"/><path d="M 726 156 L 740 170"/>
+</g>
+</svg>

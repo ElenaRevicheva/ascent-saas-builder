@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>El dinosaurio / The dinosaur</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="60" y="530" width="680" height="30" rx="15"/>
+<ellipse cx="360" cy="380" rx="170" ry="95"/>
+<path d="M 470 310 C 510 250, 530 200, 560 165"/>
+<path d="M 515 360 C 560 300, 590 240, 615 200"/>
+<ellipse cx="600" cy="160" rx="62" ry="40" transform="rotate(-10 600 160)"/>
+<circle cx="610" cy="148" r="10"/><circle cx="612" cy="149" r="4" fill="#111"/>
+
+<path d="M 600 182 Q 625 195 650 178"/>
+<circle cx="648" cy="156" r="4" fill="#111"/>
+<path d="M 200 360 C 140 370, 90 410, 60 440 C 120 445, 175 430, 215 420"/>
+<path d="M 260 450 L 255 528 L 300 528 L 305 460"/>
+<path d="M 340 470 L 340 528 L 385 528 L 385 470"/>
+<path d="M 420 468 L 425 528 L 470 528 L 465 460"/>
+<path d="M 470 440 L 490 528 L 535 528 L 515 425"/>
+<path d="M 250 300 L 270 260 L 295 295"/><path d="M 300 288 L 325 245 L 350 285"/><path d="M 355 286 L 380 242 L 405 288"/><path d="M 410 295 L 432 255 L 452 300"/>
+<circle cx="320" cy="370" r="22"/><circle cx="395" cy="400" r="18"/><circle cx="300" cy="430" r="14"/><circle cx="440" cy="355" r="15"/>
+</g>
+</svg>

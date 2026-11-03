@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>El castillo / The castle</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="60" y="530" width="680" height="30" rx="15"/>
+<path d="M 220 530 L 220 300 L 580 300 L 580 530"/>
+<path d="M 220 300 L 220 270 L 255 270 L 255 300 M 290 300 L 290 270 L 325 270 L 325 300 M 360 300 L 360 270 L 440 270 L 440 300 M 475 300 L 475 270 L 510 270 L 510 300 M 545 300 L 545 270 L 580 270 L 580 300"/>
+<rect x="110" y="230" width="110" height="300"/>
+<rect x="580" y="230" width="110" height="300"/>
+<path d="M 100 230 L 165 130 L 230 230 Z"/>
+<path d="M 570 230 L 635 130 L 700 230 Z"/>
+<path d="M 165 130 L 165 85 L 205 100 L 165 112"/>
+<path d="M 635 130 L 635 85 L 675 100 L 635 112"/>
+<path d="M 345 530 L 345 440 C 345 395, 455 395, 455 440 L 455 530"/>
+<path d="M 400 405 L 400 530"/>
+<path d="M 150 300 L 150 280 C 150 265, 180 265, 180 280 L 180 300 Z"/>
+<path d="M 620 300 L 620 280 C 620 265, 650 265, 650 280 L 650 300 Z"/>
+<path d="M 270 360 L 270 340 C 270 322, 310 322, 310 340 L 310 360 Z"/>
+<path d="M 490 360 L 490 340 C 490 322, 530 322, 530 340 L 530 360 Z"/>
+<path d="M 380 250 L 380 180 L 420 195 L 380 208"/><path d="M 380 250 L 380 270"/>
+</g>
+</svg>

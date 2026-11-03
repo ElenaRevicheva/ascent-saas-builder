@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>La flor del Espíritu Santo / The Holy Ghost orchid</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 400 560 L 400 330"/>
+<path d="M 400 470 C 320 430, 250 440, 210 480 C 270 500, 350 495, 400 470 Z"/>
+<path d="M 400 420 C 480 380, 550 390, 590 430 C 530 450, 450 445, 400 420 Z"/>
+<path d="M 400 80 C 300 80, 190 150, 190 230 C 260 250, 350 240, 400 210 C 450 240, 540 250, 610 230 C 610 150, 500 80, 400 80 Z"/>
+<path d="M 400 210 C 330 240, 270 300, 280 340 C 330 350, 380 320, 400 300 C 420 320, 470 350, 520 340 C 530 300, 470 240, 400 210 Z"/>
+<path d="M 400 190 C 370 200, 360 240, 375 265 C 385 280, 415 280, 425 265 C 440 240, 430 200, 400 190 Z"/>
+<path d="M 385 222 C 390 210, 410 210, 415 222 L 410 240 C 405 245, 395 245, 390 240 Z"/>
+<circle cx="393" cy="218" r="3" fill="#111"/><circle cx="407" cy="218" r="3" fill="#111"/>
+</g>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>La superheroína / The superhero</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="140" y="530" width="520" height="30" rx="15"/>
+<path d="M 335 235 C 265 305, 235 420, 255 510 L 545 510 C 565 420, 535 305, 465 235 Z"/>
+<circle cx="400" cy="150" r="70"/>
+<path d="M 340 140 C 360 120, 440 120, 460 140 C 455 165, 345 165, 340 140 Z"/>
+<circle cx="375" cy="143" r="7" fill="#111"/><circle cx="425" cy="143" r="7" fill="#111"/>
+<path d="M 375 180 Q 400 200 425 180"/>
+<path d="M 345 225 L 455 225 L 465 390 L 335 390 Z"/>
+<path d="M 400 262 L 409 287 L 436 288 L 415 305 L 422 331 L 400 316 L 378 331 L 385 305 L 364 288 L 391 287 Z"/>
+
+<path d="M 345 240 L 270 180"/><circle cx="262" cy="172" r="16"/>
+<path d="M 455 240 L 520 300"/><circle cx="528" cy="308" r="16"/>
+<path d="M 360 410 L 355 520 L 390 520 L 395 410"/>
+<path d="M 405 410 L 410 520 L 445 520 L 440 410"/>
+<path d="M 335 390 L 465 390 L 470 410 L 330 410 Z"/>
+</g>
+</svg>

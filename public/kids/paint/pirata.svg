@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>El barco pirata / The pirate ship</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 40 500 C 120 470, 200 530, 280 500 C 360 470, 440 530, 520 500 C 600 470, 680 530, 760 500"/>
+<path d="M 40 545 C 120 515, 200 575, 280 545 C 360 515, 440 575, 520 545 C 600 515, 680 575, 760 545"/>
+<path d="M 140 400 L 660 400 L 600 490 L 200 490 Z"/>
+<circle cx="260" cy="440" r="14"/><circle cx="400" cy="440" r="14"/><circle cx="540" cy="440" r="14"/>
+<path d="M 400 400 L 400 70"/>
+<path d="M 403 95 C 470 115, 520 170, 540 250 C 490 240, 440 245, 403 255 Z"/>
+<path d="M 403 270 C 460 285, 500 330, 515 385 C 470 380, 430 385, 403 390 Z"/>
+<path d="M 397 100 C 340 130, 300 190, 290 260 L 397 250 Z"/>
+<path d="M 400 70 L 470 50 L 470 85 L 400 95"/>
+<circle cx="440" cy="68" r="8"/>
+<path d="M 200 400 L 200 360 L 260 360 L 260 400"/>
+<path d="M 600 400 L 600 340 L 660 340 L 660 400"/>
+</g>
+</svg>

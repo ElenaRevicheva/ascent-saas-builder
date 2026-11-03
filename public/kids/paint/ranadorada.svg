@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>La rana dorada / The golden frog</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 120 520 C 250 500, 550 500, 680 520 L 680 550 C 550 530, 250 530, 120 550 Z"/>
+<ellipse cx="400" cy="360" rx="160" ry="110"/>
+<circle cx="320" cy="245" r="45"/><circle cx="480" cy="245" r="45"/>
+<circle cx="320" cy="245" r="18" fill="#111"/><circle cx="480" cy="245" r="18" fill="#111"/>
+<path d="M 330 330 Q 400 375 470 330"/>
+<path d="M 270 430 C 210 450, 170 490, 190 510 L 280 510"/>
+<path d="M 530 430 C 590 450, 630 490, 610 510 L 520 510"/>
+<path d="M 330 450 L 320 510 L 360 510"/><path d="M 470 450 L 480 510 L 440 510"/>
+<circle cx="340" cy="400" r="18"/><circle cx="455" cy="410" r="22"/><circle cx="400" cy="440" r="14"/><circle cx="500" cy="360" r="15"/><circle cx="295" cy="365" r="14"/>
+</g>
+</svg>

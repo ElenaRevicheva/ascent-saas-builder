@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>La tortuga marina / The sea turtle</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<ellipse cx="400" cy="320" rx="190" ry="130"/>
+<path d="M 400 190 L 400 450 M 210 320 L 590 320"/>
+<path d="M 300 205 L 300 435 M 500 205 L 500 435"/>
+<path d="M 590 300 C 640 270, 700 280, 720 310 C 705 345, 650 350, 590 335"/>
+<circle cx="680" cy="302" r="8"/><circle cx="682" cy="303" r="4" fill="#111"/>
+
+<path d="M 300 205 C 260 130, 190 100, 140 110 C 170 170, 230 210, 280 215"/>
+<path d="M 500 205 C 540 150, 600 130, 640 140 C 610 190, 560 215, 520 215"/>
+<path d="M 290 440 C 250 500, 200 520, 170 510 C 190 470, 240 445, 270 435"/>
+<path d="M 510 440 C 540 490, 590 505, 615 495 C 600 460, 560 440, 530 435"/>
+<circle cx="110" cy="460" r="14"/><circle cx="90" cy="410" r="9"/><circle cx="700" cy="470" r="12"/><circle cx="730" cy="420" r="8"/>
+</g>
+</svg>
