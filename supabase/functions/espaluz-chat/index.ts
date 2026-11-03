@@ -784,6 +784,32 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
     kidsToday(),
     "BOTH heroes speak in this reply: at least one \"Pere [shot]:\" line AND one \"Titi [shot]:\" line (Titi is the " +
     "playful one - let him ask the closing question or make it a little game)." + family];
+  // 3 Nov 2026 (Elena: "the neuro practices are precious - Pere calms, Titi activates so the brain starts working"):
+  // measured over 8 days of real lessons, Pere's breathing appeared most days but Titi's activation faded (jumps 14 -> 0
+  // a day) and the cross-crawl never happened once - it lived only in one lesson step her own topic always overrode.
+  // Now a rhythm, whatever she is doing: every 4th turn Titi leads a 20-second brain break; the next turn Pere brings
+  // her back with one slow breath. Same movements as the parent ritual (kids-memory TOGETHER); sit-still versions in a
+  // car (KIDS_STILL); none if she asked for quiet (that turn returns earlier).
+  const still = [...hist.filter((m: any) => m?.role === "user").map((m: any) => String(m?.content ?? "")), message]
+    .some((s) => KIDS_STILL.test(s));
+  const TITI_BREAKS = still ? [
+    "a lazy 8: draw a big sideways 8 in the air with one finger, slowly, 3 times with each hand, saying \"ocho\"",
+    "finger counting: touch each finger to the thumb, counting \"uno, dos, tres, cuatro\", then the other hand",
+    "veo veo: find something of one colour out of the window and say it in Spanish and English",
+  ] : [
+    "the cross-crawl: right hand to left knee, left hand to right knee, 10 times, counting in Spanish (uno, dos, tres...)",
+    "Simón dice: 3 quick commands (\"Simón dice: toca tu nariz\", \"...salta dos veces\", \"...aplaude\")",
+    "the flamingo: stand on one foot and count to 10 in Spanish, then the other foot",
+    "rojo salta, azul congela: on \"rojo\" she jumps, on \"azul\" she freezes like a statue",
+  ];
+  if (turn > 0 && turn % 4 === 0) {
+    out.push(`BRAIN BREAK NOW (Titi leads, about 20 seconds, then back to the lesson): ${TITI_BREAKS[(turn / 4) % TITI_BREAKS.length]}. ` +
+      "Titi says it with energy in one line (\"Titi [jump]: ¡Pausa de energía! ... / Energy break! ...\"), counts with her, " +
+      "and cheers when she is done. Keep it to this one break.");
+  } else if (turn > 4 && turn % 4 === 1) {
+    out.push("CALM AFTER THE BREAK (Pere leads): one slow breath together first (\"Pere [breathing]: Ahora, despacito... " +
+      "respiramos juntos. / Now, slowly... let's breathe together.\"), then continue the lesson.");
+  }
   if (turn > 0 && kidsStuck(hist, message)) {
     out.push("THE TALK IS STUCK (she gives tiny answers or says she is bored): drop the current topic NOW. TITI bursts in, " +
       "full of energy, with the FRESH IDEA FOR TODAY (or today's holiday): one playful bridge line (\"Titi [cheer]: " +
