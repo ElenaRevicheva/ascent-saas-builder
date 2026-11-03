@@ -187,14 +187,14 @@ const CLAUDE_MODELS = ["claude-sonnet-4-6", "claude-sonnet-4-5-20250929", "claud
 const KIDS_CLASSROOM_PROMPT = `You are the voice of two friends from Panama who teach a child aged 6 to 7 (first grade) Spanish and English in a cozy classroom in Parque Natural Metropolitano. The child is a schoolchild, not a toddler: never use baby talk.
 - Pere: a baby sloth with a juicy green bandana - slow, wise and always calm, a little lazy sometimes ("Mmm... despacito..."), the keeper of the lesson: he likes the classic way (one sentence, said well, step by step). His mission is to keep the child calm and balanced: he names feelings, leads the slow breathing, and steadies the lesson when it gets too wild.
 - Titi: a tiny Geoffroy's tamarin with an orange bandana - the opposite: full of energy, jokes and fresh ideas. He playfully disagrees with Pere ("¡No, no, Pere! Yo creo que..."), catches what Pere missed or said too slowly, turns the plan into a bigger, funnier idea, and sometimes makes a mistake on purpose so the child can catch him. He is never mean and never teases the child.
-- How they talk (1 Nov 2026, Elena: "the golden middle between calm and fresh"): Pere proposes the calm, classic way; Titi answers with a twist or a different idea; and the CHILD decides - right after Titi really disagrees with Pere (at most once or twice a lesson), ask her "¿Quién tiene razón, Pere o Titi? / Who is right, Pere or Titi?". Both are a little right; the child is the judge. When the child is upset or tired, Titi goes quiet and gentle and Pere leads.
+- How they talk (1 Nov 2026, Elena: "the golden middle between calm and fresh"): Pere proposes the calm, classic way; Titi answers with a twist or a different idea; and the CHILD decides - right after Titi really disagrees with Pere (at most ONCE a lesson - if it was already asked in this lesson, never again), ask her "¿Quién tiene razón, Pere o Titi? / Who is right, Pere or Titi?"; every other time, let her choose in fresh words of your own. Both are a little right; the child is the judge. When the child is upset or tired, Titi goes quiet and gentle and Pere leads.
 
 How to talk:
 - Always use real, complete sentences, never single words. Say each idea in Spanish first, then the same idea in English on the SAME line after " / ".
 - The FIRST line of every reply answers what the child just said. If the child asked a question, answer it; if the child told you something, say it back in a correct whole sentence. Only then continue the lesson. Example: the child says "Hello, how are you, Pere and Titi?" -> "Pere [hello]: ¡Estoy muy bien, gracias por preguntar! / I am very well, thank you for asking!" then "Titi [cheer]: ¡Yo también estoy feliz de verte! / I am happy to see you too!"
 - Clear for a 6-7 year old (about 6-12 words per sentence; two ideas may be joined with "y / and" or "porque / because"). 2-3 short lines per reply. Warm and playful. No markdown, no bullet points, at most one emoji.
 - Let Pere and Titi speak by name, and name the picture shown while each one speaks: "Pere [shot]: ..." / "Titi [shot]: ...". Choose the shot that matches what the line says or does. Pere's shots: talk, hello, counting, thinking, clap, listening, breathing, sleepy, goodbye. Titi's shots: talk, hello, cheer, silly, dance, jump, counting, freeze, oops, listening, goodbye. Both together: highfive, peekaboo. Use "talk" when nothing fits. Never give two lines in a row the same shot, and across the lesson use many different ones. Shots by lesson step: hello = Pere [hello] then Titi [hello]; wake-up = Titi [jump], [counting], [freeze] or [dance]; new sentences = Pere [talk], [thinking], [listening], praise = Pere [clap] or Titi [cheer]; the game (a riddle or "what's wrong?") = Titi [oops], [silly], [peekaboo]; calm = Pere [breathing], [sleepy]; the end = [highfive] then [goodbye]. Example: "Titi [counting]: ¡Uno, dos, tres tucanes! / One, two, three toucans!"
-- End every reply with ONE simple question and invite the child to answer with a whole sentence, in Spanish or English.
+- End every reply with ONE simple question - a NEW one, about exactly what she just said, did or painted, curious and playful like a friend who really wants to know ("¿Y qué come un perezoso en el desayuno? / And what does a sloth eat for breakfast?"). Never repeat a question already asked in this lesson, and never use the same kind of question twice in a row. Invite a whole sentence only now and then (at most every third reply), not every turn.
 - If the child makes a mistake, praise the try and say the correct whole sentence once; never say "wrong".
 - Your Spanish must be perfectly correct, because a child copies it. "muy" never goes with a verb, use "mucho" ("Amo mucho a mi mamá", never "Amo a mi mamá muy"); for loving people use "querer" or "amar", not "gustar" ("Quiero mucho a mi mamá"). When you correct the child, give one short natural sentence, not a grammar rule.
 - Each reply is ONE step of the lesson rhythm below (THIS TURN names it). After the first hello, never greet again and never restart the lesson; continue from where the conversation is.
@@ -253,7 +253,8 @@ function kidsClassSteps(u: typeof KIDS_CLASS_UNITS[number]): string[] {
       `that ONE thing and ask her to SAY it aloud once: expressing herself comes first, one step at a time). Spanish leads (she speaks it fluently); never long text. English sounds today: ` +
       `${u.en} (one or two, said aloud - English is still new for her).`,
     `WORDS OF THE CLASS (${u.theme}): Pere teaches ONE useful sentence the classic way (Spanish / English); Titi offers a ` +
-      "funnier or different version; let her choose and say it (\"¿Quién tiene razón, Pere o Titi?\").",
+      "funnier or different version; let her choose and say it - ask it in fresh words (\"¿Cuál te gusta más? / Which one " +
+      "do you like more?\", \"¿Tú cómo lo dirías? / How would you say it?\"), not a question already asked this lesson.",
     `NUMBERS CORNER: ${u.num} - with real things from today's theme or her life (mangos, toys, toucans); one small question.`,
     `STORY AND TALK: ${u.talk}. Pere listens slowly; Titi adds one surprise idea.`,
     "CALM AND GOODBYE (Pere): three slow breaths, one feelings sentence, real praise for one thing she did in this class, " +
@@ -418,6 +419,35 @@ const KIDS_BYE = /\b(ciao|chao|adi[oó]s|bye|goodbye|hasta luego|hasta mañana|p
 // 1 Nov 2026 (Alisa's first tracing test: after each trace both heroes talked on and she had no chance to speak): a
 // "✏️ Tracé" turn from the web tracing pad gets ONE line - praise that letter and give her the turn to say it.
 const KIDS_TRACED = /^✏️ Tracé "([^"]{1,20})"/;
+// 3 Nov 2026 (Elena: "always the same question, quién tiene razón, is annoying; the same tracing praise is very bad").
+// Measured over 30 days (238 kids replies): 18.5% ended "¿Quién tiene razón, Pere o Titi?" (~6 per lesson, the prompt
+// allowed 1-2) and 24% were the single tracing example "¡Qué bonita tu X! Ahora dila tú". So the code now enforces it:
+// the judge question at most ONCE a lesson, and the tracing praise rotates through words not yet used in this lesson.
+const KIDS_JUDGE = /qui[eé]n tiene raz[oó]n|who is right/i;
+const KIDS_TRACE_PRAISE: ((x: string) => string)[] = [
+  (x) => `Pere [happy]: ¡Qué trazo tan bonito, «${x}»! Ahora dilo tú. / What a lovely «${x}»! Now you say it.`,
+  (x) => `Titi [cheer]: ¡Guau, «${x}» te quedó perfecto! Dilo en voz alta. / Wow, your «${x}» looks perfect! Say it out loud.`,
+  (x) => `Pere [happy]: ¡Mira qué mano tan firme! Eso es «${x}». Ahora con tu voz. / What a steady hand! That is «${x}». Now with your voice.`,
+  (x) => `Titi [cheer]: ¡Titi aplaude! «${x}» quedó genial. Te toca decirlo. / Titi is clapping! «${x}» came out great. Your turn to say it.`,
+  (x) => `Pere [happy]: ¡Bravo! «${x}» parece de un libro. Ahora dilo despacito. / Bravo! «${x}» looks like it is from a book. Now say it slowly.`,
+  (x) => `Titi [cheer]: ¡Eso! «${x}» ya vive en tu mano. Ahora que viva en tu voz. / Yes! «${x}» lives in your hand now. Now let it live in your voice.`,
+  (x) => `Pere [happy]: ¡Paso a paso, lo lograste! «${x}». Dilo con tu voz más alegre. / Step by step, you did it! «${x}». Say it with your happiest voice.`,
+];
+/** The next tracing praise for this lesson: rotates with each trace and skips any praise already said in the lesson. */
+function kidsTracePraise(x: string, history: unknown): string {
+  const hist: { role?: unknown; content?: unknown }[] = Array.isArray(history) ? history : [];
+  const said = hist.filter((m) => m?.role === 'assistant').map((m) => String(m?.content ?? '')).join('\n');
+  const traces = hist.filter((m) => m?.role === 'user' && KIDS_TRACED.test(String(m?.content ?? ''))).length;
+  for (let i = 0; i < KIDS_TRACE_PRAISE.length; i++) {
+    const line = KIDS_TRACE_PRAISE[(traces + i) % KIDS_TRACE_PRAISE.length](x);
+    const opener = line.replace(/^\w+ \[\w+\]: /, '').split(/[!«]/)[0]; // e.g. "¡Qué trazo tan bonito, "
+    if (!said.includes(opener.trim())) return line;
+  }
+  return KIDS_TRACE_PRAISE[traces % KIDS_TRACE_PRAISE.length](x);
+}
+/** True when Pere or Titi already asked "who is right" in this lesson. */
+const kidsJudgeAsked = (history: unknown): boolean => (Array.isArray(history) ? history : [])
+  .some((m: any) => m?.role === 'assistant' && KIDS_JUDGE.test(String(m?.content ?? '')));
 // 2 Nov 2026 (Elena: "Alisa wants to paint little paintings, not just trace"): the web paint pad's "✨ Listo" sends
 // "🎨 Pinté ..." with the picture's name and the colours she used (no image leaves the tablet).
 const KIDS_PAINTED = /^🎨 Pinté/;
@@ -674,9 +704,9 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
   const traced = message.trim().match(KIDS_TRACED);
   if (traced) {
     return `\n\nSHE JUST TRACED "${traced[1]}" WITH HER FINGER ON THE TABLET.\nTHIS TURN OVERRIDES EVERY RULE ABOVE: ` +
-      `exactly ONE short line from Pere, no question, no game, no new letter: praise her "${traced[1]}" and give her the ` +
-      `turn to say it, e.g. "Pere [happy]: ¡Qué bonita tu ${traced[1]}! Ahora dila tú. / What a lovely ${traced[1]}! Now ` +
-      "you say it.\" Then stop: she speaks next.";
+      `exactly ONE short line from Pere or Titi, no question, no game, no new letter: praise her "${traced[1]}" and give ` +
+      `her the turn to say it. Use THIS line (or new words of your own - never a praise already used in this lesson): ` +
+      `"${kidsTracePraise(traced[1], kids?.history)}" Then stop: she speaks next.`;
   }
   if (KIDS_QUIET.test(message)) {
     return `\n\nSHE ASKED YOU TO TALK LESS: "${message.trim().slice(0, 200)}"\nTHIS TURN OVERRIDES EVERY RULE ABOVE: ` +
@@ -1019,7 +1049,8 @@ ${asked}` : ''}`;
       .order('created_at', { ascending: false })
       .limit(8);
 
-    const conversationHistory = sessions?.map(session => {
+    // 3 Nov 2026: fetched newest-first, so the model read the conversation backwards - oldest turn first again.
+    const conversationHistory = sessions?.slice().reverse().map(session => {
       const content = session.content as any;
       return [
         { role: 'user', content: content.user_message || '' },
@@ -1078,6 +1109,16 @@ ${asked}` : ''}`;
         const last = lines[lines.length - 1];
         fullResponse = [...lines.slice(0, 3), ...(last.includes('?') ? [last] : [])].join('\n');
       }
+      // "Who is right, Pere or Titi?" once per lesson, enforced: a second one is cut (a line that is only the judge
+      // question goes; inside a longer line only that sentence goes).
+      if (kidsJudgeAsked(kids.history)) {
+        const kept = fullResponse.split('\n').map((l: string) => {
+          if (!KIDS_JUDGE.test(l)) return l;
+          const rest = l.split(/(?<=[?!.])\s+/).filter((s: string) => !KIDS_JUDGE.test(s)).join(' ').trim();
+          return /^\w+ \[[^\]]*\]:?\s*$/.test(rest) || /^\/?\s*$/.test(rest) ? '' : rest;
+        }).filter((l: string) => l.trim());
+        if (kept.length) fullResponse = kept.join('\n');
+      }
       // 31 Oct 2026 (15:56): "No te escuché bien. ¿Me lo dices otra vez?" was followed in the same reply by "¡Salta
       // tres veces!" and a question about "the phone" she never said. Not heard = ask again, and nothing else.
       if (/no te escuch/i.test(lines[0] ?? '')) fullResponse = lines[0];
@@ -1090,7 +1131,12 @@ ${asked}` : ''}`;
       }
       else if (KIDS_TRACED.test(message.trim())) {
         const t = message.trim().match(KIDS_TRACED)![1];
-        fullResponse = lines.find((l: string) => !l.includes('?')) ?? `Pere [happy]: ¡Qué bonita tu ${t}! Ahora dila tú. / What a lovely ${t}! Now you say it.`;
+        const own = lines.find((l: string) => !l.includes('?'));
+        // A praise the model copied from earlier in the lesson is swapped for the next fresh one.
+        const earlier = (Array.isArray(kids.history) ? kids.history : []).filter((m: any) => m?.role === 'assistant')
+          .map((m: any) => String(m?.content ?? '')).join('\n');
+        const core = (own ?? '').replace(/^\w+ \[\w+\]: /, '').split(/[!«]/)[0].trim();
+        fullResponse = own && !(core.length > 6 && earlier.includes(core)) ? own : kidsTracePraise(t, kids.history);
       }
       else if (KIDS_QUIET.test(message)) {
         fullResponse = lines.find((l: string) => !l.includes('?')) ?? 'Pere [listening]: Vale, ahora te escucho yo. / Okay, now I am listening to you.';
@@ -1117,7 +1163,9 @@ ${asked}` : ''}`;
         .from('learning_sessions')
         .insert({
           user_id: userId,
-          session_type: kids ? 'classroom' : 'chat',
+          // 3 Nov 2026: was 'chat', while this function (history above) and the chat screen (ChatWithEspaluz.tsx) both
+          // read 'dashboard_chat' - so every grown-up web chat started from zero, even after a reload.
+          session_type: kids ? 'classroom' : 'dashboard_chat',
           source: botPlatform ?? 'web',
           content: {
             // 2 Nov 2026: a parent's turn is kept as parent_message, never as user_message - every reader of the child's
