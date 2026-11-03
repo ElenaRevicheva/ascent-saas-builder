@@ -376,6 +376,30 @@ const KIDS_HARD = /peg|golpe|\bhit|grit|yell|scold|rega[nñ]|castig|punish|llor|
 // the mother "it sounds like you feel worried". Twins: kids-memory KIDS_ADULT, main.py _KIDS_ADULT.
 // 1 Nov 2026: "It is mother of Alisa" was missed - "it is" and "(mother|mamá) (of|de) alisa" added.
 const KIDS_ADULT = /\bmi hij[oa]\b|\bmy (daughter|son)\b|\bmam[aá] aqu[ií]\b|\bsoy (la|su) mam[aá]\b|\b(it'?s|it is|this is|soy|habla) [^.!?]{0,20}\b(mom|mum|mother|mam[aá])\b|\balisa'?s (mom|mum|mother)\b|\b(mom|mum|mother|mam[aá]) (of|de) alisa\b|\balisa (has|had|is|was|does|doesn'?t|did|didn'?t|promised|no quiere|quiere|tiene|est[aá])\b/i;
+// 3 Nov 2026 15:11 (one recording, two voices: "¿Qué tú vas a pintar, Lisa? Habla con Pere y Titi … Voy a pintar un
+// pájaro"; 15:13 "…говори. Estai pintando…"): Mamá coaches Alisa inside the child's own clip. Elena: the heroes must
+// not ignore that part - they stand with Mamá, invite the child to follow her advice and help her say it: a bridge
+// between child and mother. Coaching = telling the child what to say / answer / ask / explain, in Spanish, English or
+// Russian (Cyrillic needs a letter-class boundary because \b is ASCII-only), or calling the child by name mid-clip.
+const KIDS_COACH = /\bhabla(le)? con (pere|titi|ellos)\b|\b(dile|diles|d[ií]selo|cu[eé]ntale|cu[eé]ntales|preg[uú]ntale|preg[uú]ntales|cont[eé]stale|resp[oó]ndele|expl[ií]cale|expl[ií]cales)\b|\b(puedes|podr[ií]as) (decir|contar|explicar|preguntar)\b|\b(tell|ask|answer) (them|him|her|pere|titi)\b|\b(you can|try to|try) (say|tell|explain|ask)\b|\bsay it to\b|(^|[^\p{L}])(говор[иi]|скаж[иi]|расскаж[иi]|ответь|спрос[иi]|объясн[иi]|можешь сказать)($|[^\p{L}])/iu;
+/** The child called by her name or its short form (Alisa -> Lisa) as a call inside her clip: "…, Lisa?", "Lisa, …". */
+function kidsCalled(message: string, childName: string): boolean {
+  const n = childName.trim().toLowerCase();
+  if (n.length < 3 || n === 'the child') return false;
+  const names = [n, ...(n.length > 4 && /^[aeiouáéíóú]/.test(n) ? [n.slice(1)] : [])]
+    .map((x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+  return new RegExp(`[,¿¡]\\s*(${names})\\s*[?!.,]|(^|[.?!]\\s*)(${names})\\s*,`, 'iu').test(message);
+}
+// The bridge between child and parent (Elena, 3 Nov 2026): when Mamá or Papá guides the child, the heroes are on the
+// parent's side - warmly, never as judges of the parent.
+const KIDS_BRIDGE = "the heroes stand WITH the parent: one warm line that honours the parent's guidance and invites the " +
+  "child to listen to it and try it (\"¡Mamá tiene una idea genial! ¿La probamos? / Mom has a great idea! Shall we try " +
+  "it?\"); if the parent suggested what to say, ask or explain (a feeling, what happened), help the child say it in HER " +
+  "own words, gently, in one short sentence she can repeat. Never contradict, correct or override the parent, never tell " +
+  "the parent how they feel, and never make the child choose between the heroes and the parent.";
+const KIDS_COACHED_LINE = "THIS RECORDING HAS TWO VOICES: the parent is coaching the child AND the child speaks. The " +
+  "parent's words are NOT the child's (never praise or correct them as hers). " + KIDS_BRIDGE + " Then react to what " +
+  "the CHILD herself said (usually the part after the parent's words) and go on with the lesson.\n";
 // 31 Oct 2026 (15:39-15:43): Alisa was in the car; Titi asked her to hop like a bunny, she said she could not ("me puede
 // abrir la cabeza"), and the next reply still had no idea. Once the lesson hears she cannot move, every later step is a
 // sit-still one - kept in code from the whole lesson history, not left to the model's memory of one turn.
@@ -486,7 +510,7 @@ async function kidsMemoryCard(supabase: any, userId: string, hist: any[]): Promi
     }
     if (now.has(words)) continue; // this lesson is already in the conversation
     const understood = firstLine(reply);
-    if (KIDS_HARD.test(words) || KIDS_HARD.test(understood) || KIDS_ADULT.test(words) || /no te escuch|didn't hear/i.test(understood)) continue;
+    if (KIDS_HARD.test(words) || KIDS_HARD.test(understood) || KIDS_ADULT.test(words) || KIDS_COACH.test(words) || /no te escuch|didn't hear/i.test(understood)) continue;
     // An "understanding" that only echoes her words means nobody understood her (eval: "te viene un perezoso").
     if (understood && kidWords(understood).join(' ').includes(kidWords(words).join(' '))) continue;
     if (!words || KIDS_STARTER.test(words) || words.startsWith('/')) continue;
@@ -591,10 +615,12 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
   const planned = turn < steps.length ? steps[turn] : KIDS_STEP_FREE;
   const step = storyOff && planned.startsWith("THIS WEEK'S STORY") ? KIDS_STEP_FREE
     : storyOff && turn === 0 ? planned.replace(/; mention this week's story in one line/, '') : planned;
+  const coached = !KIDS_ADULT.test(message) &&
+    (KIDS_COACH.test(message) || kidsCalled(message, String(kids?.child_name ?? '')));
   const heard = turn > 0 ? kidsHeard(message) + (KIDS_ADULT.test(message)
     ? "THIS MESSAGE IS FROM THE PARENT, not the child: first line thanks the parent by role (\"¡Gracias, mamá! / " +
       "Thank you, mom!\"), never tell the parent how they feel; do what the parent asks, then turn to the child by name.\n"
-    : "") : "";
+    : coached ? KIDS_COACHED_LINE : "") : "";
   if (KIDS_EMERGENCY.test(message)) {
     return `\n\nSOMEONE SAID THERE IS AN EMERGENCY: "${message.trim().slice(0, 200)}"\nTHIS TURN OVERRIDES EVERY RULE ABOVE: ` +
       "no lesson, no game, no breathing exercise, no question, and never confirm or describe the emergency. Exactly two " +
@@ -625,6 +651,8 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
       `2. When it fits, bring the parent INTO the game in one line: ask ${parent} to say today's sentence too, or ask ` +
       `${childEs} to teach ${parent} the word ("${childEs}, ¿le enseñas a ${parent.toLowerCase()} cómo se dice? / ${childEs}, ` +
       `can you teach ${parent} how to say it?").\n` +
+      `2b. If ${parent} is GUIDING ${childEs} (telling her what to say, ask or explain, how to say how she feels, what ` +
+      `to do): ${KIDS_BRIDGE}\n` +
       `3. Your LAST line turns back to ${childEs} by name with ONE short question for her, so she speaks next. Never ` +
       "leave the child out: at most one line only for the parent.\n" +
       `4. Keep the lesson going from where it is - no new hello, no restart, no skipping ahead. The lesson step stays: ${step}\n` +
@@ -793,6 +821,10 @@ async function callOpenAI(apiKey: string, request: any): Promise<any> {
   return { content: [{ text }], model: OPENAI_CHAIN_MODEL };
 }
 
+// 3 Nov 2026 (Alisa's lesson 15:08-15:25: 4 of 10 answers took 22-28 s): the free Gemini step waited the shared 25 s
+// ("Signal timed out") or a slow 503 before Groq and Grok were tried. A healthy Gemini answers in 1-3 s, so a short
+// wait only cuts a step that was failing anyway, and the next provider answers at once (Elena's waterfall rule).
+const GEMINI_TIMEOUT_MS = Number(Deno.env.get('GEMINI_TIMEOUT_MS') || 6000);
 async function callGemini(apiKey: string, request: any): Promise<any> {
   const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`, {
     method: 'POST',
@@ -802,7 +834,7 @@ async function callGemini(apiKey: string, request: any): Promise<any> {
       contents: request.messages.map((m: any) => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] })),
       generationConfig: { maxOutputTokens: request.max_tokens, temperature: request.temperature },
     }),
-    signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
+    signal: AbortSignal.timeout(GEMINI_TIMEOUT_MS),
   });
   if (!r.ok) throw new Error(`Gemini ${GEMINI_MODEL}: ${r.status} ${(await r.text()).slice(0, 200)}`);
   const j = await r.json();
