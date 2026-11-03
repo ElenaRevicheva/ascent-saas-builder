@@ -368,7 +368,7 @@ function kidsHeard(message: string): string {
     "3. Her own idea, topic or a refusal (\"I don't want to jump, I want to ride my bicycle\"; \"no quiero jugar... " +
     "Halloween\") -> follow HER idea warmly and fit the lesson into it (\"¡Vamos en bici! / Let's ride our bikes!\", " +
     "\"¡Hoy es Halloween! ¿De qué te vas a disfrazar? / Today is Halloween! What will you dress up as?\").\n" +
-    "4. Only if NO part of it makes sense -> do NOT guess and do NOT praise it: say kindly that you did not hear well and " +
+    "4. (\"no sé\", \"sí\", \"no\", \"ok\" ARE real answers - never treat them as not heard.) Only if NO part of it makes sense -> do NOT guess and do NOT praise it: say kindly that you did not hear well and " +
     "ask her to say it again (\"No te escuché bien. ¿Me lo dices otra vez? / I didn't hear you well. Can you say it " +
     "again?\") and stop there: skip the lesson step below. If part of it makes sense, answer that part.\n" +
     "Always: if her words contain something untrue, never repeat it as true - say the correct version simply (\"Las " +
@@ -615,35 +615,54 @@ const KIDS_HOLIDAYS: Record<string, string> = {
 // something truly working in the local area - so the child is switched off the glued, stale, boring conversation"):
 // one TRUE, timeless local idea per day for ordinary days (holidays above win). Same rules as PANAMA PLACES: no numbers,
 // no dates, nothing invented. Rotates by the Panama day, so each day brings a different one.
-const KIDS_FRESH = [
-  "In Panama, when you want the bus to stop, you call out \"¡Parada!\" - try saying it like a real passenger.",
-  "In shops in Panama people say \"¡Buenas!\" when they come in - a friendly hello for the whole shop.",
-  "\"¡Qué xopá!\" is how kids and grown-ups in Panama say \"What's up?\" - and a \"pelao\" or \"pelaíta\" is a kid.",
-  "A raspao is Panama's shaved ice with sweet syrup and condensed milk, sold from little carts on hot days.",
-  "Patacones are slices of green plantain, squashed flat and fried - crunchy, and eaten all over Panama.",
-  "Big ships cross the Panama Canal through locks that lift them up and down like an elevator made of water.",
-  "In Panama City you can watch the sun rise over the Pacific Ocean, because of the way the land curves.",
-  "Sloths (perezosos) move so slowly that little plants can grow in their fur, and they climb down a tree only about once a week.",
-  "The pollera is Panama's national dress, with lots of embroidery and shiny hair ornaments called tembleques.",
-  "The golden frog (rana dorada) is a symbol of good luck in Panama.",
-  "The harpy eagle is Panama's national bird - one of the strongest eagles in the world.",
-  "Hummingbirds (colibríes) beat their wings so fast you hear a hum - that is where their English name comes from.",
-  "This time of year is the rainy season in Panama: sunny mornings, big afternoon showers, and frogs singing at night.",
-  "In Bocas del Toro many houses stand on stilts right over the sea.",
-  "Cocadas are a sweet Panamanian treat made with coconut and sugar.",
-  "Panama has two oceans: the Pacific and the Caribbean - from Volcán Barú on a clear day you can see both.",
-  "Sea turtles come to some beaches in Panama to lay their eggs in the sand at night.",
-  "In Panama many fruit juices are called \"chicha\" - like chicha de tamarindo or chicha de maracuyá.",
-  "\"Chévere\" means \"cool\" or \"great\" - you hear it all the time in Panama.",
-  "Toucans (tucanes) use their huge colourful beak to pick fruit from thin branches.",
+const KIDS_FRESH: { es: string; en: string }[] = [
+  { es: "En Panamá, para que el bus pare, se grita «¡Parada!»", en: "In Panama, to stop the bus you call out \"¡Parada!\"" },
+  { es: "En las tiendas de Panamá la gente entra diciendo «¡Buenas!»", en: "In Panama's shops people walk in saying \"¡Buenas!\"" },
+  { es: "«¡Qué xopá!» es como en Panamá se dice «¿qué tal?», y un «pelao» o una «pelaíta» es un niño o una niña", en: "\"¡Qué xopá!\" is how Panama says \"What's up?\", and a \"pelao\" or \"pelaíta\" is a kid" },
+  { es: "El raspao es hielo raspado con sirope dulce y leche condensada, y se vende en carritos", en: "A raspao is shaved ice with sweet syrup and condensed milk, sold from little carts" },
+  { es: "Los patacones son rodajas de plátano verde, aplastadas y fritas: ¡crujientes!", en: "Patacones are slices of green plantain, squashed flat and fried: crunchy!" },
+  { es: "Los barcos grandes cruzan el Canal de Panamá en esclusas que los suben y bajan como un ascensor de agua", en: "Big ships cross the Panama Canal in locks that lift them up and down like a water elevator" },
+  { es: "En Ciudad de Panamá puedes ver el sol salir sobre el océano Pacífico, por cómo se curva la tierra", en: "In Panama City you can watch the sun rise over the Pacific Ocean, because of how the land curves" },
+  { es: "Los perezosos son tan lentos que les crecen plantitas en el pelo, y bajan del árbol más o menos una vez por semana", en: "Sloths are so slow that little plants grow in their fur, and they climb down a tree about once a week" },
+  { es: "La pollera es el traje nacional de Panamá, con mucho bordado y adornos brillantes en el pelo llamados tembleques", en: "The pollera is Panama's national dress, with lots of embroidery and shiny hair ornaments called tembleques" },
+  { es: "La rana dorada es un símbolo de buena suerte en Panamá", en: "The golden frog is a symbol of good luck in Panama" },
+  { es: "El águila arpía es el ave nacional de Panamá, una de las águilas más fuertes del mundo", en: "The harpy eagle is Panama's national bird, one of the strongest eagles in the world" },
+  { es: "Los colibríes mueven las alas tan rápido que se oye un zumbido", en: "Hummingbirds beat their wings so fast you can hear a hum" },
+  { es: "En esta época es la temporada de lluvias en Panamá: mañanas de sol, aguaceros por la tarde y ranas cantando de noche", en: "This time of year is Panama's rainy season: sunny mornings, afternoon downpours and frogs singing at night" },
+  { es: "En Bocas del Toro muchas casas están sobre palos, encima del mar", en: "In Bocas del Toro many houses stand on stilts right over the sea" },
+  { es: "Las cocadas son un dulce panameño de coco y azúcar", en: "Cocadas are a Panamanian sweet made of coconut and sugar" },
+  { es: "Panamá tiene dos océanos, el Pacífico y el Caribe, y desde el Volcán Barú, en un día claro, se ven los dos", en: "Panama has two oceans, the Pacific and the Caribbean, and from Volcán Barú on a clear day you can see both" },
+  { es: "Las tortugas marinas llegan de noche a algunas playas de Panamá para poner sus huevos en la arena", en: "Sea turtles come to some of Panama's beaches at night to lay their eggs in the sand" },
+  { es: "En Panamá a muchos jugos se les dice «chicha», como chicha de tamarindo o de maracuyá", en: "In Panama many fruit juices are called \"chicha\", like tamarind or passion-fruit chicha" },
+  { es: "«Chévere» quiere decir «genial», y en Panamá se oye todo el tiempo", en: "\"Chévere\" means \"great\", and in Panama you hear it all the time" },
+  { es: "Los tucanes usan su pico enorme y colorido para alcanzar frutas en ramas finitas", en: "Toucans use their huge colourful beak to reach fruit on thin branches" },
 ];
+
+// The brain break said in code when the model skipped it: one ready bilingual line per break in TITI_BREAKS
+// (kidsTurnContext), matched by the break the turn's instructions named.
+const KIDS_MOVED = /pausa de energ|rodilla|knee|sim[oó]n|flamenc|flamingo|congela|freeze|ocho|eight|dedito|finger|veo veo|i spy/i;
+const KIDS_BREAK_LINES: [string, string][] = [
+  ["cross-crawl", "Titi [jump]: ¡Pausa de energía, 20 segundos! Mano derecha a la rodilla izquierda, mano izquierda a la rodilla derecha: ¡uno, dos, tres... hasta diez! / Energy break, 20 seconds! Right hand to left knee, left hand to right knee: one, two, three... up to ten!"],
+  ["Simón dice", "Titi [jump]: ¡Pausa de energía, 20 segundos! Simón dice: toca tu nariz... salta dos veces... ¡aplaude! / Energy break, 20 seconds! Simon says: touch your nose... jump twice... clap!"],
+  ["flamingo", "Titi [jump]: ¡Pausa de energía, 20 segundos! Somos flamencos: en un pie contamos hasta diez, ¡y ahora el otro pie! / Energy break, 20 seconds! We are flamingos: on one foot we count to ten, and now the other foot!"],
+  ["rojo salta", "Titi [jump]: ¡Pausa de energía, 20 segundos! Cuando digo «rojo», saltas; cuando digo «azul», ¡te congelas! ¡Rojo! / Energy break, 20 seconds! When I say «red», you jump; when I say «blue», you freeze! Red!"],
+  ["lazy 8", "Titi [cheer]: ¡Pausa de energía, 20 segundos! Con un dedo dibuja un ocho acostado en el aire, despacito, tres veces con cada mano. / Energy break, 20 seconds! With one finger draw a sideways eight in the air, slowly, three times with each hand."],
+  ["finger counting", "Titi [cheer]: ¡Pausa de energía, 20 segundos! Toca cada dedito con el pulgar: uno, dos, tres, cuatro... ¡y la otra mano! / Energy break, 20 seconds! Touch each finger with your thumb: one, two, three, four... and the other hand!"],
+  ["veo veo", "Titi [cheer]: ¡Pausa de energía, 20 segundos! Veo veo... ¿algo de color verde por la ventana? ¡Dímelo en español y en inglés! / Energy break, 20 seconds! I spy... something green out of the window? Tell me in Spanish and English!"],
+];
+const kidsBreakLine = (asked: string): string =>
+  (KIDS_BREAK_LINES.find(([key]) => asked.includes(key)) ?? KIDS_BREAK_LINES[0])[1];
+
+/** Today's fresh idea (one a day, by the Panama day). */
+const kidsFreshToday = () => KIDS_FRESH[Math.floor((Date.now() - 5 * 3600 * 1000) / 86400000) % KIDS_FRESH.length];
 
 function kidsToday(): string {
   const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Panama', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
   const md = `${parts.find((p) => p.type === 'month')?.value}-${parts.find((p) => p.type === 'day')?.value}`;
   const day = new Intl.DateTimeFormat('es-PA', { timeZone: 'America/Panama', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
   const h = KIDS_HOLIDAYS[md];
-  const fresh = KIDS_FRESH[Math.floor((Date.now() - 5 * 3600 * 1000) / 86400000) % KIDS_FRESH.length];
+  const f = kidsFreshToday();
+  const fresh = `${f.es} / ${f.en}`;
   return `TODAY in Panama: ${day}${h ? ` - ${h}. If she brings it up (or it fits), talk about it happily and teach a sentence about it.` : '.'}` +
     `\nA FRESH IDEA FOR TODAY (true; TITI brings it - he is the energetic one, full of surprises, like a fresh battery - ` +
     `at the hello if nothing else is planned, or the moment the talk gets stuck): ${fresh}`;
@@ -1217,9 +1236,22 @@ ${asked}` : ''}`;
         }).filter((l: string) => l.trim());
         if (kept.length) fullResponse = kept.join('\n');
       }
+      // 3 Nov 2026 (live probe after Elena's Publish: the free model skipped Titi's brain break, and answered a stuck
+      // "no sé" with "No te escuché bien"): when this turn's instructions asked for a brain break or the fresh-idea
+      // switch and the reply did not do it, the code does it - the same way "¿Quién tiene razón?" is enforced.
+      const asked = String(claudeRequest.system ?? '');
+      const stuckTurn = asked.includes('THE TALK IS STUCK');
+      if (stuckTurn && !/sab[ií]as|did you know/i.test(fullResponse)) {
+        const f = kidsFreshToday();
+        fullResponse = `Titi [cheer]: ¡Oye, oye! ¿Sabías que...? ${f.es}. / Hey, hey! Did you know...? ${f.en}.\n` +
+          "Titi [silly]: ¿Tú lo sabías? / Did you know that?";
+      } else if (asked.includes('BRAIN BREAK NOW') && !KIDS_MOVED.test(fullResponse)) {
+        const first = fullResponse.split('\n').map((l: string) => l.trim()).find((l: string) => l && !l.includes('?')) ?? '';
+        fullResponse = [first, kidsBreakLine(asked)].filter(Boolean).join('\n');
+      }
       // 31 Oct 2026 (15:56): "No te escuché bien. ¿Me lo dices otra vez?" was followed in the same reply by "¡Salta
       // tres veces!" and a question about "the phone" she never said. Not heard = ask again, and nothing else.
-      if (/no te escuch/i.test(lines[0] ?? '')) fullResponse = lines[0];
+      if (/no te escuch/i.test(lines[0] ?? '') && !stuckTurn) fullResponse = lines[0];
       // A stop or an emergency gets goodbye lines only - the base prompt's "end with a question" must not leak in.
       else if (KIDS_EMERGENCY.test(message) || KIDS_BYE.test(message)) {
         fullResponse = fullResponse.split('\n').filter((l: string) => l.trim() && !l.includes('?')).slice(0, 2).join('\n') || fullResponse;
