@@ -606,12 +606,53 @@ const KIDS_HOLIDAYS: Record<string, string> = {
   '11-28': 'Independencia de Panamá de España (1821)', '12-08': 'Día de las Madres en Panamá', '12-24': 'Nochebuena',
   '12-25': 'Navidad', '12-31': 'Fin de Año', '01-01': 'Año Nuevo',
 };
+// 3 Nov 2026 (Elena: "switch to something fresh, actual, making sense for today - local practicalities, local traditions,
+// something truly working in the local area - so the child is switched off the glued, stale, boring conversation"):
+// one TRUE, timeless local idea per day for ordinary days (holidays above win). Same rules as PANAMA PLACES: no numbers,
+// no dates, nothing invented. Rotates by the Panama day, so each day brings a different one.
+const KIDS_FRESH = [
+  "In Panama, when you want the bus to stop, you call out \"¡Parada!\" - try saying it like a real passenger.",
+  "In shops in Panama people say \"¡Buenas!\" when they come in - a friendly hello for the whole shop.",
+  "\"¡Qué xopá!\" is how kids and grown-ups in Panama say \"What's up?\" - and a \"pelao\" or \"pelaíta\" is a kid.",
+  "A raspao is Panama's shaved ice with sweet syrup and condensed milk, sold from little carts on hot days.",
+  "Patacones are slices of green plantain, squashed flat and fried - crunchy, and eaten all over Panama.",
+  "Big ships cross the Panama Canal through locks that lift them up and down like an elevator made of water.",
+  "In Panama City you can watch the sun rise over the Pacific Ocean, because of the way the land curves.",
+  "Sloths (perezosos) move so slowly that little plants can grow in their fur, and they climb down a tree only about once a week.",
+  "The pollera is Panama's national dress, with lots of embroidery and shiny hair ornaments called tembleques.",
+  "The golden frog (rana dorada) is a symbol of good luck in Panama.",
+  "The harpy eagle is Panama's national bird - one of the strongest eagles in the world.",
+  "Hummingbirds (colibríes) beat their wings so fast you hear a hum - that is where their English name comes from.",
+  "This time of year is the rainy season in Panama: sunny mornings, big afternoon showers, and frogs singing at night.",
+  "In Bocas del Toro many houses stand on stilts right over the sea.",
+  "Cocadas are a sweet Panamanian treat made with coconut and sugar.",
+  "Panama has two oceans: the Pacific and the Caribbean - from Volcán Barú on a clear day you can see both.",
+  "Sea turtles come to some beaches in Panama to lay their eggs in the sand at night.",
+  "In Panama many fruit juices are called \"chicha\" - like chicha de tamarindo or chicha de maracuyá.",
+  "\"Chévere\" means \"cool\" or \"great\" - you hear it all the time in Panama.",
+  "Toucans (tucanes) use their huge colourful beak to pick fruit from thin branches.",
+];
+
 function kidsToday(): string {
   const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Panama', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
   const md = `${parts.find((p) => p.type === 'month')?.value}-${parts.find((p) => p.type === 'day')?.value}`;
   const day = new Intl.DateTimeFormat('es-PA', { timeZone: 'America/Panama', weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
   const h = KIDS_HOLIDAYS[md];
-  return `TODAY in Panama: ${day}${h ? ` - ${h}. If she brings it up (or it fits), talk about it happily and teach a sentence about it.` : '.'}`;
+  const fresh = KIDS_FRESH[Math.floor((Date.now() - 5 * 3600 * 1000) / 86400000) % KIDS_FRESH.length];
+  return `TODAY in Panama: ${day}${h ? ` - ${h}. If she brings it up (or it fits), talk about it happily and teach a sentence about it.` : '.'}` +
+    `\nA FRESH IDEA FOR TODAY (true; TITI brings it - he is the energetic one, full of surprises, like a fresh battery - ` +
+    `at the hello if nothing else is planned, or the moment the talk gets stuck): ${fresh}`;
+}
+
+// The talk is stuck: the child answers with the same few words, says "no sé / no / ok", or says she is bored.
+const KIDS_BORED = /aburr|boring|otra cosa|something else|no quiero (eso|esto)|ya no/i;
+const KIDS_TINY = /^\s*(no s[eé]|no|s[ií]|ok|okay|ya|nada|mm+|eh|aj[aá]|i don'?t know|yes|nope)\s*[.!?]*\s*$/i;
+function kidsStuck(hist: any[], message: string): boolean {
+  const said = [...hist.filter((m: any) => m?.role === 'user').map((m: any) => String(m?.content ?? '')), message]
+    .filter((s) => !/^✏️|^🎨|^📷/.test(s));
+  if (KIDS_BORED.test(message)) return true;
+  const last = said.slice(-3);
+  return last.length === 3 && last.every((s) => KIDS_TINY.test(s) || s.trim().split(/\s+/).length <= 2);
 }
 
 // ===== Family conversation (2 Nov 2026, Elena: "kid, parent, Pere and Titi all together; they recognize when mother is
@@ -743,6 +784,12 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
     kidsToday(),
     "BOTH heroes speak in this reply: at least one \"Pere [shot]:\" line AND one \"Titi [shot]:\" line (Titi is the " +
     "playful one - let him ask the closing question or make it a little game)." + family];
+  if (turn > 0 && kidsStuck(hist, message)) {
+    out.push("THE TALK IS STUCK (she gives tiny answers or says she is bored): drop the current topic NOW. TITI bursts in, " +
+      "full of energy, with the FRESH IDEA FOR TODAY (or today's holiday): one playful bridge line (\"Titi [cheer]: " +
+      "¡Oye, oye! ¿Sabías que...? / Hey, hey! Did you know...?\"), the idea in one simple sentence, then ONE curious " +
+      "question about it; Pere may add one calm line. No lecture, no going back to the old topic.");
+  }
   if ([...hist.filter((m: any) => m?.role === "user").map((m: any) => String(m?.content ?? "")), message].some((s) => KIDS_STILL.test(s))) {
     out.push("SHE CANNOT MOVE RIGHT NOW (in a car or told you she can't jump): for the rest of this lesson NO jumping, " +
       "hopping, standing or running games - use sit-still games instead (veo veo / I spy a colour out of the window, " +
