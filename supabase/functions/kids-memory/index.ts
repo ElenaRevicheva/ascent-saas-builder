@@ -26,6 +26,10 @@ const TOGETHER = [
   "Flamingo: stand on one foot and count to 10 in Spanish, then the other foot.",
   "Simón dice: 3 commands in Spanish (\"Simón dice: toca tu nariz\", \"…salta dos veces\", \"…aplaude\").",
   "Espejo / mirror: copy each other's slow moves for one minute, then each says one feeling (\"Estoy feliz\").",
+  // 3 Nov 2026: the two calm practice types Leaply uses that were missing (self-massage, body scan) - kid versions,
+  // still plain games with no health claims (docs/espaluz/LEAPLY_INSIDE_2026-11-03.md).
+  "Manos calientitas: rub your hands together until warm, rest them on your child's cheeks, then she does it for you - and both rub your ears softly from top to bottom, saying \"tranquilo / calm\".",
+  "Estatua y gelatina: squeeze the whole body tight like a statue while you count \"uno, dos, tres\" in Spanish, then go soft like jelly - 3 times, then each says how the body feels.",
 ];
 const panamaDay = (offset = 0): number => Math.floor((Date.now() - 5 * 3600 * 1000) / 86400000) + offset; // UTC-5, no DST
 

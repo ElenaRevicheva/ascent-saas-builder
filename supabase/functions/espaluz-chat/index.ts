@@ -136,6 +136,11 @@ unless it is in your country information; say instead to confirm it at the windo
 for money: never write a price or amount (no "$5-20", no "about 30 dollars") that is not in your country information -
 say "ask at the school / office how much it is" instead.
 
+A ONE-MINUTE RESET (3 Nov 2026, Leaply's adult practice - docs/espaluz/LEAPLY_INSIDE_2026-11-03.md): if they sound
+overwhelmed, anxious or exhausted, you may offer ONCE in that conversation a reset they can do anywhere in one minute -
+slow breathing (in for four, out for six, three times) or warm hands rested on the face - and, for parents of young
+children, the short movement or calm game Pere and Titi send for doing together. Offered, never pushed; no health claims.
+
 PRACTICAL HELP: you can explain a photographed document, draft a message to a landlord, school or doctor's office, or
 write a short phone script in Spanish - offer it when it fits. If you are not sure about a local fact (office hours, a
 fee, a rule), say so plainly and say where to confirm it. Never make it up.`;
@@ -803,12 +808,22 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
     "rojo salta, azul congela: on \"rojo\" she jumps, on \"azul\" she freezes like a statue",
   ];
   if (turn > 0 && turn % 4 === 0) {
+    // Leaply's session flow (docs/espaluz/LEAPLY_INSIDE_2026-11-03.md): a short framing that says how long, the
+    // exercise, a one-line wrap-up. Plain games - never a health or brain claim.
     out.push(`BRAIN BREAK NOW (Titi leads, about 20 seconds, then back to the lesson): ${TITI_BREAKS[(turn / 4) % TITI_BREAKS.length]}. ` +
-      "Titi says it with energy in one line (\"Titi [jump]: ¡Pausa de energía! ... / Energy break! ...\"), counts with her, " +
-      "and cheers when she is done. Keep it to this one break.");
+      "Three short beats: 1) Titi frames it with energy and says how long (\"Titi [jump]: ¡Pausa de energía, 20 segundos! / " +
+      "Energy break, 20 seconds!\"); 2) the movement, counting with her in Spanish; 3) a one-line wrap-up that asks how her " +
+      "body feels now (\"¿Cómo se siente tu cuerpo ahora? / How does your body feel now?\"). Keep it to this one break.");
   } else if (turn > 4 && turn % 4 === 1) {
-    out.push("CALM AFTER THE BREAK (Pere leads): one slow breath together first (\"Pere [breathing]: Ahora, despacito... " +
-      "respiramos juntos. / Now, slowly... let's breathe together.\"), then continue the lesson.");
+    // Pere's calm side, with the cues Leaply's practices use (in/out counts, warm hands, gentle self-massage, body scan).
+    const PERE_CALM = [
+      "slow breathing with counts: in through the nose while Pere counts \"uno, dos, tres\", out slowly \"cuatro, cinco, seis\", three times",
+      "warm hands: rub the hands together until they are warm, then rest them softly on the cheeks and close the eyes for three breaths",
+      "a gentle ear massage: softly rub both ears from the top down to the earlobes, slowly, while breathing out",
+      "statue to jelly: squeeze the whole body tight like a statue while Pere counts to three, then go soft and floppy like jelly",
+    ];
+    out.push(`CALM AFTER THE BREAK (Pere leads, slow and soft): ${PERE_CALM[Math.floor(turn / 4) % PERE_CALM.length]}. ` +
+      "One line to invite it (\"Pere [breathing]: Ahora, despacito... / Now, slowly...\"), do it with her, then continue the lesson.");
   }
   if (turn > 0 && kidsStuck(hist, message)) {
     out.push("THE TALK IS STUCK (she gives tiny answers or says she is bored): drop the current topic NOW. TITI bursts in, " +
