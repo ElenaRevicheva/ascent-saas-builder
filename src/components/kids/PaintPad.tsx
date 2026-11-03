@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // 2 Nov 2026 (Elena: "Alisa wants to paint little paintings, not just trace. A rainbow palette with many colors, a truly
 // colorful palette, picked with the pen. And examples of what to paint: Pere and Titi, flora and fauna of Metropolitan
@@ -271,18 +272,23 @@ export default function PaintPad({ onPainted }: Props) {
   };
 
   // The rainbow strip picks the hue, the shade strip how dark or light it is; both follow a finger or pen dragged along.
-  const strip = (pick: (f: number) => void) => ({
-    onPointerDown: (e: React.PointerEvent<HTMLDivElement>) => {
-      try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* a pointer the browser no longer tracks */ }
+  // A strip lies across under the canvas on a phone, and stands up beside it on a tablet (top = 0, bottom = 1).
+  const strip = (pick: (f: number) => void, vertical = false) => {
+    const at = (e: React.PointerEvent<HTMLDivElement>) => {
       const r = e.currentTarget.getBoundingClientRect();
-      pick(Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)));
-    },
-    onPointerMove: (e: React.PointerEvent<HTMLDivElement>) => {
-      if (!e.currentTarget.hasPointerCapture(e.pointerId)) return;
-      const r = e.currentTarget.getBoundingClientRect();
-      pick(Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)));
-    },
-  });
+      return Math.max(0, Math.min(1, vertical ? (e.clientY - r.top) / r.height : (e.clientX - r.left) / r.width));
+    };
+    return {
+      onPointerDown: (e: React.PointerEvent<HTMLDivElement>) => {
+        try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* a pointer the browser no longer tracks */ }
+        pick(at(e));
+      },
+      onPointerMove: (e: React.PointerEvent<HTMLDivElement>) => {
+        if (!e.currentTarget.hasPointerCapture(e.pointerId)) return;
+        pick(at(e));
+      },
+    };
+  };
   const pickHue = (f: number) => {
     const h = Math.round(f * 359);
     setHue(h);
@@ -343,6 +349,22 @@ export default function PaintPad({ onPainted }: Props) {
   };
 
   const big = "rounded-2xl px-4 py-3 text-lg font-bold shadow min-h-[56px]";
+  // 3 Nov 2026 (Elena: "the colours are down below; with the digital pen it is hard to reach them - put them on the
+  // right or the left side"): on a tablet or laptop the palette is a column to the RIGHT of the canvas, so the pen goes
+  // sideways to a colour and back instead of over the bottom of the picture. On a phone (< 768 px) it stays below.
+  const side = !useIsMobile();
+  const rainbow = "hsl(0,90%,50%), hsl(60,90%,50%), hsl(120,90%,45%), hsl(180,90%,45%), hsl(240,90%,55%), hsl(300,90%,50%), hsl(359,90%,50%)";
+  const shades = `hsl(${hue},90%,6%), hsl(${hue},90%,50%), hsl(${hue},90%,94%)`;
+  const current = (
+    <div className={`shrink-0 ${side ? "w-14 h-14" : "w-16 h-16"} rounded-full border-4 border-white shadow-lg ring-2 ring-slate-300`}
+      style={{ background: tool === "eraser" ? "repeating-conic-gradient(#e2e8f0 0 25%, #fff 0 50%) 50% / 16px 16px" : colour }}
+      aria-label="Color / Colour" />
+  );
+  const swatches = (cls: string) => SWATCHES.map((c) => (
+    <button key={c} onClick={() => { setColour(c); if (tool === "eraser") setTool("brush"); }}
+      className={`${cls} rounded-full border-4 shadow ${colour === c && tool !== "eraser" ? "border-slate-900 scale-110" : "border-white"}`}
+      style={{ background: c }} aria-label={colourName(c) ?? "blanco / white"} />
+  ));
   return (
     <div className="flex flex-col gap-3">
       {/* What to paint: pick a set (Pere and Titi, the city park, Chiriquí), then a page - or free paper. */}
@@ -368,7 +390,8 @@ export default function PaintPad({ onPainted }: Props) {
         ))}
       </div>
 
-      <div className="relative w-full" style={{ aspectRatio: `${W} / ${H}` }}>
+      <div className={side ? "flex gap-3 items-start" : "contents"}>
+      <div className={`relative ${side ? "flex-1 min-w-0" : "w-full"}`} style={{ aspectRatio: `${W} / ${H}` }}>
         <canvas
           ref={canvas}
           width={W}
@@ -386,31 +409,43 @@ export default function PaintPad({ onPainted }: Props) {
         )}
       </div>
 
-      {/* The palette: any colour from the two strips, or a ready one. */}
+      {side && (
+        <div className="shrink-0 flex flex-col items-center gap-3" aria-label="Colores / Colours">
+          {current}
+          <div className="flex gap-2">
+            <div {...strip(pickHue, true)} className="relative w-10 rounded-full shadow-inner cursor-pointer"
+              aria-label="Arcoíris / Rainbow" style={{ touchAction: "none", background: `linear-gradient(to bottom, ${rainbow})` }}>
+              <div className="absolute left-0 w-10 h-3 -mt-1.5 rounded-full border-4 border-white shadow" style={{ top: `${(hue / 359) * 100}%` }} />
+            </div>
+            <div {...strip(pickShade, true)} className="relative w-10 rounded-full shadow-inner cursor-pointer"
+              aria-label="Oscuro - claro / Dark - light" style={{ touchAction: "none", background: `linear-gradient(to bottom, ${shades})` }}>
+              <div className="absolute left-0 w-10 h-3 -mt-1.5 rounded-full border-4 border-white shadow" style={{ top: `${((shade - 6) / 88) * 100}%` }} />
+            </div>
+            <div className="grid grid-cols-2 gap-2">{swatches("w-10 h-10")}</div>
+          </div>
+        </div>
+      )}
+      </div>
+
+      {/* The palette on a phone: any colour from the two strips, or a ready one. */}
+      {!side && (<>
       <div className="flex items-center gap-3">
-        <div className="shrink-0 w-16 h-16 rounded-full border-4 border-white shadow-lg ring-2 ring-slate-300"
-          style={{ background: tool === "eraser" ? "repeating-conic-gradient(#e2e8f0 0 25%, #fff 0 50%) 50% / 16px 16px" : colour }}
-          aria-label="Color / Colour" />
+        {current}
         <div className="flex-1 flex flex-col gap-2">
           <div {...strip(pickHue)} className="relative h-12 rounded-full shadow-inner cursor-pointer"
             aria-label="Arcoíris / Rainbow"
-            style={{ touchAction: "none", background: "linear-gradient(to right, hsl(0,90%,50%), hsl(60,90%,50%), hsl(120,90%,45%), hsl(180,90%,45%), hsl(240,90%,55%), hsl(300,90%,50%), hsl(359,90%,50%))" }}>
+            style={{ touchAction: "none", background: `linear-gradient(to right, ${rainbow})` }}>
             <div className="absolute top-0 h-12 w-3 -ml-1.5 rounded-full border-4 border-white shadow" style={{ left: `${(hue / 359) * 100}%` }} />
           </div>
           <div {...strip(pickShade)} className="relative h-12 rounded-full shadow-inner cursor-pointer"
             aria-label="Oscuro - claro / Dark - light"
-            style={{ touchAction: "none", background: `linear-gradient(to right, hsl(${hue},90%,6%), hsl(${hue},90%,50%), hsl(${hue},90%,94%))` }}>
+            style={{ touchAction: "none", background: `linear-gradient(to right, ${shades})` }}>
             <div className="absolute top-0 h-12 w-3 -ml-1.5 rounded-full border-4 border-white shadow" style={{ left: `${((shade - 6) / 88) * 100}%` }} />
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-8 gap-2">
-        {SWATCHES.map((c) => (
-          <button key={c} onClick={() => { setColour(c); if (tool === "eraser") setTool("brush"); }}
-            className={`h-12 rounded-full border-4 shadow ${colour === c && tool !== "eraser" ? "border-slate-900 scale-110" : "border-white"}`}
-            style={{ background: c }} aria-label={colourName(c) ?? "blanco / white"} />
-        ))}
-      </div>
+      <div className="grid grid-cols-8 gap-2">{swatches("h-12")}</div>
+      </>)}
 
       {/* Tools: brush sizes, bucket, eraser, undo, clear. */}
       <div className="flex flex-wrap items-center justify-center gap-2">
