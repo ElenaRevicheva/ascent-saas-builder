@@ -84,7 +84,9 @@ serve(async (req) => {
         // has_telegram: the daily ritual goes to ONE channel too - Telegram when the family has it.
         if (rows?.length) families.push({ telegram_user_id: l.platform_user_id, user_key: l.platform_user_id, has_telegram: hasTelegram, turns: rows.map((r: any) => ({
           at: r.created_at, said: String(r.content?.user_message ?? '').slice(0, 300), reply: String(r.content?.ai_response ?? '').slice(0, 1500),
-          src: String(r.source ?? 'web') })) });
+          src: String(r.source ?? 'web'),
+          // 3 Nov 2026: the class unit + skills of this turn (espaluz-chat class_label), for the parent report.
+          unit: String(r.content?.class_label ?? '').slice(0, 260) })) });
       }
       console.log(`kids-memory lessons (${platform}): ${families.length} families with turns since ${from}`);
       return json({ families, together_today: TOGETHER[panamaDay() % TOGETHER.length],

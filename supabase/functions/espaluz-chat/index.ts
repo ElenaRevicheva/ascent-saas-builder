@@ -246,6 +246,12 @@ const KIDS_CLASS_UNITS = [
   { theme: "Fiestas y cuentos / Holidays and stories", trace: ["luna", "gato", "pato", "oso"], es: "reading a mini-story of 2-3 lines", en: "reading a mini-story of 2 lines", num: "counting in tens: 10, 20, 30...", talk: "she changes the end of a story" },
   { theme: "Mis amigos / My friends", trace: ["hola", "amigo", "amiga", "gracias"], es: "her own sentence, said aloud as if she wrote it", en: "her own sentence in English", num: "a review game with everything so far", talk: "she tells a short story of her own" },
 ];
+// 3 Nov 2026 (Elena: "make the learning visible"): one readable line per class turn, saved with it, so the parent report
+// can show WHAT was practised ("Unit 2 · Mi escuela · Spanish: ... · English: ... · Numbers: ...") instead of "she chatted".
+const kidsClassLabel = (unit: number): string => {
+  const u = KIDS_CLASS_UNITS[unit % KIDS_CLASS_UNITS.length];
+  return `Unit ${(unit % KIDS_CLASS_UNITS.length) + 1} · ${u.theme} · Spanish: ${u.es} · English: ${u.en} · Numbers: ${u.num}`;
+};
 function kidsClassSteps(u: typeof KIDS_CLASS_UNITS[number]): string[] {
   return [
     `CLASS HELLO: both heroes say hello in 1-2 short lines and announce today's class in one happy line: "${u.theme}".`,
@@ -1183,7 +1189,7 @@ ${asked}` : ''}`;
             family_member_id: familyMember.id,
             detected_emotion: emotion,
             vocabulary_taught: extractedVocabulary,
-            ...(classUnit >= 0 ? { class_unit: classUnit + 1, ...(isHello ? { class_start: 'true' } : {}) } : {})
+            ...(classUnit >= 0 ? { class_unit: classUnit + 1, class_label: kidsClassLabel(classUnit), ...(isHello ? { class_start: 'true' } : {}) } : {})
           },
           progress_data: {
             family_member: familyMember.name,
