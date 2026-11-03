@@ -10,7 +10,10 @@ const Navigation = () => {
     <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-md border-b border-border z-50">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link to="/" className="text-xl font-bold text-foreground flex items-center gap-2">
-          🇪🇸 EspaLuz
+          {/* 3 Nov 2026 (Elena: "where is my purple and yellow icon?"): the 🇪🇸 emoji showed as the letters "ES" on Windows,
+              which cannot draw flag emojis. The header now uses EspaLuz's own globe icon, the same file as the tab. */}
+          <img src="/espaluz-icon.svg?v=el4" alt="" className="h-8 w-8 rounded-lg" />
+          EspaLuz
         </Link>
         
         <div className="hidden md:flex items-center space-x-8">

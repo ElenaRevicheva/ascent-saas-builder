@@ -7,7 +7,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <Link to="/" className="text-2xl font-bold text-foreground mb-4 block flex items-center gap-2">
-              🇪🇸 EspaLuz
+              {/* 3 Nov 2026: EspaLuz's globe icon instead of 🇪🇸 (Windows shows that emoji as the letters "ES"). */}
+              <img src="/espaluz-icon.svg?v=el4" alt="" className="h-9 w-9 rounded-lg" />
+              EspaLuz
             </Link>
             <p className="text-muted-foreground mb-4 max-w-md">
               Empowering families to learn Spanish together with AI-powered tutoring 
