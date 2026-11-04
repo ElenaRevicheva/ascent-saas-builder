@@ -1041,12 +1041,37 @@ async function describePhoto(b64: string, prompt = PHOTO_PROMPT, maxTokens = 120
  *  carries its token counts; they were thrown away, so the cost of a lesson was a guess. One log line per answered
  *  turn, the same shape as the bots' llm_chain.py ("[meter] ch=wa ..."), so one grep reads all three channels.
  *  Claude: usage.input_tokens/output_tokens; OpenAI-shaped: prompt_tokens/completion_tokens; Gemini: usageMetadata. */
-// Said when every provider is out (4 Nov 2026). No time is promised: the free daily limits reset at different hours.
-const KIDS_RESTING = "Pere [sleepy]: Pere y Titi están descansando un ratito. ¡Volvemos muy pronto! / Pere and Titi " +
-  "are resting for a little while. We will be back very soon!\nTiti [goodbye]: Guarda tu idea, la jugamos después. / " +
-  "Keep your idea, we will play it later.";
-const ADULT_RESTING = "Estoy descansando un ratito 😴 Tu mensaje y tu historial están guardados; escríbeme de nuevo en " +
-  "un rato. / I'm resting for a little while. Your message and history are saved; write to me again soon.";
+// Said when every provider is out (4 Nov 2026). The family is told WHEN to come back (Elena: "en un rato" is not an
+// answer): the free daily quotas reset at 00:00 UTC = 7:00 pm Panama, so that is the promised time, with the date.
+// Same rule and words as the bots' fair_use.py back_at() — change one, change both.
+const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre",
+  "noviembre", "diciembre"];
+const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+  "November", "December"];
+const PANAMA_MS = 5 * 3600 * 1000; // UTC-5, no DST
+function backAt(nowMs = Date.now()): { es: string; en: string } {
+  const reset = (Math.floor(nowMs / 86400000) + 1) * 86400000; // next 00:00 UTC
+  const d = new Date(reset - PANAMA_MS);
+  const today = new Date(nowMs - PANAMA_MS).getUTCDate() === d.getUTCDate();
+  return {
+    es: `${today ? "hoy" : "mañana"}, ${DIAS[d.getUTCDay()]} ${d.getUTCDate()} de ${MESES[d.getUTCMonth()]}, a partir ` +
+      `de las 7:00 p. m. (hora de Panamá)`,
+    en: `${today ? "today" : "tomorrow"}, ${DAYS[d.getUTCDay()]} ${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}, from ` +
+      `7:00 pm Panama time`,
+  };
+}
+function kidsResting(): string {
+  const at = backAt();
+  return `Pere [sleepy]: Pere y Titi están descansando. ¡Volvemos ${at.es}! / Pere and Titi are resting. We will be ` +
+    `back ${at.en}!\nTiti [goodbye]: Guarda tu idea, la jugamos entonces. / Keep your idea, we will play it then.`;
+}
+function adultResting(): string {
+  const at = backAt();
+  return `Estoy descansando un ratito 😴 Tu mensaje y tu historial están guardados. Escríbeme de nuevo ${at.es}. / ` +
+    `I'm resting for a while. Your message and history are saved. Write to me again ${at.en}.`;
+}
 
 function meter(provider: string, result: any): void {
   try {
@@ -1248,7 +1273,7 @@ ${asked}` : ''}`;
     } catch (chainErr) {
       console.error(`[chain-out] ch=web kids=${!!kids} ${String((chainErr as Error).message).slice(0, 300)}`);
       return new Response(JSON.stringify({
-        response: kids ? KIDS_RESTING : ADULT_RESTING,
+        response: kids ? kidsResting() : adultResting(),
         provider: 'resting',
         resting: true,
         linked: !!userId,
