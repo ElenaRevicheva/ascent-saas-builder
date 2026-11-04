@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import PaintPad from "@/components/kids/PaintPad";
+import MusicPad from "@/components/kids/MusicPad";
 
 // 1 Nov 2026 (Elena: "she will be very happy if she can write something, especially on the tablet"): in a class, the
 // child traces today's letter / syllable / word (sent by the kids brain for her unit) with her finger, in colour, like
@@ -69,11 +70,12 @@ const SHAPES: { es: string; en: string; d: string }[] = [
   { es: "hexágono", en: "hexagon", d: poly(6, 170, 450, 215) },
 ];
 const shapeOf = (t: string) => SHAPES.find((s) => s.es === t);
-type Mode = "letters" | "numbers" | "sentences" | "shapes" | "paint";
+type Mode = "letters" | "numbers" | "sentences" | "shapes" | "paint" | "music";
 const MODES: { mode: Mode; label: string }[] = [
   { mode: "letters", label: "🔤 Letras" }, { mode: "numbers", label: "🔢 Números" }, { mode: "sentences", label: "💬 Frases" },
   { mode: "shapes", label: "🔷 Figuras" },
   { mode: "paint", label: "🎨 Pintar" },
+  { mode: "music", label: "🎵 Música" }, // 4 Nov 2026: rhythm game + listening corner (MusicPad)
 ];
 
 export default function TracePad({ targets: letters, onTraced, onClose, onPainted, initialMode = "letters" }: Props) {
@@ -248,9 +250,9 @@ export default function TracePad({ targets: letters, onTraced, onClose, onPainte
     <div className="w-full max-w-3xl mx-auto bg-white/95 rounded-3xl shadow-2xl p-4 border-4 border-amber-300">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
         <div className="text-xl font-bold text-slate-700">
-          {mode === "paint" ? "🎨 Pinta / Paint" : <>✏️ Traza / Trace: <span className="text-2xl">{mode === "shapes" ? `${target} / ${shapeOf(target)?.en ?? ""}` : target}</span></>}
+          {mode === "paint" ? "🎨 Pinta / Paint" : mode === "music" ? "🎵 Música / Music" : <>✏️ Traza / Trace: <span className="text-2xl">{mode === "shapes" ? `${target} / ${shapeOf(target)?.en ?? ""}` : target}</span></>}
         </div>
-        <div className="flex gap-1">
+        <div className="flex flex-wrap gap-1">
           {MODES.map((m) => (
             <button key={m.mode} onClick={() => { setMode(m.mode); setIndex(0); }}
               className={`rounded-full px-3 py-2 text-base font-bold ${mode === m.mode ? "bg-sky-400 text-white" : "bg-sky-100 hover:bg-sky-200"}`}>
@@ -260,7 +262,7 @@ export default function TracePad({ targets: letters, onTraced, onClose, onPainte
         </div>
         <button onClick={onClose} className="text-2xl px-3" aria-label="Cerrar / Close">✖️</button>
       </div>
-      {mode === "paint" ? <PaintPad onPainted={(t) => onPainted?.(t)} /> : <>
+      {mode === "paint" ? <PaintPad onPainted={(t) => onPainted?.(t)} /> : mode === "music" ? <MusicPad onDone={(t) => onPainted?.(t)} /> : <>
       <canvas
         ref={canvas}
         width={W}
