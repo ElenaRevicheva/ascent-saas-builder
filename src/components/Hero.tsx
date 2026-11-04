@@ -20,7 +20,7 @@ const Hero = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Link to="/auth">
+            <Link to="/auth?mode=signup">
               <Button variant="hero" size="xl" className="min-w-[200px]">
                 Start Learning
                 <ArrowRight className="ml-2 h-5 w-5" />

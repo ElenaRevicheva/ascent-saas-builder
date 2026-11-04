@@ -41,6 +41,8 @@ function scrollToSelector(selector: string, openAddMember = false) {
 export const FamilyRoadmap = () => {
   const { user } = useAuth();
   const [facts, setFacts] = useState<Facts | null>(null);
+  // Polish (4 Nov): when every step is done the map stays visible as ONE slim row; 'Show map' opens it.
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -123,6 +125,39 @@ export const FamilyRoadmap = () => {
   ];
 
   const doneCount = facts ? steps.filter((s) => facts[s.key].done).length : 0;
+  const allDone = !!facts && doneCount === steps.length;
+
+  if (allDone && !expanded) {
+    return (
+      <section id="roadmap" aria-label="Your EspaLuz map" className="rounded-3xl border border-border bg-card px-5 py-4"
+        style={{ boxShadow: 'var(--shadow-card)' }}>
+        <div className="flex flex-wrap items-center gap-3">
+          <h2 className="text-lg text-foreground">Your EspaLuz map</h2>
+          <span className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold text-white"
+            style={{ background: 'hsl(var(--espaluz-green))' }}>
+            <CheckCircle2 className="h-3.5 w-3.5" aria-hidden /> All {steps.length} set up
+          </span>
+          <ul className="flex flex-1 flex-wrap items-center gap-2">
+            {steps.map((s) => {
+              const Icon = s.icon;
+              return (
+                <li key={s.key} title={s.title}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full text-white" style={{ background: `hsl(var(${s.color}))` }}>
+                    <Icon className="h-3 w-3" aria-hidden />
+                  </span>
+                  {facts?.[s.key].fact}
+                </li>
+              );
+            })}
+          </ul>
+          <button type="button" onClick={() => setExpanded(true)} className="text-sm font-semibold text-primary hover:underline">
+            Show map
+          </button>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="roadmap" aria-labelledby="roadmap-title" className="rounded-3xl border border-border bg-card p-6" style={{ boxShadow: 'var(--shadow-card)' }}>
@@ -133,9 +168,16 @@ export const FamilyRoadmap = () => {
             One family, one memory: the classroom, your chat, WhatsApp and Telegram.
           </p>
         </div>
-        <p className="text-sm font-semibold text-foreground" aria-live="polite">
-          {facts ? `${doneCount} of ${steps.length} done` : 'Checking…'}
-        </p>
+        <div className="flex items-center gap-3">
+          <p className="text-sm font-semibold text-foreground" aria-live="polite">
+            {facts ? `${doneCount} of ${steps.length} done` : 'Checking…'}
+          </p>
+          {allDone && (
+            <button type="button" onClick={() => setExpanded(false)} className="text-sm font-semibold text-primary hover:underline">
+              Make it small
+            </button>
+          )}
+        </div>
       </div>
       <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-muted" role="progressbar"
         aria-valuemin={0} aria-valuemax={steps.length} aria-valuenow={doneCount}>

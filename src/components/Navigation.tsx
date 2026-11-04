@@ -36,7 +36,7 @@ const Navigation = () => {
           <Link to="/auth">
             <Button variant="ghost">{t("nav.signIn")}</Button>
           </Link>
-          <Link to="/auth">
+          <Link to="/auth?mode=signup">
             <Button variant="hero">{t("nav.getStarted")}</Button>
           </Link>
         </div>

@@ -28,6 +28,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
+        // A password-reset link may land on any page (if the redirect URL is not allow-listed, Supabase falls back
+        // to the Site URL). Always send it to the "choose a new password" form instead of silently signing in.
+        if (event === 'PASSWORD_RECOVERY' && !window.location.pathname.startsWith('/auth')) {
+          window.location.replace('/auth?mode=reset');
+        }
       }
     );
 
