@@ -151,6 +151,19 @@ const Index = () => {
             <span className="text-primary font-bold text-xl">EspaLuz</span> {t("hero.description")}
           </p>
         </div>
+        {/* One free offer, market pattern (Duolingo/Speak): one primary button + one quiet secondary link */}
+        <div className="mx-auto mb-10 flex max-w-xl flex-col items-center gap-3">
+          <Link to="/auth?mode=signup"
+            className="inline-flex items-center justify-center rounded-full bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-lg transition hover:opacity-95">
+            Start free: 14 days, no card
+          </Link>
+          <p className="text-sm text-muted-foreground">
+            Web, WhatsApp and Telegram, with Pere and Titi for the kids. Then $11 a month only if you stay.
+          </p>
+          <Link to="/dashboard" className="text-sm font-semibold text-primary underline-offset-4 hover:underline">
+            Not ready? Try 20 messages without an account
+          </Link>
+        </div>
         <div className="max-w-4xl mx-auto mb-8 space-y-6">
           <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-orange-200/50 hover:shadow-xl transition-all duration-300">
             <div className="flex items-center justify-start text-left">

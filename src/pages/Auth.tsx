@@ -500,13 +500,12 @@ const Auth = () => {
             )}
 
             {(mode === 'signin' || mode === 'signup') && (
-              <div className="mt-6 pt-4 border-t border-border">
-                <Button onClick={() => navigate('/dashboard')} variant="outline" className="w-full">
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  Just try 20 messages first
-                </Button>
-                <p className="text-xs text-muted-foreground text-center mt-2">No account needed</p>
-              </div>
+              <p className="mt-6 border-t border-border pt-4 text-center text-sm text-muted-foreground">
+                Not ready?{' '}
+                <button type="button" onClick={() => navigate('/dashboard')} className="font-semibold text-primary hover:underline">
+                  Try 20 messages without an account
+                </button>
+              </p>
             )}
           </CardContent>
         </Card>
