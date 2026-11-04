@@ -391,19 +391,21 @@ const KIDS_HARD = /peg|golpe|\bhit|grit|yell|scold|rega[nñ]|castig|punish|llor|
 // 31 Oct 17:31: "It's Alisa's mom now, Elena. Alisa doesn't want to brush her teeth" was not caught: the heroes told
 // the mother "it sounds like you feel worried". Twins: kids-memory KIDS_ADULT, main.py _KIDS_ADULT.
 // 1 Nov 2026: "It is mother of Alisa" was missed - "it is" and "(mother|mamá) (of|de) alisa" added.
-const KIDS_ADULT = /\bmi hij[oa]\b|\bmy (daughter|son)\b|\bmam[aá] aqu[ií]\b|\bsoy (la|su) mam[aá]\b|\b(it'?s|it is|this is|soy|habla) [^.!?]{0,20}\b(mom|mum|mother|mam[aá])\b|\balisa'?s (mom|mum|mother)\b|\b(mom|mum|mother|mam[aá]) (of|de) alisa\b|\balisa (has|had|is|was|does|doesn'?t|did|didn'?t|promised|no quiere|quiere|tiene|est[aá])\b/i;
+const KIDS_ADULT = /\bmi hij[oa]\b|\bmy (daughter|son)\b|\bmam[aá] aqu[ií]\b|\bsoy (la|su) mam[aá]\b|\b(it'?s|it is|this is|soy|habla) [^.!?]{0,20}\b(mom|mum|mother|mam[aá])\b|\b[ae]li[sz]a'?s (mom|mum|mother)\b|\b(mom|mum|mother|mam[aá]) (of|de) [ae]li[sz]a\b|\bfor [ae]li[sz]a\b|\b[ae]li[sz]a (has|had|is|was|does|doesn'?t|did|didn'?t|promised|wants|needs|likes|loves|can'?t|cannot|should|will|no quiere|quiere|tiene|est[aá])\b/i;
 // 3 Nov 2026 15:11 (one recording, two voices: "¿Qué tú vas a pintar, Lisa? Habla con Pere y Titi … Voy a pintar un
 // pájaro"; 15:13 "…говори. Estai pintando…"): Mamá coaches Alisa inside the child's own clip. Elena: the heroes must
 // not ignore that part - they stand with Mamá, invite the child to follow her advice and help her say it: a bridge
 // between child and mother. Coaching = telling the child what to say / answer / ask / explain, in Spanish, English or
 // Russian (Cyrillic needs a letter-class boundary because \b is ASCII-only), or calling the child by name mid-clip.
-const KIDS_COACH = /\bhabla(le)? con (pere|titi|ellos)\b|\b(dile|diles|d[ií]selo|cu[eé]ntale|cu[eé]ntales|preg[uú]ntale|preg[uú]ntales|cont[eé]stale|resp[oó]ndele|expl[ií]cale|expl[ií]cales)\b|\b(puedes|podr[ií]as) (decir|contar|explicar|preguntar)\b|\b(tell|ask|answer) (them|him|her|pere|titi)\b|\b(you can|try to|try) (say|tell|explain|ask)\b|\bsay it to\b|(^|[^\p{L}])(говор[иi]|скаж[иi]|расскаж[иi]|ответь|спрос[иi]|объясн[иi]|можешь сказать)($|[^\p{L}])/iu;
+// 4 Nov 2026 13:47 (missed: "¿Por qué Titi tiene razón cada día, Liza? Explica eso." - the heroes answered Mamá's words
+// as Alisa's): the name as the transcriber spells it (s/z, Alisa/Elisa), and the plain "explica eso" / "dilo" forms.
+const KIDS_COACH = /\bhabla(le)? con (pere|titi|ellos)\b|\b(expl[ií]ca|di|dime|cu[eé]nta|contesta|responde|pregunta) (eso|esto)\b|\b(dilo|expl[ií]calo|cu[eé]ntalo|cont[eé]stalo|preg[uú]ntalo)\b|\b(dile|diles|d[ií]selo|cu[eé]ntale|cu[eé]ntales|preg[uú]ntale|preg[uú]ntales|cont[eé]stale|resp[oó]ndele|expl[ií]cale|expl[ií]cales)\b|\b(puedes|podr[ií]as) (decir|contar|explicar|preguntar)\b|\b(tell|ask|answer) (them|him|her|pere|titi)\b|\b(you can|try to|try) (say|tell|explain|ask)\b|\bsay it to\b|(^|[^\p{L}])(говор[иi]|скаж[иi]|расскаж[иi]|ответь|спрос[иi]|объясн[иi]|можешь сказать)($|[^\p{L}])/iu;
 /** The child called by her name or its short form (Alisa -> Lisa) as a call inside her clip: "…, Lisa?", "Lisa, …". */
 function kidsCalled(message: string, childName: string): boolean {
   const n = childName.trim().toLowerCase();
   if (n.length < 3 || n === 'the child') return false;
   const names = [n, ...(n.length > 4 && /^[aeiouáéíóú]/.test(n) ? [n.slice(1)] : [])]
-    .map((x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+    .map((x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/[sz]/g, '[sz]')).join('|'); // "Liza" = Lisa
   return new RegExp(`[,¿¡]\\s*(${names})\\s*[?!.,]|(^|[.?!]\\s*)(${names})\\s*,`, 'iu').test(message);
 }
 // The bridge between child and parent (Elena, 3 Nov 2026): when Mamá or Papá guides the child, the heroes are on the
