@@ -63,7 +63,7 @@
     "title": "EspaLuz Features - Your Spanish Learning Toolkit 🎯",
     "subtitle": "Discover what magical features are available for your family's Spanish journey",
     "basic": "Basic Features",
-    "advanced": "Advanced Features", 
+    "advanced": "Advanced Features",
     "premium": "Premium Features",
     "support": "Family Support",
     "telegramIntegration": "Telegram Integration 📱",
@@ -132,14 +132,14 @@
     "personalizedRecommendations": "Personalized Recommendations",
     "practiceExercises": "Practice Exercises",
     "vocabularyChallenges": "Vocabulary Challenges",
-    "languageInsights": "Language Insights", 
+    "languageInsights": "Language Insights",
     "grammarInContext": "Grammar in Context",
     "nextLearningSteps": "Next Learning Steps",
     "chatNow": "Chat Now",
     "debugSessionData": "Debug Session Data",
     "level": {
       "beginner": "Beginner Level",
-      "intermediate": "Intermediate Level", 
+      "intermediate": "Intermediate Level",
       "advanced": "Advanced Level"
     },
     "lessonsCompleted": "Lessons Completed",
@@ -149,5 +149,20 @@
     "averageScore": "Average Score",
     "latestAchievement": "Latest Achievement",
     "yourLearningJourney": "Your Learning Journey"
+  },
+  "hero4": {
+    "eyebrow": "For expat and digital-nomad families in Latin America",
+    "headline": "Extra school skills for your child, while you work online",
+    "sub": "It complements the local school: ten minutes a day of Spanish and English with Pere & Titi, inspired by international bilingual schools. Real learning instead of cartoons, and a one-minute report for you.",
+    "cta": "Start free: 14 days, no card",
+    "price": "Then $11 a month only if you stay. On the web, WhatsApp and Telegram.",
+    "preview": "Not ready? Try 20 messages without an account",
+    "card1Title": "For your child, after school",
+    "card1": "Ten minutes a day, by voice, with Pere & Titi: Spanish and English school skills, inspired by international bilingual schools, that complement the local school.",
+    "card2Title": "For you, in one minute",
+    "card2": "After every lesson, a short report: what your child learned and one thing to do together.",
+    "card3Title": "For the years ahead",
+    "card3": "Your companion for the school and the doctor: teacher meetings, school notes, doctor and pharmacy visits, with practical guides for how things work in your country, at your pace.",
+    "promiseTitle": "EspaLuz walks the long road with your family"
   }
 }

@@ -140,127 +140,42 @@ const Index = () => {
         <div className="mx-auto w-32 h-32 mb-4 flex items-center justify-center">
           <img src={brandAvatar2} alt="EspaLuz Avatar" className="w-full h-full rounded-full border-4 border-primary shadow-glow object-cover bg-white" />
         </div>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-8 leading-tight bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 bg-clip-text text-transparent drop-shadow-lg px-4 py-2 tracking-tight">
-          Meet EspaLuz — Your Family's First Emotionally Intelligent Language Coach
+        {/* Round 4 message, approved by Elena 4 Nov 2026 (cto-aipa docs/espaluz/MESSAGE_DRAFT_2026-11-04.md).
+            Replaced: "Emotionally Intelligent Language Coach" headline, AI-tutor cards, "confident in a couple of weeks",
+            duplicate demo/Telegram buttons. One offer, palette tokens only. */}
+        <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-primary">{t("hero4.eyebrow")}</p>
+        <h1 className="mx-auto mb-5 max-w-4xl px-4 text-3xl font-extrabold leading-tight text-foreground sm:text-4xl md:text-5xl">
+          {t("hero4.headline")}
         </h1>
-        <div className="text-lg md:text-xl text-foreground mb-8 max-w-4xl mx-auto leading-relaxed font-medium space-y-3">
-          <p className="text-center">
-            {t("hero.subtitle")}
-          </p>
-          <p className="text-center">
-            <span className="text-primary font-bold text-xl">EspaLuz</span> {t("hero.description")}
-          </p>
-        </div>
-        {/* One free offer, market pattern (Duolingo/Speak): one primary button + one quiet secondary link */}
+        <p className="mx-auto mb-8 max-w-3xl px-4 text-lg leading-relaxed text-muted-foreground md:text-xl">
+          {t("hero4.sub")}
+        </p>
         <div className="mx-auto mb-10 flex max-w-xl flex-col items-center gap-3">
           <Link to="/auth?mode=signup"
             className="inline-flex items-center justify-center rounded-full bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-lg transition hover:opacity-95">
-            Start free: 14 days, no card
+            {t("hero4.cta")}
           </Link>
-          <p className="text-sm text-muted-foreground">
-            Web, WhatsApp and Telegram, with Pere and Titi for the kids. Then $11 a month only if you stay.
-          </p>
+          <p className="text-sm text-muted-foreground">{t("hero4.price")}</p>
           <Link to="/dashboard" className="text-sm font-semibold text-primary underline-offset-4 hover:underline">
-            Not ready? Try 20 messages without an account
+            {t("hero4.preview")}
           </Link>
         </div>
-        <div className="max-w-4xl mx-auto mb-8 space-y-6">
-          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-orange-200/50 hover:shadow-xl transition-all duration-300">
-            <div className="flex items-center justify-start text-left">
-              <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-lg mr-4 flex-shrink-0">
-                <span className="text-white text-2xl">🧠</span>
-              </div>
-              <div>
-                <h3 className="font-bold text-orange-600 text-xl mb-2">{t("hero.trulyIntelligent")}</h3>
-                <p className="text-gray-700 text-lg leading-relaxed">{t("hero.trulyIntelligentDesc")}</p>
-              </div>
+        <div className="mx-auto mb-10 grid max-w-5xl gap-4 px-4 text-left md:grid-cols-3">
+          {[
+            { icon: "🦥", color: "--espaluz-yellow", title: t("hero4.card1Title"), body: t("hero4.card1") },
+            { icon: "📒", color: "--espaluz-purple", title: t("hero4.card2Title"), body: t("hero4.card2") },
+            { icon: "🏫", color: "--espaluz-green", title: t("hero4.card3Title"), body: t("hero4.card3") },
+          ].map((c) => (
+            <div key={c.title} className="rounded-2xl border border-border bg-card p-5" style={{ boxShadow: "var(--shadow-card)" }}>
+              <span className="mb-3 flex h-12 w-12 items-center justify-center rounded-full text-2xl"
+                style={{ background: `hsl(var(${c.color}) / 0.15)` }} aria-hidden>{c.icon}</span>
+              <h2 className="mb-2 text-xl text-foreground">{c.title}</h2>
+              <p className="leading-relaxed text-muted-foreground">{c.body}</p>
             </div>
-          </div>
-          
-          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-200/50 hover:shadow-xl transition-all duration-300">
-            <div className="flex items-center justify-start text-left">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg mr-4 flex-shrink-0">
-                <span className="text-white text-2xl">💬</span>
-              </div>
-              <div>
-                <h3 className="font-bold text-purple-600 text-xl mb-2">{t("hero.humanLikeSupport")}</h3>
-                <p className="text-gray-700 text-lg leading-relaxed">{t("hero.humanLikeSupportDesc")}</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-blue-200/50 hover:shadow-xl transition-all duration-300">
-            <div className="flex items-center justify-start text-left">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center shadow-lg mr-4 flex-shrink-0">
-                <span className="text-white text-2xl">📱</span>
-              </div>
-              <div>
-                <h3 className="font-bold text-blue-600 text-xl mb-2">{t("hero.spanishCompanion")}</h3>
-                <p className="text-gray-700 text-lg leading-relaxed">{t("hero.spanishCompanionDesc")}</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-green-200/50 hover:shadow-xl transition-all duration-300">
-            <div className="flex items-start justify-start text-left">
-              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center shadow-lg mr-4 flex-shrink-0">
-                <span className="text-white text-2xl">🌍</span>
-              </div>
-              <div>
-                <h3 className="font-bold text-green-600 text-xl mb-2">{t("hero.builtForAdventures")}</h3>
-                <p className="text-gray-700 text-lg leading-relaxed mb-4">{t("hero.builtForAdventuresDesc")}</p>
-                <div className="ml-4 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                    <p className="text-orange-600 leading-relaxed font-medium">{t("hero.englishSpeakers")}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                    <p className="text-purple-600 leading-relaxed font-medium">{t("hero.spanishSpeakers")}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
-        <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-orange-200/30 max-w-3xl mx-auto mb-6">
-          <div className="space-y-4 text-center">
-            <p className="text-xl text-gray-700 font-medium flex items-center justify-center gap-2">
-              <span className="text-2xl">✨</span>
-              {t("hero.speakNaturally")}
-            </p>
-            <p className="text-xl text-orange-700 font-bold flex items-center justify-center gap-2">
-              <span className="text-2xl">⚡</span>
-              {t("hero.startSpeaking")}
-            </p>
-            <div className="border-t border-gray-200 pt-4">
-              <p className="text-xl text-purple-700 font-bold leading-relaxed">
-                <span className="text-2xl mr-2">💡</span>
-                Because language is more than words — it's <span className="text-pink-600">emotional</span>.
-              </p>
-              <p className="text-lg text-gray-600 mt-2">
-                And <span className="font-bold text-primary">EspaLuz</span> is the first AI tutor that truly gets that.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6 mb-4">
-          <Button 
-            onClick={handleStartDemo}
-            size="lg" 
-            className="text-base px-6 bg-gradient-primary hover:shadow-glow text-white rounded-full shadow-lg hover:scale-105 transition-all duration-300"
-          >
-            <MessageSquare className="mr-2 h-4 w-4" />
-            🎯 {t("hero.tryDemo")}
-          </Button>
-          <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer">
-            <Button size="lg" className="text-base px-6 rounded-full bg-[#0088cc] hover:bg-[#006ba3] text-white border-0 transition-all duration-300 shadow-lg hover:shadow-xl">
-              <Crown className="mr-2 h-4 w-4" />
-              🚀 {t("hero.startFull")}
-            </Button>
-          </a>
-        </div>
-        
+        <p className="mx-auto mb-8 max-w-3xl px-4 text-lg font-semibold text-foreground">{t("hero4.promiseTitle")}</p>
+
         {/* WhatsApp Section */}
         <div className="bg-gradient-to-br from-green-50/80 via-white/80 to-emerald-50/80 backdrop-blur-sm rounded-3xl p-8 max-w-4xl mx-auto mb-6 border-2 border-green-200 shadow-2xl">
           <div className="text-center space-y-6">
