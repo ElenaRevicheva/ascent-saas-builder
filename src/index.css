@@ -8,74 +8,74 @@ All colors MUST be HSL.
 
 @layer base {
 :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* 4 Nov 2026 (Elena: "violet and sun, like our icon, plus colors that fit the features"). Measured against 7
+       market leaders (cto-aipa docs/espaluz/COMPETITOR_UI_RESEARCH_2026-11-04.md). Every text pair >= WCAG AA 4.5.
+       Ink #1f1640 · cream #fffbf2 · violet #6d28d9 · sun #facc15 · lavender #f3efff. */
+    --background: 42 100% 97%;
+    --foreground: 253 49% 17%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 253 49% 17%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 253 49% 17%;
 
-    --primary: 14 100% 57%;
+    --primary: 263 70% 50%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 14 100% 67%;
+    --primary-glow: 262 83% 58%;
 
-    --secondary: 292 84% 61%;
+    --secondary: 295 72% 40%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 255 100% 97%;
+    --muted-foreground: 250 15% 40%;
 
-    --accent: 45 100% 51%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 48 96% 53%;
+    --accent-foreground: 253 49% 17%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 14 100% 57%;
+    --border: 257 51% 92%;
+    --input: 257 51% 92%;
+    --ring: 263 70% 50%;
 
-    /* Juicy gradient system */
-    --gradient-primary: linear-gradient(135deg, hsl(14 100% 57%), hsl(292 84% 61%));
-    --gradient-hero: linear-gradient(135deg, hsl(14 100% 95%), hsl(292 84% 95%), hsl(45 100% 95%));
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(14 100% 97%));
-    --gradient-magical: linear-gradient(135deg, hsl(292 84% 85%), hsl(14 100% 85%), hsl(45 100% 85%));
-    --gradient-accent: linear-gradient(90deg, hsl(14 100% 57%), hsl(45 100% 51%));
-    --gradient-rainbow: linear-gradient(90deg, hsl(14 100% 57%), hsl(45 100% 51%), hsl(125 65% 48%), hsl(220 89% 60%), hsl(292 84% 61%));
-    
-    /* Enhanced shadows */
-    --shadow-glow: 0 0 40px hsl(14 100% 57% / 0.25);
-    --shadow-card: 0 4px 24px hsl(222.2 84% 4.9% / 0.08);
-    --shadow-magical: 0 8px 32px hsl(292 84% 61% / 0.15);
-    --shadow-vibrant: 0 10px 40px hsl(14 100% 57% / 0.2);
+    /* Calm gradients: violet family only, soft backdrops (no rainbow text) */
+    --gradient-primary: linear-gradient(135deg, hsl(263 70% 50%), hsl(262 83% 58%));
+    --gradient-hero: linear-gradient(160deg, hsl(255 100% 97%), hsl(42 100% 97%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(42 100% 98%));
+    --gradient-magical: linear-gradient(135deg, hsl(255 100% 95%), hsl(53 98% 90%));
+    --gradient-accent: linear-gradient(90deg, hsl(48 96% 53%), hsl(53 98% 77%));
+    --gradient-rainbow: linear-gradient(90deg, hsl(263 70% 50%), hsl(48 96% 53%), hsl(142 72% 29%), hsl(201 96% 32%), hsl(295 72% 40%));
+
+    --shadow-glow: 0 0 40px hsl(263 70% 50% / 0.18);
+    --shadow-card: 0 4px 24px hsl(253 49% 17% / 0.07);
+    --shadow-magical: 0 8px 32px hsl(263 70% 50% / 0.12);
+    --shadow-vibrant: 0 10px 40px hsl(263 70% 50% / 0.16);
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    /* EspaLuz-specific vibrant colors */
-    --espaluz-orange: 14 100% 57%;
-    --espaluz-purple: 292 84% 61%;
-    --espaluz-yellow: 45 100% 51%;
-    --espaluz-pink: 330 85% 65%;
-    --espaluz-green: 125 65% 48%;
 
-    --radius: 0.75rem;
+    /* Feature colors (names kept so every existing component re-skins without edits):
+       orange -> coral (doctor / health) · purple -> violet (brand) · yellow -> sun (kids, stars)
+       pink -> orchid · green -> leaf (Pere, success) · sky (chat / voice) - all white-text safe >= 5.0 */
+    --espaluz-orange: 17 88% 40%;
+    --espaluz-purple: 263 70% 50%;
+    --espaluz-yellow: 48 96% 53%;
+    --espaluz-pink: 295 72% 40%;
+    --espaluz-green: 142 72% 29%;
+    --espaluz-sky: 201 96% 32%;
+    --espaluz-primary: 263 70% 50%;
+    --espaluz-ink: 253 49% 17%;
 
-    --sidebar-background: 0 0% 98%;
+    --radius: 1rem;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 42 100% 98%;
+    --sidebar-foreground: 253 49% 17%;
+    --sidebar-primary: 263 70% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 255 100% 97%;
+    --sidebar-accent-foreground: 253 49% 17%;
+    --sidebar-border: 257 51% 92%;
+    --sidebar-ring: 263 70% 50%;
   }
 
   .dark {
@@ -128,9 +128,11 @@ All colors MUST be HSL.
   }
 
   /* Enhanced typography */
+  /* One rounded display font for headings (market pattern: Lingokids, Khan Kids, Novakid, Duolingo); body stays plain */
   h1, h2, h3, h4, h5, h6 {
     @apply font-extrabold;
-    letter-spacing: -0.025em;
+    font-family: "Baloo 2", ui-rounded, "Segoe UI", system-ui, sans-serif;
+    letter-spacing: -0.01em;
     line-height: 1.2;
   }
 
