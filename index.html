@@ -3,9 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EspaLuz - AI Spanish Language Tutor</title>
-    <meta name="description" content="Learn Spanish with your family through AI-powered conversations and personalized lessons" />
-    <meta name="author" content="EspaLuz" />
+    <!-- 4 Nov 2026 (Elena: "make the score from 60 to 100, exactly like aideazz"): the app was a JavaScript-only shell -
+         AI crawlers saw ~8 words, the old "AI Spanish Language Tutor" title and Lovable's preview image (audit C 60/100).
+         Everything below is static and true today; claims come from the A+ page aideazz.xyz/espaluz (claims table:
+         cto-aipa docs/espaluz/LOCAL_LIFE_POSITIONING_2026-11-02.md). React replaces #root on load, so people see the app. -->
+    <title>EspaLuz: live your new country in Spanish, with your family</title>
+    <meta name="description" content="Spanish for families building a life in Latin America: the doctor, public offices and the school gate, with Pere and Titi for the kids. 14 days free." />
+    <meta name="author" content="Elena Revicheva, AIdeazz" />
+    <link rel="canonical" href="https://app.espaluz.lat/" />
     <!-- 31 Oct 2026 (Elena: the AZ mark "is not appropriate here ... design smth unique like we did for atlas"): EspaLuz's
          own mark - the Spanish-speaking world as a globe (yellow land, violet sea, golden light behind), Atlas-style. scripts/make-espaluz-icon.py -->
     <link rel="icon" type="image/svg+xml" href="/espaluz-icon.svg?v=el4" />
@@ -13,21 +18,138 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=el4" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=el4" />
 
-    <meta property="og:title" content="EspaLuz - AI Spanish Language Tutor" />
-    <meta property="og:description" content="Learn Spanish with your family through AI-powered conversations and personalized lessons" />
+    <meta property="og:title" content="EspaLuz: live your new country in Spanish, with your family" />
+    <meta property="og:description" content="The doctor, public offices and the school gate in Spanish, for the whole family. Pere and Titi keep the kids learning. 14 days free." />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta property="og:url" content="https://app.espaluz.lat/" />
+    <meta property="og:site_name" content="EspaLuz" />
+    <meta property="og:image" content="https://aideazz.xyz/espaluz-og.jpg" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta name="twitter:title" content="EspaLuz: live your new country in Spanish, with your family" />
+    <meta name="twitter:image" content="https://aideazz.xyz/espaluz-og.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://app.espaluz.lat/#website",
+          "url": "https://app.espaluz.lat/",
+          "name": "EspaLuz",
+          "inLanguage": ["en", "es"],
+          "publisher": { "@id": "https://aideazz.xyz/#org" }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://aideazz.xyz/#org",
+          "name": "AIdeazz",
+          "url": "https://aideazz.xyz/",
+          "logo": "https://app.espaluz.lat/espaluz-icon-512.png",
+          "founder": { "@type": "Person", "name": "Elena Revicheva", "url": "https://aideazz.xyz/portfolio" },
+          "sameAs": ["https://aideazz.xyz/espaluz", "https://t.me/EspaLuzFamily_bot", "https://wa.me/50766623757"]
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://app.espaluz.lat/#webpage",
+          "url": "https://app.espaluz.lat/",
+          "name": "EspaLuz: live your new country in Spanish, with your family",
+          "isPartOf": { "@id": "https://app.espaluz.lat/#website" },
+          "about": { "@id": "https://aideazz.xyz/espaluz#app" },
+          "dateModified": "2026-11-04",
+          "inLanguage": "en"
+        },
+        {
+          "@type": ["SoftwareApplication", "MobileApplication"],
+          "@id": "https://aideazz.xyz/espaluz#app",
+          "name": "EspaLuz",
+          "url": "https://app.espaluz.lat/",
+          "applicationCategory": "EducationalApplication",
+          "operatingSystem": "Web, WhatsApp, Telegram",
+          "image": "https://aideazz.xyz/espaluz-classroom.jpg",
+          "audience": { "@type": "Audience", "audienceType": "Families moving to or living in Spanish-speaking countries, parents and young children" },
+          "offers": { "@type": "Offer", "price": "11.00", "priceCurrency": "USD", "description": "14 days free, then $11 a month." },
+          "publisher": { "@id": "https://aideazz.xyz/#org" }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://app.espaluz.lat/#faq",
+          "mainEntity": [
+            { "@type": "Question", "name": "Is EspaLuz for children or for adults?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Both. The kids classroom with Pere the sloth and Titi the monkey is for young children. Parents learn in chat with text, voice messages and photos." } },
+            { "@type": "Question", "name": "Does it work on WhatsApp and Telegram?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Yes. EspaLuz works on the web, on WhatsApp and on Telegram, with the same family memory on all three." } },
+            { "@type": "Question", "name": "How much does EspaLuz cost?",
+              "acceptedAnswer": { "@type": "Answer", "text": "14 days free on any channel. Then $11 a month with PayPal, or $11 for 30 days with PágueloFácil in Panama." } }
+          ]
+        }
+      ]
+    }
+    </script>
+    <style>
+      .el-shell{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;max-width:720px;margin:0 auto;padding:32px 20px;color:#2a2340;line-height:1.55}
+      .el-shell h1{font-size:1.9rem;line-height:1.2;margin:.2em 0 .4em}.el-shell h2{font-size:1.2rem;margin:1.4em 0 .3em}
+      .el-shell a{color:#5b3fd1}.el-shell img{width:56px;height:56px}.el-shell footer{margin-top:2em;font-size:.9rem;color:#6b6385}
+    </style>
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="el-shell">
+        <header>
+          <img src="/espaluz-icon-512.png" alt="EspaLuz logo: the Spanish-speaking world as a globe" width="56" height="56" />
+          <p>EspaLuz · for families building a life in Latin America</p>
+        </header>
+        <main>
+          <article>
+            <h1>Live your new country in Spanish, with your family</h1>
+            <p>EspaLuz helps families who moved to a Spanish-speaking country handle real life in Spanish: the words people
+              really say, the customs nobody explains, and the everyday moments from the hospital and public offices to the
+              school gate, across 21 Spanish-speaking countries. While you handle the day, Pere the sloth and Titi the monkey
+              keep the kids learning.</p>
+            <section>
+              <h2>What can my child do in the EspaLuz classroom?</h2>
+              <ul>
+                <li>Talk: your child speaks in Spanish or English, and Pere and Titi listen and answer in their own voices.</li>
+                <li>Trace letters, numbers and short sentences with a finger or a pen, then say them out loud.</li>
+                <li>Show a photo of a toy, a drawing or lunch, and the heroes turn it into the lesson.</li>
+                <li>Remember: sentences your child says come back in later lessons.</li>
+              </ul>
+            </section>
+            <section>
+              <h2>How does EspaLuz help parents at the doctor or a public office?</h2>
+              <ul>
+                <li>A voice interpreter for appointments on WhatsApp and Telegram: say it in English, it says it in Spanish.</li>
+                <li>Send a photo of a school note, a form or a sign and get it explained.</li>
+                <li>Guides for everyday moments such as the doctor, public offices, school and the bank, where EspaLuz has a guide for your country.</li>
+                <li>A report after your child's lessons, so you know what was practised.</li>
+              </ul>
+            </section>
+            <section>
+              <h2>Where does EspaLuz work, and how much does it cost?</h2>
+              <p>On the web, on WhatsApp and on Telegram, with the same family memory on all three. 14 days free on any
+                channel, then $11 a month with PayPal, or $11 for 30 days with PágueloFácil in Panama.</p>
+              <p>Start on <a href="https://wa.me/50766623757">WhatsApp</a>, <a href="https://t.me/EspaLuzFamily_bot">Telegram</a>,
+                or read more at <a href="https://aideazz.xyz/espaluz">aideazz.xyz/espaluz</a>.</p>
+            </section>
+            <section lang="es">
+              <h2>EspaLuz: vive tu nuevo país en español</h2>
+              <p>Las palabras que la gente realmente usa, las costumbres que nadie te explica y los momentos de cada día, del
+                hospital y las oficinas públicas a la puerta de la escuela, vividos en familia. Pere y Titi siguen enseñando
+                a los niños por el camino. 14 días gratis.</p>
+            </section>
+          </article>
+        </main>
+        <footer>
+          <p>EspaLuz by <a href="https://aideazz.xyz/">AIdeazz</a>, Panama, built from one family's experience of arriving
+            in Panama. Updated <time datetime="2026-11-04">4 November 2026</time>.</p>
+        </footer>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

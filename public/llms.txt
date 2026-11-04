@@ -1,0 +1,11 @@
+# EspaLuz
+
+> EspaLuz helps families who moved to a Spanish-speaking country live real life in Spanish: the doctor, public offices and the school gate, the local words and customs of 21 countries, and a kids classroom where Pere the sloth and Titi the monkey keep children learning. Web, WhatsApp and Telegram. 14 days free, then $11 a month.
+
+## Main pages
+- [EspaLuz overview](https://aideazz.xyz/espaluz): who it is for, what it does, prices, questions families ask
+- [EspaLuz app](https://app.espaluz.lat/): sign in, the kids classroom, chat
+- [WhatsApp](https://wa.me/50766623757) and [Telegram](https://t.me/EspaLuzFamily_bot): the same EspaLuz in chat
+
+## Made by
+- AIdeazz AI Lab, Panama, led by Elena Revicheva: https://aideazz.xyz/portfolio
