@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import PaintPad from "@/components/kids/PaintPad";
 import MusicPad from "@/components/kids/MusicPad";
+import ProgramPad from "@/components/kids/ProgramPad";
+import GamesPad from "@/components/kids/GamesPad";
 
 // 1 Nov 2026 (Elena: "she will be very happy if she can write something, especially on the tablet"): in a class, the
 // child traces today's letter / syllable / word (sent by the kids brain for her unit) with her finger, in colour, like
@@ -70,12 +72,14 @@ const SHAPES: { es: string; en: string; d: string }[] = [
   { es: "hexágono", en: "hexagon", d: poly(6, 170, 450, 215) },
 ];
 const shapeOf = (t: string) => SHAPES.find((s) => s.es === t);
-type Mode = "letters" | "numbers" | "sentences" | "shapes" | "paint" | "music";
+type Mode = "letters" | "numbers" | "sentences" | "shapes" | "paint" | "music" | "program" | "games";
 const MODES: { mode: Mode; label: string }[] = [
   { mode: "letters", label: "🔤 Letras" }, { mode: "numbers", label: "🔢 Números" }, { mode: "sentences", label: "💬 Frases" },
   { mode: "shapes", label: "🔷 Figuras" },
   { mode: "paint", label: "🎨 Pintar" },
   { mode: "music", label: "🎵 Música" }, // 4 Nov 2026: rhythm game + listening corner (MusicPad)
+  { mode: "program", label: "🐒 Programa" }, // 4 Nov 2026: algorithms, debugging, "vibe coding" with words (ProgramPad)
+  { mode: "games", label: "🎲 Juegos" }, // 4 Nov 2026: numbers (ten-frame, pairs, clock, coins) + English sounds (GamesPad)
 ];
 
 export default function TracePad({ targets: letters, onTraced, onClose, onPainted, initialMode = "letters" }: Props) {
@@ -250,7 +254,7 @@ export default function TracePad({ targets: letters, onTraced, onClose, onPainte
     <div className="w-full max-w-3xl mx-auto bg-white/95 rounded-3xl shadow-2xl p-4 border-4 border-amber-300">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
         <div className="text-xl font-bold text-slate-700">
-          {mode === "paint" ? "🎨 Pinta / Paint" : mode === "music" ? "🎵 Música / Music" : <>✏️ Traza / Trace: <span className="text-2xl">{mode === "shapes" ? `${target} / ${shapeOf(target)?.en ?? ""}` : target}</span></>}
+          {mode === "paint" ? "🎨 Pinta / Paint" : mode === "music" ? "🎵 Música / Music" : mode === "program" ? "🐒 Programa a Titi / Program Titi" : mode === "games" ? "🎲 Juegos / Games" : <>✏️ Traza / Trace: <span className="text-2xl">{mode === "shapes" ? `${target} / ${shapeOf(target)?.en ?? ""}` : target}</span></>}
         </div>
         <div className="flex flex-wrap gap-1">
           {MODES.map((m) => (
@@ -262,7 +266,7 @@ export default function TracePad({ targets: letters, onTraced, onClose, onPainte
         </div>
         <button onClick={onClose} className="text-2xl px-3" aria-label="Cerrar / Close">✖️</button>
       </div>
-      {mode === "paint" ? <PaintPad onPainted={(t) => onPainted?.(t)} /> : mode === "music" ? <MusicPad onDone={(t) => onPainted?.(t)} /> : <>
+      {mode === "paint" ? <PaintPad onPainted={(t) => onPainted?.(t)} /> : mode === "music" ? <MusicPad onDone={(t) => onPainted?.(t)} /> : mode === "program" ? <ProgramPad onDone={(t) => onPainted?.(t)} /> : mode === "games" ? <GamesPad onDone={(t) => onPainted?.(t)} /> : <>
       <canvas
         ref={canvas}
         width={W}

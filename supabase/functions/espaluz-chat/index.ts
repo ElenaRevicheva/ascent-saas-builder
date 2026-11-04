@@ -220,14 +220,14 @@ Never ask for personal information such as addresses, school names or phone numb
 // Telegram bot (EspaLuzFamilybot main.py KIDS_STEPS / KIDS_STORIES / kids_sentence_check): the page sends the turn, the
 // function names the step, this week's story, yesterday's mission and a gentle check of the sentence the child tried.
 const KIDS_STEPS = [
-  "HELLO: both heroes say hello in 1-2 short lines; if a list of EARLIER LESSONS is above, the first line brings back ONE happy thing from it (\"La última vez me dijiste que...\"); mention this week's story in one line, then ONE question about the child's day.",
+  "HELLO: both heroes say hello in 1-2 short lines; if a list of EARLIER LESSONS is above, the first line brings back ONE happy thing from it (\"La última vez me dijiste que...\"); mention this week's story in one line, then ONE question: how the child feels today, offering two or three feeling words in both languages to choose from (alegre / happy, orgullosa / proud, nerviosa / nervous, frustrada / frustrated, curiosa / curious, cansada / tired - the right gender for the child); if the child names a hard feeling, Pere offers ONE small thing that helps (a slow breath, a hug from mamá, a drink of water).",
   "WAKE-UP GAME with Titi: one quick movement game (jumps, 'Simon dice / Simon says', right hand to left knee, 'rojo salta, azul congela / red jump, blue freeze', or drawing a big sideways 8 in the air with one finger).",
   "NEW SENTENCE 1: Pere teaches ONE useful sentence built on what the child talked about, and asks the child to say it.",
   "NEW SENTENCE 2: one more sentence on the child's topic; ask the child to say it, or to answer a '¿Por qué...? / Why...?' with 'porque / because'.",
   "GAME with Titi: a riddle, Titi's funny mistake for the child to correct, or ask the child to READ one short sentence aloud.",
   "THIS WEEK'S STORY: the heroes ask the child to help solve the story's problem; name how the hero feels; tell the Panama fact.",
   "CALM with Pere: hands on the belly, three slow breaths together, and one feelings sentence.",
-  "GOODBYE: praise, a star, today's mission (one sentence to say to a real person), and goodbye from both.",
+  "GOODBYE: praise, a star, today's mission - one sentence to say to a real person, OR (every other lesson) one real job at home said in Spanish or English while doing it (set the table, water a plant, pack the school bag, sort the socks, help make a sandwich) - and goodbye from both.",
 ];
 const KIDS_STEP_FREE = "FREE TALK: the lesson is done; keep talking about the child's topic, short, one question, warm.";
 
@@ -468,6 +468,29 @@ const kidsJudgeAsked = (history: unknown): boolean => (Array.isArray(history) ? 
 // 2 Nov 2026 (Elena: "Alisa wants to paint little paintings, not just trace"): the web paint pad's "✨ Listo" sends
 // "🎨 Pinté ..." with the picture's name and the colours she used (no image leaves the tablet).
 const KIDS_PAINTED = /^🎨 Pinté/;
+// 4 Nov 2026: the pad's new modes report like the paint pad - 🎵 Música, 🐒 Programa a Titi, 🎲 Juegos.
+const KIDS_ACTIVITY = /^(🎵|🐒|🎲) /;
+// See - Think - Wonder (a Harvard Project Zero thinking routine; our own wording): one step per painting.
+const KIDS_STW = [
+  "SEE: what is happening in the picture (\"¿Qué está pasando en tu dibujo? / What is happening in your picture?\")",
+  "THINK: why she made it that way (\"¿Por qué elegiste ese color? / Why did you choose that colour?\")",
+  "WONDER: what she wonders (\"¿Qué te preguntas de él? ¿Qué quieres saber? / What do you wonder about it?\")"];
+// 4 Nov 2026 (Elena: "adapt the best programs for 6-8", docs/espaluz/BEST_PROGRAMS_6_8_ADAPT_2026-11-04.md in cto-aipa):
+// a quality of the week (character words in the spirit of the IB learner profile - our own words) and a family project
+// of the week (Cambridge Global Perspectives Stage 1 topics + Escuela Nueva's family histories and community maps): one
+// real question the child explores WITH a parent - the family bridge, inside the curriculum.
+const KIDS_QUALITIES = ["curiosa / curious (asks questions)", "valiente / brave (tries something new)",
+  "amable / kind (helps someone)", "paciente / patient (waits, tries again)", "creativa / creative (makes something new)",
+  "honesta / honest (tells the truth)", "ordenada / organised (puts things in their place)", "agradecida / grateful (says thank you)"];
+const KIDS_PROJECTS = [
+  "¿De dónde viene el agua de nuestra casa? / Where does the water in our home come from?",
+  "La historia de mi familia: ¿dónde nació mamá? ¿y la abuela? / My family's story: where was mom born? And grandma?",
+  "El mapa de mi barrio: dibuja tu casa y tres lugares cerca / The map of my neighbourhood: draw your home and three places nearby",
+  "¿Qué comen las familias en Panamá? Pregunta a un vecino / What do families eat in Panama? Ask a neighbour",
+  "¿Qué hacemos con la basura en casa? / What do we do with the rubbish at home?",
+  "Una planta de casa: ¿qué necesita para vivir? / A plant at home: what does it need to live?",
+  "¿Cómo se dice 'hola' en el país de mi familia? / How do you say 'hello' in my family's country?",
+  "Un trabajo de mi barrio: ¿quién nos ayuda cada día? / A job in my neighbourhood: who helps us every day?"];
 const KIDS_QUIET = /(paro|parar|paren|para|paran) de hablar|no hablen|que no hable|hablan? (mucho|tanto|demasiado)|c[aá]llate|c[aá]llense|silencio|stop talking|be quiet|talk(ing)? too much/i;
 const firstLine = (reply: string): string =>
   (reply.split('\n').map((l) => l.trim()).find(Boolean) ?? '').replace(/^[^:\[]*(\[[^\]]*\])?:\s*/, '').split(' / ')[0].slice(0, 120);
@@ -667,7 +690,9 @@ function kidsToday(): string {
   const fresh = `${f.es} / ${f.en}`;
   return `TODAY in Panama: ${day}${h ? ` - ${h}. If she brings it up (or it fits), talk about it happily and teach a sentence about it.` : '.'}` +
     `\nA FRESH IDEA FOR TODAY (true; TITI brings it - he is the energetic one, full of surprises, like a fresh battery - ` +
-    `at the hello if nothing else is planned, or the moment the talk gets stuck): ${fresh}`;
+    `at the hello if nothing else is planned, or the moment the talk gets stuck): ${fresh}` +
+    `\nTHIS WEEK'S QUALITY: ${KIDS_QUALITIES[isoWeek(new Date()) % KIDS_QUALITIES.length]} - when she really shows it, ` +
+    "name it ONCE in the lesson (\"¡Eso fue muy valiente! / That was very brave!\"); never lecture about it.";
 }
 
 // The talk is stuck: the child answers with the same few words, says "no sé / no / ok", or says she is bored.
@@ -675,7 +700,7 @@ const KIDS_BORED = /aburr|boring|otra cosa|something else|no quiero (eso|esto)|y
 const KIDS_TINY = /^\s*(no s[eé]|no|s[ií]|ok|okay|ya|nada|mm+|eh|aj[aá]|i don'?t know|yes|nope)\s*[.!?]*\s*$/i;
 function kidsStuck(hist: any[], message: string): boolean {
   const said = [...hist.filter((m: any) => m?.role === 'user').map((m: any) => String(m?.content ?? '')), message]
-    .filter((s) => !/^✏️|^🎨|^📷/.test(s));
+    .filter((s) => !/^✏️|^🎨|^📷|^🎵|^🐒|^🎲/.test(s));
   if (KIDS_BORED.test(message)) return true;
   const last = said.slice(-3);
   return last.length === 3 && last.every((s) => KIDS_TINY.test(s) || s.trim().split(/\s+/).length <= 2);
@@ -774,9 +799,21 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
     return `\n\nSHE JUST FINISHED A PAINTING ON THE TABLET: "${message.trim().slice(0, 200)}" (you cannot see it; this ` +
       "is what she painted and the colours she used).\nTHIS TURN OVERRIDES EVERY RULE ABOVE: exactly two short lines, no " +
       "game, no new lesson step. Pere [clap] admires it and names ONE of her colours in Spanish and English (\"¡Qué bonito " +
-      "tu tucán! Usaste el amarillo. / What a beautiful toucan! You used yellow.\"); Titi [cheer] asks ONE happy question " +
-      "about it (its name, where it lives, why that colour). If the picture is from a place in PANAMA PLACES YOU KNOW, one " +
+      "tu tucán! Usaste el amarillo. / What a beautiful toucan! You used yellow.\"); Titi [cheer] asks ONE thinking " +
+      `question about it - this time ${KIDS_STW[(Array.isArray(kids?.history) ? kids.history : []).filter((m: any) =>
+        m?.role === 'user' && KIDS_PAINTED.test(String(m?.content ?? ''))).length % KIDS_STW.length]} (see - think - wonder, ` +
+      "one step per painting). If the picture is from a place in PANAMA PLACES YOU KNOW, one " +
       "of the two lines may carry ONE simple fact about it. Never invent details she did not say." + family;
+  }
+  if (KIDS_ACTIVITY.test(message.trim())) {
+    return `\n\nSHE JUST FINISHED AN ACTIVITY ON THE TABLET: "${message.trim().slice(0, 400)}" (exactly what she did; the ` +
+      "part in brackets is the TRUE description of the music, if any).\nTHIS TURN OVERRIDES EVERY RULE ABOVE: exactly two " +
+      "short lines, no new lesson step. Pere [clap] celebrates ONE concrete thing she did (the level, the score, an answer " +
+      "she chose). Titi [cheer] asks ONE thinking question about it: for music, what she noticed (fast or slow, loud or " +
+      "soft, which instrument, how it made her feel); for programming Titi, to explain her algorithm in order (\"¿Qué hizo " +
+      "Titi primero, y después? / What did Titi do first, and then?\") or where the bug was; for the number or sound games, " +
+      "one quick friendly question of the same kind. Never say an answer was right unless the message says so; never " +
+      "invent details." + family;
   }
   const traced = message.trim().match(KIDS_TRACED);
   if (traced) {
@@ -856,6 +893,18 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
     out.push("SHE CANNOT MOVE RIGHT NOW (in a car or told you she can't jump): for the rest of this lesson NO jumping, " +
       "hopping, standing or running games - use sit-still games instead (veo veo / I spy a colour out of the window, " +
       "count the cars, soft clapping, a riddle, finger counting). Never ask her to jump again in this lesson.");
+  }
+  if (message.trim().startsWith("📷") && !kidsIsParent(kids)) {
+    out.push("SHOW AND TELL: she is showing you something real. Invite her to tell you about it in up to three short " +
+      "sentences and give her the starters in both languages: \"Esto es... / This is...\", \"Me gusta porque... / I like it " +
+      "because...\", \"Lo uso para... / I use it for...\". Then listen; one question only.");
+  }
+  if (turn === 0 || step.startsWith("GOODBYE")) {
+    out.push(`THIS WEEK'S FAMILY PROJECT (done WITH mamá or papá): ${KIDS_PROJECTS[isoWeek(new Date()) % KIDS_PROJECTS.length]}. ` +
+      (turn === 0 ? "At the hello, if she has not told you about it yet, mention it in ONE line as a fun mission for her and her " +
+        "parent this week - she can draw the answer on the paint pad."
+        : "At goodbye, remind her of it in ONE line: next time she tells you what she and her parent found out.") +
+      " If she tells you what they found, celebrate it and ask ONE follow-up question.");
   }
   if (turn === 0 && typeof kids?.mission === "string" && kids.mission.trim()) {
     out.push(`LAST LESSON'S MISSION was: "${kids.mission.trim().slice(0, 160)}". In this hello, ask the child if they did it and what happened, and celebrate the answer.`);
@@ -1330,7 +1379,7 @@ ${asked}` : ''}`;
       else if (KIDS_EMERGENCY.test(message) || KIDS_BYE.test(message)) {
         fullResponse = fullResponse.split('\n').filter((l: string) => l.trim() && !l.includes('?')).slice(0, 2).join('\n') || fullResponse;
       }
-      else if (KIDS_PAINTED.test(message.trim()) && !kidsIsParent(kids)) {
+      else if ((KIDS_PAINTED.test(message.trim()) || KIDS_ACTIVITY.test(message.trim())) && !kidsIsParent(kids)) {
         fullResponse = lines.slice(0, 2).join('\n');
       }
       else if (KIDS_TRACED.test(message.trim())) {
