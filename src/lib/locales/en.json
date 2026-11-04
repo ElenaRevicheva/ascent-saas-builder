@@ -164,5 +164,31 @@
     "card3Title": "For the years ahead",
     "card3": "Your companion for the school and the doctor: teacher meetings, school notes, doctor and pharmacy visits, with practical guides for how things work in your country, at your pace.",
     "promiseTitle": "EspaLuz walks the long road with your family"
+  },
+  "creator": {
+    "eyebrow": "Who made EspaLuz",
+    "title": "About the creator",
+    "role": "Founder and AI builder",
+    "name": "Elena Revicheva",
+    "intro": "Hi, I'm Elena, founder of AIdeazz, where I build AI companions for real family life.",
+    "journeyTitle": "EspaLuz, a personal journey",
+    "journeyIntro": "EspaLuz is where AIdeazz began. My journey to it was deeply personal:",
+    "b1": "Former IT executive and Chief Legal Officer in Russia's e-government.",
+    "b2": "Relocated to Panama in 2022 as a single mother with:",
+    "b2a": "my one-year-old daughter",
+    "b2b": "my parents",
+    "b2c": "Mom spoke Russian and English, Dad only English",
+    "b2end": "This wasn't an adventure. It was a real challenge for all of us.",
+    "b3lead": "Started again from zero:",
+    "b3": "no profession left, no Spanish, no network.",
+    "b3b": "Language apps felt cold and robotic, nothing like the warm, patient help my three-generation family needed.",
+    "b3c": "So I built EspaLuz: first for my own family, now for yours. AI helped me rebuild my life from scratch, and that is the path I share through AIdeazz.",
+    "connectTitle": "Connect and collaborate",
+    "connectBody": "Want to work together, or just say hola? My professional outlook and portfolio are here.",
+    "scan": "Scan to open my portfolio",
+    "pdf": "Professional outlook (PDF)",
+    "portfolio": "Portfolio",
+    "buildTitle": "Let's build together.",
+    "buildBody": "The future of learning is warm, culturally aware and family-focused."
   }
 }

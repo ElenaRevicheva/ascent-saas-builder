@@ -164,5 +164,31 @@
     "card3Title": "Para los años que vienen",
     "card3": "Tu compañera para la escuela y el médico: reuniones con maestros, notas de la escuela, visitas al médico y a la farmacia, con guías prácticas de cómo funcionan las cosas en tu país, a tu ritmo.",
     "promiseTitle": "EspaLuz recorre el largo camino con tu familia"
+  },
+  "creator": {
+    "eyebrow": "Quién hizo EspaLuz",
+    "title": "Sobre la creadora",
+    "role": "Fundadora y creadora de IA",
+    "name": "Elena Revicheva",
+    "intro": "Hola, soy Elena, fundadora de AIdeazz, donde construyo compañeros de IA para la vida real de las familias.",
+    "journeyTitle": "EspaLuz, un camino personal",
+    "journeyIntro": "EspaLuz es donde empezó AIdeazz. Mi camino hasta aquí fue muy personal:",
+    "b1": "Ex ejecutiva de TI y directora jurídica en el gobierno electrónico de Rusia.",
+    "b2": "Me mudé a Panamá en 2022 como madre soltera con:",
+    "b2a": "mi hija de un año",
+    "b2b": "mis padres",
+    "b2c": "Mamá hablaba ruso e inglés; papá, solo inglés",
+    "b2end": "No fue una aventura. Fue un verdadero desafío para toda la familia.",
+    "b3lead": "Empecé de cero otra vez:",
+    "b3": "sin profesión, sin español, sin red de contactos.",
+    "b3b": "Las apps de idiomas se sentían frías y robóticas, nada parecido a la ayuda cálida y paciente que mi familia de tres generaciones necesitaba.",
+    "b3c": "Así nació EspaLuz: primero para mi familia, ahora para la tuya. La IA me ayudó a reconstruir mi vida desde cero, y ese es el camino que comparto a través de AIdeazz.",
+    "connectTitle": "Conectar y colaborar",
+    "connectBody": "¿Quieres trabajar juntos o solo decir hola? Aquí están mi perspectiva profesional y mi portafolio.",
+    "scan": "Escanea para abrir mi portafolio",
+    "pdf": "Perspectiva profesional (PDF)",
+    "portfolio": "Portafolio",
+    "buildTitle": "Construyamos juntos.",
+    "buildBody": "El futuro del aprendizaje es cálido, consciente de la cultura y centrado en la familia."
   }
 }

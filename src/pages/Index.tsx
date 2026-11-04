@@ -18,7 +18,7 @@ import { feedbackSchema } from "@/lib/validations";
 
 import brandAvatar2 from '@/assets/brand-avatar-2.jpg';
 import espaluzQr from '@/assets/espaluz-qr.jpg';
-import creatorQr from '@/assets/creator-qr.jpg';
+import portfolioQr from '@/assets/portfolio-qr.png';
 import whatsappQr from '@/assets/whatsapp-qr-code.jpg';
 
 function FeedbackForm() {
@@ -118,7 +118,10 @@ function FeedbackForm() {
 }
 
 const Index = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const outlookPdf = i18n.language?.startsWith("es")
+    ? "https://aideazz.xyz/Elena_Revicheva_Professional_Outlook_2026_ES.pdf"
+    : "https://aideazz.xyz/Elena_Revicheva_Professional_Outlook_2026.pdf";
   const [showDemoModal, setShowDemoModal] = useState(false);
   const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
 
@@ -875,107 +878,77 @@ const Index = () => {
         <Pricing />
       </div>
 
-      {/* About the Creator Section */}
-      <section id="about" className="container mx-auto px-4 py-16 mt-8 bg-gradient-to-br from-purple-50/80 via-pink-50/80 to-orange-50/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-purple-200/50">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent mb-4 drop-shadow-sm">
-              About the Creator
-            </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-orange-500 mx-auto rounded-full"></div>
-          </div>
+      {/* About the Creator. Light polish 4 Nov 2026 (cto-aipa docs/espaluz/ABOUT_CREATOR_DRAFT_2026-11-04.md):
+          same story, palette tokens only, QR opens the portfolio, button opens the Professional Outlook PDF (EN/ES). */}
+      <section id="about" className="container mx-auto px-4 py-16">
+        <div className="mx-auto max-w-5xl">
+          <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-primary">{t("creator.eyebrow")}</p>
+          <h2 className="mb-10 text-3xl text-foreground md:text-4xl">{t("creator.title")}</h2>
 
-          <div className="space-y-8">
-            {/* Founder Introduction */}
-            <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-200/30">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-                  <span className="text-white text-xl">🧠</span>
-                </div>
-                <h3 className="text-xl font-bold text-purple-700">Solo Founder and AI Entrepreneur</h3>
+          <div className="grid gap-6 md:grid-cols-[1.4fr_1fr]">
+            <div className="space-y-6">
+              <div className="rounded-2xl border border-border bg-card p-6" style={{ boxShadow: "var(--shadow-card)" }}>
+                <p className="text-sm font-semibold text-primary">{t("creator.role")}</p>
+                <h3 className="mt-1 text-2xl text-foreground">{t("creator.name")}</h3>
+                <p className="mt-3 leading-relaxed text-muted-foreground">{t("creator.intro")}</p>
               </div>
-              <h4 className="text-2xl font-bold text-gray-800 mb-3">Elena Revicheva</h4>
-              <p className="text-gray-700 leading-relaxed">
-                Hi, I'm Elena — founder of <span className="font-semibold text-purple-600">AIdeazz</span>, where I craft emotionally intelligent AI agents to support real human lives.
-              </p>
-            </div>
 
-            {/* Journey Story */}
-            <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-orange-200/30">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-                  <span className="text-white text-xl">✨</span>
-                </div>
-                <h3 className="text-xl font-bold text-orange-700">EspaLuz: A Personal Journey</h3>
-              </div>
-              <p className="text-gray-700 leading-relaxed mb-4">
-                <span className="font-semibold text-orange-600">EspaLuz is our first graduate.</span> My journey to AIdeazz was deeply personal:
-              </p>
-              
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl mt-1">🇷🇺</span>
-                  <p className="text-gray-700">Former IT executive & CLO in Russia's E-Government</p>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl mt-1">✈️</span>
-                  <div className="text-gray-700">
-                    <p className="mb-2">Relocated to Panama in 2022 as a single mother with:</p>
-                    <ul className="ml-4 space-y-1 text-sm">
-                      <li>• My 1-year-old daughter</li>
-                      <li>• Elderly parents (ages 62 & 70)</li>
-                      <li>• Mom spoke Russian-English, dad only English</li>
-                    </ul>
-                    <p className="mt-2 font-medium text-gray-800">This wasn't an adventure — it was a great challenge for all my family.</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl mt-1">💡</span>
-                  <div className="text-gray-700">
-                    <p className="mb-2"><span className="font-semibold">Started with zero:</span> no profession left, no Spanish, no network.</p>
-                    <p className="mb-2">Traditional language apps felt cold, robotic — nothing like the warm teacher my three-generation family needed.</p>
-                    <p className="font-medium text-purple-700">AI helped me create EspaLuz AI Family Tutor. AI helped me rebuild myself from scratch. Now I'm sharing that path through the AIdeazz ecosystem for all generations.</p>
-                  </div>
-                </div>
+              <div className="rounded-2xl border border-border border-l-4 bg-card p-6" style={{ boxShadow: "var(--shadow-card)", borderLeftColor: "hsl(var(--accent))" }}>
+                <h3 className="text-xl text-foreground">{t("creator.journeyTitle")}</h3>
+                <p className="mt-2 text-muted-foreground">{t("creator.journeyIntro")}</p>
+                <ul className="mt-5 space-y-5">
+                  <li className="flex items-start gap-3">
+                    <span className="mt-0.5 text-2xl" aria-hidden>🏛️</span>
+                    <p className="leading-relaxed text-foreground">{t("creator.b1")}</p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="mt-0.5 text-2xl" aria-hidden>✈️</span>
+                    <div className="leading-relaxed text-foreground">
+                      <p>{t("creator.b2")}</p>
+                      <ul className="my-2 ml-5 list-disc space-y-1 text-muted-foreground">
+                        <li>{t("creator.b2a")}</li>
+                        <li>{t("creator.b2b")}</li>
+                        <li>{t("creator.b2c")}</li>
+                      </ul>
+                      <p className="font-medium">{t("creator.b2end")}</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="mt-0.5 text-2xl" aria-hidden>💡</span>
+                    <div className="space-y-2 leading-relaxed text-foreground">
+                      <p><span className="font-semibold">{t("creator.b3lead")}</span> {t("creator.b3")}</p>
+                      <p className="text-muted-foreground">{t("creator.b3b")}</p>
+                      <p className="font-medium">{t("creator.b3c")}</p>
+                    </div>
+                  </li>
+                </ul>
               </div>
             </div>
 
-            {/* Call to Action */}
-            <div className="bg-gradient-to-r from-purple-100/80 to-pink-100/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-200/50 text-center">
-              <div className="flex items-center justify-center gap-2 mb-3">
-                <span className="text-2xl">📇</span>
-                <h3 className="text-lg font-bold text-purple-700">Connect & Collaborate</h3>
+            <aside className="space-y-6">
+              <div className="rounded-2xl border border-border bg-card p-6 text-center" style={{ boxShadow: "var(--shadow-card)" }}>
+                <h3 className="text-lg text-foreground">{t("creator.connectTitle")}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t("creator.connectBody")}</p>
+                <a href="https://aideazz.xyz/portfolio" target="_blank" rel="noopener noreferrer" className="mt-5 block">
+                  <img src={portfolioQr} alt="QR code: Elena Revicheva's portfolio" width={192} height={192}
+                    className="mx-auto h-48 w-48 rounded-xl border border-border bg-white p-2" />
+                </a>
+                <p className="mt-2 text-xs text-muted-foreground">{t("creator.scan")}</p>
+                <a href={outlookPdf} target="_blank" rel="noopener noreferrer"
+                  className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-primary px-5 py-3 font-semibold text-primary-foreground transition hover:opacity-95">
+                  {t("creator.pdf")}
+                </a>
+                <a href="https://aideazz.xyz/portfolio" target="_blank" rel="noopener noreferrer"
+                  className="mt-3 inline-flex w-full items-center justify-center rounded-full border border-primary px-5 py-3 font-semibold text-primary transition hover:bg-primary/5">
+                  {t("creator.portfolio")}
+                </a>
               </div>
-              <p className="text-gray-700 mb-4">
-                Scan my card below to connect, collaborate, or join the AIdeazz journey.
-              </p>
-              <p className="text-lg font-semibold text-purple-600">
-                Have any AIdeazz? Get on the ledger.
-              </p>
-            </div>
 
-            {/* QR Code and Visual Elements */}
-            <div className="text-center space-y-6">
-              <div className="relative">
-                <div className="absolute -inset-4 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 rounded-3xl blur opacity-20 animate-pulse"></div>
-                <img 
-                  src={creatorQr} 
-                  alt="Creator Business Card QR" 
-                  className="relative mx-auto w-64 h-64 md:w-72 md:h-72 object-contain rounded-2xl shadow-2xl border-4 border-purple-400 hover:border-purple-500 hover:shadow-vibrant hover:scale-105 transition-all duration-300 bg-white/95 backdrop-blur-sm ring-2 ring-purple-200 hover:ring-purple-300" 
-                />
+              <div className="rounded-2xl p-6" style={{ background: "hsl(var(--accent) / 0.22)", border: "1px solid hsl(var(--accent))" }}>
+                <h3 className="text-lg text-foreground">{t("creator.buildTitle")}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-foreground/80">{t("creator.buildBody")}</p>
               </div>
-              
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-200/30">
-                <h4 className="text-xl font-bold text-purple-600 mb-2">Let's Build Together!</h4>
-                <p className="text-gray-700 text-lg leading-relaxed">
-                  🚀 The future of learning is <span className="font-semibold text-orange-600">emotionally intelligent</span>, 
-                  <span className="font-semibold text-purple-600"> culturally aware</span>, and 
-                  <span className="font-semibold text-pink-600"> family-focused</span>.
-                </p>
-              </div>
-            </div>
+            </aside>
           </div>
         </div>
       </section>
