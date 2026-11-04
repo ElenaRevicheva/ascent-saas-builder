@@ -921,9 +921,10 @@ async function callGrok(apiKey: string, request: any): Promise<any> {
     signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
   });
   if (!r.ok) throw new Error(`Grok ${XAI_MODEL}: ${r.status} ${(await r.text()).slice(0, 200)}`);
-  const text = (await r.json()).choices?.[0]?.message?.content;
+  const j = await r.json();
+  const text = j.choices?.[0]?.message?.content;
   if (!text) throw new Error('Grok: empty answer');
-  return { content: [{ text }], model: XAI_MODEL };
+  return { content: [{ text }], model: XAI_MODEL, usage: j.usage };
 }
 
 async function callGroq(apiKey: string, request: any, models: string[] = GROQ_MODELS): Promise<any> {
@@ -946,7 +947,7 @@ async function callGroq(apiKey: string, request: any, models: string[] = GROQ_MO
     const text = j.choices?.[0]?.message?.content;
     if (!text) { errors.push(`Groq ${model}: empty answer`); continue; }
     console.log(`groq model ${model}`);
-    return { content: [{ text }], model };
+    return { content: [{ text }], model, usage: j.usage };
   }
   throw new Error(errors.join(' || '));
 }
@@ -966,9 +967,10 @@ async function callOpenAI(apiKey: string, request: any): Promise<any> {
     signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
   });
   if (!r.ok) throw new Error(`OpenAI ${OPENAI_CHAIN_MODEL}: ${r.status} ${(await r.text()).slice(0, 200)}`);
-  const text = (await r.json()).choices?.[0]?.message?.content;
+  const j = await r.json();
+  const text = j.choices?.[0]?.message?.content;
   if (!text) throw new Error('OpenAI: empty answer');
-  return { content: [{ text }], model: OPENAI_CHAIN_MODEL };
+  return { content: [{ text }], model: OPENAI_CHAIN_MODEL, usage: j.usage };
 }
 
 // 3 Nov 2026 (Alisa's lesson 15:08-15:25: 4 of 10 answers took 22-28 s): the free Gemini step waited the shared 25 s
@@ -990,7 +992,7 @@ async function callGemini(apiKey: string, request: any): Promise<any> {
   const j = await r.json();
   const text = j.candidates?.[0]?.content?.parts?.map((p: any) => p.text).join('') ;
   if (!text) throw new Error('Gemini: empty answer');
-  return { content: [{ text }] };
+  return { content: [{ text }], model: GEMINI_MODEL, usage: j.usageMetadata };
 }
 
 // 31 Oct 2026 (Elena: "photos in the web classroom, like Telegram"): the child shows a toy, a drawing or her lunch and
@@ -1035,6 +1037,19 @@ async function describePhoto(b64: string, prompt = PHOTO_PROMPT, maxTokens = 120
  *  to the maximum"): Claude refuses in a split second when the org has no credit and then hands over, so a top-up is
  *  used automatically with nothing to switch. Then Gemini, the strong free Groq model, Grok, and the small Groq models
  *  last. A provider without a secret is skipped, not an error. */
+/** 4 Nov 2026 — METER (Phase 0, cto-aipa docs/espaluz/MODEL_COST_STRATEGY_2026-11-03.md). Every provider's answer
+ *  carries its token counts; they were thrown away, so the cost of a lesson was a guess. One log line per answered
+ *  turn, the same shape as the bots' llm_chain.py ("[meter] ch=wa ..."), so one grep reads all three channels.
+ *  Claude: usage.input_tokens/output_tokens; OpenAI-shaped: prompt_tokens/completion_tokens; Gemini: usageMetadata. */
+function meter(provider: string, result: any): void {
+  try {
+    const u = result?.usage || {};
+    const tin = u.input_tokens ?? u.prompt_tokens ?? u.promptTokenCount ?? 0;
+    const tout = u.output_tokens ?? u.completion_tokens ?? u.candidatesTokenCount ?? 0;
+    console.log(`[meter] ch=web p=${provider} m=${result?.model ?? '?'} in=${tin} out=${tout}`);
+  } catch { /* metering must never break a lesson */ }
+}
+
 async function callChain(request: any): Promise<{ result: any; provider: string }> {
   const chain: [string, string | undefined, (k: string, r: any) => Promise<any>][] = [
     ['claude', Deno.env.get('ANTHROPIC_API_KEY'), callClaude],
@@ -1054,6 +1069,7 @@ async function callChain(request: any): Promise<{ result: any; provider: string 
     try {
       const result = await fn(key, request);
       console.log(`answered by ${name}`);
+      meter(name, result);
       return { result, provider: name };
     } catch (e) {
       errors.push(`${name}: ${(e as Error).message}`);
