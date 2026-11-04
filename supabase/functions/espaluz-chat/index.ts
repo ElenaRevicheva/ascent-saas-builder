@@ -1041,6 +1041,13 @@ async function describePhoto(b64: string, prompt = PHOTO_PROMPT, maxTokens = 120
  *  carries its token counts; they were thrown away, so the cost of a lesson was a guess. One log line per answered
  *  turn, the same shape as the bots' llm_chain.py ("[meter] ch=wa ..."), so one grep reads all three channels.
  *  Claude: usage.input_tokens/output_tokens; OpenAI-shaped: prompt_tokens/completion_tokens; Gemini: usageMetadata. */
+// Said when every provider is out (4 Nov 2026). No time is promised: the free daily limits reset at different hours.
+const KIDS_RESTING = "Pere [sleepy]: Pere y Titi están descansando un ratito. ¡Volvemos muy pronto! / Pere and Titi " +
+  "are resting for a little while. We will be back very soon!\nTiti [goodbye]: Guarda tu idea, la jugamos después. / " +
+  "Keep your idea, we will play it later.";
+const ADULT_RESTING = "Estoy descansando un ratito 😴 Tu mensaje y tu historial están guardados; escríbeme de nuevo en " +
+  "un rato. / I'm resting for a little while. Your message and history are saved; write to me again soon.";
+
 function meter(provider: string, result: any): void {
   try {
     const u = result?.usage || {};
@@ -1232,7 +1239,31 @@ ${asked}` : ''}`;
                      { role: 'user', content: kids.speaker ? `${kidsSpeakerName(kids) || 'Child'}: ${message}` : message }] }
       : formatClaudeRequest(message, familyMember, emotion, conversationHistory, isVoiceInput, originalLanguage);
 
-    const { result: claudeResult, provider } = await callChain(claudeRequest);
+    // 4 Nov 2026 (Elena: "never silence for a family"): when every provider fails, a kind resting message comes back
+    // as a normal reply (200), not "Lo siento, hubo un error" with a 500. Nothing is saved to the lesson or memory. The
+    // "[chain-out]" line is the same one the WhatsApp/Telegram bots print, so one search finds every channel.
+    let chained: { result: any; provider: string };
+    try {
+      chained = await callChain(claudeRequest);
+    } catch (chainErr) {
+      console.error(`[chain-out] ch=web kids=${!!kids} ${String((chainErr as Error).message).slice(0, 300)}`);
+      return new Response(JSON.stringify({
+        response: kids ? KIDS_RESTING : ADULT_RESTING,
+        provider: 'resting',
+        resting: true,
+        linked: !!userId,
+        classUnit: null,
+        trace: null,
+        userMessage: message,
+        videoScript: '',
+        familyMember: familyMember.name,
+        familyMemberRole: familyMember.role,
+        emotion: emotion.emotion,
+        confidence: emotion.confidence,
+        vocabularyTaught: [],
+      }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const { result: claudeResult, provider } = chained;
     let fullResponse = claudeResult.content[0].text;
     // 30 Oct 2026: the free models ignore "at most 4 sentence pairs" and wrote 8-10 lines - too long for a 6-year-old
     // and one voice request per line. Kids replies keep the first 4 lines plus the closing question, deterministically.
