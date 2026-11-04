@@ -421,6 +421,12 @@ const Classroom = () => {
         const { data, error } = await supabase.functions.invoke("voice-to-text", {
           body: { audio: b64, speaker: speaker === "child" ? "child" : "parent" } });
         const heard = (data?.text || "").trim();
+        // 4 Nov 2026: every listening service is out - say so, with when to come back, instead of blaming the child.
+        if (data?.unavailable) {
+          setBusy(false);
+          toast.error(data.message || "Pere y Titi están descansando. / Pere and Titi are resting.", { duration: 15000 });
+          return;
+        }
         if (error || !heard) {
           setBusy(false);
           toast.error("No te escuché bien. / I didn't hear you. Try again!");

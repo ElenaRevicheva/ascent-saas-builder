@@ -14,9 +14,14 @@ const GARBLE = /[ðþæøå]/i;
 const GEMINI_HEAR_MODELS = (Deno.env.get('GEMINI_HEAR_MODELS') || 'gemini-flash-latest,gemini-flash-lite-latest,gemini-pro-latest')
   .split(',').map((m) => m.trim()).filter(Boolean);
 const GEMINI_HEAR_MODEL = GEMINI_HEAR_MODELS.join(' > ');
+// 4 Nov 2026 13:04 UTC (Alisa waited 26 s, then was told "I didn't hear you"): two Gemini models hung 12 s each before
+// failing. A child cannot wait that long, so each model gets 4 s and the whole Gemini step 7 s.
+const GEMINI_STEP_MS = 7000;
 async function geminiTranscribe(key: string, audio: Uint8Array, hint: string, language?: string): Promise<any> {
   const errs: string[] = [];
+  const started = Date.now();
   for (const model of GEMINI_HEAR_MODELS) {
+    if (Date.now() - started > GEMINI_STEP_MS) { errs.push('gemini: step budget used'); break; }
     try {
       const out = await geminiTranscribeWith(model, key, audio, hint, language);
       console.log(`gemini hearing model ${model}`);
@@ -44,7 +49,7 @@ async function geminiTranscribeWith(model: string, key: string, audio: Uint8Arra
       generationConfig: { temperature: 0, responseMimeType: 'application/json',
         responseSchema: { type: 'OBJECT', properties: { text: { type: 'STRING' }, language: { type: 'STRING' } }, required: ['text'] } },
     }),
-    signal: AbortSignal.timeout(12000),  // three models must still fit in a child's turn
+    signal: AbortSignal.timeout(4000),  // 4 Nov 2026: was 12 s; the models must fit in a child's turn
   });
   if (!r.ok) throw new Error(`gemini ${model}: ${r.status} ${(await r.text()).slice(0, 120)}`);
   const raw = (await r.json()).candidates?.[0]?.content?.parts?.map((p: any) => p.text).join('') ?? '';
@@ -101,6 +106,27 @@ function echoesHint(text: string, hint: string): boolean {
 const PHANTOMS = new Set(['thank you', 'you', 'thanks for watching', 'thank you for watching', 'im not sure', 'i m not sure',
   'subtitles by the amara org community', 'gracias por ver el video', 'subtitulos realizados por la comunidad de amara org', '']);
 const isPhantom = (text: string) => PHANTOMS.has(words(text).join(' '));
+
+// WHEN to come back (4 Nov 2026, Elena: "en un rato" is not an answer): the free daily quotas reset at 00:00 UTC =
+// 7:00 pm Panama. TWIN of espaluz-chat backAt() and the bots' fair_use.back_at() - change one, change all.
+const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre",
+  "noviembre", "diciembre"];
+const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+  "November", "December"];
+const PANAMA_MS = 5 * 3600 * 1000; // UTC-5, no DST
+function backAt(nowMs = Date.now()): { es: string; en: string } {
+  const reset = (Math.floor(nowMs / 86400000) + 1) * 86400000; // next 00:00 UTC
+  const d = new Date(reset - PANAMA_MS);
+  const today = new Date(nowMs - PANAMA_MS).getUTCDate() === d.getUTCDate();
+  return {
+    es: `${today ? "hoy" : "mañana"}, ${DIAS[d.getUTCDay()]} ${d.getUTCDate()} de ${MESES[d.getUTCMonth()]}, a partir ` +
+      `de las 7:00 p. m. (hora de Panamá)`,
+    en: `${today ? "today" : "tomorrow"}, ${DAYS[d.getUTCDay()]} ${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}, from ` +
+      `7:00 pm Panama time`,
+  };
+}
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -183,7 +209,9 @@ serve(async (req) => {
       formData.append('prompt', hint);
       formData.append('temperature', '0');
       if (lang) formData.append('language', lang);
-      return fetch(url, { method: 'POST', headers: { 'Authorization': `Bearer ${key}` }, body: formData });
+      // 4 Nov 2026: no call may hang a child's turn. Groq answers in about 1 s; OpenAI gets longer for long clips.
+      return fetch(url, { method: 'POST', headers: { 'Authorization': `Bearer ${key}` }, body: formData,
+                          signal: AbortSignal.timeout(url.includes('openai.com') ? 10000 : 6000) });
     };
     const confidence = (r: any): number => {
       const segs = Array.isArray(r?.segments) ? r.segments : [];
@@ -203,7 +231,15 @@ serve(async (req) => {
           continue;
         }
       }
-      const response = await send(key, url, model, language);
+      let response: Response;
+      try {
+        response = await send(key, url, model, language);
+      } catch (e) {
+        const why = `${name} ${model}: ${String((e as Error).message || e).slice(0, 120)}`;
+        console.error('Whisper provider failed, trying the next:', why);
+        errors.push(why);
+        continue;
+      }
       if (!response.ok) {
         const why = `${name} ${model}: ${response.status} ${(await response.text()).slice(0, 200)}`;
         console.error('Whisper provider failed, trying the next:', why);
@@ -226,7 +262,8 @@ serve(async (req) => {
         for (const m of models) {
           if (m !== model && !GARBLE.test(String(result.text)) && confidence(result) >= -0.5) break;
           for (const lang of ['es', 'en']) {
-            const again = await send(key, url, m, lang);
+            let again: Response;
+            try { again = await send(key, url, m, lang); } catch (_) { continue; }
             if (!again.ok) continue;
             const alt = await again.json();
             if (better(alt, result)) result = { ...alt, language: lang };
@@ -242,9 +279,18 @@ serve(async (req) => {
       }
       break;
     }
-    if (!result) {
-      throw new Error(errors.length ? `Whisper API error: ${errors.join(' | ')}` : 'No speech-to-text provider configured (GROQ_API_KEY or OPENAI_API_KEY)');
+    if (!result && errors.length) {
+      // 4 Nov 2026: every listening service refused. That is not "the child was not heard" - saying so makes her repeat
+      // something that cannot work. One "[stt-out]" line (same shape as "[chain-out]") and an honest answer with WHEN
+      // to come back; the page shows it. 200 + unavailable, so an older page still falls back to "try again".
+      console.error(`[stt-out] ch=web ${errors.join(' | ').slice(0, 400)}`);
+      const at = backAt();
+      return new Response(JSON.stringify({ text: '', unavailable: true,
+        message: `Pere y Titi están descansando los oídos 😴 Volvemos ${at.es}. / Pere and Titi are resting their ` +
+                 `ears. We will be back ${at.en}.` }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
+    if (!result) throw new Error('No speech-to-text provider configured (GROQ_API_KEY or OPENAI_API_KEY)');
     // 31 Oct 15:56: "Man, að mér kom úr teléfón" (icelandic, retry -0.82, above the -1.0 cut). Letters that exist in
     // none of the families' languages prove the transcript is garble, whatever the confidence says.
     if (GARBLE.test(String(result.text))) {

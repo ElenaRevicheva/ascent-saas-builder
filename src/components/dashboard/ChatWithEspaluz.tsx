@@ -710,6 +710,11 @@ The video script will be used to generate an avatar video with synchronized audi
             throw new Error(`Speech recognition failed: ${transcriptionError.message || 'Unknown error'}`);
           }
           
+          if (transcriptionData?.unavailable) {
+            // 4 Nov 2026: every listening service is out - an honest message with when to come back, not "not heard".
+            toast.error(transcriptionData.message, { duration: 15000 });
+            return;
+          }
           if (!transcriptionData || !transcriptionData.text) {
             throw new Error('No text was transcribed from the audio');
           }
