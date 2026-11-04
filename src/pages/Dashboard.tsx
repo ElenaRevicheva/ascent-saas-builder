@@ -19,6 +19,7 @@ import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
 import { ReferralSystem } from '@/components/ReferralSystem';
 import { TelegramProgress } from '@/components/dashboard/TelegramProgress';
 import { LearningOptions } from '@/components/dashboard/LearningOptions';
+import { FamilyRoadmap } from '@/components/dashboard/FamilyRoadmap';
 import SubscriptionFlow from '@/components/SubscriptionFlow';
 import SubscriptionRecovery from '@/components/SubscriptionRecovery';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -108,7 +109,12 @@ const Dashboard = () => {
           <SubscriptionRecovery />
         </div>
 
-        {/* Learning Analytics - Top Priority */}
+        {/* Family map - always visible, ticks real steps (4 Nov 2026) */}
+        <div className="mb-8">
+          <FamilyRoadmap />
+        </div>
+
+        {/* Learning Analytics */}
         <div className="mb-8" data-learning-analytics>
           <LearningAnalytics />
         </div>
@@ -148,7 +154,7 @@ const Dashboard = () => {
         </div>
 
         {/* Referral System */}
-        <div className="mb-8">
+        <div className="mb-8" data-referrals>
           <ReferralSystem />
         </div>
         

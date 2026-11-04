@@ -19,10 +19,20 @@ const Auth = () => {
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
+    fullName: ''
   });
-  
-  const { signIn, user } = useAuth();
+  // 4 Nov 2026: free sign-up (14-day trial, no card) + password reset. Before this, accounts were created only
+  // after PayPal (SubscriptionComplete) and there was no way to recover a password.
+  type Mode = 'signin' | 'signup' | 'forgot' | 'reset';
+  const params = new URLSearchParams(window.location.search);
+  const startsInRecovery = window.location.hash.includes('type=recovery') || params.get('mode') === 'reset';
+  const [mode, setMode] = useState<Mode>(
+    startsInRecovery ? 'reset' : params.get('mode') === 'signup' ? 'signup' : 'signin'
+  );
+  const [notice, setNotice] = useState('');
+
+  const { signIn, signUp, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   // The classroom sends parents here with ?next=/classroom (22 Oct 2026); only that page is allowed back.
@@ -196,10 +206,86 @@ const Auth = () => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (user && mode !== 'reset') {
       navigate(afterSignIn);
     }
-  }, [user, navigate, afterSignIn]);
+  }, [user, navigate, afterSignIn, mode]);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') setMode('reset');
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const switchMode = (next: Mode) => {
+    setMode(next);
+    setError('');
+    setNotice('');
+  };
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.email || !formData.password) {
+      setError('Please fill in your email and a password');
+      return;
+    }
+    if (formData.password.length < 8) {
+      setError('Please use at least 8 characters for your password');
+      return;
+    }
+    setIsLoading(true);
+    setError('');
+    try {
+      const { error } = await signUp(formData.email.trim(), formData.password, formData.fullName.trim() || undefined);
+      if (error) {
+        setError(/registered|exists/i.test(error.message)
+          ? 'This email already has an account. Please sign in, or reset your password.'
+          : error.message);
+      } else {
+        setNotice(`Almost there! We sent a confirmation link to ${formData.email.trim()}. Open it, then sign in here. Your 14 free days start now.`);
+        setMode('signin');
+      }
+    } catch {
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleForgot = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.email) {
+      setError('Please type the email of your account');
+      return;
+    }
+    setIsLoading(true);
+    setError('');
+    const { error } = await supabase.auth.resetPasswordForEmail(formData.email.trim(), {
+      redirectTo: `${window.location.origin}/auth?mode=reset`,
+    });
+    setIsLoading(false);
+    if (error) setError(error.message);
+    else setNotice(`If ${formData.email.trim()} has an account, a link to choose a new password is on its way.`);
+  };
+
+  const handleReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (formData.password.length < 8) {
+      setError('Please use at least 8 characters for your new password');
+      return;
+    }
+    setIsLoading(true);
+    setError('');
+    const { error } = await supabase.auth.updateUser({ password: formData.password });
+    setIsLoading(false);
+    if (error) {
+      setError(error.message);
+    } else {
+      toast({ title: 'Password updated', description: 'Welcome back to EspaLuz.' });
+      navigate(afterSignIn);
+    }
+  };
 
   useEffect(() => {
     // Pre-fill email if coming from subscription flow
@@ -259,6 +345,46 @@ const Auth = () => {
 
 
 
+  const passwordField = (id: string, placeholder: string) => (
+    <div className="relative">
+      <Input
+        id={id}
+        name="password"
+        type={showPassword ? "text" : "password"}
+        placeholder={placeholder}
+        value={formData.password}
+        onChange={handleInputChange}
+        autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
+        required
+      />
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+        onClick={() => setShowPassword(!showPassword)}
+        aria-label={showPassword ? 'Hide password' : 'Show password'}
+      >
+        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+      </Button>
+    </div>
+  );
+
+  const emailField = (
+    <div className="space-y-2">
+      <Label htmlFor="auth-email">Email</Label>
+      <Input id="auth-email" name="email" type="email" placeholder="your@email.com" autoComplete="email"
+        value={formData.email} onChange={handleInputChange} required />
+    </div>
+  );
+
+  const titles: Record<Mode, { title: string; sub: string }> = {
+    signin: { title: 'Welcome back', sub: 'Sign in to your family space' },
+    signup: { title: 'Start free for 14 days', sub: 'No card needed. The classroom, your chat, WhatsApp and Telegram.' },
+    forgot: { title: 'Forgot your password?', sub: 'Type your email and we will send you a link' },
+    reset: { title: 'Choose a new password', sub: 'At least 8 characters' },
+  };
+
   return (
     <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -267,107 +393,123 @@ const Auth = () => {
             <ArrowLeft className="h-4 w-4" />
             Back to Home
           </Link>
-          
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Sparkles className="h-8 w-8 text-primary" />
+            <img src="/espaluz-icon.svg?v=el4" alt="" className="h-9 w-9" />
             <h1 className="text-2xl font-bold text-foreground">EspaLuz</h1>
           </div>
-          <p className="text-muted-foreground">
-            Your AI Spanish tutor awaits
-          </p>
+          <p className="text-muted-foreground">Live your new country in Spanish, with your family</p>
         </div>
 
-        {/* Show subscription recovery component if there are activation issues */}
         <div className="mb-6">
           <SubscriptionRecovery />
         </div>
 
         <Card className="border-border shadow-card">
           <CardHeader className="text-center">
-            <CardTitle>Welcome</CardTitle>
-            <CardDescription>
-              Sign in or try EspaLuz risk free without sign up
-            </CardDescription>
-
+            <CardTitle>{titles[mode].title}</CardTitle>
+            <CardDescription>{titles[mode].sub}</CardDescription>
+            {(mode === 'signin' || mode === 'signup') && (
+              <div className="mt-4 grid grid-cols-2 gap-1 rounded-full bg-muted p-1" role="tablist" aria-label="Sign in or create account">
+                <button type="button" role="tab" aria-selected={mode === 'signin'} onClick={() => switchMode('signin')}
+                  className={`rounded-full py-2 text-sm font-semibold ${mode === 'signin' ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}>
+                  Sign in
+                </button>
+                <button type="button" role="tab" aria-selected={mode === 'signup'} onClick={() => switchMode('signup')}
+                  className={`rounded-full py-2 text-sm font-semibold ${mode === 'signup' ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}>
+                  Create account
+                </button>
+              </div>
+            )}
           </CardHeader>
-          
+
           <CardContent>
             {error && (
               <Alert variant="destructive" className="mb-6">
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
+            {notice && (
+              <Alert className="mb-6 border-[hsl(var(--espaluz-green))]">
+                <AlertDescription>{notice}</AlertDescription>
+              </Alert>
+            )}
 
-            <form onSubmit={handleSignIn} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="signin-email">Email</Label>
-                <Input
-                  id="signin-email"
-                  name="email"
-                  type="email"
-                  placeholder="your@email.com"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="signin-password">Password</Label>
-                <div className="relative">
-                  <Input
-                    id="signin-password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    required
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </Button>
+            {mode === 'signin' && (
+              <form onSubmit={handleSignIn} className="space-y-4">
+                {emailField}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="auth-password">Password</Label>
+                    <button type="button" onClick={() => switchMode('forgot')} className="text-sm font-medium text-primary hover:underline">
+                      Forgot password?
+                    </button>
+                  </div>
+                  {passwordField('auth-password', 'Your password')}
                 </div>
+                <Button type="submit" className="w-full" disabled={isLoading} variant="hero">
+                  {isLoading ? 'Signing in...' : 'Sign in'}
+                </Button>
+              </form>
+            )}
+
+            {mode === 'signup' && (
+              <form onSubmit={handleSignUp} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="auth-name">Your name</Label>
+                  <Input id="auth-name" name="fullName" placeholder="e.g. Ana" autoComplete="name"
+                    value={formData.fullName} onChange={handleInputChange} />
+                </div>
+                {emailField}
+                <div className="space-y-2">
+                  <Label htmlFor="auth-password">Password</Label>
+                  {passwordField('auth-password', 'At least 8 characters')}
+                </div>
+                <Button type="submit" className="w-full" disabled={isLoading} variant="hero">
+                  {isLoading ? 'Creating your account...' : 'Create my free account'}
+                </Button>
+                <p className="text-xs text-muted-foreground text-center">
+                  14 days free, then $11 a month only if you choose to stay. By creating an account you accept the{' '}
+                  <Link to="/terms-of-service" className="underline">terms</Link> and{' '}
+                  <Link to="/privacy-policy" className="underline">privacy policy</Link>.
+                </p>
+              </form>
+            )}
+
+            {mode === 'forgot' && (
+              <form onSubmit={handleForgot} className="space-y-4">
+                {emailField}
+                <Button type="submit" className="w-full" disabled={isLoading} variant="hero">
+                  {isLoading ? 'Sending...' : 'Send me a link'}
+                </Button>
+                <button type="button" onClick={() => switchMode('signin')} className="w-full text-sm font-medium text-primary hover:underline">
+                  Back to sign in
+                </button>
+              </form>
+            )}
+
+            {mode === 'reset' && (
+              <form onSubmit={handleReset} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="auth-password">New password</Label>
+                  {passwordField('auth-password', 'At least 8 characters')}
+                </div>
+                <Button type="submit" className="w-full" disabled={isLoading} variant="hero">
+                  {isLoading ? 'Saving...' : 'Save new password'}
+                </Button>
+              </form>
+            )}
+
+            {(mode === 'signin' || mode === 'signup') && (
+              <div className="mt-6 pt-4 border-t border-border">
+                <Button onClick={() => navigate('/dashboard')} variant="outline" className="w-full">
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Just try 20 messages first
+                </Button>
+                <p className="text-xs text-muted-foreground text-center mt-2">No account needed</p>
               </div>
-              
-              <Button 
-                type="submit" 
-                className="w-full" 
-                disabled={isLoading}
-                variant="hero"
-              >
-                {isLoading ? "Signing in..." : "Sign In"}
-              </Button>
-            </form>
-            
-            {/* Try EspaLuz Risk Free Button */}
-            <div className="mt-6 pt-4 border-t border-border">
-              <Button 
-                onClick={() => navigate('/dashboard')} 
-                variant="outline" 
-                className="w-full bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 border-green-200 text-green-700 hover:text-green-800"
-              >
-                <Sparkles className="h-4 w-4 mr-2" />
-                Try EspaLuz Risk Free - 20 Messages
-              </Button>
-              <p className="text-xs text-muted-foreground text-center mt-2">
-                No signup required • Full features included
-              </p>
-            </div>
+            )}
           </CardContent>
         </Card>
-        
-
       </div>
     </div>
   );

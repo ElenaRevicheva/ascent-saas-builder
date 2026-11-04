@@ -7,7 +7,7 @@ export const useSubscription = () => {
   return {
     status: subscription?.status ?? 'free_trial',
     planType: subscription?.plan_type ?? 'free_trial',
-    trialDaysLeft: subscription?.trial_days_left ?? 7,
+    trialDaysLeft: subscription?.trial_days_left ?? 14,
     isTrialActive: subscription?.is_trial_active ?? true,
     isSubscriptionActive: subscription?.is_subscription_active ?? false,
     loading: isLoading,

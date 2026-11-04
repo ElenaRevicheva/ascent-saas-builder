@@ -190,7 +190,7 @@ const Pricing = () => {
                     </Button>
                   </div>
                 ) : (
-                  <Link to="/dashboard" state={{ scrollToChat: true }} className="block mb-6">
+                  <Link to="/auth?mode=signup" className="block mb-6">
                     <Button 
                       variant={plan.popular ? "hero" : "outline"} 
                       size="lg" 

@@ -25,7 +25,7 @@ const fetchSubscriptionStatus = async (userId: string): Promise<SubscriptionStat
   return {
     status: 'free_trial',
     plan_type: 'free_trial',
-    trial_days_left: 7,
+    trial_days_left: 14,
     is_trial_active: true,
     is_subscription_active: false,
   };
