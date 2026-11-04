@@ -74,6 +74,38 @@ const PAINT_SETS: { title: string; pages: Page[] }[] = [
     { id: "pirata", es: "un barco pirata", en: "a pirate ship", label: "🏴‍☠️ Barco pirata" },
     { id: "corona", es: "una corona y una varita mágica", en: "a crown and a magic wand", label: "👑 Corona" },
   ] },
+  // 4 Nov 2026 (Elena: Alisa wants more unicorns; plus shapes, mazes and step-by-step daily routines for 6-8 year olds,
+  // in line with the Cambridge Primary themes - 2D shapes, life cycles, plants, daily routines, sequencing words). All
+  // original line art from basic shapes (no studio characters). For a sequence `place` carries the right order, so the
+  // heroes can talk about "primero / después / al final" with her.
+  { title: "Más unicornios / More unicorns", pages: [
+    { id: "unicornio-nube", es: "un unicornio en una nube", en: "a unicorn on a cloud", label: "🦄 En la nube / On a cloud" },
+    { id: "unicornio-arcoiris", es: "un unicornio con arcoíris", en: "a unicorn with a rainbow", label: "🦄 Arcoíris / Rainbow" },
+    { id: "unicornio-alas", es: "un unicornio con alas", en: "a unicorn with wings", label: "🦄 Con alas / Wings" },
+    { id: "unicornio-flores", es: "un unicornio en el jardín", en: "a unicorn in the garden", label: "🦄 Jardín / Garden" },
+  ] },
+  { title: "Figuras / Shapes", pages: [
+    { id: "figuras", es: "las figuras: círculo, cuadrado, triángulo y más", en: "the shapes: circle, square, triangle and more", label: "🔷 Figuras / Shapes" },
+    { id: "casa-figuras", es: "una casa hecha de figuras", en: "a house made of shapes", label: "🏠 Casa de figuras" },
+    { id: "tren-figuras", es: "un tren hecho de figuras", en: "a train made of shapes", label: "🚂 Tren de figuras" },
+  ] },
+  { title: "Laberintos / Mazes", pages: [
+    { id: "laberinto-facil", es: "el camino del laberinto fácil", en: "the path of the easy maze", label: "🌀 Fácil / Easy" },
+    { id: "laberinto-medio", es: "el camino del laberinto medio", en: "the path of the medium maze", label: "🌀 Medio / Medium" },
+    { id: "laberinto-dificil", es: "el camino del laberinto difícil", en: "the path of the hard maze", label: "🌀 Difícil / Hard" },
+  ] },
+  { title: "Paso a paso: ¿qué va primero? / Step by step: what comes first?", pages: [
+    { id: "secuencia-payaso", es: "los pasos del payaso que se prepara", en: "the steps of the clown getting ready", label: "🤡 Payaso / Clown",
+      place: "(orden: primero los pantalones, después los zapatos, luego la cara pintada y al final la nariz roja) / (order: first the pants, then the shoes, then the face paint and last the red nose)" },
+    { id: "secuencia-manana", es: "mi mañana de escuela", en: "my school morning", label: "🎒 Mi mañana / My morning",
+      place: "(orden: me despierto a las 6:30, me pongo el uniforme, desayuno y llevo mi mochila) / (order: I wake up at 6:30, put on my uniform, have breakfast and take my backpack)" },
+    { id: "secuencia-mariposa", es: "la vida de la mariposa", en: "the life of a butterfly", label: "🦋 Mariposa / Butterfly",
+      place: "(orden: huevos en la hoja, la oruga come, la crisálida, la mariposa) / (order: eggs on a leaf, the caterpillar eats, the chrysalis, the butterfly)" },
+    { id: "secuencia-planta", es: "cómo crece una semilla", en: "how a seed grows", label: "🌱 Semilla / Seed",
+      place: "(orden: pongo la semilla, riego con agua, sale un brote, crece una flor) / (order: I plant the seed, I water it, a sprout comes out, a flower grows)" },
+    { id: "secuencia-sandwich", es: "cómo preparo un sándwich", en: "how I make a sandwich", label: "🥪 Sándwich",
+      place: "(orden: una rebanada de pan, queso y jamón, otra rebanada, lo corto en triángulos) / (order: a slice of bread, cheese and ham, another slice, I cut it into triangles)" },
+  ] },
 ];
 const BLANK: Page = { id: "blank", es: "mi propio dibujo", en: "my own picture", label: "⬜ Libre / Free" };
 

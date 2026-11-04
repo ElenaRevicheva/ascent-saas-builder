@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>Una semilla crece / A seed grows</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="30" y="70" width="360" height="245" rx="18"/>
+<rect x="44" y="84" width="48" height="48" rx="8"/>
+<g transform="translate(210 175)"><path d="M -130 55 L 130 55"/><path d="M 0 55 L 0 -10"/><path d="M 0 10 C -40 -20, -60 0, -50 15 C -30 20, -15 18, 0 10 Z"/><path d="M 0 -5 C 40 -35, 60 -15, 50 0 C 30 5, 15 3, 0 -5 Z"/></g>
+<rect x="410" y="70" width="360" height="245" rx="18"/>
+<rect x="424" y="84" width="48" height="48" rx="8"/>
+<g transform="translate(590 175)"><path d="M -130 55 L 130 55"/><path d="M 0 -32 L 0 53"/><path d="M 0 19.0 C 25 -6.5, 35 10.5, 0 27.499999999999993"/><circle cx="0" cy="-73" r="14"/><circle cx="23" cy="-50" r="14"/><circle cx="0" cy="-27" r="14"/><circle cx="-23" cy="-50" r="14"/><circle cx="16" cy="-66" r="14"/><circle cx="-16" cy="-66" r="14"/><circle cx="16" cy="-34" r="14"/><circle cx="-16" cy="-34" r="14"/><circle cx="0" cy="-50" r="13"/></g>
+<rect x="30" y="335" width="360" height="245" rx="18"/>
+<rect x="44" y="349" width="48" height="48" rx="8"/>
+<g transform="translate(210 440)"><path d="M -130 55 L 130 55"/><path d="M -50 55 C -50 95, 50 95, 50 55"/><ellipse cx="0" cy="70" rx="14" ry="9"/><path d="M -60 -60 C -40 -30, -20 -10, -5 40"/></g>
+<rect x="410" y="335" width="360" height="245" rx="18"/>
+<rect x="424" y="349" width="48" height="48" rx="8"/>
+<g transform="translate(590 440)"><path d="M -130 55 L 130 55"/><rect x="-20" y="-40" width="80" height="60" rx="10"/><path d="M -20 -25 L -80 -55"/><path d="M 60 -30 C 95 -30, 95 10, 60 10"/><path d="M -88 -40 L -92 -25"/><path d="M -100 -30 L -105 -12"/><path d="M -76 -28 L -80 -10"/></g>
+</g>
+<text x="400" y="45" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="17" font-weight="bold" fill="#111" text-anchor="middle">¿Qué va primero? Escribe 1, 2, 3, 4 / What comes first? Write 1, 2, 3, 4</text>
+<text x="210" y="277" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="19" font-weight="bold" fill="#111" text-anchor="middle">Sale un brote</text>
+<text x="210" y="301" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="17" font-weight="bold" fill="#111" text-anchor="middle">A sprout comes out</text>
+<text x="590" y="277" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="19" font-weight="bold" fill="#111" text-anchor="middle">Crece una flor</text>
+<text x="590" y="301" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="17" font-weight="bold" fill="#111" text-anchor="middle">A flower grows</text>
+<text x="210" y="542" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="19" font-weight="bold" fill="#111" text-anchor="middle">Pongo la semilla</text>
+<text x="210" y="566" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="17" font-weight="bold" fill="#111" text-anchor="middle">I plant the seed</text>
+<text x="590" y="542" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="19" font-weight="bold" fill="#111" text-anchor="middle">Riego con agua</text>
+<text x="590" y="566" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="17" font-weight="bold" fill="#111" text-anchor="middle">I water it</text>
+</svg>

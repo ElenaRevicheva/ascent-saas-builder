@@ -24,7 +24,9 @@ interface Props {
 // same day - short sentences. Sentences come in pairs with the same meaning, Spanish first and then English, so she
 // writes one idea in both languages (Cambridge Pre A1 Starters themes: feelings, family, home, greetings). Each is
 // under 20 characters so the heroes' "✏️ Tracé" turn still recognises it.
-const NUMBERS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+const NUMBERS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+  // 4 Nov 2026 (Elena: "more numbers"): first grade counts to 20 and by tens to 100 (Cambridge Primary Maths Stage 1).
+  "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "30", "40", "50", "60", "70", "80", "90", "100"];
 // 3 Nov 2026 (Elena: "fill the phrases with more, in English and Spanish"): 16 more pairs on the same themes plus
 // Panama, animals, play and manners; still under 20 characters each, no word that changes with the child's gender.
 const SENTENCES = ["Te quiero", "I love you", "Yo soy feliz", "I am happy", "Me gusta el sol", "I like the sun",
@@ -33,16 +35,50 @@ const SENTENCES = ["Te quiero", "I love you", "Yo soy feliz", "I am happy", "Me 
   "Vamos a jugar", "Let's play", "Me gusta pintar", "I like to paint", "Tengo un perro", "I have a dog",
   "El mar es azul", "The sea is blue", "Amo a Panamá", "I love Panama", "El perezoso duerme", "The sloth sleeps",
   "Mi mamá me abraza", "Mom hugs me", "Soy valiente", "I am brave", "Me gusta la fruta", "I like fruit",
-  "Llueve mucho", "It rains a lot", "Te ayudo", "I can help you", "Hoy es mi día", "Today is my day"];
-type Mode = "letters" | "numbers" | "sentences" | "paint";
+  "Llueve mucho", "It rains a lot", "Te ayudo", "I can help you", "Hoy es mi día", "Today is my day",
+  // 4 Nov 2026 (Elena: "more phrases"): school, routines in order (primero / después / al final - the sequence pages),
+  // body, colours, shapes, time and counting - Cambridge Pre A1 Starters themes, still under 20 characters each.
+  "Voy a la escuela", "I go to school", "Me lavo los dientes", "I brush my teeth", "Me pongo los zapatos",
+  "I put on my shoes", "Primero, me visto", "First, I get dressed", "Después, desayuno", "Then, I eat",
+  "Al final, leo", "Finally, I read", "Tengo seis años", "I am six years old", "Mi color es el rojo", "My color is red",
+  "Es un círculo", "It is a circle", "Son las siete", "It is seven o'clock", "Me gusta leer", "I like to read",
+  "Tengo dos manos", "I have two hands", "Mi mochila es azul", "My bag is blue", "El tucán vuela", "The toucan flies",
+  "Comemos juntos", "We eat together", "Puedo contar a diez", "I can count to ten", "La luna brilla", "The moon shines"];
+// 4 Nov 2026 (Elena: "she needs to understand figures"): the 🔷 Figuras mode - she traces the outline of a 2D shape
+// (Cambridge Primary Maths Stage 1). The target is the Spanish name (what "✏️ Tracé" sends); the English shows beside it.
+const poly = (n: number, r: number, cx = 450, cy = 220, inner = 0) => {
+  const pts: string[] = [];
+  const k = inner ? n * 2 : n;
+  for (let i = 0; i < k; i++) {
+    const a = -Math.PI / 2 + (i * 2 * Math.PI) / k;
+    const rr = inner && i % 2 ? inner : r;
+    pts.push(`${(cx + rr * Math.cos(a)).toFixed(0)} ${(cy + rr * Math.sin(a)).toFixed(0)}`);
+  }
+  return `M ${pts.join(" L ")} Z`;
+};
+const SHAPES: { es: string; en: string; d: string }[] = [
+  { es: "círculo", en: "circle", d: "M 600 215 A 150 150 0 1 0 300 215 A 150 150 0 1 0 600 215 Z" },
+  { es: "cuadrado", en: "square", d: "M 320 85 L 580 85 L 580 345 L 320 345 Z" },
+  { es: "triángulo", en: "triangle", d: "M 450 55 L 625 360 L 275 360 Z" },
+  { es: "rectángulo", en: "rectangle", d: "M 220 110 L 680 110 L 680 320 L 220 320 Z" },
+  { es: "óvalo", en: "oval", d: "M 680 215 A 230 135 0 1 0 220 215 A 230 135 0 1 0 680 215 Z" },
+  { es: "rombo", en: "diamond", d: "M 450 45 L 595 215 L 450 385 L 305 215 Z" },
+  { es: "estrella", en: "star", d: poly(5, 175, 450, 230, 72) },
+  { es: "corazón", en: "heart", d: "M 450 375 C 200 230, 290 40, 450 145 C 610 40, 700 230, 450 375 Z" },
+  { es: "pentágono", en: "pentagon", d: poly(5, 170, 450, 228) },
+  { es: "hexágono", en: "hexagon", d: poly(6, 170, 450, 215) },
+];
+const shapeOf = (t: string) => SHAPES.find((s) => s.es === t);
+type Mode = "letters" | "numbers" | "sentences" | "shapes" | "paint";
 const MODES: { mode: Mode; label: string }[] = [
   { mode: "letters", label: "🔤 Letras" }, { mode: "numbers", label: "🔢 Números" }, { mode: "sentences", label: "💬 Frases" },
+  { mode: "shapes", label: "🔷 Figuras" },
   { mode: "paint", label: "🎨 Pintar" },
 ];
 
 export default function TracePad({ targets: letters, onTraced, onClose, onPainted, initialMode = "letters" }: Props) {
   const [mode, setMode] = useState<Mode>(initialMode);
-  const targets = mode === "numbers" ? NUMBERS : mode === "sentences" ? SENTENCES : letters;
+  const targets = mode === "numbers" ? NUMBERS : mode === "sentences" ? SENTENCES : mode === "shapes" ? SHAPES.map((s) => s.es) : letters;
   const canvas = useRef<HTMLCanvasElement>(null);
   const mask = useRef<Uint8Array>(new Uint8Array(0)); // 1 = the letter is here
   const hit = useRef<Uint8Array>(new Uint8Array(0)); // 1 = her finger passed here
@@ -75,7 +111,20 @@ export default function TracePad({ targets: letters, onTraced, onClose, onPainte
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, W, H);
+    const shp = mode === "shapes" ? shapeOf(target) : undefined;
+    const path = shp ? new Path2D(shp.d) : null;
     const font = fontFor(target, ctx);
+    if (path) { // a shape: a wide soft-grey band along its outline, dotted in the middle
+      ctx.lineJoin = "round";
+      ctx.lineWidth = 34;
+      ctx.strokeStyle = "#e2e8f0";
+      ctx.stroke(path);
+      ctx.setLineDash([6, 8]);
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "#94a3b8";
+      ctx.stroke(path);
+      ctx.setLineDash([]);
+    } else {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "#e2e8f0";
@@ -85,17 +134,25 @@ export default function TracePad({ targets: letters, onTraced, onClose, onPainte
     ctx.strokeStyle = "#94a3b8";
     ctx.strokeText(target, W / 2, H / 2 + 10);
     ctx.setLineDash([]);
+    }
     // Where the letter is, on the coverage grid.
     const off = document.createElement("canvas");
     off.width = W;
     off.height = H;
     const o = off.getContext("2d");
     if (!o) return;
+    if (path) {
+      o.lineJoin = "round";
+      o.lineWidth = 34;
+      o.strokeStyle = "#000";
+      o.stroke(path);
+    } else {
     o.font = font;
     o.textAlign = "center";
     o.textBaseline = "middle";
     o.fillStyle = "#000";
     o.fillText(target, W / 2, H / 2 + 10);
+    }
     const px = o.getImageData(0, 0, W, H).data;
     const m = new Uint8Array(gw * gh);
     let n = 0;
@@ -111,7 +168,7 @@ export default function TracePad({ targets: letters, onTraced, onClose, onPainte
     hit.current = new Uint8Array(gw * gh);
     setDone(false);
     setHint("");
-  }, [target, gw, gh]);
+  }, [target, gw, gh, mode]);
 
   useEffect(() => { reset(); }, [reset, mode]);
 
@@ -191,7 +248,7 @@ export default function TracePad({ targets: letters, onTraced, onClose, onPainte
     <div className="w-full max-w-3xl mx-auto bg-white/95 rounded-3xl shadow-2xl p-4 border-4 border-amber-300">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
         <div className="text-xl font-bold text-slate-700">
-          {mode === "paint" ? "🎨 Pinta / Paint" : <>✏️ Traza / Trace: <span className="text-2xl">{target}</span></>}
+          {mode === "paint" ? "🎨 Pinta / Paint" : <>✏️ Traza / Trace: <span className="text-2xl">{mode === "shapes" ? `${target} / ${shapeOf(target)?.en ?? ""}` : target}</span></>}
         </div>
         <div className="flex gap-1">
           {MODES.map((m) => (

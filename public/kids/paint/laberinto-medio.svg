@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>Laberinto medio / Medium maze</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 110 95 L 174 95"/>
+<path d="M 110 159 L 110 224"/>
+<path d="M 110 159 L 174 159"/>
+<path d="M 110 224 L 110 288"/>
+<path d="M 110 288 L 110 352"/>
+<path d="M 110 352 L 110 416"/>
+<path d="M 110 416 L 110 481"/>
+<path d="M 110 481 L 110 545"/>
+<path d="M 110 481 L 174 481"/>
+<path d="M 110 545 L 174 545"/>
+<path d="M 174 95 L 239 95"/>
+<path d="M 174 159 L 239 159"/>
+<path d="M 174 224 L 174 288"/>
+<path d="M 174 288 L 239 288"/>
+<path d="M 174 352 L 174 416"/>
+<path d="M 174 352 L 239 352"/>
+<path d="M 174 416 L 239 416"/>
+<path d="M 174 545 L 239 545"/>
+<path d="M 239 95 L 303 95"/>
+<path d="M 239 159 L 303 159"/>
+<path d="M 239 224 L 239 288"/>
+<path d="M 239 224 L 303 224"/>
+<path d="M 239 352 L 303 352"/>
+<path d="M 239 416 L 239 481"/>
+<path d="M 239 545 L 303 545"/>
+<path d="M 303 95 L 368 95"/>
+<path d="M 303 159 L 303 224"/>
+<path d="M 303 288 L 303 352"/>
+<path d="M 303 288 L 368 288"/>
+<path d="M 303 416 L 303 481"/>
+<path d="M 303 416 L 368 416"/>
+<path d="M 303 481 L 303 545"/>
+<path d="M 303 545 L 368 545"/>
+<path d="M 368 95 L 368 159"/>
+<path d="M 368 95 L 432 95"/>
+<path d="M 368 159 L 368 224"/>
+<path d="M 368 159 L 432 159"/>
+<path d="M 368 224 L 368 288"/>
+<path d="M 368 352 L 368 416"/>
+<path d="M 368 352 L 432 352"/>
+<path d="M 368 416 L 368 481"/>
+<path d="M 368 545 L 432 545"/>
+<path d="M 432 95 L 497 95"/>
+<path d="M 432 159 L 497 159"/>
+<path d="M 432 224 L 432 288"/>
+<path d="M 432 288 L 432 352"/>
+<path d="M 432 288 L 497 288"/>
+<path d="M 432 416 L 432 481"/>
+<path d="M 432 416 L 497 416"/>
+<path d="M 432 545 L 497 545"/>
+<path d="M 497 95 L 561 95"/>
+<path d="M 497 159 L 497 224"/>
+<path d="M 497 224 L 561 224"/>
+<path d="M 497 288 L 561 288"/>
+<path d="M 497 352 L 497 416"/>
+<path d="M 497 416 L 497 481"/>
+<path d="M 497 481 L 497 545"/>
+<path d="M 497 545 L 561 545"/>
+<path d="M 561 95 L 626 95"/>
+<path d="M 561 159 L 626 159"/>
+<path d="M 561 288 L 626 288"/>
+<path d="M 561 352 L 561 416"/>
+<path d="M 561 352 L 626 352"/>
+<path d="M 561 416 L 561 481"/>
+<path d="M 561 545 L 626 545"/>
+<path d="M 626 95 L 690 95"/>
+<path d="M 626 159 L 626 224"/>
+<path d="M 626 224 L 626 288"/>
+<path d="M 626 288 L 626 352"/>
+<path d="M 626 416 L 626 481"/>
+<path d="M 626 416 L 690 416"/>
+<path d="M 626 545 L 690 545"/>
+<path d="M 690 95 L 690 159"/>
+<path d="M 690 159 L 690 224"/>
+<path d="M 690 224 L 690 288"/>
+<path d="M 690 288 L 690 352"/>
+<path d="M 690 352 L 690 416"/>
+<path d="M 690 416 L 690 481"/>
+<path d="M 60 97 L 68 116 L 89 118 L 73 131 L 78 151 L 60 141 L 42 151 L 47 131 L 31 118 L 52 116 Z"/>
+<rect x="710" y="503" width="60" height="45"/>
+<path d="M 700 505 L 740 468 L 780 505"/>
+</g>
+<text x="400" y="50" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="26" font-weight="bold" fill="#111" text-anchor="middle">Laberinto medio / Medium maze</text>
+<text x="60" y="187.14285714285714" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="18" font-weight="bold" fill="#111" text-anchor="middle">inicio</text>
+<text x="740" y="585" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="18" font-weight="bold" fill="#111" text-anchor="middle">casa / home</text>
+</svg>

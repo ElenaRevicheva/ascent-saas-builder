@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>Laberinto fácil / Easy maze</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 110 95 L 207 95"/>
+<path d="M 110 185 L 110 275"/>
+<path d="M 110 185 L 207 185"/>
+<path d="M 110 275 L 110 365"/>
+<path d="M 110 365 L 110 455"/>
+<path d="M 110 455 L 110 545"/>
+<path d="M 110 545 L 207 545"/>
+<path d="M 207 95 L 303 95"/>
+<path d="M 207 185 L 207 275"/>
+<path d="M 207 275 L 303 275"/>
+<path d="M 207 365 L 207 455"/>
+<path d="M 207 455 L 303 455"/>
+<path d="M 207 545 L 303 545"/>
+<path d="M 303 95 L 303 185"/>
+<path d="M 303 95 L 400 95"/>
+<path d="M 303 185 L 400 185"/>
+<path d="M 303 275 L 303 365"/>
+<path d="M 303 275 L 400 275"/>
+<path d="M 303 365 L 303 455"/>
+<path d="M 303 545 L 400 545"/>
+<path d="M 400 95 L 497 95"/>
+<path d="M 400 275 L 497 275"/>
+<path d="M 400 365 L 400 455"/>
+<path d="M 400 455 L 400 545"/>
+<path d="M 400 545 L 497 545"/>
+<path d="M 497 95 L 593 95"/>
+<path d="M 497 185 L 497 275"/>
+<path d="M 497 275 L 593 275"/>
+<path d="M 497 365 L 497 455"/>
+<path d="M 497 455 L 593 455"/>
+<path d="M 497 545 L 593 545"/>
+<path d="M 593 95 L 593 185"/>
+<path d="M 593 95 L 690 95"/>
+<path d="M 593 275 L 593 365"/>
+<path d="M 593 365 L 593 455"/>
+<path d="M 593 545 L 690 545"/>
+<path d="M 690 95 L 690 185"/>
+<path d="M 690 185 L 690 275"/>
+<path d="M 690 275 L 690 365"/>
+<path d="M 690 365 L 690 455"/>
+<path d="M 60 110 L 68 129 L 89 131 L 73 144 L 78 164 L 60 154 L 42 164 L 47 144 L 31 131 L 52 129 Z"/>
+<rect x="710" y="490" width="60" height="45"/>
+<path d="M 700 492 L 740 455 L 780 492"/>
+</g>
+<text x="400" y="50" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="26" font-weight="bold" fill="#111" text-anchor="middle">Laberinto fácil / Easy maze</text>
+<text x="60" y="200.0" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="18" font-weight="bold" fill="#111" text-anchor="middle">inicio</text>
+<text x="740" y="585" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="18" font-weight="bold" fill="#111" text-anchor="middle">casa / home</text>
+</svg>

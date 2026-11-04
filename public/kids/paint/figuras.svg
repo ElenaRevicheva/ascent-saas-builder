@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>Las figuras / Shapes</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="85" cy="155" r="55"/>
+<rect x="187" y="100" width="110" height="110"/>
+<path d="M 399 100 L 460 210 L 338 210 Z"/>
+<rect x="479" y="111" width="154" height="88"/>
+<ellipse cx="713" cy="155" rx="72" ry="47"/>
+<path d="M 85 350 L 129 405 L 85 460 L 41 405 Z"/>
+<path d="M 242 348 L 258 387 L 300 390 L 268 417 L 278 458 L 242 436 L 206 458 L 216 417 L 184 390 L 226 387 Z"/>
+<path d="M 399 446.25 C 316.5 396.75, 357.75 347.25, 399 384.375 C 440.25 347.25, 481.5 396.75, 399 446.25 Z"/>
+<path d="M 556 350 L 608 388 L 588 449 L 524 449 L 504 388 Z"/>
+<path d="M 713 350 L 761 378 L 761 432 L 713 460 L 665 432 L 665 378 Z"/>
+</g>
+<text x="400" y="40" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="28" font-weight="bold" fill="#111" text-anchor="middle">Las figuras / Shapes</text>
+<text x="85" y="250" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="20" font-weight="bold" fill="#111" text-anchor="middle">círculo</text>
+<text x="85" y="273" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="18" font-weight="bold" fill="#111" text-anchor="middle">circle</text>
+<text x="242" y="250" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="20" font-weight="bold" fill="#111" text-anchor="middle">cuadrado</text>
+<text x="242" y="273" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="18" font-weight="bold" fill="#111" text-anchor="middle">square</text>
+<text x="399" y="250" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="20" font-weight="bold" fill="#111" text-anchor="middle">triángulo</text>
+<text x="399" y="273" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="18" font-weight="bold" fill="#111" text-anchor="middle">triangle</text>
+<text x="556" y="250" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="20" font-weight="bold" fill="#111" text-anchor="middle">rectángulo</text>
+<text x="556" y="273" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="18" font-weight="bold" fill="#111" text-anchor="middle">rectangle</text>
+<text x="713" y="250" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="20" font-weight="bold" fill="#111" text-anchor="middle">óvalo</text>
+<text x="713" y="273" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="18" font-weight="bold" fill="#111" text-anchor="middle">oval</text>
+<text x="85" y="500" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="20" font-weight="bold" fill="#111" text-anchor="middle">rombo</text>
+<text x="85" y="523" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="18" font-weight="bold" fill="#111" text-anchor="middle">diamond</text>
+<text x="242" y="500" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="20" font-weight="bold" fill="#111" text-anchor="middle">estrella</text>
+<text x="242" y="523" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="18" font-weight="bold" fill="#111" text-anchor="middle">star</text>
+<text x="399" y="500" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="20" font-weight="bold" fill="#111" text-anchor="middle">corazón</text>
+<text x="399" y="523" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="18" font-weight="bold" fill="#111" text-anchor="middle">heart</text>
+<text x="556" y="500" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="20" font-weight="bold" fill="#111" text-anchor="middle">pentágono</text>
+<text x="556" y="523" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="18" font-weight="bold" fill="#111" text-anchor="middle">pentagon</text>
+<text x="713" y="500" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="20" font-weight="bold" fill="#111" text-anchor="middle">hexágono</text>
+<text x="713" y="523" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="18" font-weight="bold" fill="#111" text-anchor="middle">hexagon</text>
+</svg>

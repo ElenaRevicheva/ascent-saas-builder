@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>El tren de figuras / The shape train</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 30 500 L 770 500"/>
+<path d="M 30 520 L 770 520"/>
+<rect x="520" y="300" width="210" height="150"/>
+<rect x="600" y="220" width="110" height="80"/>
+<rect x="545" y="240" width="35" height="60"/>
+<path d="M 535 240 L 590 240"/>
+<path d="M 730 450 L 770 450 L 730 400 Z"/>
+<rect x="625" y="240" width="60" height="45"/>
+<path d="M 520 200 C 509.5 175.5, 534.0 160.8, 544.5 177.95 C 551.5 151.0, 576.0 160.8, 576.0 180.4 C 593.5 177.95, 597.0 200, 583.0 200 Z"/>
+<path d="M 470 150 C 461.0 129.0, 482.0 116.4, 491.0 131.1 C 497.0 108.0, 518.0 116.4, 518.0 133.2 C 533.0 131.1, 536.0 150, 524.0 150 Z"/>
+<circle cx="560" cy="470" r="28"/>
+<circle cx="560" cy="470" r="8"/>
+<circle cx="640" cy="470" r="28"/>
+<circle cx="640" cy="470" r="8"/>
+<circle cx="705" cy="470" r="28"/>
+<circle cx="705" cy="470" r="8"/>
+<rect x="290" y="330" width="200" height="120"/>
+<path d="M 490 420 L 520 420"/>
+<circle cx="335" cy="470" r="28"/>
+<circle cx="335" cy="470" r="8"/>
+<circle cx="445" cy="470" r="28"/>
+<circle cx="445" cy="470" r="8"/>
+<rect x="60" y="330" width="200" height="120"/>
+<path d="M 260 420 L 290 420"/>
+<circle cx="105" cy="470" r="28"/>
+<circle cx="105" cy="470" r="8"/>
+<circle cx="215" cy="470" r="28"/>
+<circle cx="215" cy="470" r="8"/>
+<path d="M 340 345 L 368 395 L 312 395 Z"/>
+<path d="M 440 353 L 448 373 L 469 374 L 453 388 L 458 409 L 440 398 L 422 409 L 427 388 L 411 374 L 432 373 Z"/>
+<circle cx="110" cy="380" r="26"/>
+<path d="M 210 351 L 237 385 L 210 419 L 183 385 Z"/>
+</g>
+<text x="400" y="70" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="28" font-weight="bold" fill="#111" text-anchor="middle">El tren de figuras / The shape train</text>
+</svg>

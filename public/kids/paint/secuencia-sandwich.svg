@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>Preparo un sándwich / I make a sandwich</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<rect x="30" y="70" width="360" height="245" rx="18"/>
+<rect x="44" y="84" width="48" height="48" rx="8"/>
+<g transform="translate(210 175)"><path d="M -75 55 L -75 -20 C -105 -30, -95 -75, -50 -70 L 50 -70 C 95 -75, 105 -30, 75 -20 L 75 55 Z"/><path d="M -80 -5 C -40 10, 0 -15, 40 0 C 60 8, 75 0, 85 -5"/><path d="M -70 -35 L 70 -35 L 60 20 L -60 20 Z"/></g>
+<rect x="410" y="70" width="360" height="245" rx="18"/>
+<rect x="424" y="84" width="48" height="48" rx="8"/>
+<g transform="translate(590 175)"><path d="M -90 60 L 0 60 L -90 -40 Z"/><path d="M 10 50 L 100 -50 L 100 50 Z"/></g>
+<rect x="30" y="335" width="360" height="245" rx="18"/>
+<rect x="44" y="349" width="48" height="48" rx="8"/>
+<g transform="translate(210 440)"><path d="M -75 55 L -75 -20 C -105 -30, -95 -75, -50 -70 L 50 -70 C 95 -75, 105 -30, 75 -20 L 75 55 Z"/></g>
+<rect x="410" y="335" width="360" height="245" rx="18"/>
+<rect x="424" y="349" width="48" height="48" rx="8"/>
+<g transform="translate(590 440)"><path d="M -75 55 L -75 -20 C -105 -30, -95 -75, -50 -70 L 50 -70 C 95 -75, 105 -30, 75 -20 L 75 55 Z"/><path d="M -75 -20 L 75 -20"/><path d="M -80 5 L 80 5"/><path d="M -78 30 L 78 30"/></g>
+</g>
+<text x="400" y="45" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="17" font-weight="bold" fill="#111" text-anchor="middle">¿Qué va primero? Escribe 1, 2, 3, 4 / What comes first? Write 1, 2, 3, 4</text>
+<text x="210" y="277" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="19" font-weight="bold" fill="#111" text-anchor="middle">Pongo queso y jamón</text>
+<text x="210" y="301" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="17" font-weight="bold" fill="#111" text-anchor="middle">I add cheese and ham</text>
+<text x="590" y="277" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="19" font-weight="bold" fill="#111" text-anchor="middle">Lo corto en triángulos</text>
+<text x="590" y="301" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="17" font-weight="bold" fill="#111" text-anchor="middle">I cut it into triangles</text>
+<text x="210" y="542" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="19" font-weight="bold" fill="#111" text-anchor="middle">Tomo una rebanada de pan</text>
+<text x="210" y="566" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="17" font-weight="bold" fill="#111" text-anchor="middle">I take a slice of bread</text>
+<text x="590" y="542" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="19" font-weight="bold" fill="#111" text-anchor="middle">Pongo otra rebanada</text>
+<text x="590" y="566" font-family="Comic Sans MS, Chalkboard SE, Nunito, Trebuchet MS, sans-serif" font-size="17" font-weight="bold" fill="#111" text-anchor="middle">I put another slice on top</text>
+</svg>
