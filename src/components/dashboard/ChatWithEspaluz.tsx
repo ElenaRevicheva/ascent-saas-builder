@@ -9,6 +9,7 @@ import { MessageSquare, Send, Bot, User, Heart, Volume2, Play, Video, Pause, Mic
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
+import { TalkingHello } from "@/components/landing/TalkingHello";
 import { toast } from 'sonner';
 import { useLearningProgress } from '@/hooks/useLearningProgress';
 import { useFreeMessages } from '@/hooks/useFreeMessages';
@@ -887,6 +888,7 @@ The video script will be used to generate an avatar video with synchronized audi
                 <Bot className="h-12 w-12 mx-auto mb-3 text-[hsl(var(--espaluz-primary))]" />
                 <p>{t('chat.welcome')}</p>
                 <p className="text-sm mt-1">{t('chat.startConversation')}</p>
+                <TalkingHello variant="chat" />
               </div>
             )}
             

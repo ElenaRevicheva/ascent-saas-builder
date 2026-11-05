@@ -8,6 +8,7 @@ import { ChatWithEspaluz } from "@/components/dashboard/ChatWithEspaluz";
 import SubscriptionFlow from "@/components/SubscriptionFlow";
 import { Part, Item, SectionHead } from "@/components/landing/Tree";
 import { HeroClip } from "@/components/landing/HeroClip";
+import { TalkingHello } from "@/components/landing/TalkingHello";
 import { SkyBackground } from "@/components/landing/SkyBackground";
 import heroWeb from '@/assets/heroes/hero-web.mp4';
 import heroWebPoster from '@/assets/heroes/hero-web-poster.jpg';
@@ -165,6 +166,7 @@ const Index = () => {
             <HeroClip src={heroWeb} poster={heroWebPoster} label="EspaLuz, your family's companion on the web" className="block h-full w-full object-cover" />
           </div>
         </div>
+        <div className="-mt-3 mb-6"><TalkingHello variant="landing" /></div>
         {/* Round 4 message, approved by Elena 4 Nov 2026 (cto-aipa docs/espaluz/MESSAGE_DRAFT_2026-11-04.md).
             Replaced: "Emotionally Intelligent Language Coach" headline, AI-tutor cards, "confident in a couple of weeks",
             duplicate demo/Telegram buttons. One offer, palette tokens only. */}

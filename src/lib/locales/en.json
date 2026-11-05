@@ -150,6 +150,11 @@
     "latestAchievement": "Latest Achievement",
     "yourLearningJourney": "Your Learning Journey"
   },
+  "hello": {
+    "button": "Hear EspaLuz say hello",
+    "label": "EspaLuz says hello",
+    "close": "Close"
+  },
   "hero4": {
     "eyebrow": "Expat families & digital nomads in LATAM: a bilingual long-road companion in all your chats - WhatsApp, Telegram, web - plus a kids classroom inspired by international school programs. 14 days free.",
     "headline": "Extra school skills for your child, while you work online",
