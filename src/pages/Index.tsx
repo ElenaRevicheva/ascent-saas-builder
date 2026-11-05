@@ -21,6 +21,7 @@ import brandAvatar2 from '@/assets/brand-avatar-2.jpg';
 import espaluzQr from '@/assets/espaluz-qr.jpg';
 import creatorQr from '@/assets/creator-qr-card.png';
 import whatsappQr from '@/assets/whatsapp-qr-code.jpg';
+import whatsappQrFace from '@/assets/whatsapp-qr-face.gif';
 
 function FeedbackForm() {
   const [formData, setFormData] = useState({
@@ -217,11 +218,19 @@ const Index = () => {
               <div className="flex flex-col items-center space-y-3 order-1 lg:order-2">
                 <div className="relative">
                   <div className="absolute -inset-2 bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 rounded-3xl blur opacity-30 animate-pulse"></div>
-                  <img 
-                    src={whatsappQr} 
-                    alt="EspaLuz WhatsApp QR Code" 
-                    className="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 object-contain rounded-2xl shadow-magical border-4 border-green-400 hover:border-green-500 hover:shadow-vibrant hover:scale-105 transition-all duration-300 bg-white/95 backdrop-blur-sm ring-2 ring-green-200 hover:ring-green-300" 
-                  />
+                  {/* 5 Nov 2026 (Elena): her "Warm Smile in Nine Frames" GIF moves in the centre of the QR, laid exactly over the
+                      still face (square 414-724 px of the 1138 px QR = 36.38 % / 27.24 %). All 9 frames scan to bit.ly/EspaLuz at
+                      1138, 256, 192 and 140 px. The wrapper scales on hover so the GIF stays aligned. */}
+                  <span className="relative block transition-transform duration-300 hover:scale-105">
+                    <img 
+                      src={whatsappQr} 
+                      alt="EspaLuz WhatsApp QR Code" 
+                      className="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 object-contain rounded-2xl shadow-magical border-4 border-green-400 hover:border-green-500 hover:shadow-vibrant transition-all duration-300 bg-white/95 backdrop-blur-sm ring-2 ring-green-200 hover:ring-green-300" 
+                    />
+                    <span aria-hidden className="pointer-events-none absolute inset-[4px]">
+                      <img src={whatsappQrFace} alt="" className="absolute" style={{ left: "36.38%", top: "36.38%", width: "27.24%", height: "27.24%" }} />
+                    </span>
+                  </span>
                 </div>
                 <p className="text-sm text-green-600 font-semibold bg-green-50 px-4 py-2 rounded-full border border-green-200">✨ Scan to chat instantly! ✨</p>
               </div>
