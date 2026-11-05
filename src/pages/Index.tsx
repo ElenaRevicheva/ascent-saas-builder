@@ -7,6 +7,15 @@ import { CookieConsent } from "@/components/CookieConsent";
 import { ChatWithEspaluz } from "@/components/dashboard/ChatWithEspaluz";
 import SubscriptionFlow from "@/components/SubscriptionFlow";
 import { Part, Item, SectionHead } from "@/components/landing/Tree";
+import { HeroClip } from "@/components/landing/HeroClip";
+import heroWeb from '@/assets/heroes/hero-web.mp4';
+import heroWebPoster from '@/assets/heroes/hero-web-poster.jpg';
+import heroWhatsapp from '@/assets/heroes/hero-whatsapp.mp4';
+import heroWhatsappPoster from '@/assets/heroes/hero-whatsapp-poster.jpg';
+import heroTelegram from '@/assets/heroes/hero-telegram.mp4';
+import heroTelegramPoster from '@/assets/heroes/hero-telegram-poster.jpg';
+import heroKids from '@/assets/heroes/hero-kids.mp4';
+import heroKidsPoster from '@/assets/heroes/hero-kids-poster.jpg';
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -143,8 +152,12 @@ const Index = () => {
       
       {/* Hero Section */}
       <section className="container mx-auto px-4 pt-20 pb-6 text-center bg-gradient-magical rounded-2xl shadow-vibrant">
-        <div className="mx-auto w-32 h-32 mb-4 flex items-center justify-center">
-          <img src={brandAvatar2} alt="EspaLuz Avatar" className="w-full h-full rounded-full border-4 border-primary shadow-glow object-cover bg-white" />
+        {/* 5 Nov 2026 (Elena: "a steady picture looks ugly"): moving, photorealistic web hero made in Grok Imagine
+            (still from her Warm Smile reference -> 10 s Loop). Replaces the cartoon circle; brand-avatar-2.jpg kept. */}
+        <div className="mx-auto mb-6 w-44 sm:w-52 md:w-56">
+          <div className="overflow-hidden rounded-3xl border-4 border-primary shadow-glow" style={{ aspectRatio: "540 / 804" }}>
+            <HeroClip src={heroWeb} poster={heroWebPoster} label="EspaLuz, your family's companion on the web" className="block h-full w-full object-cover" />
+          </div>
         </div>
         {/* Round 4 message, approved by Elena 4 Nov 2026 (cto-aipa docs/espaluz/MESSAGE_DRAFT_2026-11-04.md).
             Replaced: "Emotionally Intelligent Language Coach" headline, AI-tutor cards, "confident in a couple of weeks",
@@ -168,11 +181,16 @@ const Index = () => {
         </div>
         <div className="mx-auto mb-10 grid max-w-5xl gap-4 px-4 text-left md:grid-cols-3">
           {[
-            { icon: "🦥", color: "--espaluz-yellow", title: t("hero4.card1Title"), body: t("hero4.card1") },
+            { icon: "🦥", color: "--espaluz-yellow", title: t("hero4.card1Title"), body: t("hero4.card1"), kids: true },
             { icon: "📒", color: "--espaluz-purple", title: t("hero4.card2Title"), body: t("hero4.card2") },
             { icon: "🏫", color: "--espaluz-green", title: t("hero4.card3Title"), body: t("hero4.card3") },
           ].map((c) => (
             <div key={c.title} className="rounded-2xl border border-border bg-card p-5" style={{ boxShadow: "var(--shadow-card)" }}>
+              {"kids" in c && (
+                <Link to="/classroom" className="mb-4 block overflow-hidden rounded-xl" style={{ aspectRatio: "720 / 484" }} aria-label="Open the kids classroom with Pere and Titi">
+                  <HeroClip src={heroKids} poster={heroKidsPoster} label="Pere and Titi in the kids classroom" className="block h-full w-full object-cover" />
+                </Link>
+              )}
               <span className="mb-3 flex h-12 w-12 items-center justify-center rounded-full text-2xl"
                 style={{ background: `hsl(var(${c.color}) / 0.15)` }} aria-hidden>{c.icon}</span>
               <h2 className="mb-2 text-xl text-foreground">{c.title}</h2>
@@ -201,6 +219,9 @@ const Index = () => {
             
             <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
               <div className="flex flex-col items-center space-y-4 order-2 lg:order-1">
+                <div className="w-40 overflow-hidden rounded-3xl border-4 border-green-400 shadow-xl md:w-48" style={{ aspectRatio: "540 / 804" }}>
+                  <HeroClip src={heroWhatsapp} poster={heroWhatsappPoster} label="EspaLuz on WhatsApp" className="block h-full w-full object-cover" />
+                </div>
                 <p className="text-base text-gray-700 font-medium max-w-sm text-center">
                   Scan the QR code or click the button to start chatting with EspaLuz on WhatsApp!
                 </p>
@@ -248,6 +269,10 @@ const Index = () => {
               <h3 className="text-2xl md:text-3xl font-bold text-blue-600">🚀 Invite your family!</h3>
             </div>
             
+            <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
+            <div className="w-40 overflow-hidden rounded-3xl border-4 border-blue-400 shadow-xl md:w-48" style={{ aspectRatio: "540 / 804" }}>
+              <HeroClip src={heroTelegram} poster={heroTelegramPoster} label="EspaLuz on Telegram" className="block h-full w-full object-cover" />
+            </div>
             <div className="relative">
               <div className="absolute -inset-2 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl blur opacity-30 animate-pulse"></div>
               {/* 5 Nov 2026 (Elena): Telegram QR in the WhatsApp QR's style, Telegram blue (scripts/make-telegram-qr.py),
@@ -264,6 +289,7 @@ const Index = () => {
                     style={{ left: "36.38%", top: "36.38%", width: "27.24%", height: "27.24%" }} />
                 </span>
               </span>
+            </div>
             </div>
             
             <div className="space-y-4">
