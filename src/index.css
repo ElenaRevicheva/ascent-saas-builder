@@ -231,3 +231,28 @@ All colors MUST be HSL.
   box-shadow: 0 24px 60px -28px rgba(91, 63, 209, .35);
   -webkit-mask-image: linear-gradient(180deg, #000 82%, transparent 100%); mask-image: linear-gradient(180deg, #000 82%, transparent 100%);
 }
+
+
+/* 5 Nov 2026 - landing typography (Elena: "find the appropriate format of letters", colours untouched).
+   Measured live: Replika = tight grotesk; HubSpot = HubSpot Serif Light headlines + HubSpot Sans UI; Claude/Anthropic =
+   Anthropic Serif 500 headlines + Anthropic Sans UI. EspaLuz follows the serif + sans pattern with free Google fonts:
+   Newsreader (editorial serif) for h1/h2, Inter for everything else. Landing only (.landing-type) - the kids classroom
+   and dashboard keep Baloo 2 on purpose. */
+.landing-type {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "cv11", "ss01", "calt";
+}
+.landing-type h1, .landing-type h2 {
+  font-family: "Newsreader", "Iowan Old Style", Georgia, serif;
+  font-weight: 500; font-optical-sizing: auto;
+  letter-spacing: -0.02em; line-height: 1.08; text-wrap: balance;
+}
+.landing-type h2 { line-height: 1.12; }
+.landing-type h3, .landing-type h4, .landing-type h5, .landing-type h6 {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 600; letter-spacing: -0.012em; line-height: 1.3;
+}
+.landing-type p, .landing-type li { line-height: 1.62; }
+.landing-type .uppercase { font-size: .75rem; font-weight: 600; letter-spacing: .14em; }
+.landing-type button, .landing-type a.rounded-full { font-weight: 600; letter-spacing: -0.005em; }

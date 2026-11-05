@@ -148,7 +148,7 @@ const Index = () => {
   };
 
   return (
-    <div className="relative isolate min-h-screen">
+    <div className="landing-type relative isolate min-h-screen">
       <SkyBackground />
       <Navigation />
       
@@ -164,7 +164,7 @@ const Index = () => {
         {/* Round 4 message, approved by Elena 4 Nov 2026 (cto-aipa docs/espaluz/MESSAGE_DRAFT_2026-11-04.md).
             Replaced: "Emotionally Intelligent Language Coach" headline, AI-tutor cards, "confident in a couple of weeks",
             duplicate demo/Telegram buttons. One offer, palette tokens only. */}
-        <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-primary">{t("hero4.eyebrow")}</p>
+        <p className="mx-auto mb-4 max-w-3xl px-4 text-base font-medium leading-relaxed text-primary md:text-lg">{t("hero4.eyebrow")}</p>
         <h1 className="mx-auto mb-5 max-w-4xl px-4 text-3xl font-extrabold leading-tight text-foreground sm:text-4xl md:text-5xl">
           {t("hero4.headline")}
         </h1>
