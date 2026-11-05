@@ -39,8 +39,27 @@ export function kidsIsEcho(line: string, said: string): boolean {
 /** The last word on a kids reply: no "Entiendo que", and a line that only repeats her goes when another line remains. */
 export function kidsTidyReply(reply: string, said: string): string {
   const lines = reply.split('\n').map((l) => l.trim()).filter(Boolean).map(kidsStripOpener);
-  const kept = lines.filter((l) => !kidsIsEcho(l, said));
-  return (kept.length ? kept : lines).join('\n');
+  // 5 Nov probe: with "Entiendo que" gone the model moved to "¡Qué bueno que + her words". The opening recap sentence goes too.
+  const first = kidsDropRecap(lines[0] ?? '');
+  const base = [first, ...lines.slice(1)].filter(Boolean);
+  const start = base.length ? base : lines;
+  const kept = start.filter((l) => !kidsIsEcho(l, said));
+  return (kept.length ? kept : start).join('\n');
+}
+
+const RECAP_ES = /^[¡\s]*(?:qu[eé] (?:bueno|bien|lindo|bonito|genial) que|me (?:alegra|encanta|gusta) que|veo que|dices que|me cuentas que)/i;
+const sentences = (s: string): string[] => s.split(/(?<=[.!?…])\s+/).map((x) => x.trim()).filter(Boolean);
+
+/** Removes an opening "¡Qué bueno que + what she said" sentence; '' when nothing else is left on the line. */
+function kidsDropRecap(line: string): string {
+  const hero = (line.match(HERO) ?? ['', ''])[1];
+  const body = line.slice(hero.length);
+  const cut = body.indexOf(' / ');
+  const es = sentences(cut >= 0 ? body.slice(0, cut) : body);
+  if (!es.length || !RECAP_ES.test(es[0])) return line;
+  if (es.length === 1) return '';
+  const en = sentences(cut >= 0 ? body.slice(cut + 3) : '');
+  return hero + es.slice(1).join(' ') + (en.length === es.length ? ` / ${en.slice(1).join(' ')}` : '');
 }
 
 const panamaDay = (ms: number): string => new Date(ms - 5 * 3600000).toISOString().slice(0, 10);
