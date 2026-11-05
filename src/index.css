@@ -278,4 +278,11 @@ All colors MUST be HSL.
   font-family: "Newsreader", "Iowan Old Style", Georgia, serif;
   font-weight: 400; font-size: 1.6rem; letter-spacing: -0.015em; line-height: 1; font-optical-sizing: auto;
 }
-.brand-wordmark b { font-weight: 600; letter-spacing: -0.02em; }
+.brand-wordmark b {
+  font-weight: 600; letter-spacing: -0.02em;
+  /* 5 Nov (Elena): "Luz" in the golden colour of sun rays, not dark. Top = the brand sun (--espaluz-yellow),
+     bottom = a warmer gold so it stays readable on the cream header; soft glow like light. */
+  background: linear-gradient(180deg, hsl(var(--espaluz-yellow)) 8%, hsl(42 95% 50%) 55%, hsl(34 90% 44%) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 6px hsl(var(--espaluz-yellow) / .45));
+}
