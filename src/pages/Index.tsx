@@ -191,7 +191,7 @@ const Index = () => {
             { icon: "📒", color: "--espaluz-purple", title: t("hero4.card2Title"), body: t("hero4.card2"),
               clip: { src: heroRemote, poster: heroRemotePoster, label: "Working remotely by the window while the child learns with Pere and Titi" } },
             { icon: "🏫", color: "--espaluz-green", title: t("hero4.card3Title"), body: t("hero4.card3"),
-              clip: { src: heroFamily, poster: heroFamilyPoster, label: "The whole family together on a Panama beach" } },
+              clip: { src: heroFamily, poster: heroFamilyPoster, label: "The whole family celebrating together at a restaurant in Panama City" } },
           ].map((c) => (
             <div key={c.title} className="rounded-2xl border border-border bg-card p-5" style={{ boxShadow: "var(--shadow-card)" }}>
               {"kids" in c && (
@@ -200,7 +200,7 @@ const Index = () => {
                 </Link>
               )}
               {/* 5 Nov 2026 (Elena: these two cards "look very lonely"): remote work by the open window with the child
-                  learning nearby, and the family on the beach under palms - Grok Imagine loops, same sky palette. */}
+                  learning nearby, and the whole family (husband too) celebrating at a busy city restaurant with palms - Grok Imagine loops. */}
               {"clip" in c && c.clip && (
                 <div className="hero-seat mb-4" style={{ aspectRatio: "720 / 484", borderRadius: "1.25rem" }}>
                   <HeroClip src={c.clip.src} poster={c.clip.poster} label={c.clip.label} className="block h-full w-full object-cover" />
