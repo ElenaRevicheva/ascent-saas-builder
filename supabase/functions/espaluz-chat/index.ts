@@ -369,7 +369,7 @@ function kidsHeard(message: string): string {
     "3. Her own idea, topic or a refusal (\"I don't want to jump, I want to ride my bicycle\"; \"no quiero jugar... " +
     "Halloween\") -> follow HER idea warmly and fit the lesson into it (\"¡Vamos en bici! / Let's ride our bikes!\", " +
     "\"¡Hoy es Halloween! ¿De qué te vas a disfrazar? / Today is Halloween! What will you dress up as?\").\n" +
-    "4. (\"no sé\", \"sí\", \"no\", \"ok\" ARE real answers - never treat them as not heard.) Only if NO part of it makes sense -> do NOT guess and do NOT praise it: say kindly that you did not hear well and " +
+    "4. (\"no sé\", \"sí\", \"no\", \"ok\" ARE real answers - never treat them as not heard.) Names you do not know (\"Mentirita\", \"Loquito\") are her toys, pets or friends: a sentence with them makes sense, react to them with joy. Only if NO part of it makes sense -> do NOT guess and do NOT praise it: say kindly that you did not hear well and " +
     "ask her to say it again (\"No te escuché bien. ¿Me lo dices otra vez? / I didn't hear you well. Can you say it " +
     "again?\") and stop there: skip the lesson step below. If part of it makes sense, answer that part.\n" +
     "Always: never open with \"Entiendo que\" or a summary of her words. If her words contain something untrue, never repeat it as true - say the correct version simply (\"Las " +
@@ -1052,6 +1052,8 @@ async function callGemini(apiKey: string, request: any): Promise<any> {
   const j = await r.json();
   const text = j.candidates?.[0]?.content?.parts?.map((p: any) => p.text).join('') ;
   if (!text) throw new Error('Gemini: empty answer');
+  // 5 Nov 2026: its hidden thinking eats the token limit, so an answer can stop mid-sentence ("/ A new"). Next provider instead.
+  if (j.candidates?.[0]?.finishReason === 'MAX_TOKENS') throw new Error('Gemini: answer cut off at the token limit');
   return { content: [{ text }], model: GEMINI_MODEL, usage: j.usageMetadata };
 }
 
