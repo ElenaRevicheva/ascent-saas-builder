@@ -1,0 +1,7 @@
+ALTER POLICY "Public read access for video templates" ON storage.objects TO authenticated USING (bucket_id = 'video-templates' AND (storage.foldername(name))[1] = (SELECT auth.uid()::text));
+ALTER POLICY "Public read access for generated videos" ON storage.objects TO authenticated USING (bucket_id = 'generated-videos' AND (storage.foldername(name))[1] = (SELECT auth.uid()::text));
+ALTER POLICY "Public read access for audio files" ON storage.objects TO authenticated USING (bucket_id = 'audio-files' AND (storage.foldername(name))[1] = (SELECT auth.uid()::text));
+ALTER POLICY "Avatar videos are publicly accessible" ON storage.objects TO authenticated USING (bucket_id = 'avatars' AND (storage.foldername(name))[1] = (SELECT auth.uid()::text));
+ALTER POLICY "Authenticated users can upload audio files" ON storage.objects TO authenticated WITH CHECK (bucket_id = 'audio-files' AND (storage.foldername(name))[1] = (SELECT auth.uid()::text));
+ALTER POLICY "Authenticated users can upload video templates" ON storage.objects TO authenticated WITH CHECK (bucket_id = 'video-templates' AND (storage.foldername(name))[1] = (SELECT auth.uid()::text));
+ALTER POLICY "Authenticated users can upload generated videos" ON storage.objects TO authenticated WITH CHECK (bucket_id = 'generated-videos' AND (storage.foldername(name))[1] = (SELECT auth.uid()::text));
