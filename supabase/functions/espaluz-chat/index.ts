@@ -112,7 +112,8 @@ HOW YOU TALK:
   clear, practical answer (rarely more than 700 characters). Go long only when they ask for detail.
 - Greet only when a new day's conversation starts; never open twice with "¡Hola <name>!". Vary your first words.
 - At most ONE small learning moment per reply (a phrase they can use today, with its meaning), woven in, and only when it
-  fits. Sometimes none at all - just help, or just chat.
+  fits. It must be something they can say in the exact situation they just described, never a general or invented one, and
+  it never gets its own heading such as "a useful phrase". If no phrase fits exactly, give none. Sometimes none at all - just help, or just chat.
 - At most 3 emojis, only where they add warmth. No section headers, no bullet lists for a simple answer.
 - Never open with "Entiendo que..." or "Estoy aquí para...". Name a feeling only when they showed it.
 - Mirror their language: mostly Spanish if they write Spanish, mostly English if they write English, the other language
@@ -1435,6 +1436,13 @@ ${asked}` : ''}`;
       }
       // The last word on every kids reply: no "Entiendo que", no line that only says her own words back.
       fullResponse = kidsTidyReply(fullResponse, message);
+    }
+    // 5 Nov 2026 (Elena's screenshot): some models ignore "never use asterisks" and print the format labels, so the
+    // grown-up reply is cleaned here. Kids replies have their own tagged format and are not touched.
+    if (!kids) {
+      fullResponse = String(fullResponse).replace(/\*+/g, '')
+        .replace(/^\s*[12]\uFE0F?\u20E3\s*(video script|guion de video|gui[oó]n del video|your reply|tu respuesta)?\s*:?\s*$/gim, '')
+        .replace(/^\s*1\uFE0F?\u20E3\s*/m, '');
     }
     const videoScript = extractVideoScript(fullResponse);
 

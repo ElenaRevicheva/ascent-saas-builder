@@ -40,6 +40,16 @@ interface ChatWithEspaluzProps {
   onUpgradeClick?: () => void;
 }
 
+// The reply as a person should see and hear it: no video script block, no format labels, no asterisks. The raw text
+// stays in message.content because the video step reads its script from it.
+const shownText = (raw: string) => raw
+  .replace(/\[VIDEO SCRIPT START\][\s\S]*?(\[VIDEO SCRIPT END\]|$)/g, '')
+  .replace(/\[VIDEO SCRIPT END\]/g, '')
+  .replace(/\*+/g, '')
+  .replace(/^\s*[12]\uFE0F?\u20E3\s*(video script|guion de video|gui[oó]n del video|your reply|tu respuesta)?\s*:?\s*$/gim, '')
+  .replace(/^\s*1\uFE0F?\u20E3\s*/m, '')
+  .trim();
+
 export const ChatWithEspaluz = ({ onUpgradeClick }: ChatWithEspaluzProps) => {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -277,7 +287,7 @@ The video script will be used to generate an avatar video with synchronized audi
         // Generate voice and video in parallel
         setTimeout(() => {
           // Generate voice for full response
-          generateVoice(aiMessage.id, aiMessage.content, false);
+          generateVoice(aiMessage.id, shownText(aiMessage.content), false);
           
           // 5 Nov 2026 (Elena: a video after every message "annoys"): no video on every reply any more.
           maybeTalk(aiMessage);
@@ -826,7 +836,7 @@ The video script will be used to generate an avatar video with synchronized audi
                     }`}
                   >
                     {message.imageUrl && <img src={message.imageUrl} alt="📷" className="rounded-lg max-h-56 mb-2" />}
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                    <p className="text-sm whitespace-pre-wrap">{message.role === 'assistant' ? shownText(message.content) : message.content}</p>
                   </div>
                   
                   {/* AI Message Metadata and Controls */}
@@ -840,12 +850,6 @@ The video script will be used to generate an avatar video with synchronized audi
                           </span>
                         )}
                         {getFamilyMemberBadge(message.familyMember)}
-                        {message.videoScript && (
-                          <Badge variant="outline" className="text-xs">
-                            <Volume2 className="h-3 w-3 mr-1" />
-                            Video Available
-                          </Badge>
-                        )}
                       </div>
                        
                       {/* Manual Control Buttons */}
@@ -854,7 +858,7 @@ The video script will be used to generate an avatar video with synchronized audi
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => generateVoice(message.id, message.content)}
+                          onClick={() => generateVoice(message.id, shownText(message.content))}
                           disabled={loadingMedia[message.id] === 'voice'}
                           className="h-7 px-2 text-xs hover:bg-blue-50"
                         >

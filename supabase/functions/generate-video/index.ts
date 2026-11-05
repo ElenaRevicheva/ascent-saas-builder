@@ -25,8 +25,9 @@ async function realEspaLuz(req: Request, body: any): Promise<Response> {
   const authHeader = req.headers.get('Authorization') ?? '';
   const url = Deno.env.get('SUPABASE_URL')!;
   const asUser = createClient(url, Deno.env.get('SUPABASE_ANON_KEY')!, { global: { headers: { Authorization: authHeader } } });
-  const { data: { user } } = await asUser.auth.getUser();
-  if (!user) return no('not_signed_in');
+  const token = authHeader.replace(/^Bearer\s+/i, '');
+  const { data: { user }, error: authError } = await asUser.auth.getUser(token);
+  if (!user) { console.log('[talking] auth:', authError?.message); return no('not_signed_in'); }
   const rw = (path: string, init: RequestInit = {}) => fetch(RUNWAY_API + path, { ...init, signal: AbortSignal.timeout(30000),
     headers: { 'Authorization': `Bearer ${key}`, 'X-Runway-Version': '2024-11-06', 'Content-Type': 'application/json' } });
 
