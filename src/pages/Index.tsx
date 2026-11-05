@@ -18,7 +18,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { feedbackSchema } from "@/lib/validations";
 
 import brandAvatar2 from '@/assets/brand-avatar-2.jpg';
-import espaluzQr from '@/assets/espaluz-qr.jpg';
+import telegramQr from '@/assets/telegram-qr-code.png';
+import telegramQrVideo from '@/assets/telegram-qr-video.mp4';
 import creatorQr from '@/assets/creator-qr-card.png';
 import whatsappQr from '@/assets/whatsapp-qr-code.jpg';
 import whatsappQrFace from '@/assets/whatsapp-qr-face.gif';
@@ -249,11 +250,20 @@ const Index = () => {
             
             <div className="relative">
               <div className="absolute -inset-2 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl blur opacity-30 animate-pulse"></div>
-              <img 
-                src={espaluzQr} 
-                alt="EspaLuz Telegram QR Code" 
-                className="relative w-56 h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain rounded-2xl shadow-magical border-4 border-blue-400 hover:border-blue-500 hover:shadow-vibrant hover:scale-105 transition-all duration-300 bg-white/95 backdrop-blur-sm ring-2 ring-blue-200 hover:ring-blue-300" 
-              />
+              {/* 5 Nov 2026 (Elena): Telegram QR in the WhatsApp QR's style, Telegram blue (scripts/make-telegram-qr.py),
+                  t.me/EspaLuzFamily_bot. Her mother-and-daughter video plays muted in the centre square (36.38 % / 27.24 %);
+                  20 sampled frames all scan at 1138/288/224/160 px. Old espaluz-qr.jpg kept (sidebar still uses it). */}
+              <span className="relative block transition-transform duration-300 hover:scale-105">
+                <img 
+                  src={telegramQr} 
+                  alt="EspaLuz Telegram QR Code" 
+                  className="relative w-56 h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain rounded-2xl shadow-magical border-4 border-blue-400 hover:border-blue-500 hover:shadow-vibrant transition-all duration-300 bg-white/95 backdrop-blur-sm ring-2 ring-blue-200 hover:ring-blue-300" 
+                />
+                <span aria-hidden className="pointer-events-none absolute inset-[4px]">
+                  <video src={telegramQrVideo} autoPlay muted loop playsInline preload="metadata" className="absolute object-cover"
+                    style={{ left: "36.38%", top: "36.38%", width: "27.24%", height: "27.24%" }} />
+                </span>
+              </span>
             </div>
             
             <div className="space-y-4">
