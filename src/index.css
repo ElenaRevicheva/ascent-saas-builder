@@ -203,3 +203,31 @@ All colors MUST be HSL.
 .terms-section-title {
   @apply text-2xl md:text-3xl font-extrabold mt-10 mb-4 drop-shadow-sm text-pink-600 dark:text-yellow-300 border-l-8 border-pink-400 dark:border-yellow-400 pl-4 bg-pink-50 dark:bg-yellow-900/30 py-2;
 }
+/* 5 Nov 2026 - moving sunset sky (src/components/landing/SkyBackground.tsx): flowing rays + breathing sun glow + grain,
+   same idea as aideazz.xyz/sop-ai-ops.html (lv-leak / lv-glow / lv-grain). Light, slow, never aggressive. */
+.sky-rays {
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 214, 160, .16) 45%, rgba(255, 246, 228, .30) 50%, rgba(255, 196, 196, .14) 55%, transparent 62%);
+  background-size: 220% 100%;
+  mix-blend-mode: screen;
+  animation: sky-rays-flow 18s ease-in-out infinite alternate;
+}
+.sky-glow {
+  left: 50%; top: 58%; width: 120vmax; height: 120vmax; transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255, 222, 160, .34) 0%, rgba(255, 190, 170, .14) 26%, rgba(190, 160, 255, 0) 55%);
+  animation: sky-glow-breathe 9s ease-in-out infinite alternate;
+}
+.sky-grain {
+  opacity: .07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+@keyframes sky-rays-flow { from { background-position: 100% 0; } to { background-position: 0% 0; } }
+@keyframes sky-glow-breathe { from { opacity: .65; transform: translate(-50%, -50%) scale(.96); } to { opacity: 1; transform: translate(-50%, -50%) scale(1.04); } }
+@media (prefers-reduced-motion: reduce) { .sky-rays, .sky-glow { animation: none; } }
+
+/* Replika-style seat for the moving heroes: light glass, hair-thin border, very round, no thick frame */
+.hero-seat {
+  border-radius: 2.25rem; overflow: hidden;
+  background: rgba(255, 255, 255, .2); border: 1px solid rgba(255, 255, 255, .55);
+  box-shadow: 0 24px 60px -28px rgba(91, 63, 209, .35);
+  -webkit-mask-image: linear-gradient(180deg, #000 82%, transparent 100%); mask-image: linear-gradient(180deg, #000 82%, transparent 100%);
+}

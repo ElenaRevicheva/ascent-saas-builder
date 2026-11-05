@@ -11,7 +11,7 @@ export function Part({ tag, name, count, children, defaultOpen = false, classNam
   const [open, setOpen] = useState(defaultOpen);
   return (
     <details open={open} onToggle={(e) => setOpen((e.currentTarget as HTMLDetailsElement).open)}
-      className={`group/part rounded-2xl border border-border bg-card/90 ${className}`} style={{ boxShadow: "var(--shadow-card)" }}>
+      className={`group/part rounded-2xl border border-white/60 bg-white/70 backdrop-blur-md ${className}`} style={{ boxShadow: "var(--shadow-card)" }}>
       <summary className="flex min-h-[56px] cursor-pointer list-none flex-wrap items-center gap-x-3 gap-y-1 px-5 py-3 [&::-webkit-details-marker]:hidden">
         <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-primary">{tag}</span>
         <span className="text-lg font-semibold text-foreground">{name}</span>

@@ -3,7 +3,7 @@ import { Part } from "@/components/landing/Tree";
 
 const Footer = () => {
   return (
-    <footer className="bg-card border-t border-border">
+    <footer className="bg-white/60 backdrop-blur-md border-t border-white/60">
       <div className="container mx-auto px-4 py-12">
         {/* 5 Nov 2026 (Elena): footer info folds like the rest of the page; copyright + policy links stay visible. */}
         <Part tag="EspaLuz" name="Contact & Info" count="YouTube · Telegram · AIdeazz · PDF">

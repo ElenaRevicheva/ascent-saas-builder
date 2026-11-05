@@ -8,6 +8,7 @@ import { ChatWithEspaluz } from "@/components/dashboard/ChatWithEspaluz";
 import SubscriptionFlow from "@/components/SubscriptionFlow";
 import { Part, Item, SectionHead } from "@/components/landing/Tree";
 import { HeroClip } from "@/components/landing/HeroClip";
+import { SkyBackground } from "@/components/landing/SkyBackground";
 import heroWeb from '@/assets/heroes/hero-web.mp4';
 import heroWebPoster from '@/assets/heroes/hero-web-poster.jpg';
 import heroWhatsapp from '@/assets/heroes/hero-whatsapp.mp4';
@@ -147,15 +148,16 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-hero">
+    <div className="relative isolate min-h-screen">
+      <SkyBackground />
       <Navigation />
       
       {/* Hero Section */}
-      <section className="container mx-auto px-4 pt-20 pb-6 text-center bg-gradient-magical rounded-2xl shadow-vibrant">
+      <section className="container mx-auto px-4 pt-20 pb-6 text-center">
         {/* 5 Nov 2026 (Elena: "a steady picture looks ugly"): moving, photorealistic web hero made in Grok Imagine
             (still from her Warm Smile reference -> 10 s Loop). Replaces the cartoon circle; brand-avatar-2.jpg kept. */}
-        <div className="mx-auto mb-6 w-44 sm:w-52 md:w-56">
-          <div className="overflow-hidden rounded-3xl border-4 border-primary shadow-glow" style={{ aspectRatio: "540 / 804" }}>
+        <div className="mx-auto mb-6 w-52 sm:w-60 md:w-64">
+          <div className="hero-seat" style={{ aspectRatio: "540 / 804" }}>
             <HeroClip src={heroWeb} poster={heroWebPoster} label="EspaLuz, your family's companion on the web" className="block h-full w-full object-cover" />
           </div>
         </div>
@@ -187,7 +189,7 @@ const Index = () => {
           ].map((c) => (
             <div key={c.title} className="rounded-2xl border border-border bg-card p-5" style={{ boxShadow: "var(--shadow-card)" }}>
               {"kids" in c && (
-                <Link to="/classroom" className="mb-4 block overflow-hidden rounded-xl" style={{ aspectRatio: "720 / 484" }} aria-label="Open the kids classroom with Pere and Titi">
+                <Link to="/classroom" className="hero-seat mb-4 block" style={{ aspectRatio: "720 / 484", borderRadius: "1.25rem" }} aria-label="Open the kids classroom with Pere and Titi">
                   <HeroClip src={heroKids} poster={heroKidsPoster} label="Pere and Titi in the kids classroom" className="block h-full w-full object-cover" />
                 </Link>
               )}
@@ -219,7 +221,7 @@ const Index = () => {
             
             <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
               <div className="flex flex-col items-center space-y-4 order-2 lg:order-1">
-                <div className="w-40 overflow-hidden rounded-3xl border-4 border-green-400 shadow-xl md:w-48" style={{ aspectRatio: "540 / 804" }}>
+                <div className="hero-seat w-40 md:w-48" style={{ aspectRatio: "540 / 804" }}>
                   <HeroClip src={heroWhatsapp} poster={heroWhatsappPoster} label="EspaLuz on WhatsApp" className="block h-full w-full object-cover" />
                 </div>
                 <p className="text-base text-gray-700 font-medium max-w-sm text-center">
@@ -270,7 +272,7 @@ const Index = () => {
             </div>
             
             <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
-            <div className="w-40 overflow-hidden rounded-3xl border-4 border-blue-400 shadow-xl md:w-48" style={{ aspectRatio: "540 / 804" }}>
+            <div className="hero-seat w-40 md:w-48" style={{ aspectRatio: "540 / 804" }}>
               <HeroClip src={heroTelegram} poster={heroTelegramPoster} label="EspaLuz on Telegram" className="block h-full w-full object-cover" />
             </div>
             <div className="relative">
@@ -577,7 +579,7 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="container mx-auto scroll-mt-20 px-4 py-20 bg-gradient-to-br from-blue-50/50 via-white to-purple-50/50 rounded-3xl shadow-lg">
+      <section id="features" className="container mx-auto scroll-mt-20 px-4 py-20 bg-white/30 backdrop-blur-[2px] border border-white/50 rounded-3xl shadow-[0_24px_60px_-30px_rgba(91,63,209,.35)]">
         <div className="text-center mb-16">
           <Badge variant="outline" className="mb-6 text-lg px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0">
             Living Proof of Concept
@@ -690,7 +692,7 @@ const Index = () => {
       </section>
 
       {/* EspaLuz Detailed Description Section */}
-      <section id="life" className="container mx-auto scroll-mt-20 px-4 py-16 bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 rounded-3xl shadow-lg">
+      <section id="life" className="container mx-auto scroll-mt-20 px-4 py-16 bg-white/30 backdrop-blur-[2px] border border-white/50 rounded-3xl shadow-[0_24px_60px_-30px_rgba(91,63,209,.35)]">
         <div className="text-center mb-8">
           <h2 className="text-4xl font-bold text-foreground mb-6">
             🌟 EspaLuz: Your Family's Personal Spanish-English Tutor in WhatsApp or Telegram
