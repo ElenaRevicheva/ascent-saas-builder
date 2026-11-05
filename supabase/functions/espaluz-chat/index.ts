@@ -2,6 +2,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
+import { kidsTidyReply, kidsClassDaysDone, kidsGreetedRecently } from './kids_tidy.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -200,14 +201,14 @@ const KIDS_CLASSROOM_PROMPT = `You are the voice of two friends from Panama who 
 
 How to talk:
 - Always use real, complete sentences, never single words. Say each idea in Spanish first, then the same idea in English on the SAME line after " / ".
-- The FIRST line of every reply answers what the child just said. If the child asked a question, answer it; if the child told you something, say it back in a correct whole sentence. Only then continue the lesson. Example: the child says "Hello, how are you, Pere and Titi?" -> "Pere [hello]: ¡Estoy muy bien, gracias por preguntar! / I am very well, thank you for asking!" then "Titi [cheer]: ¡Yo también estoy feliz de verte! / I am happy to see you too!"
+- The FIRST line of every reply answers what the child just said. If the child asked a question, answer it; if the child told you something, REACT like a friend who heard it: add something new (a feeling, a funny thought, what you would do), and do NOT tell her back what she just said (5 Nov 2026: it irritates). Say her words back ONLY when she answered in one or two words, or to correct a real mistake, and then once. NEVER start a line with "Entiendo que", "Veo que", "I understand" or "Alisa dijo". Never repeat a sentence already said in this lesson. Only then continue the lesson. Example: the child says "Hello, how are you, Pere and Titi?" -> "Pere [hello]: ¡Estoy muy bien, gracias por preguntar! / I am very well, thank you for asking!" then "Titi [cheer]: ¡Yo también estoy feliz de verte! / I am happy to see you too!"
 - Clear for a 6-7 year old (about 6-12 words per sentence; two ideas may be joined with "y / and" or "porque / because"). 2-3 short lines per reply. Warm and playful. No markdown, no bullet points, at most one emoji.
 - Let Pere and Titi speak by name, and name the picture shown while each one speaks: "Pere [shot]: ..." / "Titi [shot]: ...". Choose the shot that matches what the line says or does. Pere's shots: talk, hello, counting, thinking, clap, listening, breathing, sleepy, goodbye. Titi's shots: talk, hello, cheer, silly, dance, jump, counting, freeze, oops, listening, goodbye. Both together: highfive, peekaboo. Use "talk" when nothing fits. Never give two lines in a row the same shot, and across the lesson use many different ones. Shots by lesson step: hello = Pere [hello] then Titi [hello]; wake-up = Titi [jump], [counting], [freeze] or [dance]; new sentences = Pere [talk], [thinking], [listening], praise = Pere [clap] or Titi [cheer]; the game (a riddle or "what's wrong?") = Titi [oops], [silly], [peekaboo]; calm = Pere [breathing], [sleepy]; the end = [highfive] then [goodbye]. Example: "Titi [counting]: ¡Uno, dos, tres tucanes! / One, two, three toucans!"
 - End every reply with ONE simple question - a NEW one, about exactly what she just said, did or painted, curious and playful like a friend who really wants to know ("¿Y qué come un perezoso en el desayuno? / And what does a sloth eat for breakfast?"). Never repeat a question already asked in this lesson, and never use the same kind of question twice in a row. Invite a whole sentence only now and then (at most every third reply), not every turn.
 - If the child makes a mistake, praise the try and say the correct whole sentence once; never say "wrong".
 - Your Spanish must be perfectly correct, because a child copies it. "muy" never goes with a verb, use "mucho" ("Amo mucho a mi mamá", never "Amo a mi mamá muy"); for loving people use "querer" or "amar", not "gustar" ("Quiero mucho a mi mamá"). When you correct the child, give one short natural sentence, not a grammar rule.
 - Each reply is ONE step of the lesson rhythm below (THIS TURN names it). After the first hello, never greet again and never restart the lesson; continue from where the conversation is.
-- A real dialogue, not a lecture: 2-3 short lines and ONE question, then stop and wait. Repeat the child's own words back (corrected if needed). Follow the child's topic: if the child talks about a cat, today's sentences are about that cat.
+- A real dialogue, not a lecture: 2-3 short lines and ONE question, then stop and wait. Follow the child's topic: if the child talks about a cat, today's sentences are about that cat.
 - Both ways: if the child speaks English, give the Spanish; if the child speaks Spanish, give the English. The child learns both languages.
 - Correct only REAL mistakes. If the child said it correctly, keep the child's words exactly (a child who says "mi gata blanca" has a girl cat: never change it to "gato blanco"). Remember what the child already told you in this lesson (a pet's name, a friend, a colour) and use it; never ask for it again.
 - Once per lesson: ask the child to READ one short sentence from the screen out loud (first graders are learning to read); ask one "¿Por qué...? / Why...?" question and welcome an answer with "porque / because"; and at the goodbye give a mission: one sentence to say today to a real person (mamá, a friend, the teacher, the shop).
@@ -362,16 +363,16 @@ function kidsHeard(message: string): string {
     "(\"Parece que te sentiste triste cuando mamá se enojó. / It sounds like you felt sad when mom got upset.\"), ask ONE " +
     "gentle question about how she feels, and stay with her: THIS TURN HAS NO GAME AND NO NEW SENTENCE, skip the lesson " +
     "step below. Use soft words; never repeat a frightening word like \"pegar / hit\" back to her.\n" +
-    "2. An answer to your last question (even one word, like \"Starberry\") -> say it back as a whole, correct sentence in " +
+    "2. A one- or two-word answer to your last question (like \"Starberry\") -> say it back as a whole, correct sentence in " +
     "both languages and praise it (\"¡Tu fruta favorita es la fresa! / Your favourite fruit is the strawberry!\"); that " +
-    "sentence is the one to practise now.\n" +
+    "sentence is the one to practise now. A longer answer -> do not say it back: react to it with something new.\n" +
     "3. Her own idea, topic or a refusal (\"I don't want to jump, I want to ride my bicycle\"; \"no quiero jugar... " +
     "Halloween\") -> follow HER idea warmly and fit the lesson into it (\"¡Vamos en bici! / Let's ride our bikes!\", " +
     "\"¡Hoy es Halloween! ¿De qué te vas a disfrazar? / Today is Halloween! What will you dress up as?\").\n" +
     "4. (\"no sé\", \"sí\", \"no\", \"ok\" ARE real answers - never treat them as not heard.) Only if NO part of it makes sense -> do NOT guess and do NOT praise it: say kindly that you did not hear well and " +
     "ask her to say it again (\"No te escuché bien. ¿Me lo dices otra vez? / I didn't hear you well. Can you say it " +
     "again?\") and stop there: skip the lesson step below. If part of it makes sense, answer that part.\n" +
-    "Always: if her words contain something untrue, never repeat it as true - say the correct version simply (\"Las " +
+    "Always: never open with \"Entiendo que\" or a summary of her words. If her words contain something untrue, never repeat it as true - say the correct version simply (\"Las " +
     "paletas son dulces, pero tienen mucho azúcar. / Lollipops are sweet, but they have a lot of sugar.\"). The recording " +
     "may hold two voices (the child and an adult helping): answer the CHILD's part.\n" +
     // 31 Oct 2026 (15:43): Elena said "estamos manejando en el auto y mi hija no puede saltar" and the heroes told her
@@ -551,7 +552,7 @@ function kidsDueMemory(turns: KidTurn[], nowMs: number): KidMemory | null {
   return { ...pick, days: pick.daySet.size };
 }
 
-type KidsMemory = { card: string; hello: string; avoid: string[] };
+type KidsMemory = { card: string; hello: string; avoid: string[]; judged?: boolean };
 
 async function kidsMemoryCard(supabase: any, userId: string, hist: any[]): Promise<KidsMemory> {
   const { data, error } = await supabase
@@ -570,6 +571,12 @@ async function kidsMemoryCard(supabase: any, userId: string, hist: any[]): Promi
   const turns: KidTurn[] = [];
   const avoid: string[] = [];
   let mission = '';
+  // 5 Nov 2026 (nine presses of "start class" that day = the same toy game and "who is right" again and again): a hello in
+  // the last 20 hours means she was already greeted, so the memory game, the mission question and the judge do not run again.
+  const recent = data.filter((r: any) => r.session_type === 'classroom')
+    .map((r: any) => ({ at: Date.parse(r.created_at), said: String(r.content?.user_message ?? ''), reply: String(r.content?.ai_response ?? '') }));
+  const greeted = kidsGreetedRecently(recent, Date.now());
+  const judged = recent.some((r: any) => Date.now() - r.at < 20 * 3600000 && KIDS_JUDGE.test(r.reply));
   for (const row of data) {
     const c = row.content || {};
     if (row.session_type === 'conversation' && c.family_role !== 'alisa') continue; // a parent's own chat stays out
@@ -599,13 +606,13 @@ async function kidsMemoryCard(supabase: any, userId: string, hist: any[]): Promi
   }
   const dislikes = avoid.length
     ? `\nSHE TOLD YOU SHE DOES NOT WANT to hear about: ${avoid.join(', ')}. Never bring it up in this lesson.` : '';
-  if (!said.length && !mission) return { card: '', hello: dislikes, avoid };
-  const due = kidsDueMemory(turns, Date.now());
+  if (!said.length && !mission) return { card: '', hello: dislikes, avoid, judged };
+  const due = greeted ? null : kidsDueMemory(turns, Date.now());
   const ago = due ? Math.max(1, Math.round((Date.now() - due.lastAt) / 86400000)) : 0;
   const card = '\n\nWHAT THE CHILD TOLD YOU IN EARLIER LESSONS (her own words, newest first; speech-to-text may be imperfect):\n' +
     said.map((s) => `- ${s}`).join('\n') +
-    (mission ? `\nLast mission you gave: "${mission}" - at the hello, ask if she did it.` : '') +
-    (due ? '' :
+    (mission && !greeted ? `\nLast mission you gave: "${mission}" - at the hello, ask if she did it.` : '') +
+    (due || greeted ? '' :
       "\nUse this like a friend who remembers: at the hello bring back ONE happy, clearly understood thing (a favourite " +
       "thing, a pet, a wish, something she likes doing) taken ONLY from this list, in simple words (\"La última vez me " +
       "dijiste que ... ¿Todavía? / Last time you told me ... Still?\")") +
@@ -622,8 +629,10 @@ async function kidsMemoryCard(supabase: any, userId: string, hist: any[]): Promi
       "If she corrects him: one line of real praise and add ONE new word to her sentence. If she does not remember: Pere " +
       "gives only the first two or three words as a hint, once, then go on happily. Never a test, never \"repeat after " +
       "me\". This replaces the usual hello question."
+    : greeted ? "\n\nSHE IS BACK: she was already greeted today. Welcome her back in ONE short new line, without \"last time you told me\", " +
+      "without asking about a mission, without a guessing game and without \"who is right\". Then simply go on with what she wants."
     : '');
-  return { card, hello, avoid };
+  return { card, hello, avoid, judged };
 }
 
 // Today in Panama, and the day's holiday when there is one (she said "Halloween" on 31 Oct and was told she seemed
@@ -1298,16 +1307,19 @@ ${asked}` : ''}`;
       ? kids.known.filter((s: unknown) => typeof s === 'string').map((s: string) => s.trim().slice(0, 120)).filter(Boolean).slice(-20)
       : [];
     const memory = kids && userId ? await kidsMemoryCard(supabase, userId, Array.isArray(kids.history) ? kids.history : [])
-      : { card: '', hello: '', avoid: [] as string[] };
+      : { card: '', hello: '', avoid: [] as string[], judged: false };
     const isHello = kids && (Number.isInteger(kids.turn) ? kids.turn : Math.floor((Array.isArray(kids.history) ? kids.history.length : 0) / 2)) === 0;
-    // CLASS mode: two classes per unit; the unit comes from her saved class starts (a guest's bot sends its own count).
+    // CLASS mode: two classes per unit; the unit comes from her finished class days (a guest's bot sends its own count).
     let classUnit = -1;
     if (kids?.mode === 'class') {
       let starts = Number.isInteger(kids.class_count) ? kids.class_count : 0;
       if (userId) {
-        const { count } = await supabase.from('learning_sessions').select('id', { count: 'exact', head: true })
-          .eq('user_id', userId).eq('session_type', 'classroom').eq('content->>class_start', 'true');
-        starts = (count ?? 0) - (isHello ? 0 : 1); // during a class, the start already saved is this class
+        // 5 Nov 2026: every press of "start class" used to count, so Alisa went through all 12 units in 5 days. A class now
+        // counts once per day and only if she really talked in it; the number never changes in the middle of a day.
+        const { data: classRows } = await supabase.from('learning_sessions').select('created_at, said:content->>user_message')
+          .eq('user_id', userId).eq('session_type', 'classroom').not('content->>class_unit', 'is', null)
+          .order('created_at', { ascending: false }).limit(2000);
+        starts = kidsClassDaysDone((classRows ?? []).map((r: any) => ({ at: Date.parse(r.created_at), said: String(r.said ?? '') })), Date.now());
       }
       classUnit = Math.floor(Math.max(0, starts) / 2) % KIDS_CLASS_UNITS.length;
     }
@@ -1370,7 +1382,7 @@ ${asked}` : ''}`;
       }
       // "Who is right, Pere or Titi?" once per lesson, enforced: a second one is cut (a line that is only the judge
       // question goes; inside a longer line only that sentence goes).
-      if (kidsJudgeAsked(kids.history)) {
+      if (kidsJudgeAsked(kids.history) || memory.judged) {
         const kept = fullResponse.split('\n').map((l: string) => {
           if (!KIDS_JUDGE.test(l)) return l;
           const rest = l.split(/(?<=[?!.])\s+/).filter((s: string) => !KIDS_JUDGE.test(s)).join(' ').trim();
@@ -1419,6 +1431,8 @@ ${asked}` : ''}`;
         const q = short.find((l: string) => l.includes('?'));
         fullResponse = [short.find((l: string) => !l.includes('?')) ?? short[0], ...(q ? [q] : [])].join('\n');
       }
+      // The last word on every kids reply: no "Entiendo que", no line that only says her own words back.
+      fullResponse = kidsTidyReply(fullResponse, message);
     }
     const videoScript = extractVideoScript(fullResponse);
 
