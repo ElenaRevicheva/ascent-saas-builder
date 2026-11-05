@@ -75,8 +75,10 @@ serve(async (req) => {
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
-    if (!text || !userId) {
-      throw new Error('Text and userId are required');
+    // 5 Nov 2026: userId was only checked, never used - and the anonymous web free trial has none, so every trial
+    // voice failed with 500. The text is what matters.
+    if (!text) {
+      throw new Error('Text is required');
     }
 
     if (text.length > 5000) {

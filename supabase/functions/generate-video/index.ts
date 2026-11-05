@@ -15,8 +15,10 @@ serve(async (req) => {
   try {
     const { videoScript, voice = "es", userId } = await req.json();
     
-    if (!videoScript || !userId) {
-      throw new Error('Video script and userId are required');
+    // 5 Nov 2026: userId was only checked, never used (fixed avatar, free Google voice) - and the anonymous web free
+    // trial has none, so every trial video failed with 500. The script is what matters.
+    if (!videoScript) {
+      throw new Error('Video script is required');
     }
 
     if (videoScript.length > 10000) {
