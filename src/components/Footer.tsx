@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
+import { Part } from "@/components/landing/Tree";
 
 const Footer = () => {
   return (
     <footer className="bg-card border-t border-border">
       <div className="container mx-auto px-4 py-12">
+        {/* 5 Nov 2026 (Elena): footer info folds like the rest of the page; copyright + policy links stay visible. */}
+        <Part tag="EspaLuz" name="Contact & Info" count="YouTube · Telegram · AIdeazz · PDF">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <Link to="/" className="text-2xl font-bold text-foreground mb-4 block flex items-center gap-2">
@@ -48,6 +51,7 @@ const Footer = () => {
             </div>
           </div>
         </div>
+        </Part>
         
         <div className="border-t border-border mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-muted-foreground text-sm">

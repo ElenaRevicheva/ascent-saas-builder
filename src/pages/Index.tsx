@@ -859,13 +859,13 @@ const Index = () => {
           <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-primary">{t("creator.eyebrow")}</p>
           <h2 className="mb-10 text-3xl text-foreground md:text-4xl">{t("creator.title")}</h2>
 
-          <div className="grid gap-6 md:grid-cols-[1.4fr_1fr]">
-            <div className="space-y-6">
-              <div className="rounded-2xl border border-border bg-card p-6" style={{ boxShadow: "var(--shadow-card)" }}>
+          <div className="space-y-4">
+            <div className="space-y-4">
+<Part tag={t("creator.role")} name={t("creator.name")}>              <div className="rounded-2xl border border-border bg-card p-6" style={{ boxShadow: "var(--shadow-card)" }}>
                 <p className="text-sm font-semibold text-primary">{t("creator.role")}</p>
                 <h3 className="mt-1 text-2xl text-foreground">{t("creator.name")}</h3>
                 <p className="mt-3 leading-relaxed text-muted-foreground">{t("creator.intro")}</p>
-              </div>
+              </div></Part>
 
 <Part className="border-l-4" tag={t("creator.eyebrow")} name={t("creator.journeyTitle")}>
                 
@@ -899,7 +899,7 @@ const Index = () => {
               </Part>
             </div>
 
-            <aside className="space-y-6">
+<Part tag={t("tree.contactTag")} name={t("creator.connectTitle")} count="QR · PDF · Portfolio">            <aside className="space-y-6">
               <div className="rounded-2xl border border-border bg-card p-6 text-center" style={{ boxShadow: "var(--shadow-card)" }}>
                 <h3 className="text-lg text-foreground">{t("creator.connectTitle")}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t("creator.connectBody")}</p>
@@ -927,7 +927,7 @@ const Index = () => {
                 <h3 className="text-lg text-foreground">{t("creator.buildTitle")}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-foreground/80">{t("creator.buildBody")}</p>
               </div>
-            </aside>
+            </aside></Part>
           </div>
         </div>
 
