@@ -1162,6 +1162,11 @@ async function callChain(request: any): Promise<{ result: any; provider: string 
   throw new Error(errors.length ? errors.join(' | ') : 'No LLM provider configured (GEMINI_API_KEY, GROQ_API_KEY or ANTHROPIC_API_KEY)');
 }
 
+// 5 Nov 2026 (Elena: "the user that does not want to sign in, just wants to try web chat right here, right now, gets
+// free 20 messages - anonymously, like we declare on our landing page; no new bicycles"). The page has offered this
+// since Aug 2025 (userId 'free-trial-user', its own 20-message counter + Subscribe dialog in ChatWithEspaluz.tsx), but
+// this function demanded a signed-in user since Nov 2025, so every anonymous try ended in "Lo siento, hubo un error".
+// Now such a visitor gets a grown-up chat turn: no account, no name, nothing saved. The page keeps counting the 20.
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -1190,6 +1195,7 @@ serve(async (req) => {
       : typeof body.whatsapp_user_id === 'string' ? 'whatsapp' : null;
     let supabase: any;
     let userId: string | null;
+    let anonTrial = false;
     if (fromBot) {
       if (!body.kids || !botPlatform) throw new Error('Unauthorized');
       supabase = createClient(supabaseUrl, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
@@ -1208,9 +1214,14 @@ serve(async (req) => {
       // Verify user authentication
       const { data: { user }, error: authError } = await supabase.auth.getUser();
       if (authError || !user) {
-        throw new Error('Unauthorized');
+        // Anonymous web free trial (5 Nov 2026, see the note above serve): grown-up chat only, never kids, never a bot.
+        if (body.userId !== 'free-trial-user' || body.kids) throw new Error('Unauthorized');
+        console.log('[trial] anonymous web chat turn');
+        anonTrial = true;
+        userId = null;
+      } else {
+        userId = user.id;
       }
-      userId = user.id;
     }
 
     const { isVoiceInput, originalLanguage, kids } = body;
@@ -1248,7 +1259,7 @@ ${asked}` : ''}`;
       }
     }
 
-    console.log(userId ? `Processing message for user ${userId}: ${message}` : `Processing ${botPlatform} guest kids turn`);
+    console.log(userId ? `Processing message for user ${userId}: ${message}` : anonTrial ? 'Processing anonymous web trial turn' : `Processing ${botPlatform} guest kids turn`);
 
     const familyMembers = userId ? await getFamilyMembers(supabase, userId) : [];
     const familyMember = await detectFamilyMember(message, familyMembers);
@@ -1257,7 +1268,7 @@ ${asked}` : ''}`;
     console.log(`Detected family member: ${familyMember.name} (${familyMember.role}), emotion: ${emotion.emotion}`);
 
     // Get conversation history
-    const { data: sessions } = kids ? { data: [] } : await supabase
+    const { data: sessions } = kids || !userId ? { data: [] } : await supabase
       .from('learning_sessions')
       .select('content')
       .eq('user_id', userId)
@@ -1273,6 +1284,14 @@ ${asked}` : ''}`;
         { role: 'assistant', content: content.ai_response || '' }
       ];
     }).flat().filter(msg => msg.content) || [];
+    // The anonymous trial keeps its conversation in the visitor's own browser; the page may send the last turns back.
+    if (anonTrial && Array.isArray(body.trial_history)) {
+      for (const m of body.trial_history.slice(-8)) {
+        if ((m?.role === 'user' || m?.role === 'assistant') && typeof m?.content === 'string' && m.content.trim()) {
+          conversationHistory.push({ role: m.role, content: m.content.slice(0, 1500) });
+        }
+      }
+    }
 
     // Sentences the child said in earlier lessons come back first (Buddy.ai: tiny vocabulary, repeated and grown; 30 Oct 2026).
     const known: string[] = Array.isArray(kids?.known)
