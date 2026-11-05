@@ -38,6 +38,11 @@ const GEMINI_HEROES: Record<string, { voice: string; style: string }> = {
 // 1 Nov 2026 (Elena: "if one fails, the next available must answer at once"): no voice call had a time limit, so a
 // provider that hangs instead of failing kept the child waiting. Each now gives up after VOICE_TIMEOUT_MS.
 const VOICE_TIMEOUT_MS = Number(Deno.env.get('VOICE_TIMEOUT_MS') || 20000);
+// Circuit breaker (5 Nov 2026): after a 402 "insufficient credit", this warm worker skips Replicate for
+// REPLICATE_DRY_MS (default 10 min) and re-asks after that, so a top-up is still picked up within minutes.
+// Cold workers start with no memory and ask once - a 402 itself comes back in well under a second.
+const REPLICATE_DRY_MS = Number(Deno.env.get('REPLICATE_DRY_MS') || 600000);
+let replicateDryUntil = 0;
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -86,9 +91,11 @@ serve(async (req) => {
     let mimeType = 'audio/mpeg';
     // 1 Nov 2026 22:20 UTC (Elena: "Replicate should sit first because I liked these voices; when credits are out it
     // immediately falls back to the chain; when topped up it is used again"): the paid MiniMax voices she loves answer
-    // first, then the free Gemini voices, then OpenAI, then the device. Every line tries every provider afresh - nothing
-    // remembers a failure - so a top-up anywhere is picked up on the very next line, with no code change.
-    if (hero && HERO_VOICES[hero] && Deno.env.get('REPLICATE_API_TOKEN')) {
+    // first, then the free Gemini voices, then OpenAI, then the device. Every line tries every provider afresh, except that
+    // a Replicate 402 is remembered for REPLICATE_DRY_MS by a warm worker (5 Nov) - a top-up is picked up within minutes.
+    if (hero && HERO_VOICES[hero] && Deno.env.get('REPLICATE_API_TOKEN') && Date.now() < replicateDryUntil) {
+      console.log(`hero voice ${hero}: Replicate said no credit ${Math.round((replicateDryUntil - Date.now()) / 1000)} s before re-check - free voice now`);
+    } else if (hero && HERO_VOICES[hero] && Deno.env.get('REPLICATE_API_TOKEN')) {
       try {
         base64Audio = await generateHeroVoice(hero, cleanedText);
         spokenBy = `minimax-${hero}`;
@@ -146,10 +153,16 @@ async function generateHeroVoice(hero: string, text: string): Promise<string> {
   const body = { input: { text: spoken, voice_id: v.voice_id, pitch: v.pitch, speed: v.speed, emotion: v.emotion,
                           language_boost: 'Automatic', audio_format: 'mp3', sample_rate: 32000 } };
   let r = await fetch('https://api.replicate.com/v1/models/minimax/speech-2.6-hd/predictions', { method: 'POST', headers, body: JSON.stringify(body), signal: AbortSignal.timeout(VOICE_TIMEOUT_MS) });
+  // 5 Nov 2026 15:13 UTC (Alisa's live lesson): with the balance at $0, Replicate first answers 429 (throttle), the old
+  // code slept a fixed 11 s, then got 402 anyway - every hero line cost ~11 s before the free voice could start. Now a
+  // throttle is waited out only if Replicate itself says it is short (<= 3 s); otherwise the free voice answers at once.
   if (r.status === 429) { // low-balance accounts get ~6 requests a minute
-    await new Promise((res) => setTimeout(res, 11000));
-    r = await fetch('https://api.replicate.com/v1/models/minimax/speech-2.6-hd/predictions', { method: 'POST', headers, body: JSON.stringify(body) });
+    const wait = Number(r.headers.get('retry-after') ?? (await r.clone().json().catch(() => ({})))?.retry_after ?? 99);
+    if (!(wait <= 3)) throw new Error(`Replicate 429: throttled, retry_after ${wait}s - not waiting, free voice answers`);
+    await new Promise((res) => setTimeout(res, wait * 1000));
+    r = await fetch('https://api.replicate.com/v1/models/minimax/speech-2.6-hd/predictions', { method: 'POST', headers, body: JSON.stringify(body), signal: AbortSignal.timeout(VOICE_TIMEOUT_MS) });
   }
+  if (r.status === 402) replicateDryUntil = Date.now() + REPLICATE_DRY_MS;
   if (!r.ok) throw new Error(`Replicate ${r.status}: ${(await r.text()).slice(0, 200)}`);
   let p = await r.json();
   const t0 = Date.now();
