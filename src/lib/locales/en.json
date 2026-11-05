@@ -150,6 +150,10 @@
     "latestAchievement": "Latest Achievement",
     "yourLearningJourney": "Your Learning Journey"
   },
+  "talking": {
+    "button": "See EspaLuz",
+    "unavailable": "EspaLuz can't appear right now. Her text and voice are still here."
+  },
   "hello": {
     "button": "Hear EspaLuz say hello",
     "label": "EspaLuz says hello",

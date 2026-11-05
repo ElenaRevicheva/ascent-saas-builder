@@ -150,6 +150,10 @@
     "latestAchievement": "Último Logro",
     "yourLearningJourney": "Tu Viaje de Aprendizaje"
   },
+  "talking": {
+    "button": "Ver a EspaLuz",
+    "unavailable": "EspaLuz no puede aparecer ahora. Su texto y su voz siguen aquí."
+  },
   "hello": {
     "button": "Escucha a EspaLuz",
     "label": "EspaLuz te saluda",

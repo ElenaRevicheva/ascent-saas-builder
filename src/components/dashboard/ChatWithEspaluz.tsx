@@ -9,6 +9,7 @@ import { MessageSquare, Send, Bot, User, Heart, Volume2, Play, Video, Pause, Mic
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
+import { useSubscription } from '@/hooks/useSubscription';
 import { TalkingHello } from "@/components/landing/TalkingHello";
 import { toast } from 'sonner';
 import { useLearningProgress } from '@/hooks/useLearningProgress';
@@ -29,6 +30,7 @@ interface ChatMessage {
   confidence?: number;
   timestamp: Date;
   audioUrl?: string; // For voice of full message
+  talkingUrl?: string; // The real talking EspaLuz (paying families, special moments)
   videoUrl?: string; // For avatar video file
   videoAudioUrl?: string; // For video script audio (separate from voice)
 }
@@ -41,6 +43,8 @@ interface ChatWithEspaluzProps {
 export const ChatWithEspaluz = ({ onUpgradeClick }: ChatWithEspaluzProps) => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { isSubscriptionActive } = useSubscription();
+  const isPaying = !!user && isSubscriptionActive;
   const { recordChatLearning } = useLearningProgress();
   const { 
     freeMessagesUsed, 
@@ -275,8 +279,8 @@ The video script will be used to generate an avatar video with synchronized audi
           // Generate voice for full response
           generateVoice(aiMessage.id, aiMessage.content, false);
           
-          // Generate video using the AI response content (contains video script markers)
-          generateVideo(aiMessage.id, aiMessage.content);
+          // 5 Nov 2026 (Elena: a video after every message "annoys"): no video on every reply any more.
+          maybeTalk(aiMessage);
         }, 500); // Small delay to let the message render first
       }
       
@@ -417,142 +421,49 @@ The video script will be used to generate an avatar video with synchronized audi
     }
   };
 
-  const generateVideo = async (messageId: string, videoScript: string) => {
+  // The real talking EspaLuz (5 Nov 2026). The server has the last word: paid, monthly cap, wallet floor.
+  // A clip takes 20-30 s, so the text and voice are already with the person when it arrives.
+  const generateVideo = async (messageId: string, videoScript: string, reason = 'asked') => {
     if (loadingMedia[messageId] === 'video') return;
-    
-    // Allow video generation for free trial users (no restrictions)
-    // Full functionality showcase for potential subscribers
-    
     setLoadingMedia(prev => ({ ...prev, [messageId]: 'video' }));
-    
     try {
-      console.log('🎬 VIDEO DEBUG - Calling generate-video with script:', videoScript);
-      console.log('🎬 VIDEO DEBUG - Script length:', videoScript.length);
-      console.log('🎬 VIDEO DEBUG - Script preview:', videoScript.substring(0, 300) + '...');
-      console.log('🎬 VIDEO DEBUG - Script type:', typeof videoScript);
-      console.log('🎬 VIDEO DEBUG - Is videoScript truthy:', !!videoScript);
-      
-        const { data, error } = await supabase.functions.invoke('generate-video', {
-        body: { 
-          videoScript,
-          voice: 'es', // Use Spanish Google TTS like voice messages
-          userId: user?.id 
-        }
-      });
-
-      if (error) {
-        console.error('Supabase function error:', error);
-        throw error;
+      const { data, error } = await supabase.functions.invoke('generate-video', { body: { mode: 'real', videoScript, reason } });
+      if (error) throw error;
+      if (!data?.real || !data.taskId) {
+        if (reason === 'asked') toast(t('talking.unavailable'));
+        return;
       }
-
-      if (!data) {
-        throw new Error('No data returned from video generation');
-      }
-
-      if (data.error) {
-        console.error('Edge function returned error:', data.error);
-        throw new Error(data.error);
-      }
-
-      console.log('Video generation successful:', data);
-
-      // Create audio blob from base64 using enhanced function
-      const audioBlob = base64ToAudioBlob(data.audioContent);
-      const audioUrl = URL.createObjectURL(audioBlob);
-
-      // Check if user has uploaded their own avatar video
-      console.log('userAvatarUrl from response:', data.userAvatarUrl);
-      
-      console.log('🎬 Generate video response data:', data);
-      
-      if (data.userAvatarUrl && data.userAvatarUrl.includes('.mp4')) {
-        // Check if avatar video is accessible before proceeding
-        console.log('🎬 Checking avatar video URL:', data.userAvatarUrl);
-        
-        try {
-          const videoResponse = await fetch(data.userAvatarUrl, { method: 'HEAD' });
-          if (!videoResponse.ok) {
-            console.error('🎬 Avatar video not accessible:', videoResponse.status, videoResponse.statusText);
-            toast.error('Avatar video not found. Please upload a valid avatar video.');
-            return;
-          }
-          console.log('🎬 Avatar video is accessible');
-        } catch (error) {
-          console.error('🎬 Failed to check avatar video:', error);
-          toast.error('Cannot access avatar video. Please check your network connection.');
+      const started = Date.now();
+      while (Date.now() - started < 150000) {
+        await new Promise((r) => setTimeout(r, 4000));
+        const { data: st, error: stError } = await supabase.functions.invoke('generate-video', { body: { mode: 'real_status', taskId: data.taskId } });
+        if (stError) throw stError;
+        if (st?.status === 'done' && st.url) {
+          setMessages(prev => prev.map(msg => (msg.id === messageId ? { ...msg, talkingUrl: st.url } : msg)));
           return;
         }
-
-        // Convert base64 audio to blob URL for video script audio
-        let videoAudioUrl = '';
-        if (data.audioContent) {
-          try {
-            console.log('🎬 Converting audio content to blob URL...');
-            const binaryString = atob(data.audioContent);
-            const bytes = new Uint8Array(binaryString.length);
-            for (let i = 0; i < binaryString.length; i++) {
-              bytes[i] = binaryString.charCodeAt(i);
-            }
-            const audioBlob = new Blob([bytes], { type: data.mimeType || 'audio/mpeg' });
-            videoAudioUrl = URL.createObjectURL(audioBlob);
-            console.log('🎬 Created video audio blob URL:', videoAudioUrl);
-          } catch (error) {
-            console.error('🎬 Failed to create video audio blob:', error);
-            toast.error('Failed to process video audio.');
-            return;
-          }
-        } else {
-          console.error('🎬 No audio content in response');
-          toast.error('No audio content received for video.');
-          return;
-        }
-        
-         setMessages(prev => prev.map(msg => 
-           msg.id === messageId ? { 
-             ...msg, 
-             videoUrl: data.userAvatarUrl, 
-             videoAudioUrl: videoAudioUrl // Store video script audio separately from voice audio
-           } : msg
-         ));
-      } else {
-        // Fallback to static image
-        console.log('Falling back to static image');
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d')!;
-        canvas.width = 400;
-        canvas.height = 400;
-        
-        const img = new Image();
-        img.onload = () => {
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          
-          canvas.toBlob((videoBlob) => {
-            if (videoBlob) {
-              const staticVideoUrl = URL.createObjectURL(videoBlob);
-              setMessages(prev => prev.map(msg => 
-                msg.id === messageId ? { ...msg, videoUrl: staticVideoUrl, audioUrl } : msg
-              ));
-            }
-          }, 'image/png');
-        };
-        img.src = avatarImage;
+        if (!st?.real) break;
       }
-
-      toast.success('Video generated successfully!');
-    } catch (error) {
-      console.error('Error generating video:', error);
-      
-      // Handle specific Google TTS errors
-      if (error.message === 'RATE_LIMIT_EXCEEDED') {
-        toast.error('Google TTS rate limit exceeded. Please wait a moment and try again.');
-      } else if (error.message === 'ACCESS_DENIED') {
-        toast.error('Access denied to Google TTS. Please try again later.');
-      } else {
-        toast.error(`Failed to generate video: ${error.message || 'Unknown error'}`);
-      }
+      if (reason === 'asked') toast(t('talking.unavailable'));
+    } catch (err) {
+      console.error('talking video:', err);
+      if (reason === 'asked') toast(t('talking.unavailable'));
     } finally {
       setLoadingMedia(prev => ({ ...prev, [messageId]: null }));
     }
+  };
+
+  // Her special moments: the first reply of the day, or when the person sounds low. Never on every message.
+  const maybeTalk = (reply: ChatMessage) => {
+    if (!isPaying) return;
+    const dayKey = `espaluz-talked-${user?.id}`;
+    const today = new Date().toISOString().slice(0, 10);
+    let seenToday = false;
+    try { seenToday = localStorage.getItem(dayKey) === today; } catch { /* private mode: treated as not seen */ }
+    const low = ['sad', 'frustrated', 'confused'].includes(reply.emotion ?? '');
+    if (seenToday && !low) return;
+    try { localStorage.setItem(dayKey, today); } catch { /* ignore */ }
+    generateVideo(reply.id, reply.content, low ? 'low_mood' : 'first_today');
   };
 
   const playAudio = (messageId: string, audioUrl: string) => {
@@ -761,6 +672,7 @@ The video script will be used to generate an avatar video with synchronized audi
           };
 
           setMessages(prev => [...prev, aiMessage]);
+          maybeTalk(aiMessage);
           
           // Show emotion detection if confidence is high
           if (chatData.confidence > 0.6) {
@@ -954,8 +866,8 @@ The video script will be used to generate an avatar video with synchronized audi
                           {message.audioUrl ? 'Regenerate Voice' : 'Generate Voice'}
                         </Button>
 
-                         {/* Video Generation Button */}
-                         <Button
+                         {/* See EspaLuz: paying families only; non-paying visitors have the pre-made hello */}
+                         {isPaying && !message.talkingUrl && <Button
                            size="sm"
                            variant="outline"
                            onClick={() => generateVideo(message.id, message.content)}
@@ -967,9 +879,13 @@ The video script will be used to generate an avatar video with synchronized audi
                            ) : (
                              <Video className="h-3 w-3 mr-1" />
                            )}
-                           {message.videoUrl ? 'Regenerate Video' : 'Generate Video'}
-                         </Button>
+                           {t('talking.button')}
+                         </Button>}
                       </div>
+                      {message.talkingUrl && (
+                        <video src={message.talkingUrl} controls playsInline preload="metadata" aria-label={t('hello.label')}
+                          className="mt-2 block w-full max-w-sm rounded-xl bg-black" />
+                      )}
                       {/* Multimedia Generation Status */}
                       {(loadingMedia[message.id] === 'voice' || loadingMedia[message.id] === 'video') && (
                         <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-200 rounded-lg p-3 mt-2">

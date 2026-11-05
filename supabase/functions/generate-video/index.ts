@@ -7,13 +7,92 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Real EspaLuz: one photo + our own voice -> photoreal lip-sync video (scripts/espaluz-avatar in cto-aipa, plan in
+// docs/espaluz/TALKING_ESPALUZ_IN_CHAT_PLAN_2026-11-05.md). Every clip costs credits, so three guards run FIRST and each
+// answers 200 with real:false, because the text and voice have already been delivered: a paid subscription, a monthly
+// cap per family, and a wallet floor (Elena approved 100 credits for this stage: 379 -> 279).
+const RUNWAY_API = 'https://api.dev.runwayml.com/v1';
+const ESPALUZ_AVATAR_ID = Deno.env.get('RUNWAY_ESPALUZ_AVATAR_ID') || 'd1495436-9e57-4151-885f-51c8b1733620';
+const TALKING_MONTHLY_CAP = Number(Deno.env.get('TALKING_MONTHLY_CAP') || 30);
+const RUNWAY_WALLET_FLOOR = Number(Deno.env.get('RUNWAY_WALLET_FLOOR') || 279);
+const TALKING_MAX_CHARS = 450; // about 30 seconds of speech
+
+async function realEspaLuz(req: Request, body: any): Promise<Response> {
+  const json = (o: unknown) => new Response(JSON.stringify(o), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  const no = (reason: string) => { console.log(`[talking] no clip: ${reason}`); return json({ real: false, reason }); };
+  const key = Deno.env.get('RUNWAY_API_KEY');
+  if (!key) return no('no_key');
+  const authHeader = req.headers.get('Authorization') ?? '';
+  const url = Deno.env.get('SUPABASE_URL')!;
+  const asUser = createClient(url, Deno.env.get('SUPABASE_ANON_KEY')!, { global: { headers: { Authorization: authHeader } } });
+  const { data: { user } } = await asUser.auth.getUser();
+  if (!user) return no('not_signed_in');
+  const rw = (path: string, init: RequestInit = {}) => fetch(RUNWAY_API + path, { ...init, signal: AbortSignal.timeout(30000),
+    headers: { 'Authorization': `Bearer ${key}`, 'X-Runway-Version': '2024-11-06', 'Content-Type': 'application/json' } });
+
+  if (body.mode === 'real_status') {
+    if (!/^[0-9a-f-]{36}$/i.test(String(body.taskId))) return no('bad_task');
+    const task = await (await rw('/tasks/' + body.taskId)).json();
+    if (task.status === 'SUCCEEDED') return json({ real: true, status: 'done', url: task.output?.[0] });
+    if (task.status === 'FAILED' || task.status === 'CANCELLED') { console.error('[talking] task failed', task.failure); return no('failed'); }
+    return json({ real: true, status: 'working' });
+  }
+
+  const db = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+  const nowIso = new Date().toISOString();
+  const { data: subs } = await db.from('user_subscriptions').select('id').eq('user_id', user.id).eq('status', 'active').gt('current_period_end', nowIso).limit(1);
+  if (!subs?.length) return no('not_paid');
+  const monthStart = nowIso.slice(0, 7) + '-01T00:00:00Z';
+  const { count } = await db.from('learning_sessions').select('id', { count: 'exact', head: true })
+    .eq('user_id', user.id).eq('session_type', 'analytics').eq('content->>event', 'talking_video').gte('created_at', monthStart);
+  if ((count ?? 0) >= TALKING_MONTHLY_CAP) return no('monthly_cap');
+  const org = await (await rw('/organization')).json();
+  if (typeof org.creditBalance !== 'number' || org.creditBalance <= RUNWAY_WALLET_FLOOR) return no('wallet_floor');
+
+  const raw = String(body.videoScript ?? '');
+  const marked = raw.match(/\[VIDEO SCRIPT START\]([\s\S]*?)\[VIDEO SCRIPT END\]/);
+  let text = cleanTextForTTS(marked ? marked[1] : raw.replace(/\[VIDEO SCRIPT (START|END)\]/g, ' ')).trim();
+  if (text.length > TALKING_MAX_CHARS) {
+    const cut = text.slice(0, TALKING_MAX_CHARS);
+    const end = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('? '), cut.lastIndexOf('! '));
+    text = end > 80 ? cut.slice(0, end + 1) : cut;
+  }
+  if (!text) return no('no_text');
+
+  // Same voice chain as every voice note: nothing new to keep working.
+  const voiced = await fetch(`${url}/functions/v1/generate-voice`, { method: 'POST', signal: AbortSignal.timeout(60000),
+    headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' }, body: JSON.stringify({ text, voice: 'es', userId: user.id }) });
+  const v = await voiced.json();
+  if (!voiced.ok || !v.audioContent) return no('no_voice');
+  const wav = /wav/i.test(String(v.mimeType));
+  const name = wav ? 'voice.wav' : 'voice.mp3';
+  const up = await (await rw('/uploads', { method: 'POST', body: JSON.stringify({ filename: name, type: 'ephemeral' }) })).json();
+  if (!up.uploadUrl) { console.error('[talking] upload start', JSON.stringify(up).slice(0, 200)); return no('upload'); }
+  const form = new FormData();
+  for (const [k, val] of Object.entries(up.fields as Record<string, string>)) form.append(k, val);
+  form.append('file', new Blob([Uint8Array.from(atob(v.audioContent), (c) => c.charCodeAt(0))], { type: wav ? 'audio/wav' : 'audio/mpeg' }), name);
+  const stored = await fetch(up.uploadUrl, { method: 'POST', body: form, signal: AbortSignal.timeout(60000) });
+  if (!stored.ok) { console.error('[talking] upload', stored.status); return no('upload'); }
+  const task = await (await rw('/avatar_videos', { method: 'POST', body: JSON.stringify({ model: 'gwm1_avatars',
+    avatar: { type: 'custom', avatarId: ESPALUZ_AVATAR_ID }, speech: { type: 'audio', audio: up.runwayUri } }) })).json();
+  if (!task.id) { console.error('[talking] create', JSON.stringify(task).slice(0, 300)); return no('create'); }
+  await db.from('learning_sessions').insert({ user_id: user.id, session_type: 'analytics', source: 'web',
+    content: { event: 'talking_video', reason: String(body.reason ?? '').slice(0, 20), chars: text.length, task: task.id, voice: v.spokenBy } });
+  console.log(`[talking] clip started reason=${body.reason} chars=${text.length} voice=${v.spokenBy} wallet=${org.creditBalance} used=${(count ?? 0) + 1}/${TALKING_MONTHLY_CAP}`);
+  return json({ real: true, status: 'working', taskId: task.id });
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { videoScript, voice = "es", userId } = await req.json();
+    const body = await req.json();
+    // 5 Nov 2026: the real talking EspaLuz (Runway Characters) for paying families only. Old callers send no `mode`
+    // and get the old answer below, so a page not yet published keeps working.
+    if (body.mode === 'real' || body.mode === 'real_status') return await realEspaLuz(req, body);
+    const { videoScript, voice = "es", userId } = body;
     
     // 5 Nov 2026: userId was only checked, never used (fixed avatar, free Google voice) - and the anonymous web free
     // trial has none, so every trial video failed with 500. The script is what matters.

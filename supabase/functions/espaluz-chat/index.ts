@@ -88,7 +88,7 @@ function detectEmotion(text: string) {
   }
 
   const dominant = Object.entries(detected).reduce((max, current) => 
-    current[1] > max[1] ? current : max, ["neutral", 1.0]);
+    current[1] > max[1] ? current : max, ["neutral", 0.25]); // 5 Nov 2026: was 1.0, which one keyword (+0.3) never beat, so every message read "neutral"; 0.25 also keeps the 0.2 "curious" default from winning
     
   return { emotion: dominant[0], confidence: dominant[1], data: detected };
 }
