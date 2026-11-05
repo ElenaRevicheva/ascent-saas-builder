@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap, Briefcase, Plane, Lightbulb } from "lucide-react";
+import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap, Briefcase, Plane, Lightbulb, ChevronDown, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { feedbackSchema } from "@/lib/validations";
@@ -20,6 +20,51 @@ import brandAvatar2 from '@/assets/brand-avatar-2.jpg';
 import espaluzQr from '@/assets/espaluz-qr.jpg';
 import creatorQr from '@/assets/creator-qr-card.png';
 import whatsappQr from '@/assets/whatsapp-qr-code.jpg';
+
+/* Tree layout (Elena 5 Nov 2026) - the same shape as aideazz.xyz/sop-ai-ops.html:
+   menu groups -> section (heading always visible) -> part (tag . name . count) -> items (one open at a time).
+   Native <details>: folded text stays in the page for Google and AI answers. Nothing was removed, only folded. */
+function Part({ tag, name, count, children, defaultOpen = false, className = "" }: {
+  tag: string; name: string; count?: string; children: React.ReactNode; defaultOpen?: boolean; className?: string;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <details open={open} onToggle={(e) => setOpen((e.currentTarget as HTMLDetailsElement).open)}
+      className={`group/part rounded-2xl border border-border bg-card/90 ${className}`} style={{ boxShadow: "var(--shadow-card)" }}>
+      <summary className="flex min-h-[56px] cursor-pointer list-none flex-wrap items-center gap-x-3 gap-y-1 px-5 py-3 [&::-webkit-details-marker]:hidden">
+        <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-primary">{tag}</span>
+        <span className="text-lg font-semibold text-foreground">{name}</span>
+        {count && <span className="text-sm text-muted-foreground">{count}</span>}
+        <Plus aria-hidden className="ml-auto h-5 w-5 shrink-0 text-primary transition-transform duration-200 group-open/part:rotate-45" />
+      </summary>
+      <div className="space-y-3 px-4 pb-5 pt-1 sm:px-5">{children}</div>
+    </details>
+  );
+}
+
+function Item({ group, title, children, defaultOpen = false }: {
+  group: string; title: React.ReactNode; children: React.ReactNode; defaultOpen?: boolean;
+}) {
+  return (
+    <details name={group} open={defaultOpen || undefined} className="group/item rounded-xl border border-border/70 bg-background/70">
+      <summary className="flex min-h-[48px] cursor-pointer list-none items-center gap-3 px-4 py-2 [&::-webkit-details-marker]:hidden">
+        <span className="flex-1">{title}</span>
+        <ChevronDown aria-hidden className="h-4 w-4 shrink-0 text-primary transition-transform duration-200 group-open/item:rotate-180" />
+      </summary>
+      <div className="px-4 pb-4">{children}</div>
+    </details>
+  );
+}
+
+function SectionHead({ eyebrow, title, lede }: { eyebrow: string; title: string; lede?: string }) {
+  return (
+    <div className="mx-auto mb-8 max-w-3xl text-center">
+      <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-primary">{eyebrow}</p>
+      <h2 className="text-3xl text-foreground md:text-4xl">{title}</h2>
+      {lede && <p className="mt-3 text-lg leading-relaxed text-muted-foreground">{lede}</p>}
+    </div>
+  );
+}
 
 function FeedbackForm() {
   const [formData, setFormData] = useState({
@@ -179,8 +224,17 @@ const Index = () => {
         </div>
         <p className="mx-auto mb-8 max-w-3xl px-4 text-lg font-semibold text-foreground">{t("hero4.promiseTitle")}</p>
 
-        {/* WhatsApp Section */}
-        <div className="bg-gradient-to-br from-green-50/80 via-white/80 to-emerald-50/80 backdrop-blur-sm rounded-3xl p-8 max-w-4xl mx-auto mb-6 border-2 border-green-200 shadow-2xl">
+      </section>
+
+
+
+      {/* Ways to start (tree): one part, three items - WhatsApp open first. Blocks moved here unchanged. */}
+      <section id="start" className="container mx-auto scroll-mt-20 px-4 py-14">
+        <SectionHead eyebrow={t("tree.startEyebrow")} title={t("tree.startTitle")} lede={t("tree.startLede")} />
+        <div className="mx-auto max-w-5xl">
+          <Part defaultOpen tag={t("tree.startTag")} name={t("tree.startPart")} count={t("tree.count3")}>
+            <Item group="start" defaultOpen title={<h3 className="text-lg font-semibold text-foreground">{t("tree.wa")}</h3>}>
+            <div className="bg-gradient-to-br from-green-50/80 via-white/80 to-emerald-50/80 backdrop-blur-sm rounded-2xl p-5 border border-green-200">
           <div className="text-center space-y-6">
             <div className="space-y-2">
               <h3 className="text-2xl md:text-3xl font-bold text-green-600">📱 EspaLuz WhatsApp is Now LIVE!</h3>
@@ -219,12 +273,39 @@ const Index = () => {
 
           </div>
         </div>
-      </section>
-
-
-
-      {/* Demo Benefits Section */}
-      <section className="container mx-auto px-4 py-12 bg-gradient-magical rounded-2xl shadow-vibrant mb-6">
+            </Item>
+            <Item group="start" title={<h3 className="text-lg font-semibold text-foreground">{t("tree.tg")}</h3>}>
+              <div className="text-center">
+        <div className="bg-gradient-to-br from-blue-50/80 via-white/80 to-purple-50/80 backdrop-blur-sm rounded-2xl p-5 border border-blue-200">
+          <div className="flex flex-col items-center space-y-6">
+            <div className="space-y-2">
+              <h3 className="text-2xl md:text-3xl font-bold text-blue-600">🚀 Invite your family!</h3>
+            </div>
+            
+            <div className="relative">
+              <div className="absolute -inset-2 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl blur opacity-30 animate-pulse"></div>
+              <img 
+                src={espaluzQr} 
+                alt="EspaLuz Telegram QR Code" 
+                className="relative w-56 h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain rounded-2xl shadow-magical border-4 border-blue-400 hover:border-blue-500 hover:shadow-vibrant hover:scale-105 transition-all duration-300 bg-white/95 backdrop-blur-sm ring-2 ring-blue-200 hover:ring-blue-300" 
+              />
+            </div>
+            
+            <div className="space-y-4">
+              <p className="text-sm text-blue-600 font-semibold bg-blue-50 px-4 py-2 rounded-full border border-blue-200">Scan to learn on the go!</p>
+              <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer">
+                <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                  <MessageSquare className="mr-3 h-5 w-5" />
+                  🚀 Join Telegram Family
+                </Button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+            </Item>
+            <Item group="start" title={<h3 className="text-lg font-semibold text-foreground">{t("tree.demo")}</h3>}>
+              
         <div className="text-center mb-8">
           <Badge className="mb-3 bg-gradient-primary text-white">20 Free Messages</Badge>
           <h2 className="text-3xl font-bold mb-3 text-primary">
@@ -329,40 +410,14 @@ const Index = () => {
             </CardContent>
           </Card>
         </div>
-      </section>
-
-      {/* QR Code Viral Loop Section */}
-      <section className="container mx-auto px-4 py-12 text-center">
-        <div className="bg-gradient-to-br from-blue-50/80 via-white/80 to-purple-50/80 backdrop-blur-sm rounded-3xl p-8 max-w-4xl mx-auto border-2 border-blue-200 shadow-2xl">
-          <div className="flex flex-col items-center space-y-6">
-            <div className="space-y-2">
-              <h3 className="text-2xl md:text-3xl font-bold text-blue-600">🚀 Invite your family!</h3>
-            </div>
-            
-            <div className="relative">
-              <div className="absolute -inset-2 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl blur opacity-30 animate-pulse"></div>
-              <img 
-                src={espaluzQr} 
-                alt="EspaLuz Telegram QR Code" 
-                className="relative w-56 h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain rounded-2xl shadow-magical border-4 border-blue-400 hover:border-blue-500 hover:shadow-vibrant hover:scale-105 transition-all duration-300 bg-white/95 backdrop-blur-sm ring-2 ring-blue-200 hover:ring-blue-300" 
-              />
-            </div>
-            
-            <div className="space-y-4">
-              <p className="text-sm text-blue-600 font-semibold bg-blue-50 px-4 py-2 rounded-full border border-blue-200">Scan to learn on the go!</p>
-              <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer">
-                <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
-                  <MessageSquare className="mr-3 h-5 w-5" />
-                  🚀 Join Telegram Family
-                </Button>
-              </a>
-            </div>
-          </div>
+      
+            </Item>
+          </Part>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="container mx-auto px-4 py-20 bg-gradient-to-br from-blue-50/50 via-white to-purple-50/50 rounded-3xl shadow-lg">
+      <section id="features" className="container mx-auto scroll-mt-20 px-4 py-20 bg-gradient-to-br from-blue-50/50 via-white to-purple-50/50 rounded-3xl shadow-lg">
         <div className="text-center mb-16">
           <Badge variant="outline" className="mb-6 text-lg px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0">
             Living Proof of Concept
@@ -378,7 +433,9 @@ const Index = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+        <div className="mx-auto max-w-6xl space-y-4">
+          <Part defaultOpen tag={t("tree.featTag")} name={t("tree.strengths")} count={t("tree.count4")}>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="text-center border-2 border-red-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm">
             <CardHeader className="pb-4">
               <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
@@ -435,9 +492,9 @@ const Index = () => {
             </CardContent>
           </Card>
         </div>
-
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
-          <Card className="border-border shadow-magical bg-gradient-to-br from-white to-purple-50/30 overflow-hidden relative">
+          </Part>
+          <Part tag={t("tree.featTag")} name="Current Functionalities" count={t("tree.count8")}>
+            <Card className="border-border shadow-magical bg-gradient-to-br from-white to-purple-50/30 overflow-hidden relative">
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-purple-100/50 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
             <CardHeader className="relative">
               <CardTitle className="flex items-center gap-3 text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
@@ -467,8 +524,9 @@ const Index = () => {
               ))}
             </CardContent>
           </Card>
-
-          <Card className="border-border shadow-card">
+          </Part>
+          <Part tag={t("tree.featTag")} name="Try EspaLuz Today" count={t("tree.videosChats")}>
+            <Card className="border-border shadow-card">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5" />
@@ -587,23 +645,22 @@ const Index = () => {
               </div>
             </CardContent>
           </Card>
+          </Part>
         </div>
       </section>
 
       {/* EspaLuz Detailed Description Section */}
-      <section className="container mx-auto px-4 py-16 bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 rounded-3xl shadow-lg">
+      <section id="life" className="container mx-auto scroll-mt-20 px-4 py-16 bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 rounded-3xl shadow-lg">
         <div className="text-center mb-8">
           <h2 className="text-4xl font-bold text-foreground mb-6">
             🌟 EspaLuz: Your Family's Personal Spanish-English Tutor in WhatsApp or Telegram
           </h2>
         </div>
 
-        <div className="max-w-4xl mx-auto space-y-8">
-          {/* Send Messages Your Way */}
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
-            <h3 className="text-2xl font-bold text-purple-700 mb-4 flex items-center gap-2">
-              📱✨ Send Messages Your Way, Get Learning Magic Back
-            </h3>
+        <div className="max-w-4xl mx-auto space-y-4">
+          <Part defaultOpen tag={t("tree.lifeTag")} name={t("tree.lifePart")} count={t("tree.topics", { n: 11 })}>
+            <Item group="life" defaultOpen title={<h3 className="text-lg font-semibold text-foreground">📱✨ Send Messages Your Way, Get Learning Magic Back</h3>}>
+            
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
                 <span className="text-xl">🎤💬</span>
@@ -622,13 +679,9 @@ const Index = () => {
                 <span>Perfect for busy parents who want to practice while 🚗 driving or 🍳 cooking</span>
               </p>
             </div>
-          </div>
-
-          {/* Type Anything */}
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
-            <h3 className="text-2xl font-bold text-blue-700 mb-4 flex items-center gap-2">
-              📝✨ Type Anything – We Make It a Learning Moment
-            </h3>
+          </Item>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">📝✨ Type Anything – We Make It a Learning Moment</h3>}>
+            
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
                 <span className="text-xl">💡</span>
@@ -643,13 +696,9 @@ const Index = () => {
                 <span>"Where's the closest pharmacy?" becomes a cultural adventure 🎉</span>
               </p>
             </div>
-          </div>
-
-          {/* Point, Snap, Learn */}
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
-            <h3 className="text-2xl font-bold text-green-700 mb-4 flex items-center gap-2">
-              📸 Point, Snap, Learn – The World Becomes Your Classroom
-            </h3>
+          </Item>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">📸 Point, Snap, Learn – The World Becomes Your Classroom</h3>}>
+            
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
                 <span className="text-xl">🍴</span>
@@ -664,13 +713,9 @@ const Index = () => {
                 <span>Turn every family outing into a Spanish discovery adventure 🎈</span>
               </p>
             </div>
-          </div>
-
-          {/* Emotional Learning Companion */}
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
-            <h3 className="text-2xl font-bold text-pink-700 mb-4 flex items-center gap-2">
-              🎭 Your Family's Emotional Learning Companion
-            </h3>
+          </Item>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">🎭 Your Family's Emotional Learning Companion</h3>}>
+            
             <h4 className="text-xl font-semibold text-pink-600 mb-3">💖 We Remember How You Feel</h4>
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
@@ -686,13 +731,9 @@ const Index = () => {
                 <span>Homesick? We connect your memories 🖼️ to new cultural discoveries 🎶</span>
               </p>
             </div>
-          </div>
-
-          {/* Made for Real Families */}
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
-            <h3 className="text-2xl font-bold text-indigo-700 mb-4 flex items-center gap-2">
-              👨‍👩‍👧‍👦 Made for Real Families
-            </h3>
+          </Item>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">👨‍👩‍👧‍👦 Made for Real Families</h3>}>
+            
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
                 <span className="text-xl">🧑‍💼</span>
@@ -707,32 +748,20 @@ const Index = () => {
                 <span>Creates family learning moments that bring everyone together ❤️</span>
               </p>
             </div>
-          </div>
-
-          {/* Learning That Comes Alive */}
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
-            <h3 className="text-2xl font-bold text-orange-700 mb-4 flex items-center gap-2">
-              🎥 Learning That Comes Alive
-            </h3>
+          </Item>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">🎥 Learning That Comes Alive</h3>}>
+            
             <p className="flex items-start gap-2 text-gray-700">
               <span className="text-xl">🎬</span>
               <span>Personalized video lessons — every conversation creates a short, engaging avatar video 🎨 your kid will love 💛</span>
             </p>
-          </div>
-
-          {/* Your Personal Coach */}
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
-            <h3 className="text-2xl font-bold text-purple-700 mb-4 flex items-center gap-2">
-              🗣️ Your Personal Spanish and English Coach
-            </h3>
+          </Item>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">🗣️ Your Personal Spanish and English Coach</h3>}>
+            
             <h4 className="text-xl font-semibold text-purple-600 mb-3">🌎 Your Cultural Bridge to LATAM</h4>
-          </div>
-
-          {/* Country-Specific Wisdom */}
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
-            <h3 className="text-2xl font-bold text-green-700 mb-4 flex items-center gap-2">
-              🏠 Country-Specific Wisdom
-            </h3>
+          </Item>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">🏠 Country-Specific Wisdom</h3>}>
+            
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
                 <span className="text-xl">🇲🇽</span>
@@ -747,13 +776,9 @@ const Index = () => {
                 <span>Covers 20+ Spanish-speaking countries with insider knowledge 📖</span>
               </p>
             </div>
-          </div>
-
-          {/* Real-Life Survival Skills */}
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
-            <h3 className="text-2xl font-bold text-blue-700 mb-4 flex items-center gap-2">
-              🚗 Real-Life Survival Skills
-            </h3>
+          </Item>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">🚗 Real-Life Survival Skills</h3>}>
+            
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
                 <span className="text-xl">📍</span>
@@ -768,13 +793,9 @@ const Index = () => {
                 <span>"How do I make friends with other parents in the neighborhood?"</span>
               </p>
             </div>
-          </div>
-
-          {/* The Magic Happens Instantly */}
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
-            <h3 className="text-2xl font-bold text-orange-700 mb-4 flex items-center gap-2">
-              ✨ The Magic Happens Instantly
-            </h3>
+          </Item>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">✨ The Magic Happens Instantly</h3>}>
+            
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
                 <span className="text-xl">⚡</span>
@@ -789,13 +810,9 @@ const Index = () => {
                 <span>Works on any phone, anywhere in the world</span>
               </p>
             </div>
-          </div>
-
-          {/* Always Getting Smarter */}
-          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-md">
-            <h3 className="text-2xl font-bold text-indigo-700 mb-4 flex items-center gap-2">
-              🔄 Always Getting Smarter
-            </h3>
+          </Item>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">🔄 Always Getting Smarter</h3>}>
+            
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
                 <span className="text-xl">🧠</span>
@@ -810,13 +827,10 @@ const Index = () => {
                 <span>Grows with your family as your Spanish improves 🌹</span>
               </p>
             </div>
-          </div>
-
-          {/* Why Families Choose EspaLuz */}
-          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-6 shadow-md border-2 border-orange-200">
-            <h3 className="text-2xl font-bold text-orange-700 mb-4 flex items-center gap-2">
-              🎯 Why Families Choose EspaLuz
-            </h3>
+          </Item>
+          </Part>
+          <Part tag={t("tree.lifeTag")} name="🎯 Why Families Choose EspaLuz">
+            
             <div className="space-y-4 text-gray-700">
               <blockquote className="border-l-4 border-orange-400 pl-4 italic">
                 <p className="flex items-start gap-2">
@@ -831,8 +845,7 @@ const Index = () => {
                 </p>
               </blockquote>
             </div>
-          </div>
-
+          </Part>
           {/* Call to Action */}
           <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-8 shadow-md border-2 border-purple-200 text-center">
             <h3 className="text-2xl font-bold text-purple-700 mb-4">
@@ -874,13 +887,13 @@ const Index = () => {
 
 
       {/* Pricing Section */}
-      <div id="pricing">
+      <div id="pricing" className="scroll-mt-20">
         <Pricing />
       </div>
 
       {/* About the Creator. Light polish 4 Nov 2026 (cto-aipa docs/espaluz/ABOUT_CREATOR_DRAFT_2026-11-04.md):
           same story, palette tokens only, QR opens the portfolio, button opens the Professional Outlook PDF (EN/ES). */}
-      <section id="about" className="container mx-auto px-4 py-16">
+      <section id="about" className="container mx-auto scroll-mt-20 px-4 py-16">
         <div className="mx-auto max-w-5xl">
           <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-primary">{t("creator.eyebrow")}</p>
           <h2 className="mb-10 text-3xl text-foreground md:text-4xl">{t("creator.title")}</h2>
@@ -893,8 +906,8 @@ const Index = () => {
                 <p className="mt-3 leading-relaxed text-muted-foreground">{t("creator.intro")}</p>
               </div>
 
-              <div className="rounded-2xl border border-border border-l-4 bg-card p-6" style={{ boxShadow: "var(--shadow-card)", borderLeftColor: "hsl(var(--accent))" }}>
-                <h3 className="text-xl text-foreground">{t("creator.journeyTitle")}</h3>
+<Part defaultOpen className="border-l-4" tag={t("creator.eyebrow")} name={t("creator.journeyTitle")}>
+                
                 <p className="mt-2 text-muted-foreground">{t("creator.journeyIntro")}</p>
                 <ul className="mt-5 space-y-5">
                   <li className="flex items-start gap-3">
@@ -922,7 +935,7 @@ const Index = () => {
                     </div>
                   </li>
                 </ul>
-              </div>
+              </Part>
             </div>
 
             <aside className="space-y-6">
@@ -960,7 +973,11 @@ const Index = () => {
 
       <Footer />
       <CookieConsent />
-      <FeedbackForm />
+      <div id="feedback" className="container mx-auto max-w-lg scroll-mt-20 px-4 pb-12">
+        <Part tag={t("tree.feedbackTag")} name={t("tree.feedback")}>
+          <FeedbackForm />
+        </Part>
+      </div>
       
       {/* Demo Modal */}
       <Dialog open={showDemoModal} onOpenChange={setShowDemoModal}>
