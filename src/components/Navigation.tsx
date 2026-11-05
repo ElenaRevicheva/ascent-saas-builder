@@ -80,7 +80,7 @@ const Navigation = () => {
           EspaLuz
         </Link>
 
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="hidden lg:flex items-center space-x-8 whitespace-nowrap">
           <div className="relative">
             <button type="button" aria-expanded={menu === "desk"} aria-controls="menu-desk"
               onClick={() => setMenu(menu === "desk" ? "none" : "desk")}
@@ -116,7 +116,7 @@ const Navigation = () => {
           <Link to="/auth?mode=signup">
             <Button variant="hero">{t("nav.getStarted")}</Button>
           </Link>
-          <button type="button" className="md:hidden flex h-10 w-10 items-center justify-center rounded-xl border border-border text-foreground"
+          <button type="button" className="lg:hidden flex h-10 w-10 items-center justify-center rounded-xl border border-border text-foreground"
             aria-label={t("menu.open")} aria-expanded={menu === "phone"} aria-controls="menu-phone"
             onClick={() => setMenu(menu === "phone" ? "none" : "phone")}>
             {menu === "phone" ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -125,7 +125,7 @@ const Navigation = () => {
       </div>
 
       {menu === "phone" && (
-        <div id="menu-phone" className="md:hidden max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-border bg-card px-3 pb-4 pt-1 shadow-xl">
+        <div id="menu-phone" className="lg:hidden max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-border bg-card px-3 pb-4 pt-1 shadow-xl">
           <MenuTree onPick={pick} />
           <div className="my-2 border-t border-border" role="separator" />
           <Link to="/auth" onClick={pick} className="block rounded-xl px-3 py-3 font-semibold text-primary hover:bg-primary/5">{t("nav.signIn")}</Link>
