@@ -17,6 +17,10 @@ import heroTelegram from '@/assets/heroes/hero-telegram.mp4';
 import heroTelegramPoster from '@/assets/heroes/hero-telegram-poster.jpg';
 import heroKids from '@/assets/heroes/hero-kids.mp4';
 import heroKidsPoster from '@/assets/heroes/hero-kids-poster.jpg';
+import heroRemote from '@/assets/heroes/hero-remote.mp4';
+import heroRemotePoster from '@/assets/heroes/hero-remote-poster.jpg';
+import heroFamily from '@/assets/heroes/hero-family.mp4';
+import heroFamilyPoster from '@/assets/heroes/hero-family-poster.jpg';
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -184,14 +188,23 @@ const Index = () => {
         <div className="mx-auto mb-10 grid max-w-5xl gap-4 px-4 text-left md:grid-cols-3">
           {[
             { icon: "🦥", color: "--espaluz-yellow", title: t("hero4.card1Title"), body: t("hero4.card1"), kids: true },
-            { icon: "📒", color: "--espaluz-purple", title: t("hero4.card2Title"), body: t("hero4.card2") },
-            { icon: "🏫", color: "--espaluz-green", title: t("hero4.card3Title"), body: t("hero4.card3") },
+            { icon: "📒", color: "--espaluz-purple", title: t("hero4.card2Title"), body: t("hero4.card2"),
+              clip: { src: heroRemote, poster: heroRemotePoster, label: "Working remotely by the window while the child learns with Pere and Titi" } },
+            { icon: "🏫", color: "--espaluz-green", title: t("hero4.card3Title"), body: t("hero4.card3"),
+              clip: { src: heroFamily, poster: heroFamilyPoster, label: "The whole family together on a Panama beach" } },
           ].map((c) => (
             <div key={c.title} className="rounded-2xl border border-border bg-card p-5" style={{ boxShadow: "var(--shadow-card)" }}>
               {"kids" in c && (
                 <Link to="/classroom" className="hero-seat mb-4 block" style={{ aspectRatio: "720 / 484", borderRadius: "1.25rem" }} aria-label="Open the kids classroom with Pere and Titi">
                   <HeroClip src={heroKids} poster={heroKidsPoster} label="Pere and Titi in the kids classroom" className="block h-full w-full object-cover" />
                 </Link>
+              )}
+              {/* 5 Nov 2026 (Elena: these two cards "look very lonely"): remote work by the open window with the child
+                  learning nearby, and the family on the beach under palms - Grok Imagine loops, same sky palette. */}
+              {"clip" in c && c.clip && (
+                <div className="hero-seat mb-4" style={{ aspectRatio: "720 / 484", borderRadius: "1.25rem" }}>
+                  <HeroClip src={c.clip.src} poster={c.clip.poster} label={c.clip.label} className="block h-full w-full object-cover" />
+                </div>
               )}
               <span className="mb-3 flex h-12 w-12 items-center justify-center rounded-full text-2xl"
                 style={{ background: `hsl(var(${c.color}) / 0.15)` }} aria-hidden>{c.icon}</span>

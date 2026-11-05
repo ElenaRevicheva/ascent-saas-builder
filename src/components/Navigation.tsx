@@ -77,7 +77,7 @@ const Navigation = () => {
           {/* 3 Nov 2026 (Elena: "where is my purple and yellow icon?"): the 🇪🇸 emoji showed as the letters "ES" on Windows,
               which cannot draw flag emojis. The header now uses EspaLuz's own globe icon, the same file as the tab. */}
           <img src="/espaluz-icon.svg?v=el4" alt="" className="h-8 w-8 rounded-lg" />
-          <span className="brand-wordmark">Espa<em>Luz</em></span>
+          <span className="brand-wordmark">Espa<b>Luz</b></span>
         </Link>
 
         <div className="hidden lg:flex items-center space-x-8 whitespace-nowrap">

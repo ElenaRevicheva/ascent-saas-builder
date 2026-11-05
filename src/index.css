@@ -272,8 +272,10 @@ All colors MUST be HSL.
 }
 
 /* Brand wordmark (header + footer): the headline serif, "Luz" in italic - colours unchanged */
+/* 5 Nov (Elena: the italic "Luz" leaned too much, the word looked broken) - "Luz" now stands upright and is set apart by
+   weight instead of slant: light "Espa" + semibold "Luz", same serif, one continuous word. */
 .brand-wordmark {
   font-family: "Newsreader", "Iowan Old Style", Georgia, serif;
-  font-weight: 500; font-size: 1.55rem; letter-spacing: -0.02em; line-height: 1; font-optical-sizing: auto;
+  font-weight: 400; font-size: 1.6rem; letter-spacing: -0.015em; line-height: 1; font-optical-sizing: auto;
 }
-.brand-wordmark em { font-style: italic; font-weight: 500; letter-spacing: -0.01em; }
+.brand-wordmark b { font-weight: 600; letter-spacing: -0.02em; }
