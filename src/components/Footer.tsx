@@ -12,7 +12,7 @@ const Footer = () => {
             <Link to="/" className="text-2xl font-bold text-foreground mb-4 block flex items-center gap-2">
               {/* 3 Nov 2026: EspaLuz's globe icon instead of 🇪🇸 (Windows shows that emoji as the letters "ES"). */}
               <img src="/espaluz-icon.svg?v=el4" alt="" className="h-9 w-9 rounded-lg" />
-              EspaLuz
+              <span className="brand-wordmark">Espa<em>Luz</em></span>
             </Link>
             <p className="text-muted-foreground mb-4 max-w-md">
               EspaLuz: live your new country in Spanish, with your family. On the web, WhatsApp and Telegram.

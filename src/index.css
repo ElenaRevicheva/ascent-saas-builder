@@ -256,3 +256,24 @@ All colors MUST be HSL.
 .landing-type p, .landing-type li { line-height: 1.62; }
 .landing-type .uppercase { font-size: .75rem; font-weight: 600; letter-spacing: .14em; }
 .landing-type button, .landing-type a.rounded-full { font-weight: 600; letter-spacing: -0.005em; }
+
+
+/* 5 Nov 2026 (Elena: "headings fine - what about the text itself? lighter, more stylish, like Claude/HubSpot") -
+   running text in Newsreader Regular, as claude.com sets its paragraphs; medium/semibold paragraph weights dropped to 400.
+   font-size-adjust keeps the serif's small x-height as readable as the old sans at the same sizes.
+   UI stays Inter: buttons, caps labels, fold titles, menu. Bold words inside a paragraph keep their bold. */
+.landing-type p:not(.uppercase), .landing-type li, .landing-type blockquote {
+  font-family: "Newsreader", "Iowan Old Style", Georgia, serif;
+  font-weight: 400; font-optical-sizing: auto; font-size-adjust: .53;
+  letter-spacing: 0; line-height: 1.6;
+}
+.landing-type summary, .landing-type button, .landing-type a.rounded-full, .landing-type nav, .landing-type label, .landing-type input, .landing-type textarea {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size-adjust: none;
+}
+
+/* Brand wordmark (header + footer): the headline serif, "Luz" in italic - colours unchanged */
+.brand-wordmark {
+  font-family: "Newsreader", "Iowan Old Style", Georgia, serif;
+  font-weight: 500; font-size: 1.55rem; letter-spacing: -0.02em; line-height: 1; font-optical-sizing: auto;
+}
+.brand-wordmark em { font-style: italic; font-weight: 500; letter-spacing: -0.01em; }
