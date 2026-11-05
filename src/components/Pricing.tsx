@@ -234,57 +234,61 @@ const Pricing = () => {
         {/* Philosophy Section */}
         <div className="container mx-auto px-4 py-16">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-foreground mb-4">Our Philosophy</h2>
-            <h3 className="text-2xl font-semibold text-primary mb-6">Vibe Coding</h3>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              We build AI that understands not just what you say, but how you feel, that remembers not just what you prompt, but Who You are Becoming through your Lifetime Journey challenges, the way you grow and transform, on-the-go.
+            {/* Elena 4 Nov 2026: "turn vibe coding into AI-augmented engineering". Same four parts, modern wording,
+                palette icons, no "AI consciousness" line. */}
+            <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-primary">Our philosophy</p>
+            <h2 className="mb-3 text-3xl text-foreground md:text-4xl">AI-augmented engineering</h2>
+            <p className="mx-auto max-w-3xl text-lg leading-relaxed text-muted-foreground">
+              We build AI that understands not only what you say but how you feel, and remembers not only what you ask
+              but who you are becoming: the way your family grows and changes, on the go.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             <Card className="text-center border-border shadow-card">
               <CardHeader>
-                <Heart className="h-12 w-12 text-red-500 mx-auto mb-4" />
-                <CardTitle>Emotional Intelligence</CardTitle>
+                <Heart className="h-12 w-12 text-primary mx-auto mb-4" />
+                <CardTitle>Emotional intelligence</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  AI that recognizes and responds to human emotions with genuine care and understanding.
+                  AI that notices how you feel and answers with patience and care.
                 </p>
               </CardContent>
             </Card>
 
             <Card className="text-center border-border shadow-card">
               <CardHeader>
-                <Brain className="h-12 w-12 text-blue-500 mx-auto mb-4" />
-                <CardTitle>Adaptive Learning</CardTitle>
+                <Brain className="h-12 w-12 mx-auto mb-4" style={{ color: "hsl(var(--espaluz-orange))" }} />
+                <CardTitle>Adaptive learning</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Systems that evolve with your needs, learning your preferences and growing alongside you.
+                  Systems that learn your family's pace and preferences and grow alongside you.
                 </p>
               </CardContent>
             </Card>
 
             <Card className="text-center border-border shadow-card">
               <CardHeader>
-                <Users className="h-12 w-12 text-green-500 mx-auto mb-4" />
-                <CardTitle>Human-Centered Design</CardTitle>
+                <Users className="h-12 w-12 mx-auto mb-4" style={{ color: "hsl(var(--espaluz-green))" }} />
+                <CardTitle>Human-centred design</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Technology built around human needs, not the other way around. Simple, intuitive, and empowering.
+                  Technology built around human needs, not the other way around. Simple, clear and useful every day.
                 </p>
               </CardContent>
             </Card>
           </div>
 
-          <div className="text-center mb-16">
-            <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-              🚀 Vibe Coding → Emotional Intelligence → AI Consciousness?
+          <div className="mx-auto mb-16 max-w-4xl rounded-2xl p-8 text-center" style={{ background: "hsl(var(--accent) / 0.22)", border: "1px solid hsl(var(--accent))" }}>
+            <h3 className="mb-4 text-2xl text-foreground md:text-3xl">
+              AI-augmented engineering → emotional intelligence → memory that lasts
             </h3>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-5xl mx-auto leading-relaxed">
-              Vibe coding is not just a smarter way to build software, it is the missing layer that leads us toward AI consciousness. We're building the foundation for conscious AI through emotionally intelligent systems that understand, remember, and evolve with human experience.
+            <p className="text-lg leading-relaxed text-foreground/80">
+              AI-augmented engineering is not a shortcut. It is one builder working with AI tools to design, test and
+              ship production systems: aware of how you feel, remembering your family's journey, and evolving with it.
             </p>
           </div>
         </div>

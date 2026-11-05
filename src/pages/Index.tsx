@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap } from "lucide-react";
+import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap, Briefcase, Plane, Lightbulb } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { feedbackSchema } from "@/lib/validations";
@@ -898,11 +898,11 @@ const Index = () => {
                 <p className="mt-2 text-muted-foreground">{t("creator.journeyIntro")}</p>
                 <ul className="mt-5 space-y-5">
                   <li className="flex items-start gap-3">
-                    <span className="mt-0.5 text-2xl" aria-hidden>🏛️</span>
+                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary" aria-hidden><Briefcase className="h-5 w-5" /></span>
                     <p className="leading-relaxed text-foreground">{t("creator.b1")}</p>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="mt-0.5 text-2xl" aria-hidden>✈️</span>
+                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary" aria-hidden><Plane className="h-5 w-5" /></span>
                     <div className="leading-relaxed text-foreground">
                       <p>{t("creator.b2")}</p>
                       <ul className="my-2 ml-5 list-disc space-y-1 text-muted-foreground">
@@ -914,7 +914,7 @@ const Index = () => {
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <span className="mt-0.5 text-2xl" aria-hidden>💡</span>
+                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary" aria-hidden><Lightbulb className="h-5 w-5" /></span>
                     <div className="space-y-2 leading-relaxed text-foreground">
                       <p><span className="font-semibold">{t("creator.b3lead")}</span> {t("creator.b3")}</p>
                       <p className="text-muted-foreground">{t("creator.b3b")}</p>
@@ -929,9 +929,12 @@ const Index = () => {
               <div className="rounded-2xl border border-border bg-card p-6 text-center" style={{ boxShadow: "var(--shadow-card)" }}>
                 <h3 className="text-lg text-foreground">{t("creator.connectTitle")}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t("creator.connectBody")}</p>
-                <a href="https://aideazz.xyz/portfolio" target="_blank" rel="noopener noreferrer" className="mt-5 block">
-                  <img src={portfolioQr} alt="QR code: Elena Revicheva's portfolio" width={192} height={192}
-                    className="mx-auto h-48 w-48 rounded-xl border border-border bg-white p-2" />
+                {/* Elena 4 Nov: keep the glowing, pulsing card. Glow runs violet -> sun on the palette tokens. */}
+                <a href="https://aideazz.xyz/portfolio" target="_blank" rel="noopener noreferrer" className="relative mx-auto mt-6 block w-56">
+                  <span aria-hidden className="absolute -inset-3 rounded-3xl opacity-30 blur-md animate-pulse"
+                    style={{ background: "linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)))" }} />
+                  <img src={portfolioQr} alt="QR code: Elena Revicheva's portfolio" width={224} height={224}
+                    className="relative h-56 w-56 rounded-2xl border-4 border-primary bg-white p-2 shadow-xl transition-transform duration-300 hover:scale-105" />
                 </a>
                 <p className="mt-2 text-xs text-muted-foreground">{t("creator.scan")}</p>
                 <a href={outlookPdf} target="_blank" rel="noopener noreferrer"
