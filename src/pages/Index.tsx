@@ -18,7 +18,7 @@ import { feedbackSchema } from "@/lib/validations";
 
 import brandAvatar2 from '@/assets/brand-avatar-2.jpg';
 import espaluzQr from '@/assets/espaluz-qr.jpg';
-import portfolioQr from '@/assets/portfolio-qr.png';
+import creatorQr from '@/assets/creator-qr.jpg';
 import whatsappQr from '@/assets/whatsapp-qr-code.jpg';
 
 function FeedbackForm() {
@@ -930,11 +930,12 @@ const Index = () => {
                 <h3 className="text-lg text-foreground">{t("creator.connectTitle")}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t("creator.connectBody")}</p>
                 {/* Elena 4 Nov: keep the glowing, pulsing card. Glow runs violet -> sun on the palette tokens. */}
-                <a href="https://aideazz.xyz/portfolio" target="_blank" rel="noopener noreferrer" className="relative mx-auto mt-6 block w-56">
+                {/* Elena 5 Nov: her own designed QR is back (opens lit.link/en/aideazz, her link card). */}
+                <a href="https://lit.link/en/aideazz" target="_blank" rel="noopener noreferrer" className="relative mx-auto mt-6 block w-56">
                   <span aria-hidden className="absolute -inset-3 rounded-3xl opacity-30 blur-md animate-pulse"
                     style={{ background: "linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)))" }} />
-                  <img src={portfolioQr} alt="QR code: Elena Revicheva's portfolio" width={224} height={224}
-                    className="relative h-56 w-56 rounded-2xl border-4 border-primary bg-white p-2 shadow-xl transition-transform duration-300 hover:scale-105" />
+                  <img src={creatorQr} alt="QR code: Elena Revicheva's business card" width={224} height={224}
+                    className="relative h-56 w-56 rounded-2xl border-4 border-primary bg-white object-contain p-1 shadow-xl transition-transform duration-300 hover:scale-105" />
                 </a>
                 <p className="mt-2 text-xs text-muted-foreground">{t("creator.scan")}</p>
                 <a href={outlookPdf} target="_blank" rel="noopener noreferrer"
