@@ -693,7 +693,7 @@ const Index = () => {
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">🏥➡️</span>
-                <span>"What should we pack for the weekend trip?" becomes a cultural adventure 🎉</span>
+                <span>"Where's the closest pharmacy?" becomes a cultural adventure 🎉</span>
               </p>
             </div>
           </Item>
@@ -777,12 +777,12 @@ const Index = () => {
               </p>
             </div>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">🚗 Real-Life Moments</h3>}>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">🚗 Real-Life Survival Skills</h3>}>
             
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
                 <span className="text-xl">📍</span>
-                <span>"How do I invite my child's classmate over to play?"</span>
+                <span>"How do I tell the taxi driver my address?"</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">🏫</span>
@@ -849,7 +849,7 @@ const Index = () => {
           {/* Call to Action */}
           <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-8 shadow-md border-2 border-purple-200 text-center">
             <h3 className="text-2xl font-bold text-purple-700 mb-4">
-              From the first week to the years ahead... Learn Spanish 🇪🇸 and improve your English 🇬🇧 right where Life happens! 🌍💫
+              From 🏥 pharmacies to 🏛️ immigration offices... Learn Spanish 🇪🇸 and improve your English 🇬🇧 right where Life happens! 🌍💫
             </h3>
             <div className="space-y-4">
               <p className="text-xl font-semibold text-gray-700">

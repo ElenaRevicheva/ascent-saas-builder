@@ -72,7 +72,7 @@ const Pricing = () => {
         "📄 A monthly progress report card (PDF) - sentences learned, missions done, next month's focus",
         "👧👦 Brothers and sisters - lessons for ages 3-5, 6-7 and 8-10 in one family",
         "👵 Grandparents in the family plan - Spanish and English, with Russian help",
-        "🇵🇦 Panama life helper - school notes and homework, photo of a document → explained",
+        "🇵🇦 Panama life helper - school notes, doctor visits, bank and immigration wording, photo of a document → explained",
         "🎬 New Pere & Titi adventures in real Panama places"
       ],
       popular: false,
