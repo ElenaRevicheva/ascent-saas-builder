@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Part } from "@/components/landing/Tree";
 import { Check, Star, Heart, Brain, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import SubscriptionFlow from "./SubscriptionFlow";
@@ -201,6 +202,12 @@ const Pricing = () => {
                   </Link>
                 )}
                 
+                <details className="group/inc rounded-xl border border-border/70">
+                  <summary className="flex min-h-[48px] cursor-pointer list-none items-center gap-2 px-4 py-2 font-semibold text-foreground [&::-webkit-details-marker]:hidden">
+                    <span className="flex-1">What's included ({plan.features.length})</span>
+                    <span aria-hidden className="text-primary transition-transform duration-200 group-open/inc:rotate-180">▾</span>
+                  </summary>
+                  <div className="px-4 pb-4">
                 <ul className="space-y-3">
                   {plan.features.map((feature, featureIndex) => (
                     typeof feature === 'string' ? (
@@ -226,153 +233,13 @@ const Pricing = () => {
                     )
                   ))}
                 </ul>
+                  </div>
+                </details>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {/* Philosophy Section */}
-        <div className="container mx-auto px-4 py-16">
-          <div className="text-center mb-12">
-            {/* Elena 4 Nov 2026: "turn vibe coding into AI-augmented engineering". Same four parts, modern wording,
-                palette icons, no "AI consciousness" line. */}
-            <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-primary">Our philosophy</p>
-            <h2 className="mb-3 text-3xl text-foreground md:text-4xl">AI-augmented engineering</h2>
-            <p className="mx-auto max-w-3xl text-lg leading-relaxed text-muted-foreground">
-              We build AI that understands not only what you say but how you feel, and remembers not only what you ask
-              but who you are becoming: the way your family grows and changes, on the go.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <Card className="text-center border-border shadow-card">
-              <CardHeader>
-                <Heart className="h-12 w-12 text-primary mx-auto mb-4" />
-                <CardTitle>Emotional intelligence</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  AI that notices how you feel and answers with patience and care.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center border-border shadow-card">
-              <CardHeader>
-                <Brain className="h-12 w-12 mx-auto mb-4" style={{ color: "hsl(var(--espaluz-orange))" }} />
-                <CardTitle>Adaptive learning</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Systems that learn your family's pace and preferences and grow alongside you.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center border-border shadow-card">
-              <CardHeader>
-                <Users className="h-12 w-12 mx-auto mb-4" style={{ color: "hsl(var(--espaluz-green))" }} />
-                <CardTitle>Human-centred design</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Technology built around human needs, not the other way around. Simple, clear and useful every day.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="mx-auto mb-16 max-w-4xl rounded-2xl p-8 text-center" style={{ background: "hsl(var(--accent) / 0.22)", border: "1px solid hsl(var(--accent))" }}>
-            <h3 className="mb-4 text-2xl text-foreground md:text-3xl">
-              AI-augmented engineering → emotional intelligence → memory that lasts
-            </h3>
-            <p className="text-lg leading-relaxed text-foreground/80">
-              AI-augmented engineering is not a shortcut. It is one builder working with AI tools to design, test and
-              ship production systems: aware of how you feel, remembering your family's journey, and evolving with it.
-            </p>
-          </div>
-        </div>
-
-        {/* Platform Overview */}
-        <div className="container mx-auto px-4 py-16">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">The Birthplace of EspaLuz</h2>
-            <h3 className="text-3xl md:text-4xl font-semibold text-primary mb-8">What is AIdeazz?</h3>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto mb-8 leading-relaxed">
-              EspaLuz was born from the <a href="https://www.aideazz.xyz" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold">AIdeazz.xyz</a> ecosystem — a visionary platform being developed for crafting and evolving emotionally intelligent AI Personal Assistants (AIPAs).
-            </p>
-            
-            {/* AIPA Demo Video */}
-            <div className="mb-8">
-              <div className="max-w-4xl mx-auto">
-                <h4 className="text-xl font-semibold text-foreground mb-4">See AIPA in Action</h4>
-                <div className="relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-r from-purple-100 to-orange-100 p-1">
-                  <video 
-                    controls 
-                    className="w-full h-auto rounded-md bg-black"
-                    poster=""
-                  >
-                    <source src="https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/generated-videos/demo2.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-gradient-to-r from-purple-50 to-orange-50 border border-purple-200 rounded-lg p-4 max-w-2xl mx-auto">
-              <p className="text-purple-800 font-medium">
-                🚧 <strong>Currently in Development</strong> — The full AIdeazz ecosystem is being built to revolutionize how we interact with AI. Get ready for a new era of emotionally intelligent assistants! EspaLuz is our first graduate, showcasing the incredible potential of truly empathetic AI.
-              </p>
-            </div>
-          </div>
-
-          <div className="text-center mb-16">
-            <h3 className="text-4xl md:text-5xl font-bold text-foreground mb-8">
-              Built Not to Replace People — But to Help Humans Thrive
-            </h3>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-              AIdeazz empowers human potential through AI that truly understands, adapts, and grows with you. This is AI for human flourishing.
-            </p>
-          </div>
-        </div>
-
-        {/* CTA Section */}
-        <section className="container mx-auto px-4 py-16">
-          <div className="text-center">
-            <h2 className="text-4xl font-bold text-foreground mb-4">Join the Revolution</h2>
-            <div className="grid md:grid-cols-1 gap-6 max-w-2xl mx-auto">
-              <Card className="border-border shadow-card">
-                <CardHeader>
-                  <CardTitle>Experience <span className="text-3xl font-extrabold bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 bg-clip-text text-transparent">AIevolution</span></CardTitle>
-                  <CardDescription>Try our live AIPA and see emotional AI in action</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Link to="/auth">
-                    <Button className="w-full" variant="hero">
-                      Chat Now
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-        <div className="text-center mt-12">
-          <div className="mt-8 flex flex-col items-center gap-4">
-            <h4 className="text-xl font-bold bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 bg-clip-text text-transparent">Invest & Partner</h4>
-            <p className="text-md text-muted-foreground">Join us in building the future of emotional AI</p>
-            <a
-              href="https://aideazz.xyz/pitch.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full inline-block px-8 py-3 text-lg font-bold rounded bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 text-white text-center shadow-lg hover:opacity-90 transition z-[9999]"
-              style={{ pointerEvents: 'auto', position: 'relative', zIndex: 9999 }}
-            >
-              Learn More
-            </a>
-          </div>
-        </div>
       </div>
     </section>
   );

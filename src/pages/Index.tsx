@@ -6,12 +6,13 @@ import Pricing from "@/components/Pricing";
 import { CookieConsent } from "@/components/CookieConsent";
 import { ChatWithEspaluz } from "@/components/dashboard/ChatWithEspaluz";
 import SubscriptionFlow from "@/components/SubscriptionFlow";
+import { Part, Item, SectionHead } from "@/components/landing/Tree";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap, Briefcase, Plane, Lightbulb, ChevronDown, Plus } from "lucide-react";
+import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap, Briefcase, Plane, Lightbulb } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { feedbackSchema } from "@/lib/validations";
@@ -20,51 +21,6 @@ import brandAvatar2 from '@/assets/brand-avatar-2.jpg';
 import espaluzQr from '@/assets/espaluz-qr.jpg';
 import creatorQr from '@/assets/creator-qr-card.png';
 import whatsappQr from '@/assets/whatsapp-qr-code.jpg';
-
-/* Tree layout (Elena 5 Nov 2026) - the same shape as aideazz.xyz/sop-ai-ops.html:
-   menu groups -> section (heading always visible) -> part (tag . name . count) -> items (one open at a time).
-   Native <details>: folded text stays in the page for Google and AI answers. Nothing was removed, only folded. */
-function Part({ tag, name, count, children, defaultOpen = false, className = "" }: {
-  tag: string; name: string; count?: string; children: React.ReactNode; defaultOpen?: boolean; className?: string;
-}) {
-  const [open, setOpen] = useState(defaultOpen);
-  return (
-    <details open={open} onToggle={(e) => setOpen((e.currentTarget as HTMLDetailsElement).open)}
-      className={`group/part rounded-2xl border border-border bg-card/90 ${className}`} style={{ boxShadow: "var(--shadow-card)" }}>
-      <summary className="flex min-h-[56px] cursor-pointer list-none flex-wrap items-center gap-x-3 gap-y-1 px-5 py-3 [&::-webkit-details-marker]:hidden">
-        <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-primary">{tag}</span>
-        <span className="text-lg font-semibold text-foreground">{name}</span>
-        {count && <span className="text-sm text-muted-foreground">{count}</span>}
-        <Plus aria-hidden className="ml-auto h-5 w-5 shrink-0 text-primary transition-transform duration-200 group-open/part:rotate-45" />
-      </summary>
-      <div className="space-y-3 px-4 pb-5 pt-1 sm:px-5">{children}</div>
-    </details>
-  );
-}
-
-function Item({ group, title, children, defaultOpen = false }: {
-  group: string; title: React.ReactNode; children: React.ReactNode; defaultOpen?: boolean;
-}) {
-  return (
-    <details name={group} open={defaultOpen || undefined} className="group/item rounded-xl border border-border/70 bg-background/70">
-      <summary className="flex min-h-[48px] cursor-pointer list-none items-center gap-3 px-4 py-2 [&::-webkit-details-marker]:hidden">
-        <span className="flex-1">{title}</span>
-        <ChevronDown aria-hidden className="h-4 w-4 shrink-0 text-primary transition-transform duration-200 group-open/item:rotate-180" />
-      </summary>
-      <div className="px-4 pb-4">{children}</div>
-    </details>
-  );
-}
-
-function SectionHead({ eyebrow, title, lede }: { eyebrow: string; title: string; lede?: string }) {
-  return (
-    <div className="mx-auto mb-8 max-w-3xl text-center">
-      <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-primary">{eyebrow}</p>
-      <h2 className="text-3xl text-foreground md:text-4xl">{title}</h2>
-      {lede && <p className="mt-3 text-lg leading-relaxed text-muted-foreground">{lede}</p>}
-    </div>
-  );
-}
 
 function FeedbackForm() {
   const [formData, setFormData] = useState({
@@ -232,7 +188,7 @@ const Index = () => {
       <section id="start" className="container mx-auto scroll-mt-20 px-4 py-14">
         <SectionHead eyebrow={t("tree.startEyebrow")} title={t("tree.startTitle")} lede={t("tree.startLede")} />
         <div className="mx-auto max-w-5xl">
-          <Part defaultOpen tag={t("tree.startTag")} name={t("tree.startPart")} count={t("tree.count3")}>
+          <Part tag={t("tree.startTag")} name={t("tree.startPart")} count={t("tree.count5")}>
             <Item group="start" defaultOpen title={<h3 className="text-lg font-semibold text-foreground">{t("tree.wa")}</h3>}>
             <div className="bg-gradient-to-br from-green-50/80 via-white/80 to-emerald-50/80 backdrop-blur-sm rounded-2xl p-5 border border-green-200">
           <div className="text-center space-y-6">
@@ -412,120 +368,8 @@ const Index = () => {
         </div>
       
             </Item>
-          </Part>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="container mx-auto scroll-mt-20 px-4 py-20 bg-gradient-to-br from-blue-50/50 via-white to-purple-50/50 rounded-3xl shadow-lg">
-        <div className="text-center mb-16">
-          <Badge variant="outline" className="mb-6 text-lg px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0">
-            Living Proof of Concept
-          </Badge>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-foreground mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-            EspaLuz - AI Family Tutor
-          </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full mb-6"></div>
-          <p className="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed font-medium">
-            Your bilingual AI family tutor — <span className="font-bold text-blue-600">emotionally intelligent</span>, 
-            <span className="font-bold text-purple-600"> culturally aware</span>, and ready to help expat families thrive in Spanish-speaking countries, 
-            Spanish speakers upgrading their English, and travelers exploring new cultures.
-          </p>
-        </div>
-
-        <div className="mx-auto max-w-6xl space-y-4">
-          <Part defaultOpen tag={t("tree.featTag")} name={t("tree.strengths")} count={t("tree.count4")}>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="text-center border-2 border-red-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm">
-            <CardHeader className="pb-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <Heart className="h-8 w-8 text-white" />
-              </div>
-              <CardTitle className="text-xl font-bold text-red-600 mb-2">Emotionally Intelligent</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-700 leading-relaxed font-medium">
-                Understands emotional challenges of cultural adaptation and family transitions
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="text-center border-2 border-blue-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm">
-            <CardHeader className="pb-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <Globe className="h-8 w-8 text-white" />
-              </div>
-              <CardTitle className="text-xl font-bold text-blue-600 mb-2">Bilingual Support</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-700 leading-relaxed font-medium">
-                Fluent in English, Spanish, and Russian with instant translation
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="text-center border-2 border-green-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm">
-            <CardHeader className="pb-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <Users className="h-8 w-8 text-white" />
-              </div>
-              <CardTitle className="text-xl font-bold text-green-600 mb-2">Family-Focused</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-700 leading-relaxed font-medium">
-                Personalized support for both children and adults navigating new environments
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="text-center border-2 border-purple-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm">
-            <CardHeader className="pb-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <MessageSquare className="h-8 w-8 text-white" />
-              </div>
-              <CardTitle className="text-xl font-bold text-purple-600 mb-2">Real-time Chat</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-700 leading-relaxed font-medium">
-                Voice, text, and image support with avatar videos for children
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-          </Part>
-          <Part tag={t("tree.featTag")} name="Current Functionalities" count={t("tree.count8")}>
-            <Card className="border-border shadow-magical bg-gradient-to-br from-white to-purple-50/30 overflow-hidden relative">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-purple-100/50 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
-            <CardHeader className="relative">
-              <CardTitle className="flex items-center gap-3 text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                <div className="p-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg shadow-lg">
-                  <Bot className="h-6 w-6 text-white" />
-                </div>
-                Current Functionalities
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 relative">
-              {[
-                { text: "Accepts voice, text, and photos in English, Spanish, and Russian", icon: "🎤", gradient: "from-green-500 to-emerald-500" },
-                { text: "Instantly translates messages into both Spanish and English", icon: "⚡", gradient: "from-yellow-500 to-orange-500" },
-                { text: "Generates bilingual replies with rich, emotional context", icon: "💬", gradient: "from-blue-500 to-cyan-500" },
-                { text: "Creates short avatar videos in Spanish and English for children", icon: "🎬", gradient: "from-purple-500 to-pink-500" },
-                { text: "Sends voice messages with AI voice synthesis", icon: "🔊", gradient: "from-indigo-500 to-purple-500" },
-                { text: "Translates text inside images (OCR) using GPT-4o vision", icon: "👁️", gradient: "from-rose-500 to-red-500" },
-                { text: "Maintains emotional memory throughout conversations", icon: "🧠", gradient: "from-teal-500 to-cyan-500" },
-                { text: "Adapts tone based on detected emotions and personal profiles", icon: "❤️", gradient: "from-pink-500 to-rose-500" }
-              ].map((feature, index) => (
-                <div key={index} className="group flex items-start gap-4 p-3 rounded-xl hover:bg-white/50 transition-all duration-300 hover:shadow-md">
-                  <div className={`flex items-center justify-center w-10 h-10 bg-gradient-to-r ${feature.gradient} rounded-full shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                    <span className="text-white text-lg">{feature.icon}</span>
-                  </div>
-                  <span className="text-gray-700 font-medium leading-relaxed flex-1 group-hover:text-gray-900 transition-colors duration-300">{feature.text}</span>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-          </Part>
-          <Part tag={t("tree.featTag")} name="Try EspaLuz Today" count={t("tree.videosChats")}>
+            <Item group="start" title={<h3 className="text-lg font-semibold text-foreground">Try EspaLuz Today</h3>}>
+              
             <Card className="border-border shadow-card">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -645,7 +489,158 @@ const Index = () => {
               </div>
             </CardContent>
           </Card>
+          
+            </Item>
+            <Item group="start" title={<h3 className="text-lg font-semibold text-foreground">{t("tree.ctaPart")}</h3>}>
+              <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-8 shadow-md border-2 border-purple-200 text-center">
+            <h3 className="text-2xl font-bold text-purple-700 mb-4">
+              From 🏥 pharmacies to 🏛️ immigration offices... Learn Spanish 🇪🇸 and improve your English 🇬🇧 right where Life happens! 🌍💫
+            </h3>
+            <div className="space-y-4">
+              <p className="text-xl font-semibold text-gray-700">
+                👉 Ready to start your learning journey on the go?
+              </p>
+              <p className="text-lg text-gray-700">
+                📲 Just text: <span className="font-bold text-green-600">WhatsApp +507-6662-3757</span> or click the link to Telegram 👉 
+                <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-bold ml-1">
+                  https://t.me/EspaLuzFamily_bot
+                </a>
+              </p>
+              <p className="text-xl font-bold text-orange-600">
+                Say "¡Hola!" and watch the magic begin ✨🌟
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+                <a href="https://api.whatsapp.com/send/?phone=50766623757" target="_blank" rel="noopener noreferrer">
+                  <Button size="lg" className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full">
+                    <MessageSquare className="mr-2 h-4 w-4" />
+                    💬 Start WhatsApp Chat
+                  </Button>
+                </a>
+                <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer">
+                  <Button size="lg" variant="outline" className="border-blue-500 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-full">
+                    <MessageSquare className="mr-2 h-4 w-4" />
+                    🚀 Join Telegram
+                  </Button>
+                </a>
+              </div>
+            </div>
+          </div>
+            </Item>
           </Part>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="container mx-auto scroll-mt-20 px-4 py-20 bg-gradient-to-br from-blue-50/50 via-white to-purple-50/50 rounded-3xl shadow-lg">
+        <div className="text-center mb-16">
+          <Badge variant="outline" className="mb-6 text-lg px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0">
+            Living Proof of Concept
+          </Badge>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-foreground mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            EspaLuz - AI Family Tutor
+          </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full mb-6"></div>
+          <p className="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed font-medium">
+            Your bilingual AI family tutor — <span className="font-bold text-blue-600">emotionally intelligent</span>, 
+            <span className="font-bold text-purple-600"> culturally aware</span>, and ready to help expat families thrive in Spanish-speaking countries, 
+            Spanish speakers upgrading their English, and travelers exploring new cultures.
+          </p>
+        </div>
+
+        <div className="mx-auto max-w-6xl space-y-4">
+          <Part tag={t("tree.featTag")} name={t("tree.strengths")} count={t("tree.count4")}>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card className="text-center border-2 border-red-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm">
+            <CardHeader className="pb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <Heart className="h-8 w-8 text-white" />
+              </div>
+              <CardTitle className="text-xl font-bold text-red-600 mb-2">Emotionally Intelligent</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-700 leading-relaxed font-medium">
+                Understands emotional challenges of cultural adaptation and family transitions
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="text-center border-2 border-blue-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm">
+            <CardHeader className="pb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <Globe className="h-8 w-8 text-white" />
+              </div>
+              <CardTitle className="text-xl font-bold text-blue-600 mb-2">Bilingual Support</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-700 leading-relaxed font-medium">
+                Fluent in English, Spanish, and Russian with instant translation
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="text-center border-2 border-green-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm">
+            <CardHeader className="pb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <Users className="h-8 w-8 text-white" />
+              </div>
+              <CardTitle className="text-xl font-bold text-green-600 mb-2">Family-Focused</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-700 leading-relaxed font-medium">
+                Personalized support for both children and adults navigating new environments
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="text-center border-2 border-purple-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm">
+            <CardHeader className="pb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <MessageSquare className="h-8 w-8 text-white" />
+              </div>
+              <CardTitle className="text-xl font-bold text-purple-600 mb-2">Real-time Chat</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-700 leading-relaxed font-medium">
+                Voice, text, and image support with avatar videos for children
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+          </Part>
+          <Part tag={t("tree.featTag")} name="Current Functionalities" count={t("tree.count8")}>
+            <Card className="border-border shadow-magical bg-gradient-to-br from-white to-purple-50/30 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-purple-100/50 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
+            <CardHeader className="relative">
+              <CardTitle className="flex items-center gap-3 text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                <div className="p-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg shadow-lg">
+                  <Bot className="h-6 w-6 text-white" />
+                </div>
+                Current Functionalities
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 relative">
+              {[
+                { text: "Accepts voice, text, and photos in English, Spanish, and Russian", icon: "🎤", gradient: "from-green-500 to-emerald-500" },
+                { text: "Instantly translates messages into both Spanish and English", icon: "⚡", gradient: "from-yellow-500 to-orange-500" },
+                { text: "Generates bilingual replies with rich, emotional context", icon: "💬", gradient: "from-blue-500 to-cyan-500" },
+                { text: "Creates short avatar videos in Spanish and English for children", icon: "🎬", gradient: "from-purple-500 to-pink-500" },
+                { text: "Sends voice messages with AI voice synthesis", icon: "🔊", gradient: "from-indigo-500 to-purple-500" },
+                { text: "Translates text inside images (OCR) using GPT-4o vision", icon: "👁️", gradient: "from-rose-500 to-red-500" },
+                { text: "Maintains emotional memory throughout conversations", icon: "🧠", gradient: "from-teal-500 to-cyan-500" },
+                { text: "Adapts tone based on detected emotions and personal profiles", icon: "❤️", gradient: "from-pink-500 to-rose-500" }
+              ].map((feature, index) => (
+                <div key={index} className="group flex items-start gap-4 p-3 rounded-xl hover:bg-white/50 transition-all duration-300 hover:shadow-md">
+                  <div className={`flex items-center justify-center w-10 h-10 bg-gradient-to-r ${feature.gradient} rounded-full shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                    <span className="text-white text-lg">{feature.icon}</span>
+                  </div>
+                  <span className="text-gray-700 font-medium leading-relaxed flex-1 group-hover:text-gray-900 transition-colors duration-300">{feature.text}</span>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+          </Part>
+          
         </div>
       </section>
 
@@ -658,7 +653,7 @@ const Index = () => {
         </div>
 
         <div className="max-w-4xl mx-auto space-y-4">
-          <Part defaultOpen tag={t("tree.lifeTag")} name={t("tree.lifePart")} count={t("tree.topics", { n: 11 })}>
+          <Part tag={t("tree.lifeTag")} name={t("tree.lifePart")} count={t("tree.topics", { n: 11 })}>
             <Item group="life" defaultOpen title={<h3 className="text-lg font-semibold text-foreground">📱✨ Send Messages Your Way, Get Learning Magic Back</h3>}>
             
             <div className="space-y-3 text-gray-700">
@@ -846,41 +841,7 @@ const Index = () => {
               </blockquote>
             </div>
           </Part>
-          {/* Call to Action */}
-          <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-8 shadow-md border-2 border-purple-200 text-center">
-            <h3 className="text-2xl font-bold text-purple-700 mb-4">
-              From 🏥 pharmacies to 🏛️ immigration offices... Learn Spanish 🇪🇸 and improve your English 🇬🇧 right where Life happens! 🌍💫
-            </h3>
-            <div className="space-y-4">
-              <p className="text-xl font-semibold text-gray-700">
-                👉 Ready to start your learning journey on the go?
-              </p>
-              <p className="text-lg text-gray-700">
-                📲 Just text: <span className="font-bold text-green-600">WhatsApp +507-6662-3757</span> or click the link to Telegram 👉 
-                <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-bold ml-1">
-                  https://t.me/EspaLuzFamily_bot
-                </a>
-              </p>
-              <p className="text-xl font-bold text-orange-600">
-                Say "¡Hola!" and watch the magic begin ✨🌟
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
-                <a href="https://api.whatsapp.com/send/?phone=50766623757" target="_blank" rel="noopener noreferrer">
-                  <Button size="lg" className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full">
-                    <MessageSquare className="mr-2 h-4 w-4" />
-                    💬 Start WhatsApp Chat
-                  </Button>
-                </a>
-                <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer">
-                  <Button size="lg" variant="outline" className="border-blue-500 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-full">
-                    <MessageSquare className="mr-2 h-4 w-4" />
-                    🚀 Join Telegram
-                  </Button>
-                </a>
-              </div>
-            </div>
-          </div>
+          
         </div>
       </section>
 
@@ -906,7 +867,7 @@ const Index = () => {
                 <p className="mt-3 leading-relaxed text-muted-foreground">{t("creator.intro")}</p>
               </div>
 
-<Part defaultOpen className="border-l-4" tag={t("creator.eyebrow")} name={t("creator.journeyTitle")}>
+<Part className="border-l-4" tag={t("creator.eyebrow")} name={t("creator.journeyTitle")}>
                 
                 <p className="mt-2 text-muted-foreground">{t("creator.journeyIntro")}</p>
                 <ul className="mt-5 space-y-5">
@@ -968,6 +929,161 @@ const Index = () => {
               </div>
             </aside>
           </div>
+        </div>
+
+        {/* 5 Nov 2026 (Elena): the AIdeazz blocks that sat under the plans belong with the creator. Moved here unchanged, closed. */}
+        <div className="mx-auto mt-6 max-w-5xl space-y-4">
+          <Part tag="Our philosophy" name="AI-augmented engineering">
+        {/* Philosophy Section */}
+        <div className="container mx-auto px-4 py-16">
+          <div className="text-center mb-12">
+            {/* Elena 4 Nov 2026: "turn vibe coding into AI-augmented engineering". Same four parts, modern wording,
+                palette icons, no "AI consciousness" line. */}
+            <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-primary">Our philosophy</p>
+            <h2 className="mb-3 text-3xl text-foreground md:text-4xl">AI-augmented engineering</h2>
+            <p className="mx-auto max-w-3xl text-lg leading-relaxed text-muted-foreground">
+              We build AI that understands not only what you say but how you feel, and remembers not only what you ask
+              but who you are becoming: the way your family grows and changes, on the go.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <Card className="text-center border-border shadow-card">
+              <CardHeader>
+                <Heart className="h-12 w-12 text-primary mx-auto mb-4" />
+                <CardTitle>Emotional intelligence</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  AI that notices how you feel and answers with patience and care.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center border-border shadow-card">
+              <CardHeader>
+                <Brain className="h-12 w-12 mx-auto mb-4" style={{ color: "hsl(var(--espaluz-orange))" }} />
+                <CardTitle>Adaptive learning</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Systems that learn your family's pace and preferences and grow alongside you.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center border-border shadow-card">
+              <CardHeader>
+                <Users className="h-12 w-12 mx-auto mb-4" style={{ color: "hsl(var(--espaluz-green))" }} />
+                <CardTitle>Human-centred design</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Technology built around human needs, not the other way around. Simple, clear and useful every day.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="mx-auto mb-16 max-w-4xl rounded-2xl p-8 text-center" style={{ background: "hsl(var(--accent) / 0.22)", border: "1px solid hsl(var(--accent))" }}>
+            <h3 className="mb-4 text-2xl text-foreground md:text-3xl">
+              AI-augmented engineering → emotional intelligence → memory that lasts
+            </h3>
+            <p className="text-lg leading-relaxed text-foreground/80">
+              AI-augmented engineering is not a shortcut. It is one builder working with AI tools to design, test and
+              ship production systems: aware of how you feel, remembering your family's journey, and evolving with it.
+            </p>
+          </div>
+        </div>
+
+
+          </Part>
+          <Part tag="AIdeazz" name="The Birthplace of EspaLuz" count="What is AIdeazz?">
+        {/* Platform Overview */}
+        <div className="container mx-auto px-4 py-16">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">The Birthplace of EspaLuz</h2>
+            <h3 className="text-3xl md:text-4xl font-semibold text-primary mb-8">What is AIdeazz?</h3>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto mb-8 leading-relaxed">
+              EspaLuz was born from the <a href="https://www.aideazz.xyz" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold">AIdeazz.xyz</a> ecosystem — a visionary platform being developed for crafting and evolving emotionally intelligent AI Personal Assistants (AIPAs).
+            </p>
+            
+            {/* AIPA Demo Video */}
+            <div className="mb-8">
+              <div className="max-w-4xl mx-auto">
+                <h4 className="text-xl font-semibold text-foreground mb-4">See AIPA in Action</h4>
+                <div className="relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-r from-purple-100 to-orange-100 p-1">
+                  <video 
+                    controls 
+                    className="w-full h-auto rounded-md bg-black"
+                    poster=""
+                  >
+                    <source src="https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/generated-videos/demo2.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-gradient-to-r from-purple-50 to-orange-50 border border-purple-200 rounded-lg p-4 max-w-2xl mx-auto">
+              <p className="text-purple-800 font-medium">
+                🚧 <strong>Currently in Development</strong> — The full AIdeazz ecosystem is being built to revolutionize how we interact with AI. Get ready for a new era of emotionally intelligent assistants! EspaLuz is our first graduate, showcasing the incredible potential of truly empathetic AI.
+              </p>
+            </div>
+          </div>
+
+          <div className="text-center mb-16">
+            <h3 className="text-4xl md:text-5xl font-bold text-foreground mb-8">
+              Built Not to Replace People — But to Help Humans Thrive
+            </h3>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+              AIdeazz empowers human potential through AI that truly understands, adapts, and grows with you. This is AI for human flourishing.
+            </p>
+          </div>
+        </div>
+
+
+          </Part>
+          <Part tag="AIdeazz" name="Join the Revolution" count="Chat now · Invest & Partner">
+        {/* CTA Section */}
+        <section className="container mx-auto px-4 py-16">
+          <div className="text-center">
+            <h2 className="text-4xl font-bold text-foreground mb-4">Join the Revolution</h2>
+            <div className="grid md:grid-cols-1 gap-6 max-w-2xl mx-auto">
+              <Card className="border-border shadow-card">
+                <CardHeader>
+                  <CardTitle>Experience <span className="text-3xl font-extrabold bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 bg-clip-text text-transparent">AIevolution</span></CardTitle>
+                  <CardDescription>Try our live AIPA and see emotional AI in action</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Link to="/auth">
+                    <Button className="w-full" variant="hero">
+                      Chat Now
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        <div className="text-center mt-12">
+          <div className="mt-8 flex flex-col items-center gap-4">
+            <h4 className="text-xl font-bold bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 bg-clip-text text-transparent">Invest & Partner</h4>
+            <p className="text-md text-muted-foreground">Join us in building the future of emotional AI</p>
+            <a
+              href="https://aideazz.xyz/pitch.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full inline-block px-8 py-3 text-lg font-bold rounded bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 text-white text-center shadow-lg hover:opacity-90 transition z-[9999]"
+              style={{ pointerEvents: 'auto', position: 'relative', zIndex: 9999 }}
+            >
+              Learn More
+            </a>
+          </div>
+        </div>
+
+          </Part>
         </div>
       </section>
 
