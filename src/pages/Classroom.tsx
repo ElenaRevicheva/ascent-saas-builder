@@ -46,6 +46,20 @@ const ASKED_QUIET = /(paro|parar|paren|para|paran) de hablar|no hablen|que no ha
 const UPSET = /\b(estoy|me siento)\s+(muy\s+)?(triste|enojad[oa]|enfadad[oa]|brav[oa]|molest[oa]|asustad[oa])\b|\btengo\s+(mucho\s+)?miedo\b|\b(quiero llorar|estoy llorando)\b|\bi(?:'?m| am| feel)\s+(so |very |really )?(sad|upset|angry|mad|scared|afraid)\b|\bi want to cry\b/i;
 // A possible real harm never gets a soothing clip: it stays with the lesson brain and needs its own parent alert.
 const HURT = /me (pega|peg[oó]|golpe|hace daño|hizo daño|lastim|toca|toc[oó])|me duele|no quiero vivir|quiero morir|hits? me|hurts? me|touched me|want to die/i;
+// 6 Nov 2026 (Elena: "when the kid is not very glad with Pere and Titi... she may come in and do something about the
+// friendship again, reconnects everybody"; "annoyed... wants to quit... sad, annoyed, bored"). Built from Alisa's real words:
+// "no quiero escuchar", "no paran de hablar", "que no hablen".
+const WANTS_TO_QUIT = /\b(quiero (parar|salir|irme|terminar|acabar|dejar)|me quiero ir|ya no quiero|no quiero (seguir|jugar|estudiar|m[aá]s|la clase|continuar)|i want to (stop|quit|leave|go)|i don'?t want to (play|continue|do this)|no more)\b/i;
+const ANNOYED = /(paro|parar|paren|para|paran) de hablar|no hablen|que no hable|hablan? (mucho|tanto|demasiado)|c[aá]llate|c[aá]llense|no quiero (escuchar|hablar)|me (molesta|molestan|fastidia|fastidian)|\b(basta|pesad[oa]s?|stop talking|be quiet|talk(ing)? too much|annoying|you'?re annoying|leave me alone)\b/i;
+const BORED = /aburr|\b(bored|boring)\b/i;
+const reactionClip = (said: string): string | null => {
+  if (HURT.test(said)) return null;
+  if (WANTS_TO_QUIT.test(said)) return "quit";
+  if (ANNOYED.test(said)) return "annoyed";
+  if (BORED.test(said)) return "bored";
+  if (UPSET.test(said)) return Math.random() < 0.5 ? "calm-1" : "calm-2";
+  return null;
+};
 const SAYS_BYE = /\[\s*goodbye\s*\]|adi[oó]s|hasta (luego|mañana|pronto)|\bgoodbye\b|\bsee you\b/i;
 
 const GREETING_CLIP = "/heroes/kids-greeting.mp4"; // the heroes' own voiced hello (the Telegram /kids clip) opens the class
@@ -260,7 +274,7 @@ const Classroom = () => {
   const mentoraEnded = useRef<(() => void) | null>(null);
   const screen = useRef<HTMLVideoElement | null>(null);
   const skipHeroes = useRef(false); // Habla during her clip: she stops and the heroes do not start talking over the child
-  const visits = useRef({ tip: false, calm: false, close: false });
+  const visits = useRef({ tip: false, close: false, reactions: new Set<string>() });
   const usedFeatures = useRef<Set<string>>(new Set());
   const padOpen = useRef(false);
   const mentoraSay = (clip: string) => new Promise<void>((done) => {
@@ -438,9 +452,13 @@ const Classroom = () => {
       if (countsAsStar && !parent) setStars((s) => s + 1);
       saveMission(text, turns.length === 0);
       const askedQuiet = [...turns.filter((t) => t.role === "user").map((t) => t.content), heard].some((w) => ASKED_QUIET.test(w));
-      if (!parent && !askedQuiet && !visits.current.calm && UPSET.test(heard) && !HURT.test(heard)) {
-        visits.current.calm = true;
-        await mentoraSay(Math.random() < 0.5 ? "calm-1" : "calm-2");
+      // She comes when the child is annoyed, bored, sad or wants to stop: each feeling once a lesson, two visits at most.
+      const reaction = parent ? null : reactionClip(heard);
+      const kind = reaction?.replace(/-\d$/, "");
+      if (reaction && kind && !visits.current.reactions.has(kind) && (visits.current.reactions.size < 2 || kind === "quit")) {
+        visits.current.reactions.add(kind);
+        if (kind === "quit") visits.current.close = true; // her goodbye is already in this clip
+        await mentoraSay(reaction);
       }
       if (skipHeroes.current) { skipHeroes.current = false; return; }
       await speak(stripShotTags(text), spoken);
@@ -450,7 +468,7 @@ const Classroom = () => {
         if (!visits.current.close && childTurns >= 2 && SAYS_BYE.test(text)) {
           visits.current.close = true;
           await mentoraSay("close");
-        } else if (!parent && !image && !padOpen.current && !visits.current.tip && childTurns >= 4) {
+        } else if (!parent && !image && !padOpen.current && !visits.current.tip && childTurns >= 4 && !reaction && !HURT.test(heard) && visits.current.reactions.size === 0) {
           const tip = nextTip();
           visits.current.tip = true;
           if (tip) await mentoraSay(tip);

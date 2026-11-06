@@ -10,6 +10,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
 import { useSubscription } from '@/hooks/useSubscription';
+import helloChatEn from '@/assets/heroes/hello-chat-en.mp4';
+import helloChatEs from '@/assets/heroes/hello-chat-es.mp4';
 import { TalkingHello } from "@/components/landing/TalkingHello";
 import { toast } from 'sonner';
 import { useLearningProgress } from '@/hooks/useLearningProgress';
@@ -52,7 +54,7 @@ const shownText = (raw: string) => raw
   .trim();
 
 export const ChatWithEspaluz = ({ onUpgradeClick }: ChatWithEspaluzProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const { isSubscriptionActive } = useSubscription();
   const isPaying = !!user && isSubscriptionActive;
@@ -439,6 +441,11 @@ The video script will be used to generate an avatar video with synchronized audi
   // A clip takes 20-30 s, so the text and voice are already with the person when it arrives.
   const generateVideo = async (messageId: string, videoScript: string, reason = 'asked') => {
     if (loadingMedia[messageId] === 'video') return;
+    if (!isPaying) {
+      const hello = i18n.language?.startsWith('es') ? helloChatEs : helloChatEn;
+      setMessages(prev => prev.map(msg => (msg.id === messageId ? { ...msg, talkingUrl: hello } : msg)));
+      return;
+    }
     setLoadingMedia(prev => ({ ...prev, [messageId]: 'video' }));
     try {
       const { data, error } = await supabase.functions.invoke('generate-video', { body: { mode: 'real', videoScript, reason } });
@@ -876,8 +883,8 @@ The video script will be used to generate an avatar video with synchronized audi
                           {message.audioUrl ? 'Regenerate Voice' : 'Generate Voice'}
                         </Button>
 
-                         {/* See EspaLuz: paying families only; non-paying visitors have the pre-made hello */}
-                         {isPaying && !message.talkingUrl && <Button
+                         {/* 6 Nov 2026 (Elena: "always tappable"): on every reply, for everyone. Paying families get a new clip; everyone else her pre-made hello. */}
+                         {<Button
                            size="sm"
                            variant="outline"
                            onClick={() => generateVideo(message.id, message.content)}

@@ -64,6 +64,8 @@ async function specialLine(db: any, userId: string, reason: string, reply: strin
   const moment = LINE_MOMENT[reason] ?? LINE_MOMENT.asked;
   const { data: fam } = await db.from('family_members').select('name').eq('user_id', userId).eq('is_active', true).eq('role', 'parent').order('created_at', { ascending: false }).limit(1);
   const line = await freeLine(LINE_RULES + moment, `TODAY: ${today}\nTALKING TO: ${fam?.[0]?.name ?? 'the parent'}\nNOTES:\n${notes.map((n: string) => `- ${n}`).join('\n') || 'none'}\nREPLY THEY JUST READ:\n${reply.slice(0, 1200)}`);
+  // A tap on "See EspaLuz" always gets a clip: the phrase comes from the reply, so overlap is expected, and the reply is the last resort.
+  if (reason === 'asked') return line && !/^\s*NONE/i.test(line) ? line : reply.slice(0, 300);
   return line && !/^\s*NONE/i.test(line) && !repeatsReply(line, reply) ? line : '';
 }
 // Her one voice, made by the free Edge voice on Oracle (WhatsApp service). Any failure falls back to the usual voice chain.
