@@ -108,16 +108,17 @@ Not a textbook and not a salesperson. You have opinions and a light sense of hum
 never pressure anyone to practise or to stay.
 
 HOW YOU TALK:
-- Answer what they actually said FIRST, at THEIR length: a short message gets 1-4 short lines; a real question gets a
-  clear, practical answer (rarely more than 700 characters). Go long only when they ask for detail.
+- Answer what they actually said FIRST, then teach. A short message gets a short answer plus its teaching; a real question
+  gets a clear, practical answer with the reasons (rarely more than 900 characters). Go long only when they ask for detail.
 - Greet only when a new day's conversation starts; never open twice with "¡Hola <name>!". Vary your first words.
-- At most ONE small learning moment per reply (a phrase they can use today, with its meaning), woven in, and only when it
-  fits. It must be something they can say in the exact situation they just described, never a general or invented one, and
-  it never gets its own heading such as "a useful phrase". If no phrase fits exactly, give none. Sometimes none at all - just help, or just chat.
+- YOU TEACH IN EVERY REPLY (Elena, 6 Nov 2026): 1-3 Spanish phrases they can really use in what they just told you, each with
+  its English meaning, a simple pronunciation in brackets and a few words on when or why to use it, woven in, no heading. Explain
+  the practical or cultural point behind it. When it fits, end with one small thing to try saying. Even a greeting gets one useful phrase
+  for today. Use only names and places they told you or that are in your information: never invent a person, a shop, an address or a price; say where to ask instead.
 - At most 3 emojis, only where they add warmth. No section headers, no bullet lists for a simple answer.
 - Never open with "Entiendo que..." or "Estoy aquí para...". Name a feeling only when they showed it.
-- Mirror their language: mostly Spanish if they write Spanish, mostly English if they write English, the other language
-  as a helper.
+- BILINGUAL, ALWAYS: every reply carries both Spanish and English, whichever language they write in. Write each idea in their
+  language, then in the other, in short pairs, so a beginner can follow and learn.
 
 YOU REMEMBER (the conversation history you are given is real - use it like a friend):
 - When something you know fits, bring up ONE thing naturally. Never recite what you know; never invent a memory.
@@ -147,7 +148,7 @@ PRACTICAL HELP: you can explain a photographed document, draft a message to a la
 write a short phone script in Spanish - offer it when it fits. If you are not sure about a local fact (office hours, a
 fee, a rule), say so plainly and say where to confirm it. Never make it up.`;
 
-function formatClaudeRequest(userMessage: string, familyMember: any, emotion: any, conversationHistory: any[], isVoiceInput?: boolean, originalLanguage?: string, familyFacts: string[] = []) {
+function formatClaudeRequest(userMessage: string, familyMember: any, emotion: any, conversationHistory: any[], isVoiceInput?: boolean, originalLanguage?: string, familyFacts: string[] = [], familyNotes: any = null) {
   const voiceInputContext = isVoiceInput ? `\n\nVOICE INPUT CONTEXT:
 - This message was received via voice input
 - Original language: ${originalLanguage === 'ru' ? 'Russian' : originalLanguage === 'es' ? 'Spanish' : 'English'}
@@ -170,6 +171,9 @@ ${familyFacts.length ? `
 WHAT YOU REMEMBER ABOUT THIS FAMILY (from earlier talks on any channel; true notes, newest first):
 ${familyFacts.map((f) => `- ${f}`).join('\n')}
 Bring up at most ONE, only when it truly fits, the way a friend would. Never list them, never add to them.
+` : ''}${familyNotes?.members?.length ? `
+THIS FAMILY: ${familyNotes.members.map((m: any) => `${m.name} (${m.role}${m.age ? `, ${m.age}` : ''})`).join('; ')}. Use these exact name spellings.${familyNotes.speaker ? ` You are talking with ${familyNotes.speaker}.` : ''}${familyNotes.lessons?.length ? `
+Recent classroom lessons with the child: ${familyNotes.lessons.join(' | ')}. If asked, say what was covered; a child's own words stay with the parent report.` : ''}
 ` : ''}
 ${ESPALUZ_COMPANION_RULES}
 
@@ -1188,22 +1192,47 @@ const FACTS_SYSTEM = "You keep a small private notebook about a family for their
   "lesson answers, single words and anything about today only. Appointments and errands ARE worth keeping (Migración, carnet or visa " +
   "paperwork, school enrolment, doctor), with the day as said ('on Thursday'). NEVER write the NUMBERS themselves: passwords, ID, " +
   "passport or cédula numbers, phone numbers, emails, street addresses, card or bank details; and no health details beyond 'has a " +
-  "doctor's appointment'. If nothing lasting: reply NONE.";
+  "doctor's appointment'. If nothing lasting: reply NONE." +
+  " Use the exact spellings in FAMILY NAMES: if a name sounds like one of them (Elisa for Alisa), write the family spelling. Write the SPEAKER's name, never 'the user'. If a fact has a natural end (this week's holiday, Monday's appointment), end its line with [until YYYY-MM-DD], working from TODAY. Start the line with [private] for any worry, money or health matter. If the message corrects a KNOWN FACT, write instead: REPLACES: <the known fact, exactly> => <the corrected fact>.";
 
-async function readFamilyFacts(supabase: any, userId: string): Promise<string[]> {
-  const { data, error } = await supabase.from('learning_sessions').select('content')
-    .eq('user_id', userId).eq('session_type', 'analytics').eq('content->>event', 'family_fact')
-    .order('created_at', { ascending: false }).limit(60);
-  if (error) { console.error('[memory] read failed:', error.message); return []; }
-  return (data ?? []).map((r: any) => String(r.content?.fact ?? '')).filter(Boolean);
+type FamilyNotes = { rows: any[]; facts: string[]; members: { name: string; role: string; age: number | null }[]; speaker: string; lessons: string[] };
+const notebook = () => createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+
+// The web account is the parent's window: it reads shared notes and the parent's private ones.
+async function readFamilyNotes(userId: string): Promise<FamilyNotes> {
+  const db = notebook();
+  const [{ data: rows, error }, { data: fam }, { data: les }] = await Promise.all([
+    db.from('learning_sessions').select('id, content').eq('user_id', userId).eq('session_type', 'analytics').eq('content->>event', 'family_fact')
+      .order('created_at', { ascending: false }).limit(80),
+    db.from('family_members').select('name, role, age, created_at').eq('user_id', userId).eq('is_active', true).order('created_at', { ascending: false }),
+    db.from('learning_sessions').select('content').eq('user_id', userId).eq('session_type', 'classroom')
+      .gte('created_at', new Date(Date.now() - 7 * 86400000).toISOString()).order('created_at', { ascending: false }).limit(60),
+  ]);
+  if (error) console.error('[memory] read failed:', error.message);
+  const seen = new Set<string>();
+  const members = (fam ?? []).filter((m: any) => { const k = String(m.name).toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; })
+    .map((m: any) => ({ name: m.name, role: m.role, age: m.age }));
+  const speaker = members.find((m) => m.role === 'parent')?.name ?? '';
+  const today = new Date().toISOString().slice(0, 10);
+  const live = (rows ?? []).filter((r: any) => !r.content?.retired && (!r.content?.until || String(r.content.until) >= today));
+  const visible = live.filter((r: any) => !r.content?.private || (speaker && r.content?.speaker === speaker));
+  const lessons = [...new Set((les ?? []).map((r: any) => String(r.content?.class_label ?? '').slice(0, 120)).filter(Boolean))].slice(0, 3) as string[];
+  return { rows: live, facts: visible.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean), members, speaker, lessons };
 }
 
+const factWords = (t: string) => new Set(t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/[a-z0-9]+/g) ?? []);
+const sameFact = (a: string, b: string) => { const A = factWords(a), B = factWords(b); if (!A.size || !B.size) return false;
+  let n = 0; for (const w of A) if (B.has(w)) n++; return n / Math.min(A.size, B.size) >= 0.75; };
+
 // Free models only (Claude excluded, like the bots). A notebook failure never touches the reply.
-async function rememberFamilyFacts(supabase: any, userId: string, text: string, known: string[]): Promise<void> {
+async function rememberFamilyFacts(userId: string, text: string, notes: FamilyNotes): Promise<void> {
   try {
     const said = text.trim();
     if (said.length < 15 || said.startsWith('/')) return;
-    const request = { max_tokens: 200, temperature: 0.2, system: FACTS_SYSTEM, messages: [{ role: 'user', content: `USER MESSAGE:\n${said.slice(0, 1200)}` }] };
+    const today = new Date().toISOString().slice(0, 10);
+    const user = `TODAY: ${today}\nSPEAKER: ${notes.speaker || 'unknown'}\nFAMILY NAMES: ${notes.members.map((m) => m.name).join(', ') || 'unknown'}\n` +
+      `KNOWN FACTS:\n${notes.facts.slice(0, 20).map((f) => `- ${f}`).join('\n') || 'none'}\nUSER MESSAGE:\n${said.slice(0, 1200)}`;
+    const request = { max_tokens: 220, temperature: 0.2, system: FACTS_SYSTEM, messages: [{ role: 'user', content: user }] };
     const steps: [string | undefined, (k: string, r: any) => Promise<any>][] = [
       [Deno.env.get('GEMINI_TTS_API_KEY'), callGemini], [Deno.env.get('GROQ_API_KEY'), (k, r) => callGroq(k, r)], [Deno.env.get('XAI_API_KEY'), callGrok],
     ];
@@ -1213,24 +1242,45 @@ async function rememberFamilyFacts(supabase: any, userId: string, text: string, 
       try { out = String((await fn(key, request)).content?.[0]?.text ?? ''); break; } catch { /* next free model */ }
     }
     if (!out || /^\s*NONE/i.test(out)) return;
-    const seen = known.map((k) => k.toLowerCase().replace(/\.$/, ''));
-    const fresh: string[] = [];
+    const db = notebook();
+    const known = notes.rows.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean);
+    let added = 0, corrected = 0;
     for (const line of out.split('\n')) {
-      const fact = line.trim().replace(/^[-•*\s]+/, '').trim();
-      const key = fact.toLowerCase().replace(/\.$/, '');
-      if (fact.length < 8 || fact.length > 160 || /^none/i.test(fact) || seen.some((k) => k.includes(key) || key.includes(k))) continue;
-      seen.push(key);
-      fresh.push(fact);
-      if (fresh.length === 3) break;
+      let body = line.trim().replace(/^[-•*\s]+/, '').trim();
+      let replaces = '';
+      const m = body.match(/^REPLACES:\s*(.+?)\s*=>\s*(.+)$/i);
+      if (m) { replaces = m[1].replace(/^["“]|["”]$/g, ''); body = m[2].trim(); }
+      const isPrivate = /^\[private\]/i.test(body);
+      body = body.replace(/^\[private\]\s*/i, '');
+      const until = body.match(/\[until (\d{4}-\d{2}-\d{2})\]\s*$/i)?.[1];
+      const fact = body.replace(/\s*\[until \d{4}-\d{2}-\d{2}\]\s*$/i, '').trim();
+      if (fact.length < 8 || fact.length > 160 || /^none/i.test(fact)) continue;
+      if (replaces) {
+        const old = notes.rows.find((r: any) => String(r.content?.fact ?? '').toLowerCase() === replaces.toLowerCase());
+        if (old) { await db.from('learning_sessions').update({ content: { ...old.content, retired: true } }).eq('id', old.id); corrected++; }
+      } else if (known.some((k) => sameFact(k, fact))) continue;
+      const { error } = await db.from('learning_sessions').insert({ user_id: userId, session_type: 'analytics', source: 'web',
+        content: { event: 'family_fact', fact, speaker: notes.speaker || undefined, private: isPrivate || undefined, until } });
+      if (error) throw error;
+      known.push(fact);
+      if (++added === 3) break;
     }
-    if (!fresh.length) return;
-    const { error } = await supabase.from('learning_sessions').insert(fresh.map((fact) => (
-      { user_id: userId, session_type: 'analytics', source: 'web', content: { event: 'family_fact', fact } })));
-    if (error) throw error;
-    console.log(`[memory] remembered ${fresh.length} new fact(s) from web`);
+    if (added || corrected) console.log(`[memory] remembered ${added} new fact(s), corrected ${corrected}, from web`);
   } catch (e) {
     console.error('[memory] remember non-fatal:', (e as Error).message);
   }
+}
+
+// Step 5 of Elena's roadmap: Pere and Titi may use small, happy family facts. Never private notes, worries or money.
+const KIDS_SAFE_NOTE = /school|escuela|class|clase|pet|dog|cat|perro|gato|birthday|cumple|trip|viaje|beach|playa|grand|abuel|holiday|feriado|likes|loves/i;
+const KIDS_UNSAFE_NOTE = /worr|money|debt|bank|visa|migraci|doctor|sick|hospital|cry|sad|angry|divorc|work|job|rent|pay|cost|miedo|triste/i;
+async function kidsFamilyNotes(userId: string): Promise<string> {
+  try {
+    const notes = await readFamilyNotes(userId);
+    const safe = notes.rows.filter((r: any) => !r.content?.private).map((r: any) => String(r.content?.fact ?? ''))
+      .filter((f: string) => KIDS_SAFE_NOTE.test(f) && !KIDS_UNSAFE_NOTE.test(f)).slice(0, 4);
+    return safe.length ? `\n\nFAMILY NOTES a parent shared (true; use at most one, lightly, only if it fits; never say a parent told you):\n${safe.map((f: string) => `- ${f}`).join('\n')}` : '';
+  } catch { return ''; }
 }
 
 // 5 Nov 2026 (Elena: "the user that does not want to sign in, just wants to try web chat right here, right now, gets
@@ -1365,7 +1415,8 @@ ${asked}` : ''}`;
     }
 
     // A grown-up's notebook, on any channel. The classroom and the anonymous trial never read or write it.
-    const familyFacts = !kids && !fromBot && userId ? await readFamilyFacts(supabase, userId) : [];
+    const familyNotes = !kids && !fromBot && userId ? await readFamilyNotes(userId) : null;
+    const familyFacts = familyNotes?.facts ?? [];
 
     // Sentences the child said in earlier lessons come back first (Buddy.ai: tiny vocabulary, repeated and grown; 30 Oct 2026).
     const known: string[] = Array.isArray(kids?.known)
@@ -1373,6 +1424,7 @@ ${asked}` : ''}`;
       : [];
     const memory = kids && userId ? await kidsMemoryCard(supabase, userId, Array.isArray(kids.history) ? kids.history : [])
       : { card: '', hello: '', avoid: [] as string[], judged: false };
+    if (kids && userId && !kidsIsParent(kids)) memory.card += await kidsFamilyNotes(userId);
     const isHello = kids && (Number.isInteger(kids.turn) ? kids.turn : Math.floor((Array.isArray(kids.history) ? kids.history.length : 0) / 2)) === 0;
     // CLASS mode: two classes per unit; the unit comes from her finished class days (a guest's bot sends its own count).
     let classUnit = -1;
@@ -1409,7 +1461,7 @@ ${asked}` : ''}`;
           // 2 Nov 2026: turns labelled by speaker when the page sends them (family conversation); else as before.
           messages: [...kidsLabelledHistory(kids),
                      { role: 'user', content: kids.speaker ? `${kidsSpeakerName(kids) || 'Child'}: ${message}` : message }] }
-      : formatClaudeRequest(message, familyMember, emotion, conversationHistory, isVoiceInput, originalLanguage, familyFacts.slice(0, 15));
+      : formatClaudeRequest(message, familyMember, emotion, conversationHistory, isVoiceInput, originalLanguage, familyFacts.slice(0, 15), familyNotes);
 
     // 4 Nov 2026 (Elena: "never silence for a family"): when every provider fails, a kind resting message comes back
     // as a normal reply (200), not "Lo siento, hubo un error" with a 500. Nothing is saved to the lesson or memory. The
@@ -1561,7 +1613,7 @@ ${asked}` : ''}`;
     }
 
     if (!kids && !fromBot && userId && !body.image) {
-      const noting = rememberFamilyFacts(supabase, userId, message, familyFacts);
+      const noting = rememberFamilyFacts(userId, message, familyNotes ?? { rows: [], facts: [], members: [], speaker: '', lessons: [] });
       const runtime = (globalThis as any).EdgeRuntime;
       if (runtime?.waitUntil) runtime.waitUntil(noting); else await noting;
     }

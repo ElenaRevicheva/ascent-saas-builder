@@ -17,6 +17,60 @@ const TALKING_MONTHLY_CAP = Number(Deno.env.get('TALKING_MONTHLY_CAP') || 30);
 const RUNWAY_WALLET_FLOOR = Number(Deno.env.get('RUNWAY_WALLET_FLOOR') || 279);
 const TALKING_MAX_CHARS = 450; // about 30 seconds of speech
 
+// 6 Nov 2026 (Elena: "they should bring something special... lips moving and repeating the same message is not precious").
+// A clip never repeats the reply. TWIN of espaluz_talking.py on the bots. Free models only; no true note, no clip.
+const LINE_RULES = "You write what EspaLuz, a warm friend of this family, says aloud in a short personal video. Spanish first, then the same in " +
+  "English, under 45 words in all, plain speech, no emojis, no labels, no quotes. NEVER repeat the reply they just read: bring something it does " +
+  "not contain. Never invent anything: use only the NOTES and the REPLY. Never state a price, a date or a name that is not there. ";
+const LINE_MOMENT: Record<string, string> = {
+  first_today: "Moment: first talk of the day. Ask warmly about ONE thing from the NOTES, like a friend who remembered.",
+  low_mood: "Moment: they sound low. One calm, personal line that uses ONE thing from the NOTES, then one kind thought. No advice list.",
+  asked: "Moment: they asked to see you. Take the single most useful Spanish phrase from the REPLY. Say it slowly, say it again, then what it means in English and when to use it.",
+};
+const lineWords = (t: string) => new Set(t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/[a-zñ]{3,}/g) ?? []);
+function repeatsReply(line: string, reply: string): boolean {
+  const L = lineWords(line), R = lineWords(reply);
+  if (!L.size) return true;
+  let n = 0; for (const w of L) if (R.has(w)) n++;
+  return n / L.size > 0.7;
+}
+async function freeLine(system: string, user: string): Promise<string> {
+  const groq = Deno.env.get('GROQ_API_KEY');
+  const gem = Deno.env.get('GEMINI_TTS_API_KEY');
+  if (gem) try {
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${Deno.env.get('GEMINI_MODEL') || 'gemini-2.5-flash'}:generateContent`, {
+      method: 'POST', signal: AbortSignal.timeout(20000), headers: { 'x-goog-api-key': gem, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ systemInstruction: { parts: [{ text: system }] }, contents: [{ role: 'user', parts: [{ text: user }] }], generationConfig: { maxOutputTokens: 200, temperature: 0.6 } }) });
+    if (r.ok) { const t = (await r.json()).candidates?.[0]?.content?.parts?.map((p: any) => p.text).join('') ?? ''; if (t.trim()) return t.trim(); }
+  } catch { /* next */ }
+  if (groq) try {
+    const r = await fetch('https://api.groq.com/openai/v1/chat/completions', { method: 'POST', signal: AbortSignal.timeout(20000),
+      headers: { 'Authorization': `Bearer ${groq}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: (Deno.env.get('GROQ_MODELS') || 'openai/gpt-oss-120b').split(',')[0], max_tokens: 400, temperature: 0.6, messages: [{ role: 'system', content: system }, { role: 'user', content: user }] }) });
+    if (r.ok) return String((await r.json()).choices?.[0]?.message?.content ?? '').trim();
+  } catch { /* nothing */ }
+  return '';
+}
+async function specialLine(db: any, userId: string, reason: string, reply: string): Promise<string> {
+  const { data } = await db.from('learning_sessions').select('content').eq('user_id', userId).eq('session_type', 'analytics').eq('content->>event', 'family_fact')
+    .order('created_at', { ascending: false }).limit(40);
+  const today = new Date().toISOString().slice(0, 10);
+  const notes = (data ?? []).filter((r: any) => !r.content?.retired && !r.content?.private && (!r.content?.until || String(r.content.until) >= today))
+    .map((r: any) => String(r.content?.fact ?? '')).filter(Boolean).slice(0, 12);
+  const moment = LINE_MOMENT[reason] ?? LINE_MOMENT.asked;
+  if (reason !== 'asked' && !notes.length) return '';
+  const line = await freeLine(LINE_RULES + moment, `NOTES:\n${notes.map((n: string) => `- ${n}`).join('\n') || 'none'}\nREPLY THEY JUST READ:\n${reply.slice(0, 1200)}`);
+  return line && !repeatsReply(line, reply) ? line : '';
+}
+// Her one voice, made by the free Edge voice on Oracle (WhatsApp service). Any failure falls back to the usual voice chain.
+async function emmaVoice(text: string): Promise<string> {
+  try {
+    const r = await fetch('https://webhook.aideazz.xyz/espaluz/internal/emma', { method: 'POST', signal: AbortSignal.timeout(30000),
+      headers: { 'x-espaluz-bot-secret': Deno.env.get('ESPALUZ_BOT_SECRET') ?? '', 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) });
+    return r.ok ? String((await r.json()).audioBase64 ?? '') : '';
+  } catch { return ''; }
+}
+
 async function realEspaLuz(req: Request, body: any): Promise<Response> {
   const json = (o: unknown) => new Response(JSON.stringify(o), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   const no = (reason: string) => { console.log(`[talking] no clip: ${reason}`); return json({ real: false, reason }); };
@@ -70,13 +124,19 @@ async function realEspaLuz(req: Request, body: any): Promise<Response> {
     const end = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('? '), cut.lastIndexOf('! '));
     text = end > 80 ? cut.slice(0, end + 1) : cut;
   }
+  if (user) {
+    const reply = marked ? raw.replace(marked[0], ' ') : raw;
+    text = cleanTextForTTS(await specialLine(db, user.id, String(body.reason ?? 'asked'), reply)).trim().slice(0, TALKING_MAX_CHARS);
+    if (!text) return no('nothing_special');
+  }
   const botAudio = fromBot && typeof body.audioBase64 === 'string' && body.audioBase64.length < 8_000_000 ? body.audioBase64 : '';
   if (fromBot && !botAudio) return no('no_voice');
   if (!botAudio && !text) return no('no_text');
 
   // Same voice chain as every voice note: nothing new to keep working. A bot brings its own.
-  let v: any = { audioContent: botAudio, mimeType: 'audio/mpeg', spokenBy: 'emma' };
-  if (!botAudio) {
+  const emma = botAudio || await emmaVoice(text);
+  let v: any = { audioContent: emma, mimeType: 'audio/mpeg', spokenBy: 'emma' };
+  if (!emma) {
     const voiced = await fetch(`${url}/functions/v1/generate-voice`, { method: 'POST', signal: AbortSignal.timeout(60000),
       headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' }, body: JSON.stringify({ text, voice: 'es', userId: user.id }) });
     v = await voiced.json();

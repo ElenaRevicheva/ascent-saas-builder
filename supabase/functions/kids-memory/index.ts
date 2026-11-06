@@ -46,32 +46,72 @@ serve(async (req) => {
     // 6 Nov 2026 (Elena: "firstly it is about memory, because it will follow the long road"): one grown-up notebook per
     // linked family, across web, Telegram and WhatsApp. Rows are learning_sessions like every other family record, no
     // second store. A family that never linked gets linked:false and its bot keeps its notes to itself.
-    if (mode === 'facts_get' || mode === 'facts_add') {
-      const { facts } = body;
+    if (mode === 'facts_get' || mode === 'facts_add' || mode === 'who_set') {
+      const { facts, speaker: said } = body;
       const tg = telegram_user_id != null && telegram_user_id !== '';
       const platform = tg ? 'telegram' : 'whatsapp';
+      const platformId = String(tg ? telegram_user_id : whatsapp_user_id ?? '');
       const { data: link } = await db.from('connected_bots').select('user_id')
-        .eq('platform', platform).eq('platform_user_id', String(tg ? telegram_user_id : whatsapp_user_id ?? '')).eq('is_active', true)
+        .eq('platform', platform).eq('platform_user_id', platformId).eq('is_active', true)
         .order('connected_at', { ascending: false }).limit(1);
       const userId = link?.[0]?.user_id;
       if (!userId) return json({ linked: false, facts: [] });
-      const { data: rows, error } = await db.from('learning_sessions').select('content')
-        .eq('user_id', userId).eq('session_type', 'analytics').eq('content->>event', 'family_fact')
-        .order('created_at', { ascending: false }).limit(60);
-      if (error) throw error;
-      const known: string[] = (rows ?? []).map((r: any) => String(r.content?.fact ?? '')).filter(Boolean);
-      if (mode === 'facts_get') return json({ linked: true, facts: known.slice(0, 15) });
-      const lower = known.map((k) => k.toLowerCase().replace(/\.$/, ''));
-      const fresh = (Array.isArray(facts) ? facts : []).slice(0, 3).map((f: unknown) => String(f ?? '').trim())
-        .filter((f: string) => f.length >= 8 && f.length <= 160)
-        .filter((f: string) => { const k = f.toLowerCase().replace(/\.$/, ''); return !lower.some((o) => o.includes(k) || k.includes(o)); });
-      if (fresh.length) {
-        const { error: addError } = await db.from('learning_sessions').insert(fresh.map((fact: string) => (
-          { user_id: userId, session_type: 'analytics', source: platform, content: { event: 'family_fact', fact } })));
-        if (addError) throw addError;
-        console.log(`[memory] shared ${fresh.length} fact(s) from ${platform}`);
+      // Who this number belongs to: one row per link, no schema change. The newest answer wins.
+      if (mode === 'who_set') {
+        const name = String(said ?? '').trim().slice(0, 40);
+        if (!name) return json({ linked: true, saved: false });
+        await db.from('learning_sessions').insert({ user_id: userId, session_type: 'analytics', source: platform,
+          content: { event: 'family_link', platform, platform_user_id: platformId, member: name } });
+        console.log(`[memory] number recognized on ${platform}`);
+        return json({ linked: true, saved: true });
       }
-      return json({ linked: true, added: fresh.length });
+      const { data: links } = await db.from('learning_sessions').select('content')
+        .eq('user_id', userId).eq('session_type', 'analytics').eq('content->>event', 'family_link')
+        .eq('content->>platform_user_id', platformId).order('created_at', { ascending: false }).limit(1);
+      const speaker: string = String(links?.[0]?.content?.member ?? '');
+      const { data: rows, error } = await db.from('learning_sessions').select('id, content')
+        .eq('user_id', userId).eq('session_type', 'analytics').eq('content->>event', 'family_fact')
+        .order('created_at', { ascending: false }).limit(80);
+      if (error) throw error;
+      const today = new Date().toISOString().slice(0, 10);
+      const live = (rows ?? []).filter((r: any) => !r.content?.retired && (!r.content?.until || String(r.content.until) >= today));
+      // A private note (a worry, money, health) is read only on the number of the person who said it.
+      const visible = live.filter((r: any) => !r.content?.private || (speaker && r.content?.speaker === speaker));
+      if (mode === 'facts_get') {
+        const { data: fam } = await db.from('family_members').select('name, role, age, created_at').eq('user_id', userId)
+          .eq('is_active', true).order('created_at', { ascending: false });
+        const seen = new Set<string>();
+        const members = (fam ?? []).filter((m: any) => { const k = String(m.name).toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; })
+          .map((m: any) => ({ name: m.name, role: m.role, age: m.age }));
+        const week = new Date(Date.now() - 7 * 86400000).toISOString();
+        const { data: les } = await db.from('learning_sessions').select('content, created_at').eq('user_id', userId)
+          .eq('session_type', 'classroom').gte('created_at', week).order('created_at', { ascending: false }).limit(60);
+        const lessons = [...new Set((les ?? []).map((r: any) => String(r.content?.class_label ?? '').slice(0, 120)).filter(Boolean))].slice(0, 3);
+        return json({ linked: true, facts: visible.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean).slice(0, 15),
+          members, speaker, lessons, lesson_turns: les?.length ?? 0 });
+      }
+      const words = (t: string) => new Set(t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/[a-z0-9]+/g) ?? []);
+      const same = (a: string, b: string) => { const A = words(a), B = words(b); if (!A.size || !B.size) return false;
+        let n = 0; for (const w of A) if (B.has(w)) n++; return n / Math.min(A.size, B.size) >= 0.75; };
+      const known: string[] = live.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean);
+      let added = 0, retired = 0;
+      for (const raw of (Array.isArray(facts) ? facts : []).slice(0, 3)) {
+        const item = typeof raw === 'string' ? { fact: raw } : (raw ?? {});
+        const fact = String(item.fact ?? '').trim();
+        if (fact.length < 8 || fact.length > 160) continue;
+        if (item.replaces) {
+          const old = live.find((r: any) => String(r.content?.fact ?? '').toLowerCase() === String(item.replaces).toLowerCase());
+          if (old) { await db.from('learning_sessions').update({ content: { ...old.content, retired: true } }).eq('id', old.id); retired++; }
+        } else if (known.some((k) => same(k, fact))) continue;
+        const until = /^\d{4}-\d{2}-\d{2}$/.test(String(item.until ?? '')) ? String(item.until) : undefined;
+        const { error: addError } = await db.from('learning_sessions').insert({ user_id: userId, session_type: 'analytics', source: platform,
+          content: { event: 'family_fact', fact, speaker: speaker || undefined, private: item.private ? true : undefined, until } });
+        if (addError) throw addError;
+        known.push(fact);
+        added++;
+      }
+      if (added || retired) console.log(`[memory] shared ${added} fact(s), corrected ${retired}, from ${platform}`);
+      return json({ linked: true, added, retired });
     }
     // 1 Nov 2026 (WhatsApp parity step 6): the child's stars on WhatsApp are the SAME number as in the web classroom -
     // every saved classroom answer, web or WhatsApp, minus the "start the class" turns (twin of Classroom.tsx's count).
