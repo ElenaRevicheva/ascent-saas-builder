@@ -40,8 +40,39 @@ serve(async (req) => {
   const secret = Deno.env.get('ESPALUZ_BOT_SECRET');
   if (!secret || req.headers.get('x-espaluz-bot-secret') !== secret) return json({ error: 'unauthorized' }, 401);
   try {
-    const { telegram_user_id, mode, since, platform: asked, whatsapp_user_id } = await req.json();
+    const body = await req.json();
+    const { telegram_user_id, mode, since, platform: asked, whatsapp_user_id } = body;
     const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+    // 6 Nov 2026 (Elena: "firstly it is about memory, because it will follow the long road"): one grown-up notebook per
+    // linked family, across web, Telegram and WhatsApp. Rows are learning_sessions like every other family record, no
+    // second store. A family that never linked gets linked:false and its bot keeps its notes to itself.
+    if (mode === 'facts_get' || mode === 'facts_add') {
+      const { facts } = body;
+      const tg = telegram_user_id != null && telegram_user_id !== '';
+      const platform = tg ? 'telegram' : 'whatsapp';
+      const { data: link } = await db.from('connected_bots').select('user_id')
+        .eq('platform', platform).eq('platform_user_id', String(tg ? telegram_user_id : whatsapp_user_id ?? '')).eq('is_active', true)
+        .order('connected_at', { ascending: false }).limit(1);
+      const userId = link?.[0]?.user_id;
+      if (!userId) return json({ linked: false, facts: [] });
+      const { data: rows, error } = await db.from('learning_sessions').select('content')
+        .eq('user_id', userId).eq('session_type', 'analytics').eq('content->>event', 'family_fact')
+        .order('created_at', { ascending: false }).limit(60);
+      if (error) throw error;
+      const known: string[] = (rows ?? []).map((r: any) => String(r.content?.fact ?? '')).filter(Boolean);
+      if (mode === 'facts_get') return json({ linked: true, facts: known.slice(0, 15) });
+      const lower = known.map((k) => k.toLowerCase().replace(/\.$/, ''));
+      const fresh = (Array.isArray(facts) ? facts : []).slice(0, 3).map((f: unknown) => String(f ?? '').trim())
+        .filter((f: string) => f.length >= 8 && f.length <= 160)
+        .filter((f: string) => { const k = f.toLowerCase().replace(/\.$/, ''); return !lower.some((o) => o.includes(k) || k.includes(o)); });
+      if (fresh.length) {
+        const { error: addError } = await db.from('learning_sessions').insert(fresh.map((fact: string) => (
+          { user_id: userId, session_type: 'analytics', source: platform, content: { event: 'family_fact', fact } })));
+        if (addError) throw addError;
+        console.log(`[memory] shared ${fresh.length} fact(s) from ${platform}`);
+      }
+      return json({ linked: true, added: fresh.length });
+    }
     // 1 Nov 2026 (WhatsApp parity step 6): the child's stars on WhatsApp are the SAME number as in the web classroom -
     // every saved classroom answer, web or WhatsApp, minus the "start the class" turns (twin of Classroom.tsx's count).
     // 1 Nov 2026 (Phase 3, one brain): Telegram asks too, by its Telegram user id.

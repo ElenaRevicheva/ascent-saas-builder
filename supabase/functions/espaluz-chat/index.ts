@@ -147,7 +147,7 @@ PRACTICAL HELP: you can explain a photographed document, draft a message to a la
 write a short phone script in Spanish - offer it when it fits. If you are not sure about a local fact (office hours, a
 fee, a rule), say so plainly and say where to confirm it. Never make it up.`;
 
-function formatClaudeRequest(userMessage: string, familyMember: any, emotion: any, conversationHistory: any[], isVoiceInput?: boolean, originalLanguage?: string) {
+function formatClaudeRequest(userMessage: string, familyMember: any, emotion: any, conversationHistory: any[], isVoiceInput?: boolean, originalLanguage?: string, familyFacts: string[] = []) {
   const voiceInputContext = isVoiceInput ? `\n\nVOICE INPUT CONTEXT:
 - This message was received via voice input
 - Original language: ${originalLanguage === 'ru' ? 'Russian' : originalLanguage === 'es' ? 'Spanish' : 'English'}
@@ -166,7 +166,11 @@ FAMILY MEMBER CONTEXT:
 EMOTIONAL CONTEXT:
 - Detected emotion: ${emotion.emotion} (confidence: ${Math.round(emotion.confidence * 100)}%)
 - Respond with appropriate emotional intelligence and warmth${voiceInputContext}
-
+${familyFacts.length ? `
+WHAT YOU REMEMBER ABOUT THIS FAMILY (from earlier talks on any channel; true notes, newest first):
+${familyFacts.map((f) => `- ${f}`).join('\n')}
+Bring up at most ONE, only when it truly fits, the way a friend would. Never list them, never add to them.
+` : ''}
 ${ESPALUZ_COMPANION_RULES}
 
 RESPONSE FORMAT - two parts:
@@ -1174,6 +1178,61 @@ async function callChain(request: any): Promise<{ result: any; provider: string 
   throw new Error(errors.length ? errors.join(' | ') : 'No LLM provider configured (GEMINI_API_KEY, GROQ_API_KEY or ANTHROPIC_API_KEY)');
 }
 
+// 6 Nov 2026 (Elena: "firstly it is about memory, because it will follow the long road"): the web chat kept only its last
+// 8 turns and could not see what the bots knew. Now one notebook per family: rows in learning_sessions, shared with the
+// bots through kids-memory (facts_get / facts_add). FACTS_SYSTEM is the twin of _FACTS_SYSTEM in the bots' espaluz_memory.py.
+const FACTS_SYSTEM = "You keep a small private notebook about a family for their friendly assistant EspaLuz. From the USER MESSAGE " +
+  "ONLY, write 0 to 3 LASTING facts about their life worth remembering next week: names and ages of family members, pets, their " +
+  "city or neighbourhood, a child's school or grade, their job, an upcoming appointment, move or event (with its date if given), " +
+  "plans, likes and dislikes, worries. Third person, English, under 15 words each, one per line starting with '- '. Skip greetings, " +
+  "lesson answers, single words and anything about today only. Appointments and errands ARE worth keeping (Migración, carnet or visa " +
+  "paperwork, school enrolment, doctor), with the day as said ('on Thursday'). NEVER write the NUMBERS themselves: passwords, ID, " +
+  "passport or cédula numbers, phone numbers, emails, street addresses, card or bank details; and no health details beyond 'has a " +
+  "doctor's appointment'. If nothing lasting: reply NONE.";
+
+async function readFamilyFacts(supabase: any, userId: string): Promise<string[]> {
+  const { data, error } = await supabase.from('learning_sessions').select('content')
+    .eq('user_id', userId).eq('session_type', 'analytics').eq('content->>event', 'family_fact')
+    .order('created_at', { ascending: false }).limit(60);
+  if (error) { console.error('[memory] read failed:', error.message); return []; }
+  return (data ?? []).map((r: any) => String(r.content?.fact ?? '')).filter(Boolean);
+}
+
+// Free models only (Claude excluded, like the bots). A notebook failure never touches the reply.
+async function rememberFamilyFacts(supabase: any, userId: string, text: string, known: string[]): Promise<void> {
+  try {
+    const said = text.trim();
+    if (said.length < 15 || said.startsWith('/')) return;
+    const request = { max_tokens: 200, temperature: 0.2, system: FACTS_SYSTEM, messages: [{ role: 'user', content: `USER MESSAGE:\n${said.slice(0, 1200)}` }] };
+    const steps: [string | undefined, (k: string, r: any) => Promise<any>][] = [
+      [Deno.env.get('GEMINI_TTS_API_KEY'), callGemini], [Deno.env.get('GROQ_API_KEY'), (k, r) => callGroq(k, r)], [Deno.env.get('XAI_API_KEY'), callGrok],
+    ];
+    let out = '';
+    for (const [key, fn] of steps) {
+      if (!key) continue;
+      try { out = String((await fn(key, request)).content?.[0]?.text ?? ''); break; } catch { /* next free model */ }
+    }
+    if (!out || /^\s*NONE/i.test(out)) return;
+    const seen = known.map((k) => k.toLowerCase().replace(/\.$/, ''));
+    const fresh: string[] = [];
+    for (const line of out.split('\n')) {
+      const fact = line.trim().replace(/^[-•*\s]+/, '').trim();
+      const key = fact.toLowerCase().replace(/\.$/, '');
+      if (fact.length < 8 || fact.length > 160 || /^none/i.test(fact) || seen.some((k) => k.includes(key) || key.includes(k))) continue;
+      seen.push(key);
+      fresh.push(fact);
+      if (fresh.length === 3) break;
+    }
+    if (!fresh.length) return;
+    const { error } = await supabase.from('learning_sessions').insert(fresh.map((fact) => (
+      { user_id: userId, session_type: 'analytics', source: 'web', content: { event: 'family_fact', fact } })));
+    if (error) throw error;
+    console.log(`[memory] remembered ${fresh.length} new fact(s) from web`);
+  } catch (e) {
+    console.error('[memory] remember non-fatal:', (e as Error).message);
+  }
+}
+
 // 5 Nov 2026 (Elena: "the user that does not want to sign in, just wants to try web chat right here, right now, gets
 // free 20 messages - anonymously, like we declare on our landing page; no new bicycles"). The page has offered this
 // since Aug 2025 (userId 'free-trial-user', its own 20-message counter + Subscribe dialog in ChatWithEspaluz.tsx), but
@@ -1305,6 +1364,9 @@ ${asked}` : ''}`;
       }
     }
 
+    // A grown-up's notebook, on any channel. The classroom and the anonymous trial never read or write it.
+    const familyFacts = !kids && !fromBot && userId ? await readFamilyFacts(supabase, userId) : [];
+
     // Sentences the child said in earlier lessons come back first (Buddy.ai: tiny vocabulary, repeated and grown; 30 Oct 2026).
     const known: string[] = Array.isArray(kids?.known)
       ? kids.known.filter((s: unknown) => typeof s === 'string').map((s: string) => s.trim().slice(0, 120)).filter(Boolean).slice(-20)
@@ -1347,7 +1409,7 @@ ${asked}` : ''}`;
           // 2 Nov 2026: turns labelled by speaker when the page sends them (family conversation); else as before.
           messages: [...kidsLabelledHistory(kids),
                      { role: 'user', content: kids.speaker ? `${kidsSpeakerName(kids) || 'Child'}: ${message}` : message }] }
-      : formatClaudeRequest(message, familyMember, emotion, conversationHistory, isVoiceInput, originalLanguage);
+      : formatClaudeRequest(message, familyMember, emotion, conversationHistory, isVoiceInput, originalLanguage, familyFacts.slice(0, 15));
 
     // 4 Nov 2026 (Elena: "never silence for a family"): when every provider fails, a kind resting message comes back
     // as a normal reply (200), not "Lo siento, hubo un error" with a 500. Nothing is saved to the lesson or memory. The
@@ -1496,6 +1558,12 @@ ${asked}` : ''}`;
       }
     } catch (sessionSaveError) {
       console.error('Session save exception:', sessionSaveError);
+    }
+
+    if (!kids && !fromBot && userId && !body.image) {
+      const noting = rememberFamilyFacts(supabase, userId, message, familyFacts);
+      const runtime = (globalThis as any).EdgeRuntime;
+      if (runtime?.waitUntil) runtime.waitUntil(noting); else await noting;
     }
 
     return new Response(JSON.stringify({
