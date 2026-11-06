@@ -286,7 +286,12 @@ const Classroom = () => {
   // A browser that refuses sound without a fresh tap skips the clip: the lesson never waits for it.
   useEffect(() => {
     if (!mentora && !greeting) return;
-    screen.current?.play().catch(() => { (mentoraEnded.current ?? greetingEnded.current)?.(); });
+    // 6 Nov 2026: a clip plays on the device, so the server cannot see it. One row with the clip's name, never the child's words.
+    const logClip = (outcome: string) => {
+      if (mentora && user?.id) supabase.from("learning_sessions").insert({ user_id: user.id, session_type: "analytics", source: "web",
+        content: { event: "classroom_clip", clip: mentora, outcome } }).then(({ error }) => { if (error) console.error("clip log", error.message); });
+    };
+    screen.current?.play().then(() => logClip("played")).catch(() => { logClip("skipped"); (mentoraEnded.current ?? greetingEnded.current)?.(); });
   }, [mentora, greeting]);
   const nextTip = () => {
     const key = `classroom-mentora-tip-${user?.id}`;
