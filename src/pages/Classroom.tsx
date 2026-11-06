@@ -37,6 +37,17 @@ const STICKERS: { e: string; es: string; en: string }[] = [
 ];
 const stickerFor = (n: number) => STICKERS[(n - 1) % STICKERS.length]; // n = 1st, 2nd... sticker
 
+// 6 Nov 2026 (Elena: "mentora amiga", never noisy): EspaLuz in pre-made clips, wide scene with Pere and Titi cutting to an
+// exact-lips close-up. She opens and closes the lesson, suggests one feature at most, and calms a child who says she is
+// upset. No child's name is in any clip, nothing is generated live, and one tap on Habla silences her.
+const TIPS = ["paint", "photo", "trace", "program"] as const;
+// Twin of KIDS_QUIET in espaluz-chat: a child who asked for less talk gets no extra visit.
+const ASKED_QUIET = /(paro|parar|paren|para|paran) de hablar|no hablen|que no hable|hablan? (mucho|tanto|demasiado)|c[aá]llate|c[aá]llense|silencio|stop talking|be quiet|talk(ing)? too much/i;
+const UPSET = /\b(estoy|me siento)\s+(muy\s+)?(triste|enojad[oa]|enfadad[oa]|brav[oa]|molest[oa]|asustad[oa])\b|\btengo\s+(mucho\s+)?miedo\b|\b(quiero llorar|estoy llorando)\b|\bi(?:'?m| am| feel)\s+(so |very |really )?(sad|upset|angry|mad|scared|afraid)\b|\bi want to cry\b/i;
+// A possible real harm never gets a soothing clip: it stays with the lesson brain and needs its own parent alert.
+const HURT = /me (pega|peg[oó]|golpe|hace daño|hizo daño|lastim|toca|toc[oó])|me duele|no quiero vivir|quiero morir|hits? me|hurts? me|touched me|want to die/i;
+const SAYS_BYE = /\[\s*goodbye\s*\]|adi[oó]s|hasta (luego|mañana|pronto)|\bgoodbye\b|\bsee you\b/i;
+
 const GREETING_CLIP = "/heroes/kids-greeting.mp4"; // the heroes' own voiced hello (the Telegram /kids clip) opens the class
 const TALK = { pere: ["pere-talking-1", "pere-talking-2"], titi: ["titi-talking-1", "titi-talking-2"] };
 const SHOT_CLIPS: Record<"pere" | "titi", Record<string, string>> = {
@@ -245,6 +256,37 @@ const Classroom = () => {
     supabase.from("learning_sessions").select("id").eq("user_id", user.id).eq("session_type", "classroom").limit(1)
       .then(({ data }) => setMetBefore(Boolean(data?.length)));
   }, [user?.id]);
+  const [mentora, setMentora] = useState<string | null>(null); // the EspaLuz clip on screen, with sound
+  const mentoraEnded = useRef<(() => void) | null>(null);
+  const screen = useRef<HTMLVideoElement | null>(null);
+  const skipHeroes = useRef(false); // Habla during her clip: she stops and the heroes do not start talking over the child
+  const visits = useRef({ tip: false, calm: false, close: false });
+  const usedFeatures = useRef<Set<string>>(new Set());
+  const padOpen = useRef(false);
+  const mentoraSay = (clip: string) => new Promise<void>((done) => {
+    const finish = () => { clearTimeout(safety); mentoraEnded.current = null; setMentora(null); done(); };
+    const safety = setTimeout(finish, 30000);
+    mentoraEnded.current = finish;
+    setMentora(clip);
+  });
+  // A browser that refuses sound without a fresh tap skips the clip: the lesson never waits for it.
+  useEffect(() => {
+    if (!mentora && !greeting) return;
+    screen.current?.play().catch(() => { (mentoraEnded.current ?? greetingEnded.current)?.(); });
+  }, [mentora, greeting]);
+  const nextTip = () => {
+    const key = `classroom-mentora-tip-${user?.id}`;
+    let last = -1;
+    try { last = parseInt(localStorage.getItem(key) ?? "-1", 10); } catch { /* blocked storage starts from the first tip */ }
+    for (let i = 1; i <= TIPS.length; i++) {
+      const at = (last + i) % TIPS.length;
+      const tip = TIPS[at];
+      if (usedFeatures.current.has(tip) || (tip === "trace" && !(classMode.current && traceTargets.length))) continue;
+      try { localStorage.setItem(key, String(at)); } catch { /* ignore */ }
+      return tip;
+    }
+    return null;
+  };
   const recorder = useRef<MediaRecorder | null>(null);
   const chunks = useRef<Blob[]>([]);
   const audio = useRef<HTMLAudioElement | null>(null);
@@ -355,6 +397,10 @@ const Classroom = () => {
   const [traceTargets, setTraceTargets] = useState<string[]>([]);
   // 2 Nov 2026 (Elena: "Alisa wants to paint little paintings"): the same pad opens on tracing or on 🎨 painting.
   const [pad, setPad] = useState<null | "trace" | "paint">(null);
+  useEffect(() => {
+    padOpen.current = pad !== null;
+    if (pad) usedFeatures.current.add(pad === "paint" ? "paint" : "trace");
+  }, [pad]);
 
   const talk = async (childSays: string, countsAsStar: boolean, image?: string, speaker: Who = "child") => {
     setBusy(true);
@@ -391,8 +437,26 @@ const Classroom = () => {
       setShot(0);
       if (countsAsStar && !parent) setStars((s) => s + 1);
       saveMission(text, turns.length === 0);
+      const askedQuiet = [...turns.filter((t) => t.role === "user").map((t) => t.content), heard].some((w) => ASKED_QUIET.test(w));
+      if (!parent && !askedQuiet && !visits.current.calm && UPSET.test(heard) && !HURT.test(heard)) {
+        visits.current.calm = true;
+        await mentoraSay(Math.random() < 0.5 ? "calm-1" : "calm-2");
+      }
+      if (skipHeroes.current) { skipHeroes.current = false; return; }
       await speak(stripShotTags(text), spoken);
       if (countsAsStar && !parent && (stars + 1) % 5 === 0 && !hush.current) await celebrate(stars + 1);
+      const childTurns = turns.filter((t) => t.role === "user" && (t.who ?? "child") === "child").length + (parent ? 0 : 1);
+      if (!hush.current && !askedQuiet) {
+        if (!visits.current.close && childTurns >= 2 && SAYS_BYE.test(text)) {
+          visits.current.close = true;
+          await mentoraSay("close");
+        } else if (!parent && !image && !padOpen.current && !visits.current.tip && childTurns >= 4) {
+          const tip = nextTip();
+          visits.current.tip = true;
+          if (tip) await mentoraSay(tip);
+        }
+        skipHeroes.current = false;
+      }
     } catch (e) {
       toast.error("Pere y Titi no pudieron contestar. / Pere and Titi could not answer. Try again!");
       console.error("classroom talk failed", e);
@@ -441,6 +505,7 @@ const Classroom = () => {
       hush.current = true;
       audio.current?.pause();
       window.speechSynthesis?.cancel();
+      if (mentoraEnded.current) { skipHeroes.current = true; mentoraEnded.current(); }
     } catch {
       toast.error("Necesitamos el micrófono. / We need the microphone.");
     }
@@ -456,6 +521,7 @@ const Classroom = () => {
     try {
       const { b64, url } = await shrinkPhoto(file);
       setPhoto(url);
+      usedFeatures.current.add("photo");
       await talk("📷 ¡Mira mi foto! / Look at my photo!", true, b64);
     } catch {
       toast.error("No pude abrir la foto. / I could not open the photo.");
@@ -491,15 +557,16 @@ const Classroom = () => {
       </div>
 
       <video
-        key={reward ? `dance-${reward}` : greeting ? GREETING_CLIP : `${lines[shot]?.clip ?? IDLE_CLIP}-${shot}`}
-        src={reward ? DANCE_CLIP : greeting ? GREETING_CLIP : lines[shot]?.clip ?? IDLE_CLIP}
+        ref={screen}
+        key={mentora ? `mentora-${mentora}` : reward ? `dance-${reward}` : greeting ? GREETING_CLIP : `${lines[shot]?.clip ?? IDLE_CLIP}-${shot}`}
+        src={mentora ? `/mentora/${mentora}.mp4` : reward ? DANCE_CLIP : greeting ? GREETING_CLIP : lines[shot]?.clip ?? IDLE_CLIP}
         autoPlay
-        loop={!greeting}
-        muted={!greeting}
+        loop={!greeting && !mentora}
+        muted={!greeting && !mentora}
         playsInline
-        onEnded={() => greetingEnded.current?.()}
-        onError={() => greetingEnded.current?.()}
-        className="w-full max-w-[520px] aspect-square rounded-[2rem] shadow-2xl border-8 border-white/80 object-cover"
+        onEnded={() => (mentoraEnded.current ?? greetingEnded.current)?.()}
+        onError={() => (mentoraEnded.current ?? greetingEnded.current)?.()}
+        className={`w-full rounded-[2rem] shadow-2xl border-8 border-white/80 object-cover ${mentora ? "max-w-[720px] aspect-[1088/704]" : "max-w-[520px] aspect-square"}`}
       />
 
       {reward > 0 && (
@@ -565,15 +632,17 @@ const Classroom = () => {
         <Button size="lg" className="rounded-full text-2xl h-20 px-10 shadow-xl" disabled={busy || loading}
           onClick={() => {
             classMode.current = false;
-            // First lesson ever: Pere and Titi introduce themselves in their own voices while the first line is written.
-            if (!metBefore) {
-              greetingDone.current = new Promise<void>((done) => {
+            // 6 Nov 2026: EspaLuz opens the lesson while the first line is written.
+            // First lesson ever: then Pere and Titi introduce themselves in their own voices.
+            greetingDone.current = mentoraSay(metBefore ? "open-back" : "open-first").then(() => {
+              if (metBefore || skipHeroes.current) return;
+              return new Promise<void>((done) => {
                 const finish = () => { greetingEnded.current = null; done(); };
                 greetingEnded.current = finish;
                 setTimeout(finish, 25000);
+                setGreeting(true);
               });
-              setGreeting(true);
-            }
+            });
             talk("¡Hola Pere y Titi! Quiero empezar la clase. / Hello Pere and Titi! I want to start the class.", false);
           }}>
           <Play className="w-8 h-8 mr-2" /> ¡Empezar! / Start!
@@ -581,6 +650,7 @@ const Classroom = () => {
         <Button size="lg" variant="secondary" className="rounded-full text-2xl h-20 px-10 shadow-xl" disabled={busy || loading}
           onClick={() => {
             classMode.current = true;
+            greetingDone.current = mentoraSay(metBefore ? "open-back" : "open-first");
             talk("¡Hola Pere y Titi! Quiero empezar la clase. / Hello Pere and Titi! I want to start the class.", false);
           }}>
           📚 ¡Clase! / Class!
@@ -648,15 +718,15 @@ const Classroom = () => {
         </button>
         <button
           onClick={recording ? stopRecording : startRecording}
-          disabled={busy && !recording && !speaking}
+          disabled={busy && !recording && !speaking && !mentora}
           className={`w-32 h-32 rounded-full shadow-2xl flex flex-col items-center justify-center text-white text-lg font-bold transition
-            ${recording ? "bg-red-500 animate-pulse" : busy && !speaking ? "bg-gray-400"
+            ${recording ? "bg-red-500 animate-pulse" : busy && !speaking && !mentora ? "bg-gray-400"
               : who === "child" ? "bg-green-500 hover:bg-green-600" : "bg-violet-500 hover:bg-violet-600"}`}
           aria-label={recording ? "Stop" : `Talk - ${nameOf(who)}`}
         >
           {recording ? <Square className="w-12 h-12" /> : <Mic className="w-12 h-12" />}
           <span className="mt-1 text-center leading-tight px-2">
-            {recording ? "Listo / Done" : busy && !speaking ? "…" : who === "child" ? "Habla / Talk" : `Habla ${nameOf(who)}`}
+            {recording ? "Listo / Done" : busy && !speaking && !mentora ? "…" : who === "child" ? "Habla / Talk" : `Habla ${nameOf(who)}`}
           </span>
         </button>
         {/* 2 Nov 2026 (Elena: "they recognize when mother is talking and when Alisa is talking"): who talks next. Tap a
