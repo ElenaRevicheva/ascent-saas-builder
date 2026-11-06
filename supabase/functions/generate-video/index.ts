@@ -21,10 +21,12 @@ const TALKING_MAX_CHARS = 450; // about 30 seconds of speech
 // A clip never repeats the reply. TWIN of espaluz_talking.py on the bots. Free models only; no true note, no clip.
 const LINE_RULES = "You write what EspaLuz, a warm friend of this family, says aloud in a short personal video. Spanish first, then the same in " +
   "English, under 45 words in all, plain speech, no emojis, no labels, no quotes. NEVER repeat the reply they just read: bring something it does " +
-  "not contain. Never invent anything: use only the NOTES and the REPLY. Never state a price, a date or a name that is not there. Warm and light. Never mention marital status, money, health or hardship. ";
+  "not contain. Never invent anything: use only the NOTES and the REPLY. Never state a price, a date or a name that is not there. Never mention marital status, money, health or hardship. " +
+  "Speak to this one person, warm and confidential, like a private note from a friend who knows them. One thing only, and it must belong to them. No teaching, no tips, no general encouragement. If you have nothing truly personal and worth a surprise, reply exactly NONE. ";
 const LINE_MOMENT: Record<string, string> = {
-  first_today: "Moment: first talk of the day. Ask warmly about ONE thing from the NOTES, like a friend who remembered.",
-  low_mood: "Moment: they sound low. One calm, personal line that uses ONE thing from the NOTES, then one kind thought. No advice list.",
+  remembered: "Moment: a surprise visit. Only if a note names something happening today, tomorrow or just past, or a step they are proud of, ask or say something about that ONE thing. Otherwise reply NONE.",
+  low_mood: "Moment: they sound low. One calm, personal line about ONE thing from the NOTES that shows how far they have come or who is beside them, then one kind thought. No advice.",
+  long_road: "Moment: the long road. From the NOTES, one or two true things that show how far this family has come. Quiet and proud, never dramatic.",
   asked: "Moment: they asked to see you. Take the single most useful Spanish phrase from the REPLY. Say it slowly, say it again, then what it means in English and when to use it.",
 };
 const lineWords = (t: string) => new Set(t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/[a-zñ]{3,}/g) ?? []);
@@ -57,10 +59,11 @@ async function specialLine(db: any, userId: string, reason: string, reply: strin
   const today = new Date().toISOString().slice(0, 10);
   const notes = (data ?? []).filter((r: any) => !r.content?.retired && !r.content?.private && (!r.content?.until || String(r.content.until) >= today))
     .map((r: any) => String(r.content?.fact ?? '')).filter((f: string) => f && !/spouse|single parent|divorc|widow|money|debt|\[object/i.test(f)).slice(0, 12);
-  const moment = LINE_MOMENT[reason] ?? LINE_MOMENT.asked;
   if (reason !== 'asked' && !notes.length) return '';
-  const line = await freeLine(LINE_RULES + moment, `NOTES:\n${notes.map((n: string) => `- ${n}`).join('\n') || 'none'}\nREPLY THEY JUST READ:\n${reply.slice(0, 1200)}`);
-  return line && !repeatsReply(line, reply) ? line : '';
+  if (reason === 'long_road' && notes.length < 5) return '';
+  const moment = LINE_MOMENT[reason] ?? LINE_MOMENT.asked;
+  const line = await freeLine(LINE_RULES + moment, `TODAY: ${today}\nNOTES:\n${notes.map((n: string) => `- ${n}`).join('\n') || 'none'}\nREPLY THEY JUST READ:\n${reply.slice(0, 1200)}`);
+  return line && !/^\s*NONE/i.test(line) && !repeatsReply(line, reply) ? line : '';
 }
 // Her one voice, made by the free Edge voice on Oracle (WhatsApp service). Any failure falls back to the usual voice chain.
 async function emmaVoice(text: string): Promise<string> {
@@ -126,7 +129,18 @@ async function realEspaLuz(req: Request, body: any): Promise<Response> {
   }
   if (user) {
     const reply = marked ? raw.replace(marked[0], ' ') : raw;
-    text = cleanTextForTTS(await specialLine(db, user.id, String(body.reason ?? 'asked'), reply)).trim().slice(0, TALKING_MAX_CHARS);
+    // Elena, 6 Nov 2026: a rare surprise that belongs to the person. The page asks often; the door decides: one a week.
+    let reason = String(body.reason ?? 'asked');
+    if (reason !== 'asked') {
+      const since = (days: number) => new Date(Date.now() - days * 86400000).toISOString();
+      const auto = async (days: number) => (await db.from('learning_sessions').select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id).eq('session_type', 'analytics').eq('content->>event', 'talking_video')
+        .neq('content->>reason', 'asked').gte('created_at', since(days))).count ?? 0;
+      if (await auto(7) > 0) return no('surprise_this_week');
+      reason = reason === 'low_mood' ? 'low_mood' : (await auto(30) === 0 && (count ?? 0) > 0 ? 'long_road' : 'remembered');
+    }
+    body.reason = reason;
+    text = cleanTextForTTS(await specialLine(db, user.id, reason, reply)).trim().slice(0, TALKING_MAX_CHARS);
     if (!text) return no('nothing_special');
   }
   const botAudio = fromBot && typeof body.audioBase64 === 'string' && body.audioBase64.length < 8_000_000 ? body.audioBase64 : '';
