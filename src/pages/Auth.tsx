@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 
 import { supabase } from '@/integrations/supabase/client';
+import { signupErrorKind, track } from '@/lib/track';
 import { Eye, EyeOff, ArrowLeft, Sparkles } from 'lucide-react';
 import SubscriptionRecovery from '@/components/SubscriptionRecovery';
 
@@ -239,10 +240,12 @@ const Auth = () => {
     try {
       const { error } = await signUp(formData.email.trim(), formData.password, formData.fullName.trim() || undefined);
       if (error) {
+        track('app_signup_error', { kind: signupErrorKind(error.message) });
         setError(/registered|exists/i.test(error.message)
           ? 'This email already has an account. Please sign in, or reset your password.'
           : error.message);
       } else {
+        track('app_signup_sent');
         setNotice(`Almost there! We sent a confirmation link to ${formData.email.trim()}. Open it, then sign in here. Your 14 free days start now.`);
         setMode('signin');
       }
@@ -325,11 +328,13 @@ const Auth = () => {
         if (error.message.includes('Invalid login credentials')) {
           setError('Invalid email or password. Please check your credentials.');
         } else if (error.message.includes('Email not confirmed')) {
+          track('app_signin_unconfirmed');
           setError('Please check your email and click the confirmation link before signing in.');
         } else {
           setError(error.message);
         }
       } else {
+        track('app_signin');
         toast({
           title: "Welcome back!",
           description: "You have successfully signed in.",

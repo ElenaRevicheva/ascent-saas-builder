@@ -2,8 +2,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { queryClient } from "@/lib/queryClient";
+import { trackDoorClicks, trackRoute } from "@/lib/track";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
@@ -17,11 +19,22 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Classroom from "./pages/Classroom";
 
+trackDoorClicks();
+
+const RouteCounter = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    trackRoute(pathname);
+  }, [pathname]);
+  return null;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <RouteCounter />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/auth" element={<Auth />} />

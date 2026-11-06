@@ -14,6 +14,7 @@ import { TalkingHello } from "@/components/landing/TalkingHello";
 import { toast } from 'sonner';
 import { useLearningProgress } from '@/hooks/useLearningProgress';
 import { useFreeMessages } from '@/hooks/useFreeMessages';
+import { track, trackChatMessage } from '@/lib/track';
 import SubscriptionFlow from '@/components/SubscriptionFlow';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import avatarImage from '@/assets/avatar-teacher.jpg';
@@ -189,11 +190,14 @@ export const ChatWithEspaluz = ({ onUpgradeClick }: ChatWithEspaluzProps) => {
     // Check free message limitations for non-authenticated users
     if (!user) {
       if (hasReachedLimit) {
+        track('app_free_wall', { via: 'text' });
         toast.error('Free message limit reached! Subscribe to continue unlimited conversations.');
         setShowSubscriptionDialog(true);
         return;
       }
     }
+
+    trackChatMessage(!!user);
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
@@ -567,6 +571,7 @@ The video script will be used to generate an avatar video with synchronized audi
   const startRecording = async () => {
     // Check free message limit for non-authenticated users
     if (!user && hasReachedLimit) {
+      track('app_free_wall', { via: 'voice' });
       toast.error('Free message limit reached! Subscribe to continue unlimited conversations.');
       setShowSubscriptionDialog(true);
       return;
@@ -652,12 +657,13 @@ The video script will be used to generate an avatar video with synchronized audi
             timestamp: new Date()
           };
           setMessages(prev => [...prev, userMessage]);
-          
+          trackChatMessage(!!user);
+
           // Increment message count for non-authenticated users
           if (!user) {
             incrementMessageCount();
           }
-          
+
           // Send to Espaluz for bilingual response
           const { data: chatData, error: chatError } = await supabase.functions.invoke('espaluz-chat', {
             body: {
