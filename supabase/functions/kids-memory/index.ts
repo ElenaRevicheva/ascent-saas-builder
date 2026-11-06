@@ -123,7 +123,10 @@ serve(async (req) => {
         const { data: les } = await db.from('learning_sessions').select('content, created_at').eq('user_id', userId)
           .eq('session_type', 'classroom').gte('created_at', week).order('created_at', { ascending: false }).limit(60);
         const lessons = [...new Set((les ?? []).map((r: any) => String(r.content?.class_label ?? '').slice(0, 120)).filter(Boolean))].slice(0, 3);
-        return json({ linked: true, facts: visible.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean).slice(0, 15),
+        // 6 Nov 2026 (Elena: Telegram exactly like WhatsApp): a family that pays on one channel is paying on all of them.
+        const { data: paidRows } = await db.from('user_subscriptions').select('id').eq('user_id', userId).eq('status', 'active')
+          .gt('current_period_end', new Date().toISOString()).limit(1);
+        return json({ linked: true, family_paying: !!paidRows?.length, facts: visible.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean).slice(0, 15),
           members, speaker, lessons, lesson_turns: les?.length ?? 0 });
       }
       const words = (t: string) => new Set(t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/[a-z0-9]+/g) ?? []);
