@@ -74,7 +74,7 @@ serve(async (req) => {
         .order('created_at', { ascending: false }).limit(80);
       if (error) throw error;
       const today = new Date().toISOString().slice(0, 10);
-      const live = (rows ?? []).filter((r: any) => !r.content?.retired && (!r.content?.until || String(r.content.until) >= today));
+      const live = (rows ?? []).filter((r: any) => !r.content?.retired && r.content?.fact !== '[object Object]' && (!r.content?.until || String(r.content.until) >= today));
       // A private note (a worry, money, health) is read only on the number of the person who said it.
       const visible = live.filter((r: any) => !r.content?.private || (speaker && r.content?.speaker === speaker));
       if (mode === 'facts_get') {

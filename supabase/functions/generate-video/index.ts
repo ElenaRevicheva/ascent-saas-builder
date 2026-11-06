@@ -21,7 +21,7 @@ const TALKING_MAX_CHARS = 450; // about 30 seconds of speech
 // A clip never repeats the reply. TWIN of espaluz_talking.py on the bots. Free models only; no true note, no clip.
 const LINE_RULES = "You write what EspaLuz, a warm friend of this family, says aloud in a short personal video. Spanish first, then the same in " +
   "English, under 45 words in all, plain speech, no emojis, no labels, no quotes. NEVER repeat the reply they just read: bring something it does " +
-  "not contain. Never invent anything: use only the NOTES and the REPLY. Never state a price, a date or a name that is not there. ";
+  "not contain. Never invent anything: use only the NOTES and the REPLY. Never state a price, a date or a name that is not there. Warm and light. Never mention marital status, money, health or hardship. ";
 const LINE_MOMENT: Record<string, string> = {
   first_today: "Moment: first talk of the day. Ask warmly about ONE thing from the NOTES, like a friend who remembered.",
   low_mood: "Moment: they sound low. One calm, personal line that uses ONE thing from the NOTES, then one kind thought. No advice list.",
@@ -56,7 +56,7 @@ async function specialLine(db: any, userId: string, reason: string, reply: strin
     .order('created_at', { ascending: false }).limit(40);
   const today = new Date().toISOString().slice(0, 10);
   const notes = (data ?? []).filter((r: any) => !r.content?.retired && !r.content?.private && (!r.content?.until || String(r.content.until) >= today))
-    .map((r: any) => String(r.content?.fact ?? '')).filter(Boolean).slice(0, 12);
+    .map((r: any) => String(r.content?.fact ?? '')).filter((f: string) => f && !/spouse|single parent|divorc|widow|money|debt|\[object/i.test(f)).slice(0, 12);
   const moment = LINE_MOMENT[reason] ?? LINE_MOMENT.asked;
   if (reason !== 'asked' && !notes.length) return '';
   const line = await freeLine(LINE_RULES + moment, `NOTES:\n${notes.map((n: string) => `- ${n}`).join('\n') || 'none'}\nREPLY THEY JUST READ:\n${reply.slice(0, 1200)}`);

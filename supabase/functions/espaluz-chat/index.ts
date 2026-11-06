@@ -1214,7 +1214,7 @@ async function readFamilyNotes(userId: string): Promise<FamilyNotes> {
     .map((m: any) => ({ name: m.name, role: m.role, age: m.age }));
   const speaker = members.find((m) => m.role === 'parent')?.name ?? '';
   const today = new Date().toISOString().slice(0, 10);
-  const live = (rows ?? []).filter((r: any) => !r.content?.retired && (!r.content?.until || String(r.content.until) >= today));
+  const live = (rows ?? []).filter((r: any) => !r.content?.retired && r.content?.fact !== '[object Object]' && (!r.content?.until || String(r.content.until) >= today));
   const visible = live.filter((r: any) => !r.content?.private || (speaker && r.content?.speaker === speaker));
   const lessons = [...new Set((les ?? []).map((r: any) => String(r.content?.class_label ?? '').slice(0, 120)).filter(Boolean))].slice(0, 3) as string[];
   return { rows: live, facts: visible.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean), members, speaker, lessons };
