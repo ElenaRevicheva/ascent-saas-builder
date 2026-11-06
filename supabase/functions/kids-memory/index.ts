@@ -46,6 +46,42 @@ serve(async (req) => {
     // 6 Nov 2026 (Elena: "firstly it is about memory, because it will follow the long road"): one grown-up notebook per
     // linked family, across web, Telegram and WhatsApp. Rows are learning_sessions like every other family record, no
     // second store. A family that never linked gets linked:false and its bot keeps its notes to itself.
+    // 6 Nov 2026 (Elena: free inside the same 14 days): one tap from a bot chat into the classroom, already signed in. A family
+    // with no web account gets one under an internal address built from the hashed id: no phone number, nothing emailed. Its
+    // trial end is the bot's (app_metadata.trial_until, read by get_user_subscription_status). An account that exists is untouched.
+    if (mode === 'classroom_link') {
+      const tgLink = telegram_user_id != null && telegram_user_id !== '';
+      const platform = tgLink ? 'telegram' : 'whatsapp';
+      const platformId = String(tgLink ? telegram_user_id : whatsapp_user_id ?? '');
+      if (!platformId) return json({ ok: false, reason: 'no_id' });
+      const redirectTo = 'https://app.espaluz.lat/classroom';
+      const { data: found } = await db.from('connected_bots').select('user_id').eq('platform', platform).eq('platform_user_id', platformId)
+        .eq('is_active', true).order('connected_at', { ascending: false }).limit(1);
+      let email = '';
+      if (found?.[0]?.user_id) {
+        const { data: existing } = await db.auth.admin.getUserById(found[0].user_id);
+        email = existing?.user?.email ?? '';
+        if (!email) return json({ ok: false, reason: 'no_email' });
+      } else {
+        const until = Date.parse(String(body.trial_until ?? ''));
+        if (!body.paid && !(until > Date.now())) return json({ ok: false, reason: 'no_access' });
+        const hash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${platform}:${platformId}`))))
+          .map((b) => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
+        email = `f${hash}@family.espaluz.lat`;
+        const { error: made } = await db.auth.admin.createUser({ email, email_confirm: true,
+          app_metadata: until > Date.now() ? { trial_until: new Date(until).toISOString() } : {} });
+        if (made && !/already/i.test(made.message)) throw made;
+      }
+      const { data: gen, error: genError } = await db.auth.admin.generateLink({ type: 'magiclink', email, options: { redirectTo } });
+      if (genError || !gen?.properties?.action_link || !gen?.user?.id) throw genError ?? new Error('no link');
+      if (!found?.[0]?.user_id) {
+        const { error: linkError } = await db.from('connected_bots').upsert({ user_id: gen.user.id, platform, platform_user_id: platformId,
+          is_active: true, connected_at: new Date().toISOString(), last_activity: new Date().toISOString() }, { onConflict: 'platform,platform_user_id' });
+        if (linkError) throw linkError;
+      }
+      console.log(`[classroom-link] made on ${platform}, ${found?.[0]?.user_id ? 'existing' : 'new'} family`);
+      return json({ ok: true, url: gen.properties.action_link });
+    }
     if (mode === 'facts_get' || mode === 'facts_add' || mode === 'who_set') {
       const { facts, speaker: said } = body;
       const tg = telegram_user_id != null && telegram_user_id !== '';
