@@ -111,13 +111,13 @@ export const AvatarUpload = () => {
             setAvatarUrl(data.publicUrl);
           } else {
             // Show default EspaLuz avatar
-            const defaultAvatarUrl = 'https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/avatars/5fa36928-3201-4c2f-bc27-c30b7a6d36c6/avatar.mp4';
+            const defaultAvatarUrl = '/videos/espaluz-avatar.mp4';
             setAvatarUrl(defaultAvatarUrl);
           }
         })
         .catch(() => {
           // Show default EspaLuz avatar if fetch fails
-          const defaultAvatarUrl = 'https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/avatars/5fa36928-3201-4c2f-bc27-c30b7a6d36c6/avatar.mp4';
+          const defaultAvatarUrl = '/videos/espaluz-avatar.mp4';
           setAvatarUrl(defaultAvatarUrl);
         });
     }

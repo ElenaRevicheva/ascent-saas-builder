@@ -476,7 +476,7 @@ const Index = () => {
                         preload="metadata"
                         style={{ backgroundColor: '#000' }}
                       >
-                        <source src="https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/generated-videos/demo.mp4" type="video/mp4" />
+                        <source src="/videos/demo.mp4" type="video/mp4" />
                         <p className="flex items-center justify-center h-40 bg-gray-100 text-gray-600 text-center text-sm">
                           🎬 Video loading...
                         </p>
@@ -497,7 +497,7 @@ const Index = () => {
                         preload="metadata"
                         style={{ backgroundColor: '#000' }}
                       >
-                        <source src="https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/generated-videos/demo1.mp4" type="video/mp4" />
+                        <source src="/videos/demo1.mp4" type="video/mp4" />
                         <p className="flex items-center justify-center h-40 bg-gray-100 text-gray-600 text-center text-sm">
                           🎬 Video loading...
                         </p>
@@ -1080,7 +1080,7 @@ const Index = () => {
                     className="w-full h-auto rounded-md bg-black"
                     poster=""
                   >
-                    <source src="https://euyidvolwqmzijkfrplh.supabase.co/storage/v1/object/public/generated-videos/demo2.mp4" type="video/mp4" />
+                    <source src="/videos/demo2.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                 </div>
