@@ -4,7 +4,8 @@ import skyPoster from "@/assets/heroes/sky-poster.jpg";
 
 /* Whole-page sunset sky (Elena 5 Nov 2026): "vivid, clouds moving, rays of light flowing, violet and sun, a little rose,
    very light palette" - built like aideazz.xyz/api (background video under a veil) + sop-ai-ops (light-leak, glow, grain).
-   Sky = 15 s Grok Imagine loop (seam 1.7/255), fixed behind everything. The veil keeps dark text readable.
+   Sky = 15 s Grok Imagine loop, fixed behind everything. 6 Nov 2026 (Elena, picked by her from a Grok test): two big soft see-through
+   palms swaying inside the sky itself, nothing laid on top; the palm-free sky of 5 Nov is in git history and OneDrive. The veil keeps dark text readable.
    Reduced-motion users get the still sky and no moving light. */
 export function SkyBackground() {
   const [still, setStill] = useState(false);
