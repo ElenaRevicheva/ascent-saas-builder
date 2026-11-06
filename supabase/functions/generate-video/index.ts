@@ -22,7 +22,7 @@ const TALKING_MAX_CHARS = 450; // about 30 seconds of speech
 const LINE_RULES = "You write what EspaLuz, a warm friend of this family, says aloud in a short personal video. Spanish first, then the same in " +
   "English, under 45 words in all, plain speech, no emojis, no labels, no quotes. NEVER repeat the reply they just read: bring something it does " +
   "not contain. Never invent anything: use only the NOTES and the REPLY. Never state a price, a date or a name that is not there. Never mention marital status, money, health or hardship. " +
-  "Speak to this one grown-up, warm and personal, like a friend who knows their life. Bring ONE concrete, practically useful thing tied to a NOTE: what to say, what to bring, who to ask, or the exact Spanish phrase for what is coming up, and why it helps. Never ask how they feel, never offer psychological support or encouragement, never describe their feelings, never praise. Use only facts in the NOTES, no guessed details. Write normal words, never spaced-out letters. If you cannot be really useful, reply exactly NONE. ";
+  "Speak to this one grown-up, warm and personal, like a friend who knows their life. Bring ONE concrete, practically useful thing tied to a NOTE: what to say, what to bring, who to ask, or the exact Spanish phrase for what is coming up, and why it helps. Never ask how they feel, never offer psychological support or encouragement, never describe their feelings, never praise. Use only facts in the NOTES, no guessed details. You speak to the grown-up named in TALKING TO, by name at most once. Talk ABOUT a child, never TO a child. Never state a rule, a policy or what a school or office will do. Write normal words, never spaced-out letters. If you cannot be really useful, reply exactly NONE. ";
 const LINE_MOMENT: Record<string, string> = {
   remembered: "Moment: a surprise visit. Only if a NOTE names something coming up or just past, give the one thing that will help them with it. Otherwise reply NONE.",
   low_mood: "Moment: they are having a hard moment. Do not talk about it. Take one practical thing off their plate, tied to a NOTE: a ready sentence or the next small step.",
@@ -62,7 +62,8 @@ async function specialLine(db: any, userId: string, reason: string, reply: strin
   if (reason !== 'asked' && !notes.length) return '';
   if (reason === 'long_road' && notes.length < 5) return '';
   const moment = LINE_MOMENT[reason] ?? LINE_MOMENT.asked;
-  const line = await freeLine(LINE_RULES + moment, `TODAY: ${today}\nNOTES:\n${notes.map((n: string) => `- ${n}`).join('\n') || 'none'}\nREPLY THEY JUST READ:\n${reply.slice(0, 1200)}`);
+  const { data: fam } = await db.from('family_members').select('name').eq('user_id', userId).eq('is_active', true).eq('role', 'parent').order('created_at', { ascending: false }).limit(1);
+  const line = await freeLine(LINE_RULES + moment, `TODAY: ${today}\nTALKING TO: ${fam?.[0]?.name ?? 'the parent'}\nNOTES:\n${notes.map((n: string) => `- ${n}`).join('\n') || 'none'}\nREPLY THEY JUST READ:\n${reply.slice(0, 1200)}`);
   return line && !/^\s*NONE/i.test(line) && !repeatsReply(line, reply) ? line : '';
 }
 // Her one voice, made by the free Edge voice on Oracle (WhatsApp service). Any failure falls back to the usual voice chain.
