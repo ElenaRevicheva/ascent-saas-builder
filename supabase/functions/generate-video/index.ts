@@ -24,10 +24,19 @@ async function realEspaLuz(req: Request, body: any): Promise<Response> {
   if (!key) return no('no_key');
   const authHeader = req.headers.get('Authorization') ?? '';
   const url = Deno.env.get('SUPABASE_URL')!;
-  const asUser = createClient(url, Deno.env.get('SUPABASE_ANON_KEY')!, { global: { headers: { Authorization: authHeader } } });
-  const token = authHeader.replace(/^Bearer\s+/i, '');
-  const { data: { user }, error: authError } = await asUser.auth.getUser(token);
-  if (!user) { console.log('[talking] auth:', authError?.message); return no('not_signed_in'); }
+  // 6 Nov 2026: the Telegram and WhatsApp bots use this same door with the bots' secret. Payment truth and the monthly cap
+  // live on their side (espaluz_talking.py), because a bot family may have no web account; they send their own Emma voice.
+  // The wallet floor below still guards every clip.
+  const botSecret = Deno.env.get('ESPALUZ_BOT_SECRET');
+  const fromBot = !!botSecret && req.headers.get('x-espaluz-bot-secret') === botSecret;
+  let user: any = null;
+  if (!fromBot) {
+    const asUser = createClient(url, Deno.env.get('SUPABASE_ANON_KEY')!, { global: { headers: { Authorization: authHeader } } });
+    const token = authHeader.replace(/^Bearer\s+/i, '');
+    const { data, error: authError } = await asUser.auth.getUser(token);
+    user = data?.user ?? null;
+    if (!user) { console.log('[talking] auth:', authError?.message); return no('not_signed_in'); }
+  }
   const rw = (path: string, init: RequestInit = {}) => fetch(RUNWAY_API + path, { ...init, signal: AbortSignal.timeout(30000),
     headers: { 'Authorization': `Bearer ${key}`, 'X-Runway-Version': '2024-11-06', 'Content-Type': 'application/json' } });
 
@@ -41,12 +50,15 @@ async function realEspaLuz(req: Request, body: any): Promise<Response> {
 
   const db = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
   const nowIso = new Date().toISOString();
-  const { data: subs } = await db.from('user_subscriptions').select('id').eq('user_id', user.id).eq('status', 'active').gt('current_period_end', nowIso).limit(1);
-  if (!subs?.length) return no('not_paid');
-  const monthStart = nowIso.slice(0, 7) + '-01T00:00:00Z';
-  const { count } = await db.from('learning_sessions').select('id', { count: 'exact', head: true })
-    .eq('user_id', user.id).eq('session_type', 'analytics').eq('content->>event', 'talking_video').gte('created_at', monthStart);
-  if ((count ?? 0) >= TALKING_MONTHLY_CAP) return no('monthly_cap');
+  let count: number | null = 0;
+  if (user) {
+    const { data: subs } = await db.from('user_subscriptions').select('id').eq('user_id', user.id).eq('status', 'active').gt('current_period_end', nowIso).limit(1);
+    if (!subs?.length) return no('not_paid');
+    const monthStart = nowIso.slice(0, 7) + '-01T00:00:00Z';
+    ({ count } = await db.from('learning_sessions').select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id).eq('session_type', 'analytics').eq('content->>event', 'talking_video').gte('created_at', monthStart));
+    if ((count ?? 0) >= TALKING_MONTHLY_CAP) return no('monthly_cap');
+  }
   const org = await (await rw('/organization')).json();
   if (typeof org.creditBalance !== 'number' || org.creditBalance <= RUNWAY_WALLET_FLOOR) return no('wallet_floor');
 
@@ -58,13 +70,18 @@ async function realEspaLuz(req: Request, body: any): Promise<Response> {
     const end = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('? '), cut.lastIndexOf('! '));
     text = end > 80 ? cut.slice(0, end + 1) : cut;
   }
-  if (!text) return no('no_text');
+  const botAudio = fromBot && typeof body.audioBase64 === 'string' && body.audioBase64.length < 8_000_000 ? body.audioBase64 : '';
+  if (fromBot && !botAudio) return no('no_voice');
+  if (!botAudio && !text) return no('no_text');
 
-  // Same voice chain as every voice note: nothing new to keep working.
-  const voiced = await fetch(`${url}/functions/v1/generate-voice`, { method: 'POST', signal: AbortSignal.timeout(60000),
-    headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' }, body: JSON.stringify({ text, voice: 'es', userId: user.id }) });
-  const v = await voiced.json();
-  if (!voiced.ok || !v.audioContent) return no('no_voice');
+  // Same voice chain as every voice note: nothing new to keep working. A bot brings its own.
+  let v: any = { audioContent: botAudio, mimeType: 'audio/mpeg', spokenBy: 'emma' };
+  if (!botAudio) {
+    const voiced = await fetch(`${url}/functions/v1/generate-voice`, { method: 'POST', signal: AbortSignal.timeout(60000),
+      headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' }, body: JSON.stringify({ text, voice: 'es', userId: user.id }) });
+    v = await voiced.json();
+    if (!voiced.ok || !v.audioContent) return no('no_voice');
+  }
   const wav = /wav/i.test(String(v.mimeType));
   const name = wav ? 'voice.wav' : 'voice.mp3';
   const up = await (await rw('/uploads', { method: 'POST', body: JSON.stringify({ filename: name, type: 'ephemeral' }) })).json();
@@ -77,9 +94,9 @@ async function realEspaLuz(req: Request, body: any): Promise<Response> {
   const task = await (await rw('/avatar_videos', { method: 'POST', body: JSON.stringify({ model: 'gwm1_avatars',
     avatar: { type: 'custom', avatarId: ESPALUZ_AVATAR_ID }, speech: { type: 'audio', audio: up.runwayUri } }) })).json();
   if (!task.id) { console.error('[talking] create', JSON.stringify(task).slice(0, 300)); return no('create'); }
-  await db.from('learning_sessions').insert({ user_id: user.id, session_type: 'analytics', source: 'web',
+  if (user) await db.from('learning_sessions').insert({ user_id: user.id, session_type: 'analytics', source: 'web',
     content: { event: 'talking_video', reason: String(body.reason ?? '').slice(0, 20), chars: text.length, task: task.id, voice: v.spokenBy } });
-  console.log(`[talking] clip started reason=${body.reason} chars=${text.length} voice=${v.spokenBy} wallet=${org.creditBalance} used=${(count ?? 0) + 1}/${TALKING_MONTHLY_CAP}`);
+  console.log(`[talking] clip started channel=${fromBot ? String(body.platform) : 'web'} reason=${body.reason} chars=${fromBot ? Number(body.chars) || 0 : text.length} voice=${v.spokenBy} wallet=${org.creditBalance} used=${(count ?? 0) + 1}/${TALKING_MONTHLY_CAP}`);
   return json({ real: true, status: 'working', taskId: task.id });
 }
 
