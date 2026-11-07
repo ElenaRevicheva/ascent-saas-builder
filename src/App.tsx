@@ -8,6 +8,7 @@ import { queryClient } from "@/lib/queryClient";
 import { trackDoorClicks, trackRoute } from "@/lib/track";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import AuthConfirm from "./pages/AuthConfirm";
 import Dashboard from "./pages/Dashboard";
 import LearningModule from "./pages/LearningModule";
 import ConnectBot from "./pages/ConnectBot";
@@ -38,6 +39,7 @@ const App = () => (
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/auth" element={<Auth />} />
+        <Route path="/auth/confirm" element={<AuthConfirm />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/learning/:moduleId" element={<LearningModule />} />
         <Route path="/connect-bot" element={<ConnectBot />} />

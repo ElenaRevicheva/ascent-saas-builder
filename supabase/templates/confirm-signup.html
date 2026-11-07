@@ -1,0 +1,60 @@
+<!--
+  EspaLuz sign-up confirmation email (7 Nov 2026). Paste into Supabase Dashboard → Authentication → Emails → "Confirm signup".
+  Subject: Confirma tu cuenta de EspaLuz / Confirm your EspaLuz account
+  Why: Elena's test mail ("Confirm your signup", one bare link to the supabase.co host) went to Outlook Junk.
+  The link now opens app.espaluz.lat/auth/confirm (src/pages/AuthConfirm.tsx), which confirms the account and opens the app.
+  Needs Site URL = https://app.espaluz.lat in Supabase Authentication → URL Configuration.
+-->
+<!DOCTYPE html>
+<html lang="es">
+  <body style="margin:0;padding:0;background:#fffaf0;font-family:Georgia,'Times New Roman',serif;color:#211a3d;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fffaf0;padding:32px 12px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:16px;padding:32px 28px;border:1px solid #ede9fe;">
+            <tr>
+              <td align="center" style="padding-bottom:8px;">
+                <img src="https://app.espaluz.lat/espaluz-icon-192.png" width="64" height="64" alt="EspaLuz" style="display:block;border:0;">
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="font-size:30px;padding-bottom:20px;">
+                Espa<span style="color:#d4a017;font-weight:bold;">Luz</span>
+              </td>
+            </tr>
+            <tr>
+              <td style="font-size:18px;line-height:1.55;padding-bottom:8px;">
+                ¡Hola! Qué alegría que estés aquí. Toca el botón para confirmar tu correo y empezar.
+              </td>
+            </tr>
+            <tr>
+              <td style="font-size:16px;line-height:1.55;color:#5b5480;padding-bottom:24px;font-family:Arial,Helvetica,sans-serif;">
+                Hello! We are glad you are here. Tap the button to confirm your email and start.
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="padding-bottom:24px;">
+                <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup"
+                   style="background:#6d28d9;color:#ffffff;text-decoration:none;font-family:Arial,Helvetica,sans-serif;font-weight:bold;font-size:16px;padding:14px 28px;border-radius:999px;display:inline-block;">
+                  Confirmar mi cuenta / Confirm my account
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td style="font-size:14px;line-height:1.55;color:#5b5480;font-family:Arial,Helvetica,sans-serif;padding-bottom:16px;">
+                Tus 14 días gratis empiezan hoy: chat en español e inglés con voz, y la clase de Pere y Titi para tu peque.<br>
+                Your 14 free days start today: chat in Spanish and English with voice, and Pere and Titi's class for your child.
+              </td>
+            </tr>
+            <tr>
+              <td style="font-size:12px;line-height:1.5;color:#8a84a6;font-family:Arial,Helvetica,sans-serif;border-top:1px solid #ede9fe;padding-top:16px;">
+                Si no creaste una cuenta en EspaLuz, ignora este correo. / If you did not create an EspaLuz account, ignore this email.<br>
+                EspaLuz · AIdeazz AI Lab · Panamá · <a href="https://app.espaluz.lat/privacy-policy" style="color:#6d28d9;">Privacidad / Privacy</a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

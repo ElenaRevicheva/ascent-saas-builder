@@ -46,12 +46,16 @@ const PrivacyPolicy = () => (
         <h2 className="terms-section-title">3. Who else processes it</h2>
         <p>To work, EspaLuz sends what you write or say to these services. Each one only processes it to give you an answer:</p>
         <ul>
-          <li><strong>AI models that write the replies and voices:</strong> Google (Gemini), Groq, xAI (Grok), OpenAI and Anthropic (Claude).</li>
+          <li><strong>AI models that write the replies and voices:</strong> Google (Gemini), Groq, xAI (Grok), OpenAI and Anthropic (Claude); Replicate for Pere and Titi's voices.</li>
           <li><strong>Speech to text:</strong> Groq and OpenAI (Whisper).</li>
           <li><strong>Video of EspaLuz speaking:</strong> Runway, for paying families.</li>
           <li><strong>Messaging:</strong> WhatsApp (Meta), through Twilio, and Telegram.</li>
           <li><strong>Hosting and storage:</strong> Supabase, Oracle Cloud and Lovable.</li>
           <li><strong>Payments:</strong> PayPal, PagueloFacil and Gumroad.</li>
+          <li><strong>Visit counting:</strong> Google Analytics on app.espaluz.lat counts page visits and taps on buttons
+            (for example, a first chat message or the WhatsApp button), so we can see where people get stuck. It receives
+            page addresses and event names only, never what you write or say, and it is switched off in the kids classroom.
+            Advertising features are turned off.</li>
         </ul>
         <p>We also share information if the law requires it.</p>
 
@@ -80,8 +84,8 @@ const PrivacyPolicy = () => (
 
         <h2 className="terms-section-title">7. Cookies and local storage</h2>
         <p>
-          We use only what is needed for the app to work: keeping you signed in and remembering small settings in your browser.
-          No advertising or tracking cookies.
+          We use what the app needs to work (keeping you signed in, small settings in your browser) and the Google Analytics
+          cookie that counts visits, described in section 3. No advertising cookies. The kids classroom does not load it.
         </p>
 
         <h2 className="terms-section-title">8. Changes</h2>
@@ -93,7 +97,8 @@ const PrivacyPolicy = () => (
         <p className="text-sm text-muted-foreground">
           <strong>En español, en breve:</strong> EspaLuz es una IA. Guardamos tu cuenta, tus conversaciones, notas cortas de
           tu familia y lo que tu peque hace en la clase, para seguir donde lo dejaron. No vendemos tus datos, no hay anuncios y
-          no entrenamos modelos con tus conversaciones. Los servicios de IA, mensajería, alojamiento y pago listados arriba
+          no entrenamos modelos con tus conversaciones. Google Analytics cuenta visitas y botones (nunca lo que escribes ni
+          lo que dices) y está apagado en la clase de los peques. Los servicios de IA, mensajería, alojamiento y pago listados arriba
           procesan lo necesario para responderte. Para borrar todo, escribe a aipa@aideazz.xyz con el asunto "Borrar mis datos".
         </p>
       </div>
