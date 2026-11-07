@@ -115,8 +115,11 @@ serve(async (req) => {
       }
     }
     if (!base64Audio) {
-      // Generate audio using OpenAI TTS with Nova voice
-      base64Audio = await generateOpenAIVoice(cleanedText);
+      // 7 Nov 2026 (Alisa's class): Gemini's free voices stop after 10 a day, and from then on Pere and Titi both spoke as
+      // "nova" - one woman's voice for two characters. The last fallback now keeps each hero's own voice.
+      const pick = OPENAI_VOICES[hero && OPENAI_VOICES[hero] ? hero : 'usual'];
+      base64Audio = await generateOpenAIVoice(cleanedText, pick.voice, pick.speed);
+      spokenBy = `openai-${pick.voice}`;
     }
 
     // 1 Nov 2026: only failures were logged, so a lesson's logs could not show which voice Alisa actually heard.
@@ -243,8 +246,16 @@ function pcmToWav(pcm: Uint8Array, rate: number): Uint8Array {
   return out;
 }
 
+// The OpenAI fallback per speaker: EspaLuz stays nova; Pere (the calm sloth) a deep, slow voice; Titi (the quick monkey)
+// a bright, quicker one - so a child still hears two different friends when the other providers are out.
+const OPENAI_VOICES: Record<string, { voice: string; speed: number }> = {
+  usual: { voice: 'nova', speed: 0.9 },
+  pere: { voice: 'onyx', speed: 0.85 },
+  titi: { voice: 'fable', speed: 1.05 },
+};
+
 // Generate voice using OpenAI TTS
-async function generateOpenAIVoice(text: string): Promise<string> {
+async function generateOpenAIVoice(text: string, voice = 'nova', speed = 0.9): Promise<string> {
   const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
   if (!openaiApiKey) {
     throw new Error('OpenAI API key not configured');
@@ -259,9 +270,9 @@ async function generateOpenAIVoice(text: string): Promise<string> {
     body: JSON.stringify({
       model: 'tts-1',
       input: text,
-      voice: 'nova', // Female, soft, clear voice
+      voice,
       response_format: 'mp3',
-      speed: 0.9 // Slightly slower for better clarity
+      speed
     }),
     signal: AbortSignal.timeout(VOICE_TIMEOUT_MS),
   });
