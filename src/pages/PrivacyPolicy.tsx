@@ -1,114 +1,101 @@
 import React from "react";
 
+// 7 Nov 2026 (Google Play path, stage A): rewritten so it says only what EspaLuz really does. The July 2025 text claimed
+// data "may be used to improve our AI models" (nothing is trained), "regular security audits" and marketing cookies
+// (none exist), and never named the AI services that read messages. Google Play's Data safety form asks for exactly these.
 const PrivacyPolicy = () => (
   <div className="min-h-screen flex flex-col items-center justify-start pt-16 pb-24 bg-gradient-to-br from-pink-50 via-blue-50 to-yellow-50 dark:from-[#1a1a2e] dark:via-[#16213e] dark:to-[#0f3460]">
     <div className="w-full max-w-3xl bg-white/90 dark:bg-card shadow-2xl rounded-3xl p-8 md:p-12 border-2 border-pink-200 dark:border-blue-900 relative overflow-hidden">
       <div className="absolute -top-8 -left-8 w-32 h-32 bg-gradient-to-br from-pink-200 via-yellow-200 to-blue-200 rounded-full opacity-30 blur-2xl pointer-events-none"></div>
       <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-tr from-blue-200 via-pink-200 to-yellow-200 rounded-full opacity-30 blur-2xl pointer-events-none"></div>
       <h1 className="text-4xl md:text-5xl font-extrabold text-center text-primary mb-2 tracking-tight drop-shadow-lg">Privacy Policy</h1>
-      <p className="text-center text-muted-foreground mb-8 text-sm font-medium">Last updated: July 15, 2025</p>
+      <p className="text-center text-muted-foreground mb-8 text-sm font-medium">Last updated: November 7, 2026</p>
       <div className="prose prose-base md:prose-lg max-w-none text-foreground">
-        <h2 className="terms-section-title">1. Information We Collect</h2>
-        <p>We collect information you provide directly to us, such as when you create an account, use our services, or contact us for support.</p>
-        <strong>Personal Information:</strong>
+        <p>
+          EspaLuz is an AI companion that helps families live in Spanish and English: a chat on the web, on WhatsApp and on
+          Telegram, with voice, and Pere and Titi's classroom for children. EspaLuz is an AI, not a person. It is run by
+          Elena Revicheva (AIdeazz), Panama. This page says plainly what we keep, why, and who else sees it.
+        </p>
+
+        <h2 className="terms-section-title">1. What we keep</h2>
         <ul>
-          <li>Account information (email, name, password)</li>
-          <li>Learning progress and preferences</li>
-          <li>Communication data from chat interactions</li>
-          <li>Usage analytics and performance data</li>
-          <li>Payment information (processed by third-party payment processors)</li>
+          <li><strong>Your account:</strong> your email address and sign-in details.</li>
+          <li><strong>Your conversations</strong> with EspaLuz (web, WhatsApp, Telegram), so she can continue where you left off.</li>
+          <li><strong>A small family notebook:</strong> short notes EspaLuz writes from what you tell her, such as family names,
+            a child's age or school, pets, or an upcoming appointment. We tell the AI never to keep passwords, ID or card numbers,
+            phone numbers, emails, street addresses, or health details beyond "has a doctor's appointment".</li>
+          <li><strong>Voice notes:</strong> a voice note you send is turned into text; we keep the text.</li>
+          <li><strong>The classroom:</strong> what the child says or draws in a lesson, so the next lesson continues from there
+            and the parent can get a short report.</li>
+          <li><strong>On WhatsApp and Telegram:</strong> your phone number or Telegram account ID, and WhatsApp's user ID for
+            you, so we know it is the same family.</li>
+          <li><strong>Payments:</strong> whether your subscription is active. Card or bank details stay with the payment
+            company (PayPal, PagueloFacil or Gumroad); we never see them.</li>
+          <li><strong>Reports:</strong> when you tap "Report", the text of that reply, with nothing about you.</li>
         </ul>
-        <strong>Automatically Collected Information:</strong>
+        <p>The free chat on the website without an account is <strong>not saved</strong>.</p>
+
+        <h2 className="terms-section-title">2. Why we keep it</h2>
         <ul>
-          <li>Device information (device type, operating system, browser type)</li>
-          <li>IP address and general location data</li>
-          <li>Usage patterns and feature interactions</li>
-          <li>Performance metrics and error logs</li>
+          <li>To answer you, remember your family, and continue lessons where they stopped.</li>
+          <li>To run your subscription.</li>
+          <li>To fix problems and keep the service safe.</li>
         </ul>
-        <h2 className="terms-section-title">2. How We Use Your Information</h2>
-        <p>We use the information we collect to:</p>
+        <p>We do <strong>not</strong> sell your data, show advertising inside EspaLuz, or use your conversations to train AI models.</p>
+
+        <h2 className="terms-section-title">3. Who else processes it</h2>
+        <p>To work, EspaLuz sends what you write or say to these services. Each one only processes it to give you an answer:</p>
         <ul>
-          <li>Provide and improve our Spanish learning services</li>
-          <li>Personalize your learning experience using AI algorithms</li>
-          <li>Communicate with you about your account and our services</li>
-          <li>Analyze usage patterns to enhance our platform</li>
-          <li>Process payments and manage subscriptions</li>
-          <li>Ensure platform security and prevent fraud</li>
-          <li>Comply with legal obligations</li>
+          <li><strong>AI models that write the replies and voices:</strong> Google (Gemini), Groq, xAI (Grok), OpenAI and Anthropic (Claude).</li>
+          <li><strong>Speech to text:</strong> Groq and OpenAI (Whisper).</li>
+          <li><strong>Video of EspaLuz speaking:</strong> Runway, for paying families.</li>
+          <li><strong>Messaging:</strong> WhatsApp (Meta), through Twilio, and Telegram.</li>
+          <li><strong>Hosting and storage:</strong> Supabase, Oracle Cloud and Lovable.</li>
+          <li><strong>Payments:</strong> PayPal, PagueloFacil and Gumroad.</li>
         </ul>
-        <h2 className="terms-section-title">3. Information Sharing and Disclosure</h2>
-        <p>We do not sell, trade, or otherwise transfer your personal information to third parties except:</p>
+        <p>We also share information if the law requires it.</p>
+
+        <h2 className="terms-section-title">4. Children</h2>
         <ul>
-          <li><strong>With your explicit consent</strong></li>
-          <li><strong>Service providers:</strong> Trusted third-party vendors who assist in operating our platform (cloud hosting, payment processing, analytics)</li>
-          <li><strong>Legal requirements:</strong> When required by law, court order, or to protect our rights and safety</li>
-          <li><strong>Business transfers:</strong> In connection with a merger, acquisition, or sale of assets</li>
-          <li><strong>AI training:</strong> Anonymized and aggregated data may be used to improve our AI models</li>
+          <li>The classroom opens only after a grown-up signs in. A child does not create an account.</li>
+          <li>We keep only what the lesson needs: what the child said or drew, and how the lesson went.</li>
+          <li>A child's own words are shown only to their parent (in the report), never to other users.</li>
+          <li>There is no advertising and no advertising ID in EspaLuz.</li>
+          <li>A parent can ask us at any time to see or delete what we keep about their child.</li>
         </ul>
-        <h2 className="terms-section-title">4. Data Security</h2>
-        <p>We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. This includes:</p>
-        <ul>
-          <li>Encryption of data in transit and at rest</li>
-          <li>Regular security audits and monitoring</li>
-          <li>Access controls and authentication measures</li>
-          <li>Secure data storage with reputable cloud providers</li>
-        </ul>
-        <p>However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security.</p>
-        <h2 className="terms-section-title">5. Your Rights and Choices</h2>
-        <p>You have the right to:</p>
-        <ul>
-          <li><strong>Access and update</strong> your personal information through your account settings</li>
-          <li><strong>Delete your account</strong> and associated data</li>
-          <li><strong>Opt out</strong> of marketing communications</li>
-          <li><strong>Request data portability</strong> in a machine-readable format</li>
-          <li><strong>Object to processing</strong> of your data for certain purposes</li>
-          <li><strong>Withdraw consent</strong> where processing is based on consent</li>
-        </ul>
-        <p>To exercise these rights, please contact us using the information provided below.</p>
-        <h2 className="terms-section-title">6. Cookies and Tracking Technologies</h2>
-        <p>We use cookies and similar technologies to enhance your experience, analyze usage, and provide personalized content. Types of cookies we use include:</p>
-        <ul>
-          <li><strong>Essential cookies:</strong> Required for basic functionality</li>
-          <li><strong>Performance cookies:</strong> Help us understand how you use our service</li>
-          <li><strong>Preference cookies:</strong> Remember your settings and preferences</li>
-          <li><strong>Marketing cookies:</strong> Deliver relevant advertisements (if applicable)</li>
-        </ul>
-        <p>You can control cookie settings through your browser preferences, though disabling certain cookies may affect service functionality.</p>
-        <h2 className="terms-section-title">7. Children's Privacy</h2>
-        <p>Our service is designed for family use, including children under 13. We take special care to protect children's privacy and comply with the Children's Online Privacy Protection Act (COPPA) and other applicable laws:</p>
-        <ul>
-          <li>We obtain parental consent before collecting personal information from children under 13</li>
-          <li>Parents can review, modify, or delete their child's information</li>
-          <li>We collect only information necessary to provide our educational services</li>
-          <li>We do not share children's personal information with third parties except as outlined in this policy</li>
-        </ul>
-        <h2 className="terms-section-title">8. Data Retention</h2>
-        <p>We retain your personal information for as long as necessary to provide our services and fulfill the purposes outlined in this policy. Specifically:</p>
-        <ul>
-          <li>Account information is kept while your account is active</li>
-          <li>Learning progress data is retained to maintain continuity of your educational experience</li>
-          <li>Communication data may be kept for customer service purposes</li>
-          <li>We may retain some information for legitimate business purposes or legal compliance even after account deletion</li>
-        </ul>
-        <h2 className="terms-section-title">9. International Data Transfers</h2>
-        <p>Your information may be transferred to and processed in countries other than your own. We ensure adequate protection through appropriate safeguards such as standard contractual clauses or other approved mechanisms.</p>
-        <h2 className="terms-section-title">10. Third-Party Links and Services</h2>
-        <p>Our service may contain links to third-party websites or integrate with third-party services. This Privacy Policy does not apply to those external services, and we encourage you to review their privacy policies.</p>
-        <h2 className="terms-section-title">11. Changes to This Policy</h2>
-        <p>We may update this Privacy Policy from time to time. We will notify you of material changes by:</p>
-        <ul>
-          <li>Posting the updated policy on our website</li>
-          <li>Updating the "Last updated" date</li>
-          <li>Sending you an email notification (for significant changes)</li>
-          <li>Providing in-app notifications</li>
-        </ul>
-        <p>Your continued use of our service after changes become effective constitutes acceptance of the updated policy.</p>
-        <h2 className="terms-section-title">12. Contact Us</h2>
-        <p>If you have any questions about this Privacy Policy, want to exercise your rights, or have privacy-related concerns, please contact us at:</p>
-        <p><strong>Email:</strong> aipa@aideazz.xyz<br/><strong>Subject line:</strong> Privacy Policy Inquiry</p>
-        <p>We will respond to your inquiry within a reasonable timeframe as required by applicable law.</p>
+
+        <h2 className="terms-section-title">5. How long we keep it, and how to delete it</h2>
+        <p>
+          We keep your data while your account is active. To delete your account and everything we keep about your family,
+          email <strong>aipa@aideazz.xyz</strong> with the subject <strong>"Delete my data"</strong> from the email of your
+          account (if you use only WhatsApp or Telegram, tell us your number or Telegram name in the email). We delete it
+          within 30 days and tell you when it is done.
+        </p>
+
+        <h2 className="terms-section-title">6. Security</h2>
+        <p>
+          Data travels encrypted (HTTPS) and is stored with the providers above. Access is limited to what the service needs.
+          No system is perfectly secure; if something goes wrong that affects you, we will tell you.
+        </p>
+
+        <h2 className="terms-section-title">7. Cookies and local storage</h2>
+        <p>
+          We use only what is needed for the app to work: keeping you signed in and remembering small settings in your browser.
+          No advertising or tracking cookies.
+        </p>
+
+        <h2 className="terms-section-title">8. Changes</h2>
+        <p>If this policy changes, we update this page and the date at the top.</p>
+
+        <h2 className="terms-section-title">9. Contact</h2>
+        <p><strong>Email:</strong> aipa@aideazz.xyz<br/><strong>Subject line:</strong> Privacy</p>
         <hr />
-        <p className="text-xs text-muted-foreground mt-8">*This Privacy Policy is effective as of the last updated date above.*</p>
+        <p className="text-sm text-muted-foreground">
+          <strong>En español, en breve:</strong> EspaLuz es una IA. Guardamos tu cuenta, tus conversaciones, notas cortas de
+          tu familia y lo que tu peque hace en la clase, para seguir donde lo dejaron. No vendemos tus datos, no hay anuncios y
+          no entrenamos modelos con tus conversaciones. Los servicios de IA, mensajería, alojamiento y pago listados arriba
+          procesan lo necesario para responderte. Para borrar todo, escribe a aipa@aideazz.xyz con el asunto "Borrar mis datos".
+        </p>
       </div>
     </div>
   </div>
