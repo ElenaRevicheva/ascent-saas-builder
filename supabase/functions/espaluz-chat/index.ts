@@ -232,7 +232,7 @@ Never ask for personal information such as addresses, school names or phone numb
 // Telegram bot (EspaLuzFamilybot main.py KIDS_STEPS / KIDS_STORIES / kids_sentence_check): the page sends the turn, the
 // function names the step, this week's story, yesterday's mission and a gentle check of the sentence the child tried.
 const KIDS_STEPS = [
-  "HELLO: both heroes say hello in 1-2 short lines; if a list of EARLIER LESSONS is above, the first line brings back ONE happy thing from it (\"La última vez me dijiste que...\"); mention this week's story in one line, then ONE question: how the child feels today, offering two or three feeling words in both languages to choose from (alegre / happy, orgullosa / proud, nerviosa / nervous, frustrada / frustrated, curiosa / curious, cansada / tired - the right gender for the child); if the child names a hard feeling, Pere offers ONE small thing that helps (a slow breath, a hug from mamá, a drink of water).",
+  "HELLO: both heroes say hello in 1-2 short lines; if a list of EARLIER LESSONS is above, the first line brings back ONE happy thing from it (\"La última vez me dijiste que...\"); mention this week's story in one line, then ONE question about her day (what she did at school, what she played, who she saw) - never \"how do you feel today\" (Elena, 6 Nov 2026); if she names a hard feeling herself, Pere offers ONE small thing that helps (a slow breath, a hug from mamá, a drink of water).",
   "WAKE-UP GAME with Titi: one quick movement game (jumps, 'Simon dice / Simon says', right hand to left knee, 'rojo salta, azul congela / red jump, blue freeze', or drawing a big sideways 8 in the air with one finger).",
   "NEW SENTENCE 1: Pere teaches ONE useful sentence built on what the child talked about, and asks the child to say it.",
   "NEW SENTENCE 2: one more sentence on the child's topic; ask the child to say it, or to answer a '¿Por qué...? / Why...?' with 'porque / because'.",
@@ -241,6 +241,10 @@ const KIDS_STEPS = [
   "CALM with Pere: hands on the belly, three slow breaths together, and one feelings sentence.",
   "GOODBYE: praise, a star, today's mission - one sentence to say to a real person, OR (every other lesson) one real job at home said in Spanish or English while doing it (set the table, water a plant, pack the school bag, sort the socks, help make a sandwich) - and goodbye from both.",
 ];
+// 6 Nov 2026, read in Alisa's lesson: "how honest" said twice for ordinary answers, and a mission repeated after she
+// said her mother already told her. Same rule on every step.
+const KIDS_PRAISE_RULE = "\nPraise: name exactly what she did (\"you said the whole sentence\"), never the same praise word twice in a lesson, " +
+  "and never call an ordinary answer honest or brave. If she says she already did the mission or does not need it, accept it warmly and do not give it again.";
 const KIDS_STEP_FREE = "FREE TALK: the lesson is done; keep talking about the child's topic, short, one question, warm.";
 
 // ===== CLASS mode (1 Nov 2026, Elena: "also classes, like regular kids of 6-7 study at school and at home") =====
@@ -370,7 +374,9 @@ function kidsHeard(message: string): string {
     // said "Simon dice, salta" - and repeated "las paletas no son dulces" as true.
     "1. A feeling she names or clearly shows, or something hard that happened (scolded, sad, scared, hurt, missing " +
     "someone) -> name the feeling kindly. Not wanting to play is NOT sadness (that is 3); never tell her she feels " +
-    "something she did not say. " +
+    "something she did not say. Plain facts about who, where or when (who she goes with, what time it is, what her " +
+    "mother said) are NOT feelings: react to the fact itself, with no calm routine (6 Nov 2026: two breathing breaks for " +
+    "plain facts). " +
     "(\"Parece que te sentiste triste cuando mamá se enojó. / It sounds like you felt sad when mom got upset.\"), ask ONE " +
     "gentle question about how she feels, and stay with her: THIS TURN HAS NO GAME AND NO NEW SENTENCE, skip the lesson " +
     "step below. Use soft words; never repeat a frightening word like \"pegar / hit\" back to her.\n" +
@@ -775,7 +781,7 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
   const heard = turn > 0 ? kidsHeard(message) + (KIDS_ADULT.test(message)
     ? "THIS MESSAGE IS FROM THE PARENT, not the child: first line thanks the parent by role (\"¡Gracias, mamá! / " +
       "Thank you, mom!\"), never tell the parent how they feel; do what the parent asks, then turn to the child by name.\n"
-    : coached ? KIDS_COACHED_LINE : "") : "";
+    : coached ? KIDS_COACHED_LINE : "") + KIDS_PRAISE_RULE : "";
   if (KIDS_EMERGENCY.test(message)) {
     return `\n\nSOMEONE SAID THERE IS AN EMERGENCY: "${message.trim().slice(0, 200)}"\nTHIS TURN OVERRIDES EVERY RULE ABOVE: ` +
       "no lesson, no game, no breathing exercise, no question, and never confirm or describe the emergency. Exactly two " +
