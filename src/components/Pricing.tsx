@@ -4,6 +4,7 @@ import { Part } from "@/components/landing/Tree";
 import { Check, Star, Heart, Brain, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import SubscriptionFlow from "./SubscriptionFlow";
+import { insidePlayApp } from "@/lib/playBilling";
 
 interface PricingPlan {
   name: string;
@@ -58,7 +59,8 @@ const Pricing = () => {
       paypal: true,
       comingSoon: false,
       merchantId: "P8TXABNT28ZXG",
-      bonus: "🎁 First PayPal charge 2 weeks after you subscribe"
+      // 7 Nov 2026: inside the Play app the payment is Google Play, so the card names it, not PayPal.
+      bonus: insidePlayApp() ? "🎁 Your first charge comes 2 weeks after you subscribe" : "🎁 First PayPal charge 2 weeks after you subscribe"
     },
     {
       // 1 Nov 2026 (Elena): Premium comes back as a roadmap the family can look forward to - only features we are
@@ -129,8 +131,8 @@ const Pricing = () => {
                       </span>
                       {plan.paypal && (
                         <>
-                          <div className="text-sm font-medium text-green-700 mt-2">🛡️ Secure payment powered by PayPal</div>
-                          <div className="text-xs text-green-600">Merchant ID: {plan.merchantId}</div>
+                          <div className="text-sm font-medium text-green-700 mt-2">🛡️ Secure payment powered by {insidePlayApp() ? "Google Play" : "PayPal"}</div>
+                          {!insidePlayApp() && <div className="text-xs text-green-600">Merchant ID: {plan.merchantId}</div>}
                           {plan.bonus && (
                             <div className="mt-2 px-3 py-1 bg-gradient-to-r from-green-100 to-blue-100 rounded-full">
                               <span className="text-sm font-bold text-green-700">{plan.bonus}</span>

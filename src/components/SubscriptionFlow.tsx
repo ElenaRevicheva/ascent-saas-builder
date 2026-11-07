@@ -5,6 +5,8 @@ import { PAYPAL_CONFIG, getPayPalSDKUrl } from "@/config/paypal";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PlaySubscribe } from "@/components/PlaySubscribe";
+import { insidePlayApp } from "@/lib/playBilling";
 
 interface SubscriptionFlowProps {
   planType: "standard" | "premium";
@@ -18,7 +20,7 @@ declare global {
   }
 }
 
-const SubscriptionFlow = ({ planType, onSuccess, onError }: SubscriptionFlowProps) => {
+const PayPalSubscriptionFlow = ({ planType, onSuccess, onError }: SubscriptionFlowProps) => {
   const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
@@ -349,5 +351,10 @@ const SubscriptionFlow = ({ planType, onSuccess, onError }: SubscriptionFlowProp
     </div>
   );
 };
+
+// 7 Nov 2026: inside the EspaLuz Play app the subscription is sold through Google Play only (Play policy); the website
+// keeps PayPal. One switch here covers every payment screen (Pricing, Index, Dashboard, chat upgrade).
+const SubscriptionFlow = (props: SubscriptionFlowProps) =>
+  insidePlayApp() ? <PlaySubscribe onSuccess={props.onSuccess} /> : <PayPalSubscriptionFlow {...props} />;
 
 export default SubscriptionFlow;
