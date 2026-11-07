@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { useAuth } from "@/hooks/useAuth";
 import { ChevronDown, Compass, CreditCard, GraduationCap, Mail, Menu, MessageCircle, Sparkles, UserRound, X } from "lucide-react";
 
 /* Menu tree (Elena 5 Nov 2026) - same shape as aideazz.xyz/sop-ai-ops.html: grouped labels, each item = icon + title +
@@ -55,6 +56,8 @@ function MenuTree({ onPick }: { onPick: () => void }) {
 
 const Navigation = () => {
   const { t } = useTranslation();
+  // 7 Nov 2026: a signed-in family saw "Sign In" / "Get Started" on the home page and thought sign-up had failed.
+  const { user } = useAuth();
   const [menu, setMenu] = useState<"none" | "desk" | "phone">("none");
   const ref = useRef<HTMLElement>(null);
 
@@ -110,12 +113,20 @@ const Navigation = () => {
 
         <div className="flex min-w-0 items-center gap-1.5 sm:gap-4">
           <LanguageSwitcher />
-          <Link to="/auth" className="hidden sm:block">
-            <Button variant="ghost">{t("nav.signIn")}</Button>
-          </Link>
-          <Link to="/auth?mode=signup">
-            <Button variant="hero">{t("nav.getStarted")}</Button>
-          </Link>
+          {user ? (
+            <Link to="/dashboard">
+              <Button variant="hero">Mi EspaLuz / My EspaLuz</Button>
+            </Link>
+          ) : (
+            <>
+              <Link to="/auth" className="hidden sm:block">
+                <Button variant="ghost">{t("nav.signIn")}</Button>
+              </Link>
+              <Link to="/auth?mode=signup">
+                <Button variant="hero">{t("nav.getStarted")}</Button>
+              </Link>
+            </>
+          )}
           <button type="button" className="lg:hidden flex h-10 w-10 items-center justify-center rounded-xl border border-border text-foreground"
             aria-label={t("menu.open")} aria-expanded={menu === "phone"} aria-controls="menu-phone"
             onClick={() => setMenu(menu === "phone" ? "none" : "phone")}>
@@ -128,7 +139,7 @@ const Navigation = () => {
         <div id="menu-phone" className="lg:hidden max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-border bg-card px-3 pb-4 pt-1 shadow-xl">
           <MenuTree onPick={pick} />
           <div className="my-2 border-t border-border" role="separator" />
-          <Link to="/auth" onClick={pick} className="block rounded-xl px-3 py-3 font-semibold text-primary hover:bg-primary/5">{t("nav.signIn")}</Link>
+          <Link to={user ? "/dashboard" : "/auth"} onClick={pick} className="block rounded-xl px-3 py-3 font-semibold text-primary hover:bg-primary/5">{user ? "Mi EspaLuz / My EspaLuz" : t("nav.signIn")}</Link>
         </div>
       )}
     </nav>
