@@ -778,22 +778,23 @@ The video script will be used to generate an avatar video with synchronized audi
               )}
             </div>
             <div className="text-sm space-y-1">
-              <p>✨ <strong>You're experiencing the full EspaLuz features! Sign up for unlimited access:</strong></p>
+              {/* 7 Nov 2026 (Elena: "otherwise it will be scamming the user"): only what is true today. The old list promised
+                  unlimited video, learning paths and chats "saved forever" - none of that is built, and this free chat saves nothing. */}
+              <p>✨ <strong>Sign up free for 14 days / Regístrate gratis, 14 días:</strong></p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-1 text-xs">
-                <span>• Unlimited conversations</span>
-                <span>• Unlimited voice & video generation</span>
-                <span>• Family member profiles</span>
-                <span>• Progress tracking & analytics</span>
-                <span>• Personalized learning paths</span>
-                <span>• All conversations saved forever</span>
+                <span>• Your chats and family notes kept in your account</span>
+                <span>• Pere and Titi's kids classroom</span>
+                <span>• Replies in Spanish and English, with voice</span>
+                <span>• The same EspaLuz on WhatsApp and Telegram</span>
               </div>
+              <p className="text-xs text-muted-foreground">This free chat is not saved. / Este chat gratis no se guarda.</p>
               <Button 
                 size="sm" 
                 className="mt-2 bg-[hsl(var(--espaluz-primary))] hover:bg-[hsl(var(--espaluz-primary))]/90"
-                onClick={() => setShowSubscriptionDialog(true)}
+                onClick={() => window.location.assign('/auth')}
               >
                 <Star className="h-3 w-3 mr-1" />
-                Subscribe Now - Get Unlimited!
+                Sign up free / Regístrate gratis
               </Button>
             </div>
           </AlertDescription>

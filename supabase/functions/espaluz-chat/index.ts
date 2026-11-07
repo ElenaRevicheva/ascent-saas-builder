@@ -182,7 +182,9 @@ RESPONSE FORMAT - two parts:
 2️⃣ A short spoken line for the video, 1-2 sentences in Spanish and English, no emojis:
 [VIDEO SCRIPT START]
 (one warm sentence that fits this reply)
-[VIDEO SCRIPT END]`;
+[VIDEO SCRIPT END]
+
+${BILINGUAL_LAST}`;
 
   const messages = [
     ...conversationHistory.slice(-8),
@@ -1184,6 +1186,46 @@ function meter(provider: string, result: any): void {
   } catch { /* metering must never break a lesson */ }
 }
 
+// 7 Nov 2026 (Elena's incognito test: a grown-up web reply came back in Spanish only). Same fix as the bots on 6 Nov:
+// the rule goes last, the finished reply is checked, and a failed check gets one rewrite; if that fails too, the original goes out.
+const BILINGUAL_LAST = `LAST AND MOST IMPORTANT - THE FORM OF THIS REPLY:
+- Both languages, always, even if everything above is in Spanish: each idea in Spanish, and right after it the same idea in English, in short pairs.
+- 2 to 4 emojis across the reply where they fit: the opening, a phrase to learn, the closing. Never zero, never one on every line.
+- Start with your answer. Never repeat or translate their message back to them.
+- A phrase line that already shows the Spanish and its English meaning is one pair: write it once, never again reversed.`;
+const EN_WORDS = new Set("the and you your with for this that what can how is are to of in it when say try means".split(" "));
+const ES_WORDS = new Set("el la los las y que de en para con tu una un es por como cuando puedes hoy".split(" "));
+function hasBothLanguages(text: string): boolean {
+  const words = (text.toLowerCase().match(/[a-záéíóúñü]+/g) ?? []);
+  if (words.length < 8) return true;
+  const en = words.filter((w) => EN_WORDS.has(w)).length / words.length;
+  const es = words.filter((w) => ES_WORDS.has(w)).length / words.length;
+  return en >= 0.08 && es >= 0.08;
+}
+async function bilingualOrRewrite(full: string): Promise<string> {
+  const script = full.match(/\[VIDEO SCRIPT START\][\s\S]*?(\[VIDEO SCRIPT END\]|$)/)?.[0] ?? '';
+  const main = full.replace(script, '').trim();
+  if (hasBothLanguages(main)) return full;
+  try {
+    const { result } = await callChain({ model: CLAUDE_MODELS[0], max_tokens: 1000, temperature: 0.4,
+      system: "You rewrite a chat message from EspaLuz, a warm friend helping a family live in Spanish. Keep every fact, name and " +
+        "phrase; add nothing new. A line that already has both languages stays as it is, once. Output only the rewritten message, " +
+        "with no asterisks and no headings.\n\n" + BILINGUAL_LAST,
+      messages: [{ role: 'user', content: main }] });
+    const fixed = String(result?.content?.[0]?.text ?? '').replace(/\[VIDEO SCRIPT START\][\s\S]*$/, '').trim();
+    const ok = fixed.length > main.length * 0.8 && hasBothLanguages(fixed);
+    console.log(`[web polish] spanish-only reply rewrite_ok=${ok}`);
+    return ok ? fixed + (script ? '\n\n' + script : '') : full;
+  } catch (err) {
+    console.error('[web polish] non-fatal', (err as Error).message);
+    return full;
+  }
+}
+
+// 7 Nov 2026: with no Anthropic credit every grown-up turn waited ~4 s for Claude to refuse. After a credit refusal,
+// Claude waits at the end of the chain for an hour on this instance; free models answer first.
+let claudeRestingUntil = 0;
+
 async function callChain(request: any): Promise<{ result: any; provider: string }> {
   const chain: [string, string | undefined, (k: string, r: any) => Promise<any>][] = [
     ['claude', Deno.env.get('ANTHROPIC_API_KEY'), callClaude],
@@ -1198,7 +1240,8 @@ async function callChain(request: any): Promise<{ result: any; provider: string 
     ['openai', Deno.env.get('OPENAI_API_KEY'), callOpenAI],
   ];
   const errors: string[] = [];
-  for (const [name, key, fn] of chain) {
+  const ordered = Date.now() < claudeRestingUntil ? [...chain.filter((c) => c[0] !== 'claude'), ...chain.filter((c) => c[0] === 'claude')] : chain;
+  for (const [name, key, fn] of ordered) {
     if (!key) continue;
     try {
       const result = await fn(key, request);
@@ -1207,6 +1250,7 @@ async function callChain(request: any): Promise<{ result: any; provider: string 
       return { result, provider: name };
     } catch (e) {
       errors.push(`${name}: ${(e as Error).message}`);
+      if (name === 'claude' && /credit balance|billing/i.test((e as Error).message)) claudeRestingUntil = Date.now() + 3600000;
       console.error(`${name} failed, trying the next provider:`, (e as Error).message);
     }
   }
@@ -1591,6 +1635,7 @@ ${asked}` : ''}`;
       fullResponse = String(fullResponse).replace(/\*+/g, '')
         .replace(/^\s*[12]\uFE0F?\u20E3\s*(video script|guion de video|gui[oó]n del video|your reply|tu respuesta)?\s*:?\s*$/gim, '')
         .replace(/^\s*1\uFE0F?\u20E3\s*/m, '');
+      fullResponse = await bilingualOrRewrite(fullResponse);
     }
     const videoScript = extractVideoScript(fullResponse);
 
