@@ -37,6 +37,8 @@ const STICKERS: { e: string; es: string; en: string }[] = [
 ];
 const stickerFor = (n: number) => STICKERS[(n - 1) % STICKERS.length]; // n = 1st, 2nd... sticker
 
+// "open-wave" = only the wide shot: she waves with Pere and Titi, no words (Elena, 7 Nov: sometimes her face, sometimes this).
+const WELCOME_BACK = ["open-wave", "open-back", "open-wave", "open-back-2", "open-back-3", "open-back-4"];
 // 6 Nov 2026 (Elena: "mentora amiga", never noisy): EspaLuz in pre-made clips, wide scene with Pere and Titi cutting to an
 // exact-lips close-up. She opens and closes the lesson, suggests one feature at most, and calms a child who says she is
 // upset. No child's name is in any clip, nothing is generated live, and one tap on Habla silences her.
@@ -277,6 +279,21 @@ const Classroom = () => {
   const visits = useRef({ tip: false, close: false, reactions: new Set<string>() });
   const usedFeatures = useRef<Set<string>>(new Set());
   const padOpen = useRef(false);
+  // 7 Nov 2026 (Elena: the same "Titi asked about you five times" at every Start is annoying; she should be a surprise
+  // and a motivation): a welcome-back clip at most once a day, on about half of the days, never the same line twice in a
+  // row. The first-ever hello is unchanged.
+  const openingClip = (): string | null => {
+    if (!metBefore) return "open-first";
+    const key = `classroom-mentora-open-${user?.id}`;
+    const today = new Date().toDateString();
+    let last: { day?: string; clip?: string } = {};
+    try { last = JSON.parse(localStorage.getItem(key) ?? "{}") ?? {}; } catch { /* old value or blocked storage */ }
+    if (last.day === today) return null;
+    const choices = WELCOME_BACK.filter((c) => c !== last.clip);
+    const clip = Math.random() < 0.5 ? choices[Math.floor(Math.random() * choices.length)] : null;
+    try { localStorage.setItem(key, JSON.stringify({ day: today, clip: clip ?? last.clip })); } catch { /* ignore */ }
+    return clip;
+  };
   const mentoraSay = (clip: string) => new Promise<void>((done) => {
     const finish = () => { clearTimeout(safety); mentoraEnded.current = null; setMentora(null); done(); };
     const safety = setTimeout(finish, 30000);
@@ -657,7 +674,8 @@ const Classroom = () => {
             classMode.current = false;
             // 6 Nov 2026: EspaLuz opens the lesson while the first line is written.
             // First lesson ever: then Pere and Titi introduce themselves in their own voices.
-            greetingDone.current = mentoraSay(metBefore ? "open-back" : "open-first").then(() => {
+            const opening = openingClip();
+            greetingDone.current = (opening ? mentoraSay(opening) : Promise.resolve()).then(() => {
               if (metBefore || skipHeroes.current) return;
               return new Promise<void>((done) => {
                 const finish = () => { greetingEnded.current = null; done(); };
@@ -673,7 +691,8 @@ const Classroom = () => {
         <Button size="lg" variant="secondary" className="rounded-full text-2xl h-20 px-10 shadow-xl" disabled={busy || loading}
           onClick={() => {
             classMode.current = true;
-            greetingDone.current = mentoraSay(metBefore ? "open-back" : "open-first");
+            const opening = openingClip();
+            greetingDone.current = opening ? mentoraSay(opening) : Promise.resolve();
             talk("¡Hola Pere y Titi! Quiero empezar la clase. / Hello Pere and Titi! I want to start the class.", false);
           }}>
           📚 ¡Clase! / Class!

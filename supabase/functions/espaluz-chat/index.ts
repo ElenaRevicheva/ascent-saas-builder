@@ -759,7 +759,24 @@ function kidsLabelledHistory(kids: KidsWho): { role: string; content: string }[]
 const kidsFamilyTalk = (kids: KidsWho): boolean => kidsIsParent(kids) ||
   (Array.isArray(kids?.speakers) && kids.speakers.some((s) => s?.speaker === 'parent'));
 
-function kidsTurnContext(kids: any, message: string, avoid: string[] = [], classUnit = -1): string {
+// 7 Nov 2026 (Elena: "Pere and Titi always start from the place where Alisa left, not from zero"): every press of Start
+// began at the hello again, because the step came only from the turns on the page. If her last lesson stopped part way
+// through in the last 20 hours, it continues from that step. A finished lesson, or an older one, starts fresh.
+async function kidsResumeFrom(supabase: any, userId: string, stepsLength: number, atHello: boolean): Promise<number> {
+  const { data } = await supabase.from('learning_sessions').select('created_at, said:content->>user_message, speaker:content->>speaker, resumed:content->>resumed_from')
+    .eq('user_id', userId).eq('session_type', 'classroom').order('created_at', { ascending: false }).limit(40);
+  const rows = (data ?? []) as { created_at: string; said: string | null; speaker: string | null; resumed: string | null }[];
+  const start = rows.findIndex((r) => KIDS_STARTER.test(String(r.said ?? '')));
+  if (start < 0 || Date.now() - Date.parse(rows[start].created_at) > 20 * 3600000) return 0;
+  // Inside a lesson the offset stays the one its own start picked up; the page counts the turns since.
+  if (!atHello) return parseInt(String(rows[start].resumed ?? '0'), 10) || 0;
+  // A resumed start remembers where it picked up, so leaving twice still adds up.
+  const done = (parseInt(String(rows[start].resumed ?? '0'), 10) || 0) +
+    rows.slice(0, start).filter((r) => r.speaker !== 'parent' && String(r.said ?? '').trim()).length;
+  return done > 0 && done < stepsLength - 1 ? done : 0;
+}
+
+function kidsTurnContext(kids: any, message: string, avoid: string[] = [], classUnit = -1, resume = 0): string {
   const hist = Array.isArray(kids?.history) ? kids.history : [];
   const raw = Number.isInteger(kids?.turn) ? kids.turn : Math.floor(hist.length / 2);
   // The page counts every exchange; a turn spent answering her question does not move the lesson on.
@@ -773,9 +790,15 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
   const storyOff = classUnit >= 0 || avoid.some((a) => storyWords.includes(a) || storyWords.includes(STORY_WORD[a] ?? ''));
   const story = storyOff ? "(no story this week - she does not want it; follow HER topic)" : weekStory;
   const steps = classUnit >= 0 ? kidsClassSteps(KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length]) : KIDS_STEPS;
-  const planned = turn < steps.length ? steps[turn] : KIDS_STEP_FREE;
+  const at = turn + resume;
+  const next = at < steps.length ? steps[at] : KIDS_STEP_FREE;
+  const planned = turn === 0 && resume > 0
+    ? "WELCOME BACK: she left in the middle of this lesson. One short warm line from each hero that you go on from where " +
+      "you stopped (say in a few words what you were doing), with no new hello, no memory game and no feelings question. " +
+      "Then do this step: " + next
+    : next;
   const step = storyOff && planned.startsWith("THIS WEEK'S STORY") ? KIDS_STEP_FREE
-    : storyOff && turn === 0 ? planned.replace(/; mention this week's story in one line/, '') : planned;
+    : storyOff && at === 0 ? planned.replace(/; mention this week's story in one line/, '') : planned;
   const coached = !KIDS_ADULT.test(message) &&
     (KIDS_COACH.test(message) || kidsCalled(message, String(kids?.child_name ?? '')));
   const heard = turn > 0 ? kidsHeard(message) + (KIDS_ADULT.test(message)
@@ -1448,6 +1471,9 @@ ${asked}` : ''}`;
       }
       classUnit = Math.floor(Math.max(0, starts) / 2) % KIDS_CLASS_UNITS.length;
     }
+    const resumeSteps = classUnit >= 0 ? kidsClassSteps(KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length]).length : KIDS_STEPS.length;
+    const resume = kids && userId && !kidsIsParent(kids) ? await kidsResumeFrom(supabase, userId, resumeSteps, Boolean(isHello)).catch(() => 0) : 0;
+    if (resume && isHello) console.log(`[classroom] resumes at step ${resume + 1} of ${resumeSteps}`);
     // The turn instruction (with the child's own words) goes LAST: the model weighs the end of the prompt most - and at
     // the hello, the memory game (her own sentence coming back, spaced repetition) goes after it.
     // 2 Nov 2026: the places' facts ride along when she paints or talks about the park or Chiriquí (this turn or the
@@ -1457,8 +1483,8 @@ ${asked}` : ''}`;
       .some((t) => KIDS_PLACES.test(t));
     const kidsSystem = KIDS_CLASSROOM_PROMPT + memory.card + (kidsPlaces ? '\n' + KIDS_PLACES_FACTS : '') + (known.length
       ? `\n\nSentences the child already said in earlier lessons: ${known.map((s) => `"${s}"`).join(' · ')}. At the hello, invite the child to say one of them again and praise, then teach new ones (the same words come back and grow).`
-      : '') + (kids ? kidsTurnContext(kids, message, memory.avoid, classUnit) : '') +
-      (isHello ? memory.hello : (memory.hello.startsWith('\nSHE TOLD YOU') ? memory.hello.split('\n\nTHIS HELLO')[0] : '')) +
+      : '') + (kids ? kidsTurnContext(kids, message, memory.avoid, classUnit, resume) : '') +
+      (isHello && !resume ? memory.hello : (memory.hello.startsWith('\nSHE TOLD YOU') ? memory.hello.split('\n\nTHIS HELLO')[0] : '')) +
       (kids && message.startsWith('📷') ? (photoDescription
         ? `\nSHE IS SHOWING YOU A PHOTO: ${photoDescription}\nTalk about what is in it with real curiosity first (name ` +
           "the thing and its colour in Spanish and English), then build this turn's sentence from it. Never comment on a " +
@@ -1597,7 +1623,8 @@ ${asked}` : ''}`;
             family_member_id: familyMember.id,
             detected_emotion: emotion,
             vocabulary_taught: extractedVocabulary,
-            ...(classUnit >= 0 ? { class_unit: classUnit + 1, class_label: kidsClassLabel(classUnit), ...(isHello ? { class_start: 'true' } : {}) } : {})
+            ...(classUnit >= 0 ? { class_unit: classUnit + 1, class_label: kidsClassLabel(classUnit), ...(isHello ? { class_start: 'true' } : {}) } : {}),
+            ...(isHello && resume ? { resumed_from: String(resume) } : {})
           },
           progress_data: {
             family_member: familyMember.name,
