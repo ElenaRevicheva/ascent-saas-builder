@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { FeatureGate } from "@/components/FeatureGate";
 import TracePad from "@/components/kids/TracePad";
 import { shrinkPhoto } from "@/lib/shrinkPhoto";
+import { ReportReply } from "@/components/ReportReply";
 
 // Pere + Titi's classroom (22 Oct 2026): the dashboard chat's voice loop (voice-to-text -> espaluz-chat -> generate-voice)
 // in kids mode, with the heroes' clips as the avatar. 28 Oct 2026 (Elena: the picture must match what the line says, and
@@ -664,6 +665,10 @@ const Classroom = () => {
               </div>
             );
           })}
+          {/* 7 Nov 2026 (Google Play stage A): a quiet report link for the grown-up, under the heroes' lines. */}
+          <div className="flex justify-end -mt-1">
+            <ReportReply text={reply} where="classroom" />
+          </div>
         </div>
       )}
 

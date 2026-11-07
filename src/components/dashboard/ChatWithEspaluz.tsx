@@ -14,6 +14,7 @@ import helloChatEn from '@/assets/heroes/hello-chat-en.mp4';
 import helloChatEs from '@/assets/heroes/hello-chat-es.mp4';
 import { TalkingHello } from "@/components/landing/TalkingHello";
 import { toast } from 'sonner';
+import { ReportReply } from '@/components/ReportReply';
 import { useLearningProgress } from '@/hooks/useLearningProgress';
 import { useFreeMessages } from '@/hooks/useFreeMessages';
 import { track, trackChatMessage } from '@/lib/track';
@@ -899,6 +900,7 @@ The video script will be used to generate an avatar video with synchronized audi
                            )}
                            {t('talking.button')}
                          </Button>}
+                        <ReportReply text={shownText(message.content)} where="chat" />
                       </div>
                       {message.talkingUrl && (
                         <video src={message.talkingUrl} controls playsInline preload="metadata" aria-label={t('hello.label')}
