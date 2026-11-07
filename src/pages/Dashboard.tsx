@@ -22,6 +22,7 @@ import { LearningOptions } from '@/components/dashboard/LearningOptions';
 import { FamilyRoadmap } from '@/components/dashboard/FamilyRoadmap';
 import SubscriptionFlow from '@/components/SubscriptionFlow';
 import SubscriptionRecovery from '@/components/SubscriptionRecovery';
+import { insidePlayApp, restorePlayPurchases } from '@/lib/playBilling';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const Dashboard = () => {
@@ -45,6 +46,12 @@ const Dashboard = () => {
   useEffect(() => {
     setCheckingOnboarding(false);
   }, []);
+
+  // 7 Nov 2026: inside the Play app, a subscription bought earlier (or on another phone) is checked with Google on open,
+  // so a paying family is never locked out. Does nothing on the website.
+  useEffect(() => {
+    if (user && insidePlayApp()) restorePlayPurchases();
+  }, [user]);
 
   useEffect(() => {
     const scrollToChat = () => {
