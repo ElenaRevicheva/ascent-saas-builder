@@ -1,0 +1,443 @@
+{
+  "country": "dominican_republic",
+  "name": "República Dominicana",
+  "timezone": "America/Santo_Domingo",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in the Dominican Republic is. No stereotypes, no ethnic labels."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in the Dominican Republic (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_the_Dominican_Republic"
+    },
+    "cdn_10cosas": {
+      "title": "10 cosas que hacen los dominicanos y los hacen ser tan especiales (CDN)",
+      "url": "https://cdn.com.do/estilos-de-vida/10-cosas-que-hacen-los-dominicanos-y-los-hacen-ser-tan-especiales/"
+    },
+    "dominicanabroad_slang": {
+      "title": "Dominican slang (Dominican Abroad)",
+      "url": "https://www.dominicanabroad.com/dominican-slang/"
+    },
+    "elcaribe_lexico": {
+      "title": "El peculiar léxico que identifica a los dominicanos (El Caribe)",
+      "url": "https://www.elcaribe.com.do/opiniones/el-peculiar-lexico-que-identifica-los-dominicanos-2/"
+    },
+    "elcaribe_diminutivos": {
+      "title": "Descifremos diminutivos (El Caribe)",
+      "url": "https://www.elcaribe.com.do/opiniones/descifremos-diminutivos/"
+    },
+    "acento_calendario": {
+      "title": "Calendario escolar 2026-2027: todo lo que deben saber los padres (Acento)",
+      "url": "https://acento.com.do/actualidad/calendario-escolar-2026-2027-todo-lo-que-deben-saber-los-padres-antes-del-inicio-del-ano-escolar-este-24-de-agosto-9731154.html"
+    },
+    "diariolibre_inicio": {
+      "title": "El sistema público comenzará el 24 de agosto el año escolar 2026-2027 (Diario Libre)",
+      "url": "https://diariolibre.com/actualidad/educacion/2026/07/23/el-sistema-publico-comenzara-el-24-de-agosto-el-ano-escolar-2026-2027/3608480"
+    },
+    "elcaribe_lavega": {
+      "title": "En La Vega, febrero significa Carnaval (El Caribe)",
+      "url": "https://www.elcaribe.com.do/gente/a-y-e/en-la-vega-febrero-significa-carnaval/"
+    },
+    "diariolibre_carnaval": {
+      "title": "Carnaval dominicano: universo de expresiones folclóricas (Diario Libre)",
+      "url": "https://www.diariolibre.com/especiales/carnaval/carnaval-dominicano-universo-de-expresiones-folcloricas-y-de-fantasia-sacadas-de-las-entranas-del-pueblo-DL16958812"
+    },
+    "acento_ciclonica": {
+      "title": "Temporada ciclónica 2026: qué hacer desde ahora para prepararse ante un huracán (Acento)",
+      "url": "https://acento.com.do/ecologia/temporada-ciclonica-2026-que-hacer-desde-ahora-para-prepararse-ante-un-huracan-9689771.html"
+    },
+    "eldinero_ciclonica": {
+      "title": "Gloria Ceballos: la temporada ciclónica está en el inicio de su periodo crítico (elDinero)",
+      "url": "https://eldinero.com.do/244179/gloria-ceballos-la-temporada-ciclonica-esta-en-el-inicio-de-su-periodo-critico/"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "school_year",
+        "text": "The school year runs from late August to late June: 24 August 2026 to 29 June 2027, with 190 class days, for public and private schools.",
+        "es": "el año escolar",
+        "sources": [
+          "diariolibre_inicio",
+          "acento_calendario"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "carnival_february",
+        "text": "February is Carnival month: in La Vega the 'diablos cojuelos' go out every Sunday of February, ending with a big closing day at the end of the month.",
+        "es": "carnaval · diablos cojuelos",
+        "sources": [
+          "elcaribe_lavega",
+          "diariolibre_carnaval"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "hurricane_season",
+        "text": "Hurricane season runs from 1 June to 30 November; the critical months are August, September and the first half of October. Follow the official bulletins (COE, Indomet).",
+        "es": "temporada ciclónica",
+        "sources": [
+          "acento_ciclonica",
+          "eldinero_ciclonica"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "baseball_season",
+        "text": "During the baseball season fans argue passionately about their teams - an easy way into a conversation.",
+        "es": "la pelota",
+        "sources": [
+          "cdn_10cosas"
+        ],
+        "status": "checked"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "list",
+        "text": "Public holidays: 1 January, 6 January (Three Kings), 21 January (Virgen de la Altagracia), 26 January (Duarte's birthday), 27 February (Independence), Good Friday (March or April), 1 May, Corpus Christi (May or June), 16 August (Restoration), 24 September (Virgen de las Mercedes), 6 November (Constitution), 25 December.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "moved",
+        "text": "Some holidays are moved to the nearest Monday by law - check each year's official list.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "instant_family",
+        "text": "People greet strangers warmly and quickly talk like old friends: '¿De qué parte tú eres?' is a typical opener.",
+        "es": "¿De qué parte tú eres?",
+        "sources": [
+          "cdn_10cosas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "que_lo_que",
+        "text": "'¿Qué lo que?' - informal 'what's up?'.",
+        "es": "¿qué lo que?",
+        "sources": [
+          "dominicanabroad_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "neighbourhood_dress",
+        "text": "In the neighbourhood people may pop to the corner shop in house clothes and rollers - they are among people they know.",
+        "sources": [
+          "cdn_10cosas"
+        ],
+        "status": "checked"
+      }
+    ],
+    "time": [
+      {
+        "id": "voy_ahora",
+        "text": "'Voy ahora' can mean in five minutes, in an hour, or tomorrow.",
+        "es": "voy ahora",
+        "sources": [
+          "cdn_10cosas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "bolita",
+        "text": "People often ask for a short lift, 'una bolita' - and 'just to the corner' can be much further.",
+        "es": "una bolita",
+        "sources": [
+          "cdn_10cosas"
+        ],
+        "status": "checked"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "colmado",
+        "text": "The 'colmado' (corner shop) is a meeting place: people chat, listen to music, play dominoes and catch up on local news.",
+        "es": "el colmado",
+        "sources": [
+          "cdn_10cosas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "dominoes",
+        "text": "Dominoes are played loudly and seriously - tiles slammed on the table and shouts of '¡Tranca eso ahí!'.",
+        "es": "el dominó",
+        "sources": [
+          "cdn_10cosas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "dance",
+        "text": "Not knowing how to dance is gently mocked - 'pariguayo' is a teasing word for it; dancing merengue or bachata is an easy way to join in.",
+        "es": "pariguayo",
+        "sources": [
+          "elcaribe_lexico"
+        ],
+        "status": "checked"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "ordinance",
+        "text": "The national calendar is set by an ordinance of the Ministry of Education (MINERD) and applies to public and private schools; it includes holidays and teacher-training days.",
+        "es": "MINERD",
+        "sources": [
+          "acento_calendario"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "teachers_earlier",
+        "text": "Teachers return in early August, three weeks before pupils.",
+        "sources": [
+          "diariolibre_inicio"
+        ],
+        "status": "unverified"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "bandera",
+        "text": "The everyday lunch is 'la bandera': rice, beans (habichuelas) and meat, often at midday; the crispy rice at the bottom of the pot is 'el concón'.",
+        "es": "la bandera · el concón",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "un_chin",
+        "text": "'Un chin' means 'a little bit' - 'dame un chin'.",
+        "es": "un chin",
+        "sources": [
+          "elcaribe_diminutivos"
+        ],
+        "status": "checked"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "music_always",
+        "text": "In many neighbourhoods a speaker is almost always playing merengue, bachata or dembow - it is simply 'ambiente'.",
+        "es": "es ambiente",
+        "sources": [
+          "cdn_10cosas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "guagua",
+        "text": "A bus is a 'guagua'.",
+        "es": "guagua",
+        "sources": [
+          "dominicanabroad_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "motorbikes",
+        "text": "Motorbikes often carry three people, sometimes with a child in the middle - teach children road safety early.",
+        "sources": [
+          "cdn_10cosas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "cheerful",
+        "text": "Heat, traffic and power cuts are met with music, jokes and improvised parties.",
+        "sources": [
+          "cdn_10cosas"
+        ],
+        "status": "checked"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "vaina",
+        "text": "'Vaina' - 'thing', stands in for almost any noun.",
+        "es": "vaina",
+        "sources": [
+          "dominicanabroad_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "tiguere",
+        "text": "'Tíguere' - a street-smart, cunning person with a cool manner (can be praise or a warning).",
+        "es": "tíguere",
+        "sources": [
+          "dominicanabroad_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "jevi",
+        "text": "'Jevi' - cool.",
+        "es": "jevi",
+        "sources": [
+          "dominicanabroad_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "en_olla",
+        "text": "'Estar en olla' - to be broke.",
+        "es": "en olla",
+        "sources": [
+          "dominicanabroad_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "coba",
+        "text": "'Dar coba' - to flatter someone, usually to get something.",
+        "es": "dar coba",
+        "sources": [
+          "elcaribe_lexico"
+        ],
+        "status": "checked"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "noise",
+        "text": "Music and dominoes at full volume in the neighbourhood, day and evening.",
+        "sources": [
+          "cdn_10cosas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "time_words",
+        "text": "'Voy ahora' that is not now.",
+        "sources": [
+          "cdn_10cosas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "hurricanes",
+        "text": "Hurricane season from June to November - learn where official alerts come from before it starts.",
+        "sources": [
+          "acento_ciclonica"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "diablos_names",
+        "text": "Carnival devils have different names by region: diablos cojuelos in La Vega, 'cachúas' in Cabral, 'toros' in Montecristi, 'papeluses' in Cotuí.",
+        "sources": [
+          "diariolibre_carnaval"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "altagracia",
+        "text": "21 January, the Virgen de la Altagracia, is one of the biggest religious days of the year.",
+        "es": "la Altagracia",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "baseball",
+        "text": "Baseball rivalries are taken very seriously - 'Las Águilas son las mejores' is a typical claim.",
+        "es": "la pelota",
+        "sources": [
+          "cdn_10cosas"
+        ],
+        "status": "checked"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "first_carnival",
+      "label": "Your first Carnival",
+      "words": [
+        "carnaval",
+        "diablo cojuelo",
+        "diablos cojuelos",
+        "la vega",
+        "careta"
+      ]
+    },
+    {
+      "id": "colmado",
+      "label": "Hanging out at the colmado",
+      "words": [
+        "colmado",
+        "dominó",
+        "domino"
+      ]
+    },
+    {
+      "id": "first_hurricane_season",
+      "label": "Your first hurricane season",
+      "words": [
+        "temporada ciclónica",
+        "huracán",
+        "huracan",
+        "tormenta",
+        "coe"
+      ]
+    },
+    {
+      "id": "baseball",
+      "label": "A baseball game",
+      "words": [
+        "pelota",
+        "béisbol",
+        "beisbol",
+        "águilas"
+      ]
+    },
+    {
+      "id": "independence",
+      "label": "27 de febrero",
+      "words": [
+        "27 de febrero",
+        "independencia",
+        "desfile"
+      ]
+    },
+    {
+      "id": "school_start",
+      "label": "The school year starts in August",
+      "words": [
+        "año escolar",
+        "inicio de clases",
+        "uniforme",
+        "útiles"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor"
+      ]
+    }
+  ]
+}

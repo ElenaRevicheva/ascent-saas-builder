@@ -1,0 +1,403 @@
+{
+  "country": "bolivia",
+  "name": "Bolivia",
+  "timezone": "America/La_Paz",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in Bolivia is. No stereotypes, no ethnic labels.",
+    "Bolivia runs from the high Andes (La Paz, Oruro, Potosí) to the lowlands (Santa Cruz, Beni): climate and customs differ a lot. Ask which department the family lives in. Southern hemisphere: winter is June-August."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in Bolivia (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Bolivia"
+    },
+    "unesco_alasita": {
+      "title": "Ritual journeys in La Paz during Alasita (UNESCO Intangible Cultural Heritage, 2017)",
+      "url": "https://ich.unesco.org/en/RL/ritual-journeys-in-la-paz-during-alasita-01182?RL=01182"
+    },
+    "unesco_oruro": {
+      "title": "Carnival of Oruro (UNESCO Intangible Cultural Heritage)",
+      "url": "https://ich.unesco.org/en/RL/carnival-of-oruro-00003"
+    },
+    "voa_tantawawas": {
+      "title": "Bolivia: Todos Santos, la tradición de las t'anta wawas para recordar a los difuntos (Voz de América)",
+      "url": "https://www.vozdeamerica.com/a/bolivia-todos-santos-la-tradicion-de-las-t-anta-wawas-para-recordar-a-los-difuntos/6814273.html"
+    },
+    "lostiempos_todossantos": {
+      "title": "Todos Santos: un viaje espiritual entre vivos y muertos en Bolivia (Los Tiempos)",
+      "url": "https://www.lostiempos.com/node/643916/devel"
+    },
+    "eju_inicio": {
+      "title": "Educación fija para el 2 de febrero el inicio de las clases (eju.tv, 2025)",
+      "url": "https://eju.tv/2025/12/educacion-fija-para-el-2-de-febrero-el-inicio-de-las-clases/"
+    },
+    "bt_invierno": {
+      "title": "Vacaciones invernales descentralizadas 2026 (Bolivian Thoughts, from Red Uno)",
+      "url": "https://bolivianthoughts.com/2026/01/16/vacaciones-invernales-descentralizadas-2026"
+    },
+    "baselang_bo": {
+      "title": "Bolivian Slang: 28 Terms You Might Hear on the Streets of La Paz (BaseLang)",
+      "url": "https://baselang.com/blog/vocabulary/bolivian-slang/"
+    },
+    "lingopie_bo": {
+      "title": "Bolivian Slang: 23 Essential Phrases (Lingopie)",
+      "url": "https://lingopie.com/blog/bolivian-slang/"
+    },
+    "andes_rae": {
+      "title": "Bolivianismos en la Real Academia de la Lengua Española (ANDES)",
+      "url": "https://www.andesacd.org/wp-content/uploads/2015/08/Bolivianismos-en-la-Real-Academia-de-la-Lengua-Espa%C3%B1ola.pdf"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "school_year",
+        "text": "The school year (gestión escolar) runs from early February to early December - in 2026 from 2 February to 2 December, with 200 class days.",
+        "es": "la gestión escolar",
+        "sources": [
+          "eju_inicio"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "winter_break",
+        "text": "The winter break ('descanso pedagógico') around June-July is no longer the same everywhere: since 2026 each department sets its own dates with health authorities - check your department's announcement.",
+        "es": "descanso pedagógico",
+        "sources": [
+          "bt_invierno"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "alasita",
+        "text": "From 24 January, La Paz holds the Alasita: for two or three weeks people buy miniature 'good luck' objects linked to the Ekeko, the deity of abundance, and have them blessed.",
+        "es": "la Alasita · el Ekeko",
+        "sources": [
+          "unesco_alasita"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "carnival",
+        "text": "Carnival (February or March - moves every year) is a two-day national holiday; the Carnival of Oruro is the most famous, with a procession of dancers lasting about twenty hours.",
+        "es": "carnaval",
+        "sources": [
+          "wiki_holidays",
+          "unesco_oruro"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "june21",
+        "text": "21 June, the Aymara or Andean New Year (Año Nuevo Andino), is a national holiday at the winter solstice.",
+        "es": "Año Nuevo Andino",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "todos_santos",
+        "text": "Early November: families believe the souls of their dead return, and set up an altar at home with photos, flowers, their favourite food and drink, and t'anta wawas.",
+        "es": "Todos Santos",
+        "sources": [
+          "voa_tantawawas",
+          "lostiempos_todossantos"
+        ],
+        "status": "checked"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "list",
+        "text": "Public holidays: 1 January, 22 January (Plurinational State Day), Carnival Monday and Tuesday, Good Friday, 1 May (moved to Monday if on a Sunday), Corpus Christi (May or June), 21 June (Andean New Year), 6 August (Independence), 2 November (All Souls), 25 December. Movable dates change every year.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "departments",
+        "text": "Each department also has its own anniversary holiday (for example La Paz on 16 July, Santa Cruz on 24 September).",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "usted",
+        "text": "Use 'usted' with elders and in offices; many people use it more than in other countries.",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "greet_shop",
+        "text": "Greeting people when you enter a small shop or a minibus is common courtesy.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "time": [
+      {
+        "id": "soroche",
+        "text": "Altitude sickness is called 'soroche' - on arrival in La Paz or Oruro, take the first days slowly.",
+        "es": "el soroche",
+        "sources": [
+          "baselang_bo",
+          "andes_rae"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "entrada_long",
+        "text": "Festival processions ('entradas') last many hours.",
+        "sources": [
+          "unesco_oruro"
+        ],
+        "status": "checked"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "altar_home",
+        "text": "On Todos Santos many families receive visitors at their home altar and share bread and food in memory of the dead.",
+        "sources": [
+          "voa_tantawawas"
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "chango",
+        "text": "Young people are 'changos' / 'changas' - affectionate, for children and young adults.",
+        "es": "chango · changa",
+        "sources": [
+          "lingopie_bo",
+          "baselang_bo"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "alasita_gifts",
+        "text": "At the Alasita, miniatures are also given as presents and even used symbolically to pay debts.",
+        "sources": [
+          "unesco_alasita"
+        ],
+        "status": "checked"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "calendar_2026",
+        "text": "Class days start in February after enrolment in January - check the ministry's calendar each year.",
+        "es": "inscripciones",
+        "sources": [
+          "eju_inicio"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "winter_by_department",
+        "text": "Winter break dates are decided by the departmental education directorates - schools in two cities may differ.",
+        "sources": [
+          "bt_invierno"
+        ],
+        "status": "checked"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "tantawawas",
+        "text": "'T'anta wawas' are sweet breads shaped like babies or people, made for Todos Santos as an offering to the dead.",
+        "es": "t'anta wawa",
+        "sources": [
+          "voa_tantawawas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "salteñas",
+        "text": "Salteñas (juicy baked empanadas) are a mid-morning snack, eaten carefully so the juice does not spill.",
+        "es": "salteña",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "yapa",
+        "text": "'La yapa' - the little extra a market seller adds; it is often expected and not rude to ask for.",
+        "es": "la yapa",
+        "sources": [
+          "andes_rae",
+          "lingopie_bo"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "miniatures_blessing",
+        "text": "Alasita miniatures are blessed either by Andean ritualists or at a Catholic church.",
+        "sources": [
+          "unesco_alasita"
+        ],
+        "status": "checked"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "pucha",
+        "text": "'¡Pucha!' - 'oh no!', 'darn!', frustration or disappointment.",
+        "es": "¡pucha!",
+        "sources": [
+          "lingopie_bo",
+          "baselang_bo"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "jailon",
+        "text": "'Jailón / jailona' - someone posh or show-off.",
+        "es": "jailón",
+        "sources": [
+          "lingopie_bo",
+          "baselang_bo"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "chango2",
+        "text": "Careful: 'chango' means a young person in Bolivia but a monkey in Mexico.",
+        "es": "chango",
+        "sources": [
+          "lingopie_bo"
+        ],
+        "status": "checked"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "altitude",
+        "text": "Altitude: Oruro is at about 3,700 m and much of western Bolivia is high - newcomers need time to adjust.",
+        "sources": [
+          "baselang_bo",
+          "unesco_oruro"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "school_dates_vary",
+        "text": "Winter-break dates that differ by department.",
+        "sources": [
+          "bt_invierno"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "oruro_unesco",
+        "text": "The Carnival of Oruro, with the 'diablada' as its main dance, was proclaimed by UNESCO in 2001 and inscribed on the Intangible Heritage list in 2008; it is linked to Candlemas (2 February).",
+        "es": "la diablada",
+        "sources": [
+          "unesco_oruro"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "alasita_unesco",
+        "text": "The ritual journeys of the Alasita were inscribed on UNESCO's Intangible Heritage list in 2017.",
+        "sources": [
+          "unesco_alasita"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "mixed_roots",
+        "text": "Todos Santos rituals combine pre-Columbian elements with Catholic ones.",
+        "sources": [
+          "lostiempos_todossantos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "corpus",
+        "text": "Corpus Christi is both a religious and national holiday and one of the busiest festivities.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "first_alasita",
+      "label": "Your first Alasita",
+      "words": [
+        "alasita",
+        "alasitas",
+        "ekeko",
+        "miniatura",
+        "miniaturas"
+      ]
+    },
+    {
+      "id": "first_carnival",
+      "label": "Your first Carnival",
+      "words": [
+        "carnaval",
+        "oruro",
+        "diablada",
+        "entrada",
+        "morenada"
+      ]
+    },
+    {
+      "id": "todos_santos",
+      "label": "Todos Santos and t'anta wawas",
+      "words": [
+        "todos santos",
+        "tantawawa",
+        "t'anta wawa",
+        "tantawawas",
+        "mesa",
+        "almas"
+      ]
+    },
+    {
+      "id": "andean_new_year",
+      "label": "The Andean New Year",
+      "words": [
+        "año nuevo andino",
+        "21 de junio",
+        "solsticio"
+      ]
+    },
+    {
+      "id": "soroche",
+      "label": "Getting used to the altitude",
+      "words": [
+        "soroche",
+        "altura",
+        "altitude"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor",
+        "yapa"
+      ]
+    }
+  ]
+}

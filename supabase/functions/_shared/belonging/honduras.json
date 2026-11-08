@@ -1,0 +1,447 @@
+{
+  "country": "honduras",
+  "name": "Honduras",
+  "timezone": "America/Tegucigalpa",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in Honduras is. No stereotypes, no ethnic labels."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in Honduras (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Honduras"
+    },
+    "tunota_tradiciones": {
+      "title": "10 tradiciones de Honduras (TuNota, 2022)",
+      "url": "https://www.tunota.com/honduras-hoy/10-tradiciones-de-honduras-las-costumbres-que-caracterizan-a-todos-los-hondurenos-2022-09-28"
+    },
+    "tunota_inicio": {
+      "title": "¿Cuándo inician las clases en Honduras 2026? (TuNota)",
+      "url": "https://www.tunota.com/honduras-hoy/cuando-inician-las-clases-en-honduras-2026-en-escuelas-y-colegios-2026-01-14"
+    },
+    "tunota_fin": {
+      "title": "¿Cuándo termina el año escolar 2026 en Honduras? (TuNota)",
+      "url": "https://www.tunota.com/honduras-hoy/cuando-termina-el-ano-escolar-2026-en-honduras-fecha-confirmada-por-educacion-2026-10-05"
+    },
+    "tunota_morazanica": {
+      "title": "Semana Morazánica 2026: cuándo comienzan las vacaciones escolares (TuNota)",
+      "url": "https://www.tunota.com/honduras-hoy/semana-morazanica-2026-cuando-comienzan-las-vacaciones-escolares-2026-09-11"
+    },
+    "tunota_receso": {
+      "title": "¿Cuándo termina el receso escolar y vuelven los estudiantes a las aulas? (TuNota, 2026)",
+      "url": "https://www.tunota.com/honduras-hoy/cuando-termina-el-receso-escolar-y-vuelven-los-estudiantes-a-las-aulas-2026-07-13"
+    },
+    "latribuna_palillonas": {
+      "title": "Palillonas llenan de color y tradición los desfiles patrios en San Pedro Sula (La Tribuna, 2026)",
+      "url": "https://www.latribuna.hn/2026/09/15/palillonas-llenan-de-color-y-tradicion-los-desfiles-patrios-en-san-pedro-sula-galeria/"
+    },
+    "laprensa_calor": {
+      "title": "Por el calor recortan horarios de clases y Educación Física (La Prensa)",
+      "url": "https://www.laprensa.hn/honduras/educacion-horario-reducido-calor-contaminacion-honduras-EH30379836"
+    },
+    "spanishacademy_hn": {
+      "title": "Talk Like a Honduran: Slang Words for Everyday Use (Spanish Academy)",
+      "url": "https://www.spanish.academy/blog/talk-like-a-honduran-slang-words-for-everyday-use/"
+    },
+    "laprensa_catracho": {
+      "title": "Aquí no se habla mal, se habla catracho (La Prensa, 2026)",
+      "url": "https://www.laprensa.hn/honduras/espanol-hondureno-identidad-historia-evolucion-hondurenismo-NA30300269"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "school_year",
+        "text": "The public school year runs from early February to late November: 2 February to 30 November in 2026.",
+        "es": "el año lectivo",
+        "sources": [
+          "tunota_inicio",
+          "tunota_fin"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "mid_year",
+        "text": "A one-week mid-year school break in July (13-17 July in 2026).",
+        "es": "receso de medio año",
+        "sources": [
+          "tunota_receso"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "morazanica",
+        "text": "Early October brings the 'Semana Morazánica', a week off school and a long holiday for many - the exact week is set each year.",
+        "es": "Semana Morazánica",
+        "sources": [
+          "tunota_morazanica"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "september_patria",
+        "text": "September is the patriotic month: on 15 September pupils and school bands parade, led by 'palillonas' (baton twirlers); in Tegucigalpa the parades end at the National Stadium.",
+        "es": "desfiles patrios · palillonas",
+        "sources": [
+          "tunota_tradiciones",
+          "latribuna_palillonas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "suyapa",
+        "text": "3 February: many people travel to honour the Virgen de Suyapa, patron of Honduras, with an all-night vigil (the 'alborada') and songs broadcast on TV.",
+        "es": "la alborada",
+        "sources": [
+          "tunota_tradiciones"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "holy_week",
+        "text": "Holy Week (March or April - moves every year): Thursday, Friday and Saturday are holidays, with processions over sawdust carpets in Tegucigalpa and Comayagua.",
+        "es": "Semana Santa · alfombras de aserrín",
+        "sources": [
+          "wiki_holidays",
+          "tunota_tradiciones"
+        ],
+        "status": "checked"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "mandatory",
+        "text": "Public holidays: 1 January, Holy Thursday-Saturday, 14 April (Day of the Americas), 1 May, 15 September, 3 October (Morazán), 12 October, 21 October (Armed Forces), 25 December. Schools take a 'Semana Morazánica' week off in early October.",
+        "sources": [
+          "wiki_holidays",
+          "tunota_morazanica"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "observances",
+        "text": "Days marked but not off: 3 February (Suyapa), 19 March (Father's Day), Mother's Day (second Sunday of May), 11 June (Students' Day), 20 July (Lempira Day), 1 September (Flag Day), 10 September (Children's Day), 17 September (Teachers' Day).",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "vos",
+        "text": "'Vos' is everyday Honduran speech: 'mirá vos', 'dejate de cuentos'.",
+        "es": "mirá vos",
+        "sources": [
+          "laprensa_catracho"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "cheque",
+        "text": "'¿Cheque?' - 'OK?', 'alright?'; answer '¡cheque!'.",
+        "es": "cheque",
+        "sources": [
+          "spanishacademy_hn"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "maje",
+        "text": "'Maje' - 'dude', between friends only; with others it can offend.",
+        "es": "maje",
+        "sources": [
+          "spanishacademy_hn"
+        ],
+        "status": "checked"
+      }
+    ],
+    "time": [
+      {
+        "id": "heat_hours",
+        "text": "In very hot periods the Education Ministry has shortened class hours and physical education - watch for school notices.",
+        "es": "horario reducido",
+        "sources": [
+          "laprensa_calor"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "late_social",
+        "text": "Social gatherings often start later than the stated time.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "cipote",
+        "text": "Children are 'cipotes' / 'cipotas'.",
+        "es": "cipote",
+        "sources": [
+          "spanishacademy_hn",
+          "laprensa_catracho"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "alero",
+        "text": "A best friend who always has your back is your 'alero'.",
+        "es": "alero",
+        "sources": [
+          "spanishacademy_hn"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "stadium",
+        "text": "Going to the National Stadium to support the national team or a league club is something many people do at least once.",
+        "es": "el Estadio Nacional",
+        "sources": [
+          "tunota_tradiciones"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "weekend_outings",
+        "text": "Families from Tegucigalpa often go to La Tigra park or the Cristo del Picacho viewpoint at weekends.",
+        "sources": [
+          "tunota_tradiciones"
+        ],
+        "status": "checked"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "parades_school",
+        "text": "Most children parade with their school on 15 September, with school bands and palillonas.",
+        "es": "banda de guerra",
+        "sources": [
+          "tunota_tradiciones",
+          "latribuna_palillonas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "days_celebrated",
+        "text": "Students' Day (11 June), Children's Day (10 September) and Teachers' Day (17 September) are celebrated at school.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "unverified"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "baleada",
+        "text": "Baleadas - a flour tortilla with refried beans, egg and 'mantequilla' - are a common breakfast, freshly made at a corner stall.",
+        "es": "baleada",
+        "sources": [
+          "tunota_tradiciones"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "roadside_corn",
+        "text": "Roadside stalls sell roasted corn, sweet corn tamalitos and atol.",
+        "es": "elote · atol",
+        "sources": [
+          "tunota_tradiciones"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "sopa_semana_santa",
+        "text": "In Holy Week many families make seafood soup with coconut milk.",
+        "es": "sopa marinera",
+        "sources": [
+          "tunota_tradiciones"
+        ],
+        "status": "checked"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "pulperia",
+        "text": "The corner shop is the 'pulpería' (or 'pulpe').",
+        "es": "pulpería",
+        "sources": [
+          "spanishacademy_hn"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "pisto",
+        "text": "Money is 'pisto'.",
+        "es": "pisto",
+        "sources": [
+          "spanishacademy_hn",
+          "laprensa_catracho"
+        ],
+        "status": "checked"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "catracho",
+        "text": "People from Honduras call themselves 'catrachos' / 'catrachas'.",
+        "es": "catracho",
+        "sources": [
+          "spanishacademy_hn",
+          "laprensa_catracho"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "que_pepsi",
+        "text": "'¡Qué pepsi!' / 'macizo' - 'how cool!', 'great'.",
+        "es": "¡qué pepsi! · macizo",
+        "sources": [
+          "spanishacademy_hn"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "yuca",
+        "text": "'Está yuca' - it is difficult (a strict teacher, a hard exam).",
+        "es": "está yuca",
+        "sources": [
+          "spanishacademy_hn"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "pijin",
+        "text": "'Pijin' - a party.",
+        "es": "pijín",
+        "sources": [
+          "spanishacademy_hn"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "chunche",
+        "text": "'Chunche' - a thing whose name you don't know.",
+        "es": "chunche",
+        "sources": [
+          "laprensa_catracho"
+        ],
+        "status": "checked"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "school_calendar",
+        "text": "The school year runs February-November, not September-June - plan a child's arrival with the school.",
+        "sources": [
+          "tunota_inicio",
+          "tunota_fin"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "heat",
+        "text": "Heat waves strong enough to change school hours.",
+        "sources": [
+          "laprensa_calor"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "punta",
+        "text": "Folk dances are colourful and flirtatious, with 'bombas' (short rhymed verses); the punta comes from the Garífuna tradition.",
+        "es": "la punta · bombas",
+        "sources": [
+          "tunota_tradiciones"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "alfombras",
+        "text": "On Good Friday the centres of Tegucigalpa and Comayagua are covered with sawdust carpets for the processions - Comayagua's are famous.",
+        "es": "alfombras",
+        "sources": [
+          "tunota_tradiciones"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "feria_juniana",
+        "text": "In June San Pedro Sula holds the Feria Juniana, with live music and a carnival.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "first_desfile",
+      "label": "Your first 15 de septiembre",
+      "words": [
+        "15 de septiembre",
+        "desfile",
+        "desfiles patrios",
+        "palillona",
+        "palillonas",
+        "banda de guerra"
+      ]
+    },
+    {
+      "id": "suyapa",
+      "label": "The Suyapa alborada",
+      "words": [
+        "suyapa",
+        "alborada",
+        "3 de febrero"
+      ]
+    },
+    {
+      "id": "morazanica",
+      "label": "Semana Morazánica",
+      "words": [
+        "morazánica",
+        "morazanica",
+        "feriado morazánico"
+      ]
+    },
+    {
+      "id": "semana_santa",
+      "label": "Holy Week and sawdust carpets",
+      "words": [
+        "semana santa",
+        "alfombras",
+        "comayagua",
+        "procesión"
+      ]
+    },
+    {
+      "id": "baleadas",
+      "label": "Baleadas for breakfast",
+      "words": [
+        "baleada",
+        "baleadas",
+        "pulpería",
+        "pulperia"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor",
+        "alero"
+      ]
+    }
+  ]
+}
