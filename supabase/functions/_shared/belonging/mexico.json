@@ -1,0 +1,734 @@
+{
+  "country": "mexico",
+  "name": "México",
+  "timezone": "America/Mexico_City",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in Mexico is. No stereotypes, no ethnic labels.",
+    "Mexico is large and has several time zones and climates: say 'in much of Mexico' and ask the family which state they live in before giving local detail."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in Mexico (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Mexico"
+    },
+    "matador_13": {
+      "title": "Las 13 costumbres mexicanas que más le sacan de onda a los extranjeros (Montse Aguilar, Matador Network, 2016)",
+      "url": "https://matadornetwork.com/es/las-13-costumbres-mexicanas-que-mas-le-sacan-de-onda-los-extranjeros/"
+    },
+    "matador_21": {
+      "title": "21 costumbres que debes conocer antes de visitar México (Rulo Luna Ramos, Matador Network, 2015)",
+      "url": "https://matadornetwork.com/es/21-costumbres-que-debes-conocer-antes-de-visitar-mexico/"
+    },
+    "matador_expr": {
+      "title": "14 essential expressions to learn before your trip to Mexico (Rulo Luna Ramos, Matador Network, updated 2022)",
+      "url": "https://matadornetwork.com/read/14-essential-expressions-learn-trip-mexico"
+    },
+    "mnd_late": {
+      "title": "Are Mexicans really always late? (Sarah DeVries, Mexico News Daily, 2024)",
+      "url": "https://mexiconewsdaily.com/culture/archive-are-mexicans-really-always-late/"
+    },
+    "mexperience_xmas": {
+      "title": "Discovering the Charms of a Mexican Christmas Experience (Mexperience, 2025)",
+      "url": "https://www.mexperience.com/christmas-in-mexico"
+    },
+    "cndh_muertos": {
+      "title": "2 de noviembre, Día de Muertos (CNDH, Comisión Nacional de los Derechos Humanos)",
+      "url": "https://www.cndh.org.mx/sites/default/files/documentos/2023-10/FRN_NOV_02-1.pdf"
+    },
+    "inah_muertos": {
+      "title": "Boletín 739: actividades de Día de Muertos (INAH, 2023)",
+      "url": "https://www.inah.gob.mx/images/boletines/2023/739/Boletin%20739.pdf"
+    },
+    "unotv_sep": {
+      "title": "SEP publica el calendario escolar definitivo para 2025-2026 (Uno TV)",
+      "url": "https://www.unotv.com/nacional/sep-publica-el-calendario-escolar-2025-2026-fechas-clave/"
+    },
+    "unotv_maestro": {
+      "title": "¿Cuándo y por qué se celebra el Día del Maestro en México? (Uno TV)",
+      "url": "https://www.unotv.com/nacional/cuando-es-dia-del-maestro-por-que-se-celebra-mexico/"
+    },
+    "sep_honores": {
+      "title": "Discurso del secretario de Educación Pública en ceremonia de Honores a la Bandera, 2015 (SEP, gob.mx)",
+      "url": "https://www.gob.mx/cms/uploads/attachment/file/260073/Mensaje_140915_-_SEP_-_Mensaje_del_secretario_de_Educacio_n_Pu_blica__Aurelio_Nun_o_Mayer__ante_maestros__alumnos_y_padres_de_familia_de_la_escuela_primaria_Espan_a_del_Centro_Histo_rico_de_la_ciudad_de_Me_xico._.pdf"
+    },
+    "rove_rain": {
+      "title": "Rainy season in Mexico (Rove.me)",
+      "url": "https://rove.me/to/mexico/rainy-season-summer"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "rainy_season",
+        "text": "In much of Mexico the rainy season starts around May and peaks in the warmest months; hurricane season on the coasts runs from June into October, in some areas November.",
+        "es": "la temporada de lluvias",
+        "sources": [
+          "rove_rain"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "afternoon_rain",
+        "text": "Rain often comes as a short afternoon or evening downpour after a clear morning - many people plan outings for the morning. Varies a lot by region.",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "season_end_year",
+        "text": "The end-of-year season runs from mid-December (Día de Guadalupe, then the posadas) through Christmas Eve, New Year and Día de Reyes on 6 January, and for many families on to 2 February.",
+        "es": "las fiestas decembrinas",
+        "sources": [
+          "mexperience_xmas",
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "muertos_season",
+        "text": "Late October to 2 November: families set up an 'ofrenda' (home altar) with marigold flowers (cempasúchil) for relatives who have died; 1 November is traditionally for children who died, 2 November for adults.",
+        "es": "la ofrenda · cempasúchil",
+        "sources": [
+          "cndh_muertos",
+          "inah_muertos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "september_patria",
+        "text": "September is the patriotic month: Independence Day, 16 September, is a national holiday.",
+        "es": "el mes patrio",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "grito",
+        "text": "On the night of 15 September many towns gather in the main square for 'el Grito' - the shout of independence - with food and fireworks.",
+        "es": "el Grito",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "school_year_shape",
+        "text": "The public school year runs from late August or early September to mid-July, with a winter break over Christmas and New Year - confirm this year's SEP calendar.",
+        "es": "el ciclo escolar",
+        "sources": [
+          "unotv_sep"
+        ],
+        "status": "checked"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "jan1",
+        "text": "1 January - New Year's Day.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "feb_constitution",
+        "text": "Constitution Day (5 February) - observed on the first Monday of February.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "mar_juarez",
+        "text": "Benito Juárez's birthday (21 March) - observed on the third Monday of March.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "may1",
+        "text": "1 May - Labour Day.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "sep16",
+        "text": "16 September - Independence Day.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "nov_revolution",
+        "text": "Revolution Day (20 November) - observed on the third Monday of November.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "dec25",
+        "text": "25 December - Christmas Day.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "sunday_rule",
+        "text": "When a statutory holiday falls on a Sunday, the Monday is the day off. Federal election days are also days off.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "not_days_off",
+        "text": "Big days that are NOT official days off: Día del Niño (30 April), Día de las Madres (10 May), Día de Muertos (1-2 November), Día de la Virgen de Guadalupe (12 December). Many schools and offices still mark them.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "holy_week",
+        "text": "Holy Week (Semana Santa, March or April - moves every year): Thursday and Friday are widely taken off and many families travel; confirm with the employer.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "kiss_hug",
+        "text": "Among friends and family many people greet with a kiss on the cheek and a short hug; with strangers and at work a handshake is safer until you see what others do.",
+        "sources": [
+          "matador_13",
+          "matador_21"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "please_thanks",
+        "text": "'Por favor' and 'gracias' are said constantly - you can hardly overdo them.",
+        "sources": [
+          "matador_21"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "mande",
+        "text": "'¿Mande?' is the polite way to say 'pardon?' / 'yes?' - you will hear it all the time, and a bare '¿qué?' can sound abrupt.",
+        "es": "¿Mande?",
+        "sources": [
+          "matador_21",
+          "matador_expr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "provecho",
+        "text": "'¡Provecho!' is said to people who are eating, about to eat or just finished - including strangers in a restaurant as you pass their table.",
+        "es": "¡Provecho!",
+        "sources": [
+          "matador_expr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "bueno_phone",
+        "text": "'¿Bueno?' is how people answer the phone.",
+        "es": "¿Bueno?",
+        "sources": [
+          "matador_expr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "gracias_no",
+        "text": "A street vendor or a host's offer is often declined with a simple 'gracias' or 'ahorita, gracias' - it means 'no, thank you'.",
+        "sources": [
+          "matador_expr",
+          "matador_21"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "comper",
+        "text": "'Con permiso' (often shortened) is said to get through a crowd or to leave a table or room.",
+        "es": "con permiso",
+        "sources": [
+          "matador_expr"
+        ],
+        "status": "checked"
+      }
+    ],
+    "time": [
+      {
+        "id": "social_late",
+        "text": "For parties and friends' gatherings many people arrive 15-30 minutes or more after the stated time, and hosts expect it; concerts and plays often start 15-30 minutes late.",
+        "sources": [
+          "mnd_late",
+          "matador_21",
+          "matador_13"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "tolerancia",
+        "text": "Schools, doctors and appointments are firmer: many announce a 'tolerancia' of 10-15 minutes, and if you are later you can lose the appointment.",
+        "es": "la tolerancia",
+        "sources": [
+          "mnd_late"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "ahorita",
+        "text": "'Ahorita' literally means 'right now' but can mean in a minute, in a few hours, or never; if you need it now, ask 'ahora mismo' or 'ya'.",
+        "es": "ahorita · ahora mismo · ya",
+        "sources": [
+          "mnd_late",
+          "matador_expr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "ratito",
+        "text": "'Un ratito' (a little while) usually lasts longer than five minutes.",
+        "sources": [
+          "matador_13",
+          "matador_21"
+        ],
+        "status": "checked"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "birthdays_big",
+        "text": "Birthdays are family events, often with 15 or more people - 'there is no small party'.",
+        "es": "no hay fiesta chiquita",
+        "sources": [
+          "matador_21"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "mananitas",
+        "text": "Birthdays are sung with 'Las Mañanitas' - learning the first verse is an easy way to join in.",
+        "es": "Las Mañanitas",
+        "sources": [
+          "matador_21"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "quinceanera",
+        "text": "A girl's 15th birthday, the 'quince años' or quinceañera, is often a big family celebration.",
+        "sources": [
+          "matador_13"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "rosca_host",
+        "text": "On 6 January families share the 'rosca de Reyes'; whoever finds a small doll figure in their slice hosts a tamales gathering on 2 February (Día de la Candelaria).",
+        "es": "la rosca · los tamales de la Candelaria",
+        "sources": [
+          "mexperience_xmas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "pride",
+        "text": "Many people love to show their country - asking about local food, music or places opens conversations.",
+        "sources": [
+          "matador_21"
+        ],
+        "status": "checked"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "calendar_sep",
+        "text": "Public basic education follows the national SEP calendar (about 185 class days in 2025-2026); schools also have teacher-training days without class - read the official calendar each year.",
+        "es": "el calendario de la SEP",
+        "sources": [
+          "unotv_sep"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "honores",
+        "text": "Many schools hold 'honores a la bandera' on Monday mornings: the flag is received with honours and the national anthem is sung.",
+        "es": "honores a la bandera",
+        "sources": [
+          "sep_honores"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "dia_maestro",
+        "text": "15 May is Teachers' Day: many schools hold small celebrations or suspend classes - check the school's notice.",
+        "es": "Día del Maestro",
+        "sources": [
+          "unotv_maestro"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "dia_nino",
+        "text": "30 April, Día del Niño, is celebrated at many schools though it is not a day off.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "tortilla",
+        "text": "Tortillas are on the table at most meals, and almost anything can become a taco.",
+        "es": "las tortillas",
+        "sources": [
+          "matador_21"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "salsa_lime",
+        "text": "Salsa and lime go on almost everything; even a 'mild' salsa is usually spicy for a newcomer - ask '¿pica?' before you try.",
+        "es": "¿pica?",
+        "sources": [
+          "matador_13",
+          "matador_21"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "diminutive_food",
+        "text": "Food diminutives ('un caldito', 'un tacito') do not mean a small portion - they are friendly.",
+        "sources": [
+          "matador_21"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "nochebuena",
+        "text": "Nochebuena supper on 24 December is the main Christmas meal for many families.",
+        "es": "la cena de Nochebuena",
+        "sources": [
+          "mexperience_xmas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "mal_puerco",
+        "text": "The sleepy feeling after a big meal has a name: 'el mal del puerco'.",
+        "es": "el mal del puerco",
+        "sources": [
+          "matador_expr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "comida_time",
+        "text": "The main meal, 'la comida', is often eaten mid-afternoon (around 2-4 pm), with a lighter supper in the evening.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "tianguis",
+        "text": "Many neighbourhoods have a weekly open-air market, the 'tianguis', for the week's shopping and a meal.",
+        "es": "el tianguis",
+        "sources": [
+          "matador_21"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "markets_fruit",
+        "text": "Markets have a huge variety of fruit and vegetables, often at low prices.",
+        "sources": [
+          "matador_13"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "small_change",
+        "text": "Small change is often scarce - carry small notes and coins, especially for taxis.",
+        "es": "¿tiene cambio?",
+        "sources": [
+          "matador_21"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "gas_station",
+        "text": "At petrol stations an attendant pumps the fuel and may clean the windscreen; a small tip is expected.",
+        "sources": [
+          "matador_21"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "crosswalk",
+        "text": "Drivers may not stop at pedestrian crossings - teach children to wait and look.",
+        "sources": [
+          "matador_21"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "public_toilets",
+        "text": "Public toilets often charge a few pesos, which may include a little toilet paper.",
+        "sources": [
+          "matador_21"
+        ],
+        "status": "checked"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "que_onda",
+        "text": "'¿Qué onda?' - 'what's up?', among friends.",
+        "es": "¿Qué onda?",
+        "sources": [
+          "matador_expr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "orale",
+        "text": "'¡Órale!' - usually 'OK, deal', but by tone also 'hurry up' or 'wow'.",
+        "es": "¡Órale!",
+        "sources": [
+          "matador_expr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "aguas",
+        "text": "'¡Aguas!' - 'watch out!'",
+        "es": "¡Aguas!",
+        "sources": [
+          "matador_expr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "padre_chido",
+        "text": "'¡Qué padre!' / 'chido' - 'great, cool'; 'chingón' means the same but is rude.",
+        "es": "¡Qué padre! · chido",
+        "sources": [
+          "matador_expr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "camara",
+        "text": "'Cámara' - 'deal', 'agreed', informal.",
+        "es": "cámara",
+        "sources": [
+          "matador_expr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "guey",
+        "text": "'Güey' - 'dude' between friends; it can also be an insult, so leave it to close friends.",
+        "es": "güey",
+        "sources": [
+          "matador_expr"
+        ],
+        "status": "checked"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "ahorita_gap",
+        "text": "'Ahorita' and a polite 'gracias' that both mean 'not now' or 'no' - newcomers wait for things that are not coming.",
+        "sources": [
+          "mnd_late",
+          "matador_21"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "social_vs_appointment",
+        "text": "Arriving 'on time' for a party is early, while 10-15 minutes late for a doctor can lose the appointment.",
+        "sources": [
+          "mnd_late"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "spice",
+        "text": "Spice levels: salsa's purpose is heat, so a mild one still bites.",
+        "es": "El propósito de la salsa es picar",
+        "sources": [
+          "matador_21"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "pedestrian",
+        "text": "Traffic: crossings do not guarantee that drivers stop.",
+        "sources": [
+          "matador_21"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "muertos_unesco",
+        "text": "Day of the Dead is on UNESCO's list of the Intangible Cultural Heritage of Humanity.",
+        "sources": [
+          "inah_muertos",
+          "cndh_muertos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "posadas",
+        "text": "Las Posadas, 16 to 24 December: candle-lit processions recalling Mary and Joseph looking for shelter, songs, and a piñata at the end.",
+        "es": "las posadas · la piñata",
+        "sources": [
+          "mexperience_xmas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "guadalupe",
+        "text": "12 December, Día de la Virgen de Guadalupe, is one of the biggest religious days of the year and opens the end-of-year festivities.",
+        "sources": [
+          "wiki_holidays",
+          "mexperience_xmas"
+        ],
+        "status": "checked"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "first_muertos",
+      "label": "Your first Día de Muertos",
+      "words": [
+        "día de muertos",
+        "dia de muertos",
+        "ofrenda",
+        "cempasúchil",
+        "cempasuchil",
+        "pan de muerto",
+        "day of the dead"
+      ]
+    },
+    {
+      "id": "first_posada",
+      "label": "Your first posada",
+      "words": [
+        "posada",
+        "posadas",
+        "piñata",
+        "pinata"
+      ]
+    },
+    {
+      "id": "rosca_tamales",
+      "label": "Rosca de Reyes and the Candelaria tamales",
+      "words": [
+        "rosca",
+        "día de reyes",
+        "dia de reyes",
+        "candelaria",
+        "tamales",
+        "muñequito"
+      ]
+    },
+    {
+      "id": "first_grito",
+      "label": "Your first 16 de septiembre",
+      "words": [
+        "grito",
+        "16 de septiembre",
+        "independencia",
+        "fiestas patrias",
+        "mes patrio"
+      ]
+    },
+    {
+      "id": "mananitas",
+      "label": "A birthday with Las Mañanitas",
+      "words": [
+        "mañanitas",
+        "mananitas",
+        "cumpleaños",
+        "quince años",
+        "quinceañera",
+        "xv años"
+      ]
+    },
+    {
+      "id": "school_honores",
+      "label": "Honores a la bandera at school",
+      "words": [
+        "honores",
+        "escolta",
+        "bandera",
+        "ceremonia cívica"
+      ]
+    },
+    {
+      "id": "teachers_day",
+      "label": "Día del Maestro / Día del Niño",
+      "words": [
+        "día del maestro",
+        "dia del maestro",
+        "día del niño",
+        "dia del niño"
+      ]
+    },
+    {
+      "id": "tianguis",
+      "label": "Shopping at the tianguis",
+      "words": [
+        "tianguis",
+        "mercado",
+        "market"
+      ]
+    },
+    {
+      "id": "rainy_season",
+      "label": "Your first rainy season",
+      "words": [
+        "temporada de lluvias",
+        "rainy season",
+        "aguacero",
+        "tormenta"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor",
+        "comadre",
+        "compadre"
+      ]
+    }
+  ]
+}

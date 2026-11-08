@@ -1,0 +1,617 @@
+{
+  "country": "colombia",
+  "name": "Colombia",
+  "timezone": "America/Bogota",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in Colombia is. No stereotypes, no ethnic labels.",
+    "Colombia's climate depends on altitude, not on the month: Bogotá is cool all year, the coast is hot all year. Ask which city the family lives in."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in Colombia (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Colombia"
+    },
+    "matador_co": {
+      "title": "Las 11 costumbres colombianas que más desconciertan a los extranjeros (I Love Bogotá, Matador Network, 2017)",
+      "url": "https://matadornetwork.com/es/costumbres-colombianas-que-mas-desconciertan-a-extranjeros/"
+    },
+    "calco_costumbres": {
+      "title": "Costumbres colombianas que sorprenden a los extranjeros (Calendario de Colombia)",
+      "url": "https://www.calendariodecolombia.com/fechas/costumbres-colombianas-que-sorprenden-a-los-extranjeros"
+    },
+    "colombiamove": {
+      "title": "Colombian etiquette, customs and social norms (Colombia Move)",
+      "url": "https://colombiamove.com/blog/es/colombian-etiquette-customs-social-norms/"
+    },
+    "portafolio_pena": {
+      "title": "'Qué pena con usted': la expresión en Colombia que confunde a los extranjeros (Portafolio)",
+      "url": "https://www.portafolio.co/tendencias/sociales/que-pena-con-usted-la-expresion-en-colombia-que-confunde-a-los-extranjeros-601258"
+    },
+    "rcn_receso": {
+      "title": "¿Cuándo es la semana de receso de octubre de 2026? Calendario A y B (Noticias RCN)",
+      "url": "https://www.noticiasrcn.com/economia/cuando-es-la-semana-de-receso-de-octubre-de-2026-fechas-para-colegios-calendario-a-y-b-1057179"
+    },
+    "radionacional_navidad": {
+      "title": "Tradiciones navideñas en Colombia (Radio Nacional de Colombia)",
+      "url": "https://radionacional.co/cultura/tradiciones/tradiciones-navidenas-colombia"
+    },
+    "elpais_navidad": {
+      "title": "Estas son las tradiciones más populares de Navidad en Colombia (El País, Cali)",
+      "url": "https://www.elpais.com.co/colombia/estas-son-las-tradiciones-mas-populares-de-navidad-en-colombia-las-conoce-todas-1554.html"
+    },
+    "radionacional_lluvias": {
+      "title": "¿Por qué llueve tanto? IDEAM (Radio Nacional de Colombia, 2026)",
+      "url": "https://radionacional.co/actualidad/porque-llueve-ideam"
+    },
+    "bloomberg_lluvias": {
+      "title": "¿Por qué está lloviendo tanto en Colombia y cuánto podría durar? (Bloomberg Línea)",
+      "url": "https://www.bloomberglinea.com/latinoamerica/colombia/por-que-esta-lloviendo-tanto-en-colombia-y-cuanto-podria-durar/"
+    },
+    "storylearning_slang": {
+      "title": "30 Colombian Slang Expressions (StoryLearning)",
+      "url": "https://storylearning.com/learn/spanish/spanish-tips/colombian-slang-expressions"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "two_rainy_seasons",
+        "text": "In the Andean region (Bogotá, Medellín) rain comes in two seasons: roughly March to June and late September to November, the second usually stronger, peaking in October-November. December and January are the traditional dry season.",
+        "es": "temporada de lluvias · temporada seca",
+        "sources": [
+          "bloomberg_lluvias",
+          "radionacional_lluvias"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "altitude",
+        "text": "Temperature depends on altitude rather than the month: highland cities stay cool all year and the coast stays hot - 'tierra fría' and 'tierra caliente'.",
+        "es": "tierra fría · tierra caliente",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "december_season",
+        "text": "Christmas season opens on the night of 7 December with candles (Noche de Velitas), then the novenas from 16 to 24 December.",
+        "es": "la Noche de Velitas",
+        "sources": [
+          "radionacional_navidad",
+          "elpais_navidad"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "puentes",
+        "text": "Many holidays are moved to the following Monday, so the year is full of three-day weekends ('puentes') when cities empty and roads fill.",
+        "es": "puente festivo",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "october_receso",
+        "text": "Schools on calendar A have a compulsory one-week break in October, the week before the 12 October holiday - confirm the dates each year.",
+        "es": "semana de receso",
+        "sources": [
+          "rcn_receso"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "cycling",
+        "text": "During the big cycling tours (Giro, Tour de France, Vuelta) many people follow the Colombian riders on TV or radio.",
+        "sources": [
+          "matador_co"
+        ],
+        "status": "checked"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "fixed",
+        "text": "Fixed days off: 1 January, 1 May, 20 July (Independence), 7 August (Battle of Boyacá), 8 December (Immaculate Conception), 25 December.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "monday_rule",
+        "text": "About ten holidays move to the following Monday when they do not fall on a Monday (law of 1983): Epiphany (6 Jan), San José (19 Mar), Ascension, Corpus Christi, Sacred Heart, Saints Peter and Paul (29 Jun), Assumption (15 Aug), 12 October, All Saints (1 Nov), Independence of Cartagena (11 Nov). Confirm each year's dates.",
+        "es": "festivo trasladado al lunes",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "holy_week",
+        "text": "Holy Thursday and Good Friday are days off (March or April - the dates move every year).",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "oct12",
+        "text": "12 October is now Día de la Diversidad Étnica y Cultural (formerly Día de la Raza).",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "chiquinquira",
+        "text": "A recent law made 9 July (Virgen de Chiquinquirá) a national holiday; its status and whether it moves to Monday should be checked against the official calendar.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "local_carnival",
+        "text": "Barranquilla has local days off for Carnival Monday and Tuesday; Cartagena celebrates a festive week around 11 November.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "cheek_kiss",
+        "text": "In social settings women are usually greeted with a kiss on the right cheek, even at a first meeting; men usually shake hands, with a pat or half-hug if they know each other. At work, a handshake for everyone.",
+        "sources": [
+          "colombiamove",
+          "calco_costumbres"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "greet_each",
+        "text": "In a group you greet each person one by one, and say goodbye to each when you leave. Say 'buenas' when you enter a shop or a lift.",
+        "es": "buenas",
+        "sources": [
+          "colombiamove"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "como_estas",
+        "text": "'¿Cómo estás?' expects a real answer, and greetings often come as several questions in a row ('¿Cómo estás? ¿Qué has hecho?').",
+        "sources": [
+          "calco_costumbres",
+          "portafolio_pena"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "don_dona",
+        "text": "Older people are called 'don' or 'doña' with their first name, offered a seat, and listened to.",
+        "es": "don · doña",
+        "sources": [
+          "calco_costumbres"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "courtesy_words",
+        "text": "Shopkeepers and staff say 'con gusto', 'a la orden' and 'por favor' constantly.",
+        "es": "con gusto · a la orden",
+        "sources": [
+          "calco_costumbres"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "que_pena",
+        "text": "'Qué pena con usted' means 'I'm sorry / excuse me' (pena = embarrassment, not grief); it softens a refusal, asks a favour or apologises.",
+        "es": "qué pena con usted",
+        "sources": [
+          "portafolio_pena"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "sumerce",
+        "text": "'Sumercé', an old respectful form of 'you', is still used in some regions.",
+        "es": "sumercé",
+        "sources": [
+          "portafolio_pena"
+        ],
+        "status": "checked"
+      }
+    ],
+    "time": [
+      {
+        "id": "social_late",
+        "text": "A party called for 7 pm often really starts around 9; arriving exactly on time can be awkward. 'Ya voy' or 'ahí llego' may mean the person is still at home.",
+        "es": "ya voy · ahí llego",
+        "sources": [
+          "colombiamove",
+          "calco_costumbres"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "work_punctual",
+        "text": "At work it is different: being 30 minutes late for a meeting is seen as disrespect, not 'Colombian time'.",
+        "sources": [
+          "colombiamove"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "long_visits",
+        "text": "Home visits often run two or three hours longer than expected.",
+        "sources": [
+          "colombiamove"
+        ],
+        "status": "checked"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "family_ties",
+        "text": "Family ties are strong; many families gather often, especially for Sunday meals, and big decisions are talked over together.",
+        "es": "almuerzo del domingo",
+        "sources": [
+          "calco_costumbres"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "bendicion",
+        "text": "Many people ask for their mother's blessing before leaving home: 'Bendición, mamá'.",
+        "es": "bendición, mamá",
+        "sources": [
+          "matador_co"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "visit_gift",
+        "text": "When invited home, bring something small - wine, juice, chocolates or a ponqué (small cake); the gesture matters more than the price.",
+        "es": "un detallito",
+        "sources": [
+          "colombiamove"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "parchar",
+        "text": "'Parchar' is to hang out with friends talking; 'echar pata' is to walk around the city together.",
+        "es": "parchar · echar pata",
+        "sources": [
+          "matador_co"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "dance",
+        "text": "When a good song plays, people often dance - at home, in a shop, at a party.",
+        "sources": [
+          "calco_costumbres"
+        ],
+        "status": "checked"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "calendar_ab",
+        "text": "Schools follow calendar A (all public schools; the October recess is compulsory) or calendar B (some private and international schools, whose breaks can differ). Ask which one your school uses.",
+        "es": "calendario A · calendario B",
+        "sources": [
+          "rcn_receso"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "calendar_months",
+        "text": "Calendar A years usually run from about late January to late November; calendar B from about August/September to June - confirm with the school.",
+        "es": "inicio de clases",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "twelve_weeks",
+        "text": "Students have about twelve weeks of break a year, set by each region's education office; one must be the October recess week.",
+        "es": "receso estudiantil",
+        "sources": [
+          "rcn_receso"
+        ],
+        "status": "checked"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "tinto",
+        "text": "Visitors are offered coffee almost at once - '¿quiere un tintico?' - and accepting is polite. A 'tinto' is a small black coffee.",
+        "es": "un tintico",
+        "sources": [
+          "colombiamove",
+          "calco_costumbres"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "plantain",
+        "text": "Plantain comes in many forms: patacón, sweet ripe plantain, and plátano con bocadillo (with guava paste).",
+        "es": "patacón · bocadillo",
+        "sources": [
+          "matador_co"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "christmas_food",
+        "text": "Buñuelos and natilla are the classic food of the novenas and Christmas.",
+        "es": "buñuelos · natilla",
+        "sources": [
+          "elpais_navidad",
+          "radionacional_navidad"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "la_pega",
+        "text": "The crispy rice stuck to the bottom of the pot, 'la pega', is a treat.",
+        "sources": [
+          "matador_co"
+        ],
+        "status": "checked"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "veci",
+        "text": "Neighbourhood shopkeepers are treated like neighbours - 'Hola veci, ¿me regalas...?' - and regular customers are known by name.",
+        "es": "veci · ¿me regalas...?",
+        "sources": [
+          "matador_co"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "napa",
+        "text": "When buying, people sometimes ask for a small extra, 'la ñapa' (one more bread roll).",
+        "es": "la ñapa",
+        "sources": [
+          "matador_co"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "haggle",
+        "text": "Asking for a small discount ('una rebajita') in markets is common; not in supermarkets.",
+        "es": "una rebajita",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "tejo",
+        "text": "Tejo is a traditional game: a metal disc thrown at small gunpowder targets that pop - with a shout of '¡mecha!'.",
+        "es": "el tejo",
+        "sources": [
+          "matador_co"
+        ],
+        "status": "checked"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "parce",
+        "text": "'Parce' / 'parcero' - friend, mate.",
+        "es": "parce",
+        "sources": [
+          "matador_co",
+          "storylearning_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "chevere",
+        "text": "'Chévere' / 'bacano' - great, cool.",
+        "es": "chévere · bacano",
+        "sources": [
+          "storylearning_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "guayabo",
+        "text": "'Guayabo' - a hangover (literally a guava tree).",
+        "es": "guayabo",
+        "sources": [
+          "storylearning_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "todo_bien",
+        "text": "'Todo bien' - 'all good', said often, even when things are not quite.",
+        "es": "todo bien",
+        "sources": [
+          "calco_costumbres"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "tranco",
+        "text": "'Trancón' - a traffic jam.",
+        "es": "trancón",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "de_una",
+        "text": "'¡De una!' - 'right away / let's do it'.",
+        "es": "¡de una!",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "party_time",
+        "text": "Social time vs work time: arrive at a party 30-45 minutes late, but be on time for work.",
+        "sources": [
+          "colombiamove"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "que_pena_no",
+        "text": "'Qué pena con usted...' often comes before a 'no' from an office - it is a polite way of refusing.",
+        "sources": [
+          "portafolio_pena"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "greeting_everyone",
+        "text": "Greeting and saying goodbye to every person at a family gathering - leaving with one wave can look cold.",
+        "sources": [
+          "colombiamove"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "climate_altitude",
+        "text": "Packing for altitude: a Bogotá family needs jackets and umbrellas all year.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "novena",
+        "text": "The Novena de Aguinaldos, 16-24 December: families and neighbours pray and sing carols together each evening, then share buñuelos and natilla.",
+        "es": "la novena de aguinaldos",
+        "sources": [
+          "radionacional_navidad",
+          "elpais_navidad"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "velitas",
+        "text": "Noche de Velitas, 7 December: candles and lanterns on doorsteps and streets in honour of the Immaculate Conception.",
+        "es": "Noche de Velitas",
+        "sources": [
+          "radionacional_navidad"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "music",
+        "text": "Vallenato, salsa, cumbia and reggaeton are everywhere; each region has its own music.",
+        "sources": [
+          "calco_costumbres"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "patron_saints",
+        "text": "Processions, pilgrimages and patron-saint festivals are part of local life, like Holy Week in Popayán and the Virgen del Carmen.",
+        "sources": [
+          "calco_costumbres"
+        ],
+        "status": "checked"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "first_velitas",
+      "label": "Your first Noche de Velitas",
+      "words": [
+        "velitas",
+        "noche de velitas",
+        "7 de diciembre",
+        "faroles"
+      ]
+    },
+    {
+      "id": "first_novena",
+      "label": "Your first novena",
+      "words": [
+        "novena",
+        "novenas",
+        "aguinaldos",
+        "buñuelos",
+        "natilla"
+      ]
+    },
+    {
+      "id": "puente",
+      "label": "A long weekend (puente)",
+      "words": [
+        "puente",
+        "festivo",
+        "fin de semana largo"
+      ]
+    },
+    {
+      "id": "october_recess",
+      "label": "The October school recess",
+      "words": [
+        "receso",
+        "semana de receso",
+        "receso escolar"
+      ]
+    },
+    {
+      "id": "july20",
+      "label": "Your first 20 de julio",
+      "words": [
+        "20 de julio",
+        "independencia",
+        "grito de independencia"
+      ]
+    },
+    {
+      "id": "tinto_visit",
+      "label": "Coffee at a neighbour's home",
+      "words": [
+        "tinto",
+        "tintico",
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor"
+      ]
+    },
+    {
+      "id": "rainy_season",
+      "label": "The rainy season",
+      "words": [
+        "temporada de lluvias",
+        "aguacero",
+        "rainy season",
+        "lluvias"
+      ]
+    },
+    {
+      "id": "local_food",
+      "label": "Local food at your table",
+      "words": [
+        "patacón",
+        "patacones",
+        "arepa",
+        "ajiaco",
+        "bandeja paisa",
+        "bocadillo"
+      ]
+    }
+  ]
+}

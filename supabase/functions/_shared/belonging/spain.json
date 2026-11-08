@@ -1,0 +1,561 @@
+{
+  "country": "spain",
+  "name": "España",
+  "timezone": "Europe/Madrid",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in Spain is. No stereotypes, no ethnic labels.",
+    "Each autonomous community sets its own school calendar and some holidays, and several have their own co-official language. Ask which community and town the family lives in before giving local detail. The Canary Islands are one hour behind (Atlantic/Canary)."
+  ],
+  "sources": {
+    "matador_es": {
+      "title": "Las 15 costumbres españolas que más desconciertan a los extranjeros (Ana Bulnes, Matador Network, 2017)",
+      "url": "https://matadornetwork.com/es/las-15-costumbres-espanolas-que-mas-desconciertan-los-extranjeros/"
+    },
+    "wiki_holidays": {
+      "title": "Public holidays in Spain (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Spain"
+    },
+    "hosteltur_horarios": {
+      "title": "Horarios de comida y cena en Madrid (Hosteltur, Madrid responde)",
+      "url": "https://www.hosteltur.com/madrid-responde/es/horarios-comida-cena-madrid"
+    },
+    "directo_huso": {
+      "title": "Este mapa muestra a qué hora se cena en cada país: España es la excepción (Directo al Paladar)",
+      "url": "https://www.directoalpaladar.com/actualidad-1/este-mapa-muestra-a-que-hora-se-cena-cada-pais-espana-excepcion-como-su-huso-horario"
+    },
+    "consumer_reyes": {
+      "title": "La víspera de Reyes: cuatro claves para que sea inolvidable (Consumer, Eroski)",
+      "url": "https://www.consumer.es/?p=70312"
+    },
+    "hola_cabalgatas": {
+      "title": "Las mejores cabalgatas de Reyes de España (¡Hola!, 2025)",
+      "url": "https://www.hola.com/viajes/20250103738951/mejores-cabalgatas-de-reyes-espana/"
+    },
+    "spaininfo_nochevieja": {
+      "title": "Nochevieja en la Puerta del Sol de Madrid (Spain.info, Turespaña)",
+      "url": "https://www.spain.info/es/descubrir-espana/new-years-eve-spain/"
+    },
+    "vozpopuli_loteria": {
+      "title": "El motivo por el que la Lotería de Navidad se celebra el 22 de diciembre (Vozpópuli)",
+      "url": "https://www.vozpopuli.com/loterias/loteria-navidad/el-motivo-por-el-que-la-loteria-de-navidad-se-celebra-el-22-de-diciembre.html"
+    },
+    "micole_calendario": {
+      "title": "Calendario escolar España 2026-2027: fechas clave por comunidad autónoma (Micole)",
+      "url": "https://www.micole.net/blog/educacion/calendario-escolar-espana-2026-2027-fechas-clave/"
+    },
+    "eldiario_madrid_cal": {
+      "title": "Calendario escolar 2026-2027 en Madrid (elDiario.es)",
+      "url": "https://www.eldiario.es/madrid/somos/calendario-escolar-2026-2027-madrid-curso-puentes-inicio-final-adelantado_1_13322933.html"
+    },
+    "storylearning_es": {
+      "title": "15 Spanish Slang Words To Help You Sound Like A Native (StoryLearning)",
+      "url": "https://storylearning.com/learn/spanish/spanish-tips/spanish-slang-words"
+    },
+    "ihmadrid_slang": {
+      "title": "Spanish slang phrases and words (International House Madrid)",
+      "url": "https://www.ihmadrid.com/en/spanish-slang-phrases-and-words"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "school_year",
+        "text": "The school year runs from the first or second week of September to around the third or fourth week of June; each autonomous community sets its own dates.",
+        "es": "el curso escolar",
+        "sources": [
+          "micole_calendario"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "christmas_break",
+        "text": "Christmas school holidays run from about 22-24 December to 6-10 January, and there is a week or more off around Holy Week (March or April) - confirm your community's calendar.",
+        "es": "vacaciones de Navidad · Semana Santa",
+        "sources": [
+          "micole_calendario",
+          "eldiario_madrid_cal"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "lottery_22",
+        "text": "On 22 December the Christmas Lottery draw ('El Gordo') is broadcast all morning; for many people it is the symbolic start of Christmas.",
+        "es": "la Lotería de Navidad · El Gordo",
+        "sources": [
+          "vozpopuli_loteria"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "nochevieja",
+        "text": "On New Year's Eve people eat twelve grapes, one at each of the twelve chimes at midnight, watching the clock of the Puerta del Sol in Madrid on TV.",
+        "es": "las uvas · las campanadas",
+        "sources": [
+          "spaininfo_nochevieja"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "reyes",
+        "text": "The Three Kings (Reyes Magos) bring children's presents on the night of 5 to 6 January; on the evening of the 5th almost every town holds a parade, the 'cabalgata',.",
+        "es": "la cabalgata de Reyes",
+        "sources": [
+          "consumer_reyes",
+          "hola_cabalgatas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "puentes",
+        "text": "Spain has many holidays, and when one falls near a weekend people take a 'puente' (bridge) to make a long weekend.",
+        "es": "hacer puente",
+        "sources": [
+          "matador_es"
+        ],
+        "status": "checked"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "national",
+        "text": "National holidays: 1 January, 6 January (Epiphany), Good Friday (moves every year), 1 May, 15 August (Assumption), 12 October (National Day), 1 November (All Saints), 6 December (Constitution Day), 8 December (Immaculate Conception), 25 December.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "regional_local",
+        "text": "On top of that, each region adds up to three holidays and each town at least two local ones, often its patron saint - so holidays differ between neighbouring towns. Up to 14 a year in total.",
+        "es": "fiesta local · patrón",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "holy_thursday_monday",
+        "text": "Holy Thursday or Easter Monday are days off in some regions but not others.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "sunday_rule",
+        "text": "When a national holiday falls on a Sunday, the region may move it to Monday or give the day to towns - check the regional calendar.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "dos_besos",
+        "text": "Many people greet with two cheek kisses ('dos besos'), even in some professional settings.",
+        "es": "dos besos",
+        "sources": [
+          "matador_es"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "vale",
+        "text": "'Vale' is the everyday 'OK' - you will hear it all day.",
+        "es": "vale",
+        "sources": [
+          "storylearning_es",
+          "ihmadrid_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "tio",
+        "text": "'Tío / tía' - 'mate', 'dude' among friends; not for your landlord or boss.",
+        "es": "tío · tía",
+        "sources": [
+          "storylearning_es"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "shoes",
+        "text": "People usually keep their shoes on at home; ask before going barefoot in someone else's house.",
+        "sources": [
+          "matador_es"
+        ],
+        "status": "checked"
+      }
+    ],
+    "time": [
+      {
+        "id": "meal_times",
+        "text": "Lunch, the main meal, is usually around 2-3 pm and dinner around 9-10 pm; restaurants may be empty at 7 pm.",
+        "es": "la comida · la cena",
+        "sources": [
+          "hosteltur_horarios",
+          "matador_es"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "time_zone",
+        "text": "Part of the reason: Spain uses Central European Time although it lies further west, so the clock runs 'ahead' of the sun.",
+        "es": "el huso horario",
+        "sources": [
+          "directo_huso"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "midday_close",
+        "text": "Many smaller shops close for two hours or more at midday and reopen until 8-9 pm - mostly to eat, not to nap.",
+        "es": "horario partido",
+        "sources": [
+          "matador_es"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "late_nights",
+        "text": "Going out starts late; nightlife runs late.",
+        "sources": [
+          "matador_es"
+        ],
+        "status": "checked"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "meet_at_bars",
+        "text": "Friends usually meet at bars and terraces rather than at home - an invitation home is a sign of closeness.",
+        "es": "ir de tapas · ir de cañas",
+        "sources": [
+          "matador_es"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "aperitivo",
+        "text": "A pre-lunch 'aperitivo' with a small beer (caña) or vermouth is normal on weekends.",
+        "es": "el aperitivo · una caña",
+        "sources": [
+          "matador_es"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "living_with_parents",
+        "text": "Many young adults live with their parents into their late 20s or 30s, and come home from visits with tubs of food ('tuppers').",
+        "sources": [
+          "matador_es"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "family_meals",
+        "text": "After big family meals the adults often take a small liqueur, said to help digestion.",
+        "sources": [
+          "matador_es"
+        ],
+        "status": "checked"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "community_calendar",
+        "text": "There is no single national school calendar: education is run by each autonomous community - read your community's official calendar.",
+        "es": "calendario escolar autonómico",
+        "sources": [
+          "micole_calendario"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "bachillerato_ends_may",
+        "text": "The last year of upper secondary (2º de Bachillerato) usually ends in May because of the university entrance exams.",
+        "sources": [
+          "micole_calendario"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "coofficial_school",
+        "text": "In communities with a co-official language (Catalonia, Valencia, the Balearic Islands, the Basque Country, Navarre, Galicia) much of school may be taught in that language - ask the school about support for newcomers.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "bread",
+        "text": "Bread comes with every meal and is seen as a basic need.",
+        "sources": [
+          "matador_es"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "olive_oil",
+        "text": "Olive oil is used generously; a Spanish tortilla's potatoes are fried in it, not boiled.",
+        "sources": [
+          "matador_es"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "breakfast",
+        "text": "Breakfast is small and often sweet - coffee and toast, or milk and biscuits.",
+        "sources": [
+          "matador_es"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "tapas",
+        "text": "Going out for tapas is a common way to eat with friends instead of cooking.",
+        "es": "ir de tapas",
+        "sources": [
+          "matador_es"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "roscon",
+        "text": "On 6 January families share a 'roscón de Reyes', a ring cake with a small figure and a bean hidden inside.",
+        "es": "el roscón de Reyes",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "street_clothes",
+        "text": "People usually wear everyday street clothes rather than sportswear outside the gym.",
+        "sources": [
+          "matador_es"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "dubbing",
+        "text": "Many people prefer films and series dubbed into Spanish.",
+        "sources": [
+          "matador_es"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "holidays_many",
+        "text": "Between national, regional and local holidays, check the calendar before planning paperwork.",
+        "sources": [
+          "matador_es",
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "guay",
+        "text": "'Guay' - cool, great (used mainly in Spain).",
+        "es": "guay",
+        "sources": [
+          "storylearning_es",
+          "ihmadrid_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "mola",
+        "text": "'¡Mola!' - 'it's cool', 'I like it' (from 'molar').",
+        "es": "mola",
+        "sources": [
+          "storylearning_es"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "currar",
+        "text": "'Currar' - to work: 'tengo que currar'.",
+        "es": "currar · el curro",
+        "sources": [
+          "storylearning_es"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "que_te_pasa_boca",
+        "text": "Friends may tease someone who pronounces English 'too well' - it is a joke, not an insult.",
+        "sources": [
+          "matador_es"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "vosotros",
+        "text": "Spain uses 'vosotros' for 'you all' among friends ('¿Venís?'), where Latin America uses 'ustedes'.",
+        "es": "vosotros",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "late_schedule",
+        "text": "The late schedule: lunch at 2-3 pm and dinner at 9-10 pm.",
+        "sources": [
+          "matador_es",
+          "hosteltur_horarios"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "shops_closed",
+        "text": "Shops closed at midday.",
+        "sources": [
+          "matador_es"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "bread_charge",
+        "text": "Being charged for the bread basket at a restaurant surprises many people.",
+        "sources": [
+          "matador_es"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "patchwork_holidays",
+        "text": "A holiday in your town may be a normal working day in the next one.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "patron_fiestas",
+        "text": "Every town has its fiestas, usually for its patron saint, with at least two local holidays a year.",
+        "es": "las fiestas del pueblo",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "semana_santa",
+        "text": "Holy Week processions ('pasos', brotherhoods called 'cofradías') are a major event in many cities, especially in Andalusia and Castile.",
+        "es": "procesiones de Semana Santa",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "cabalgata_oldest",
+        "text": "Alcoy (Alicante) claims the oldest Three Kings parade, from 1885.",
+        "sources": [
+          "hola_cabalgatas"
+        ],
+        "status": "unverified"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "first_reyes",
+      "label": "Your first Reyes",
+      "words": [
+        "reyes",
+        "cabalgata",
+        "roscón",
+        "roscon",
+        "reyes magos",
+        "carta a los reyes"
+      ]
+    },
+    {
+      "id": "first_uvas",
+      "label": "Twelve grapes at New Year",
+      "words": [
+        "uvas",
+        "campanadas",
+        "nochevieja",
+        "puerta del sol"
+      ]
+    },
+    {
+      "id": "loteria",
+      "label": "The Christmas Lottery",
+      "words": [
+        "lotería",
+        "loteria",
+        "el gordo",
+        "décimo",
+        "decimo"
+      ]
+    },
+    {
+      "id": "town_fiestas",
+      "label": "Your town's fiestas",
+      "words": [
+        "fiestas del pueblo",
+        "patrón",
+        "patrona",
+        "fiestas patronales",
+        "feria"
+      ]
+    },
+    {
+      "id": "puente",
+      "label": "A long weekend (puente)",
+      "words": [
+        "puente",
+        "festivo",
+        "fin de semana largo"
+      ]
+    },
+    {
+      "id": "semana_santa",
+      "label": "Holy Week",
+      "words": [
+        "semana santa",
+        "procesión",
+        "procesion",
+        "cofradía",
+        "paso"
+      ]
+    },
+    {
+      "id": "tapas_friends",
+      "label": "Out for tapas with new friends",
+      "words": [
+        "tapas",
+        "cañas",
+        "terraza",
+        "aperitivo",
+        "vermú",
+        "vermut"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited home by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor"
+      ]
+    }
+  ]
+}

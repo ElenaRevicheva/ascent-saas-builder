@@ -1,0 +1,542 @@
+{
+  "country": "argentina",
+  "name": "Argentina",
+  "timezone": "America/Argentina/Buenos_Aires",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in Argentina is. No stereotypes, no ethnic labels.",
+    "Argentina is in the southern hemisphere: summer is December-February, winter is June-August. Each province sets its own school calendar - ask which province the family lives in."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in Argentina (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Argentina"
+    },
+    "matador_ar": {
+      "title": "6 costumbres argentinas que descolocan a los extranjeros (Laura Bernhein, Matador Network, 2017)",
+      "url": "https://matadornetwork.com/es/costumbres-argentinas-descolocan-extranjeros/"
+    },
+    "visitar_10": {
+      "title": "10 costumbres argentinas: por qué toman mate (Visit Argentina, Ministerio de Turismo, 2024)",
+      "url": "https://www.argentina.travel/novedades/10-argentine-customs-why-they-drink-mate"
+    },
+    "turismo_ba": {
+      "title": "7 cosas que aprenderás a amar de Buenos Aires (Turismo Buenos Aires, Gobierno de la Ciudad)",
+      "url": "https://turismo.buenosaires.gob.ar/es/article/7-cosas-que-aprender%C3%A1s-amar-de-buenos-aires"
+    },
+    "lanacion_besos": {
+      "title": "Esos besos argentinos que los extranjeros no comprenden (La Nación)",
+      "url": "https://www.lanacion.com.ar/sociedad/esos-besos-argentinos-que-los-extranjeros-no-comprenden-nid1280680/"
+    },
+    "lanacion_noquis": {
+      "title": "Comer ñoquis el 29: qué significa poner plata debajo del plato (La Nación)",
+      "url": "https://www.lanacion.com.ar/lifestyle/comer-noquis-el-29-que-significa-poner-plata-debajo-del-plato-nid29092022/"
+    },
+    "billiken_amigo": {
+      "title": "20 de julio, Día del Amigo (Billiken)",
+      "url": "https://billiken.lat/para-tus-tareas/20-de-julio-dia-del-amigo/"
+    },
+    "lanacion_guardapolvo": {
+      "title": "La historia del guardapolvo blanco, un invento argentino (La Nación)",
+      "url": "https://www.lanacion.com.ar/lifestyle/la-historia-del-guardapolvo-blanco-invento-argentino-nid2338751"
+    },
+    "chequeado_calendario": {
+      "title": "Calendario escolar 2026: cuándo inician las clases en cada provincia (Chequeado)",
+      "url": "https://chequeado.com/el-explicador/calendario-escolar-2026-cuando-inician-las-clases-en-cada-provincia/"
+    },
+    "perfil_invierno": {
+      "title": "Vacaciones de invierno 2026: cronograma provincia por provincia (Perfil)",
+      "url": "https://www.perfil.com/noticias/sociedad/vacaciones-de-invierno-2026-este-es-el-cronograma-de-receso-escolar-provincia-por-provincia.phtml"
+    },
+    "spanishdict_rioplatense": {
+      "title": "River Plate Spanish (SpanishDict guide)",
+      "url": "https://www.spanishdict.com/guide/river-plate-spanish"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "school_year",
+        "text": "The school year starts in late February or early March and ends in December; national minimum 190 class days, each province sets its own calendar.",
+        "es": "el ciclo lectivo",
+        "sources": [
+          "chequeado_calendario"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "summer_holidays",
+        "text": "Summer holidays are December to February; January is the big month for family holidays and many offices slow down.",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "winter_break",
+        "text": "Two weeks of winter school holidays in July, staggered by province in two or three blocks - confirm your province's dates.",
+        "es": "las vacaciones de invierno",
+        "sources": [
+          "perfil_invierno"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "dia_amigo",
+        "text": "20 July is Friendship Day (Día del Amigo): friends meet up, restaurants fill, messages fly - it is not a day off.",
+        "es": "Día del Amigo",
+        "sources": [
+          "billiken_amigo"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "noquis_29",
+        "text": "On the 29th of each month many families eat gnocchi (ñoquis) with a banknote under the plate for luck and prosperity.",
+        "es": "ñoquis del 29",
+        "sources": [
+          "lanacion_noquis"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "bridge_days",
+        "text": "Each year the government adds a few 'feriados puente' (bridge days) to make long weekends - check the official list each year.",
+        "es": "feriado puente",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "fixed",
+        "text": "Fixed holidays: 1 January, 24 March (Day of Remembrance for Truth and Justice), 2 April (Malvinas veterans), 1 May, 25 May (May Revolution), 20 June (Belgrano / Flag Day), 9 July (Independence), 8 December, 25 December.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "movable",
+        "text": "Movable holidays: Carnival Monday and Tuesday (February or March), Good Friday, 17 June (Güemes), 17 August (San Martín), 12 October (Respect for Cultural Diversity), 20 November (National Sovereignty). Those falling Tuesday-Wednesday move to the previous Monday, Thursday-Sunday to the next Monday.",
+        "es": "feriado trasladable",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "non_working",
+        "text": "Some religious days are 'días no laborables' for people of that faith (Holy Thursday, Passover, Jewish New Year, Yom Kippur, Eid days) - optional for employers.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "cheek_kiss",
+        "text": "A kiss on the cheek is the usual greeting - with family, friends, people you have just met, often even a boss - instead of a handshake.",
+        "sources": [
+          "visitar_10",
+          "turismo_ba",
+          "matador_ar"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "men_kiss",
+        "text": "Men often greet male friends and relatives with a kiss too; who gets a kiss has no fixed rule, even locals say so - follow what the other person does.",
+        "sources": [
+          "turismo_ba",
+          "lanacion_besos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "talk_anyone",
+        "text": "People talk easily with strangers, look you in the eye and move quickly from small talk to deep topics.",
+        "sources": [
+          "matador_ar"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "che",
+        "text": "'Che' is used to get someone's attention: 'Che, ¿venís?'",
+        "es": "che",
+        "sources": [
+          "visitar_10",
+          "turismo_ba"
+        ],
+        "status": "checked"
+      }
+    ],
+    "time": [
+      {
+        "id": "late_dinner",
+        "text": "Dinner often starts around 9-10 pm; arrive early to a 10 pm plan and you will likely be first.",
+        "es": "la cena",
+        "sources": [
+          "visitar_10",
+          "turismo_ba"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "sobremesa",
+        "text": "After dinner the conversation at the table can continue for hours - leaving straight after eating feels abrupt.",
+        "es": "la sobremesa",
+        "sources": [
+          "matador_ar"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "asado_time",
+        "text": "At an asado the fire is lit a couple of hours before eating; guests snack and talk while the meat cooks slowly.",
+        "sources": [
+          "turismo_ba"
+        ],
+        "status": "checked"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "friends_central",
+        "text": "Friendship is central and any excuse is good for a celebration; groups usually make room for a newcomer.",
+        "es": "juntada",
+        "sources": [
+          "visitar_10"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "asado",
+        "text": "The asado (barbecue) brings family and friends together, often weekly, not only in summer; the 'asador' who cooks has a special role.",
+        "es": "el asado · el asador",
+        "sources": [
+          "visitar_10",
+          "turismo_ba"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "mate_round",
+        "text": "Mate is shared from one gourd and one metal straw (bombilla): one person serves and passes it round; you hand it back to the server, and saying 'gracias' means you are finished.",
+        "es": "la ronda de mate · gracias = ya no",
+        "sources": [
+          "turismo_ba",
+          "visitar_10",
+          "matador_ar"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "opinions",
+        "text": "People debate passionately - football, politics, food - and it rarely turns hostile; politics comes up often, even at family meals.",
+        "sources": [
+          "visitar_10",
+          "matador_ar"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "football",
+        "text": "Football is a passion; sooner or later you will be asked which team you support.",
+        "es": "¿de qué cuadro sos?",
+        "sources": [
+          "visitar_10",
+          "turismo_ba"
+        ],
+        "status": "checked"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "guardapolvo",
+        "text": "Children in many public schools wear a white smock, the 'guardapolvo blanco', meant to make everyone equal.",
+        "es": "el guardapolvo blanco",
+        "sources": [
+          "lanacion_guardapolvo"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "province_calendar",
+        "text": "Start dates, winter break and end of year differ by province - read your province's ministry calendar.",
+        "es": "calendario escolar provincial",
+        "sources": [
+          "chequeado_calendario",
+          "perfil_invierno"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "flag_day",
+        "text": "20 June (Flag Day) is when many fourth-grade pupils promise loyalty to the flag at school ceremonies, 'la promesa a la bandera'.",
+        "es": "promesa a la bandera",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "cheese",
+        "text": "Cheese finds its way onto pizza, empanadas, medialunas and milanesa napolitana.",
+        "sources": [
+          "visitar_10"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "mate_snacks",
+        "text": "Mate goes with biscuits and facturas (pastries); some drink it bitter, some sweet.",
+        "es": "facturas · amargo o dulce",
+        "sources": [
+          "visitar_10"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "asado_cuts",
+        "text": "At an asado expect whole cuts (vacío, ojo de bife) plus chorizo, morcilla and offal (achuras).",
+        "es": "achuras",
+        "sources": [
+          "visitar_10",
+          "turismo_ba"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "merienda",
+        "text": "'La merienda' - an afternoon snack with mate or coffee and pastries - bridges the long gap to the late dinner.",
+        "es": "la merienda",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "fernet",
+        "text": "Fernet with cola is a very popular drink among adults, often shared.",
+        "sources": [
+          "turismo_ba"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "queja",
+        "text": "Complaining is a common way of talking - it does not mean the person is in real trouble.",
+        "sources": [
+          "matador_ar"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "noquis_money",
+        "text": "The banknote under the ñoquis plate is for luck and prosperity.",
+        "es": "plata debajo del plato",
+        "sources": [
+          "lanacion_noquis"
+        ],
+        "status": "checked"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "voseo",
+        "text": "People use 'vos' instead of 'tú', with the stress at the end: 'vos tenés', 'vos sos', 'vos podés', 'vení', 'decime'.",
+        "es": "vos tenés · vos sos",
+        "sources": [
+          "spanishdict_rioplatense"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "boludo",
+        "text": "'Boludo' is very common between friends ('dude') but an insult with strangers - leave it to close friends.",
+        "es": "boludo",
+        "sources": [
+          "visitar_10",
+          "turismo_ba"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "copado",
+        "text": "'Copado' / 're copado' - great, cool.",
+        "es": "re copado",
+        "sources": [
+          "visitar_10",
+          "turismo_ba"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "chamuyar",
+        "text": "'Chamuyar' - to sweet-talk, to chat someone up.",
+        "es": "chamuyar",
+        "sources": [
+          "visitar_10"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "laburo",
+        "text": "'Laburo' / 'laburar' - work / to work (from Italian).",
+        "es": "laburo",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "bondi",
+        "text": "'Bondi' - city bus.",
+        "es": "bondi",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "late_hours",
+        "text": "Late hours: dinner at 10 pm is hard with small children at first.",
+        "sources": [
+          "turismo_ba",
+          "visitar_10"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "kisses",
+        "text": "Knowing when to kiss: there is no clear rule, and men kissing men surprises many newcomers.",
+        "sources": [
+          "lanacion_besos",
+          "turismo_ba"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "mate_etiquette",
+        "text": "Mate etiquette: one gourd for everyone, the same person serves each round, and 'gracias' means you are finished - newcomers say it on the first sip and are not served again.",
+        "es": "gracias = ya no",
+        "sources": [
+          "turismo_ba",
+          "matador_ar"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "province_dates",
+        "text": "School dates change by province - advice from a friend in another province may be wrong.",
+        "sources": [
+          "perfil_invierno"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "idols",
+        "text": "National idols from music and sport (Gardel, Cerati, Maradona, Messi) are part of everyday conversation.",
+        "sources": [
+          "visitar_10"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "tango",
+        "text": "Tango and its milongas (dance halls) are part of Buenos Aires life; folklore music and peñas are strong in the provinces.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "first_asado",
+      "label": "Your first asado",
+      "words": [
+        "asado",
+        "parrilla",
+        "asador",
+        "choripán"
+      ]
+    },
+    {
+      "id": "mate_round",
+      "label": "Your first mate round",
+      "words": [
+        "mate",
+        "ronda de mate",
+        "bombilla",
+        "yerba"
+      ]
+    },
+    {
+      "id": "noquis_29",
+      "label": "Ñoquis on the 29th",
+      "words": [
+        "ñoquis",
+        "noquis",
+        "29"
+      ]
+    },
+    {
+      "id": "dia_amigo",
+      "label": "Día del Amigo",
+      "words": [
+        "día del amigo",
+        "dia del amigo",
+        "20 de julio"
+      ]
+    },
+    {
+      "id": "winter_break",
+      "label": "Winter school holidays",
+      "words": [
+        "vacaciones de invierno",
+        "receso invernal"
+      ]
+    },
+    {
+      "id": "guardapolvo",
+      "label": "The white school smock",
+      "words": [
+        "guardapolvo",
+        "acto escolar",
+        "promesa a la bandera"
+      ]
+    },
+    {
+      "id": "football",
+      "label": "Choosing a team",
+      "words": [
+        "cuadro",
+        "hincha",
+        "partido",
+        "fútbol",
+        "futbol",
+        "cancha"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor",
+        "juntada"
+      ]
+    }
+  ]
+}
