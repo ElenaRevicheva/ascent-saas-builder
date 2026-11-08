@@ -261,12 +261,15 @@ function pcmToWav(pcm: Uint8Array, rate: number): Uint8Array {
 
 // Azure neural voices per speaker (bilingual "Multilingual" voices read the Spanish and the English line alike);
 // each can be changed without code through AZURE_<WHO>_VOICE / _PITCH / _RATE secrets.
+// 8 Nov 2026: Elena chose these by ear from 9 samples (cto-aipa docs/espaluz/voice-samples/az2_*.mp3) - Phoebe
+// (EspaLuz, ~30, an older friend for kids), Jelly (Titi, a playful child voice), Jorge (Pere, Mexican Spanish, slowed).
+// Round 1 (Emma / Brian / Andrew) was rejected: "old man", "not joyful", "a woman working in a local shop".
 const AZURE_VOICES: Record<string, { voice: string; pitch: string; rate: string }> = {
-  usual: { voice: Deno.env.get('AZURE_USUAL_VOICE') ?? 'en-US-EmmaMultilingualNeural', pitch: '+0%', rate: '-5%' },
-  pere: { voice: Deno.env.get('AZURE_PERE_VOICE') ?? 'en-US-BrianMultilingualNeural',
-          pitch: Deno.env.get('AZURE_PERE_PITCH') ?? '-8%', rate: Deno.env.get('AZURE_PERE_RATE') ?? '-18%' },
-  titi: { voice: Deno.env.get('AZURE_TITI_VOICE') ?? 'en-US-AndrewMultilingualNeural',
-          pitch: Deno.env.get('AZURE_TITI_PITCH') ?? '+18%', rate: Deno.env.get('AZURE_TITI_RATE') ?? '+0%' },
+  usual: { voice: Deno.env.get('AZURE_USUAL_VOICE') ?? 'en-US-PhoebeMultilingualNeural', pitch: '+0%', rate: '+0%' },
+  pere: { voice: Deno.env.get('AZURE_PERE_VOICE') ?? 'es-MX-JorgeMultilingualNeural',
+          pitch: Deno.env.get('AZURE_PERE_PITCH') ?? '+0%', rate: Deno.env.get('AZURE_PERE_RATE') ?? '-10%' },
+  titi: { voice: Deno.env.get('AZURE_TITI_VOICE') ?? 'en-us-jelly:DragonHDOmniLatestNeural',
+          pitch: Deno.env.get('AZURE_TITI_PITCH') ?? '+0%', rate: Deno.env.get('AZURE_TITI_RATE') ?? '+0%' },
 };
 
 async function generateAzureVoice(who: string, text: string): Promise<string> {
