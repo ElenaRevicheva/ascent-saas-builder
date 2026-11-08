@@ -13,6 +13,10 @@ export const AvatarUpload = () => {
   const [uploading, setUploading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  // 8 Nov 2026 (Elena: "it says uploaded, but the old avatar sits there"): the upload worked, but the file keeps the same
+  // address and was cached for an hour, so the browser kept playing its old copy. Every address now carries the file's
+  // own version (?v=), the cache is short, and the card says whose video it shows.
+  const [ownName, setOwnName] = useState<string | null>(null);
 
   const handleFileSelect = () => {
     fileInputRef.current?.click();
@@ -37,25 +41,31 @@ export const AvatarUpload = () => {
     setUploading(true);
 
     try {
-      const fileExt = file.name.split('.').pop();
+      const fileExt = (file.name.split('.').pop() || 'mp4').toLowerCase();
       const fileName = `${user.id}/avatar.${fileExt}`;
+      // One avatar per family: a different format (mov/webm) must not leave the old mp4 shown on the next visit.
+      const { data: old } = await supabase.storage.from('avatars').list(user.id);
+      const stale = (old ?? []).map((f) => `${user.id}/${f.name}`).filter((n) => /\/avatar\./.test(n) && n !== fileName);
 
       // Upload file to Supabase Storage
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(fileName, file, {
           upsert: true,
-          contentType: file.type
+          contentType: file.type,
+          cacheControl: '60'
         });
 
       if (uploadError) throw uploadError;
+      if (stale.length) await supabase.storage.from('avatars').remove(stale);
 
       // Get public URL
       const { data } = supabase.storage
         .from('avatars')
         .getPublicUrl(fileName);
 
-      setAvatarUrl(data.publicUrl);
+      setAvatarUrl(`${data.publicUrl}?v=${Date.now()}`);
+      setOwnName(fileName);
       toast.success('Avatar video uploaded successfully!');
     } catch (error) {
       console.error('Error uploading avatar:', error);
@@ -66,17 +76,16 @@ export const AvatarUpload = () => {
   };
 
   const handleDelete = async () => {
-    if (!user || !avatarUrl) return;
+    if (!user || !avatarUrl || !ownName) return;
 
     try {
-      const fileName = `${user.id}/avatar.mp4`;
-      
       const { error } = await supabase.storage
         .from('avatars')
-        .remove([fileName]);
+        .remove([ownName]);
 
       if (error) throw error;
 
+      setOwnName(null);
       setAvatarUrl(null);
       toast.success('Avatar video deleted successfully!');
     } catch (error) {
@@ -99,27 +108,16 @@ export const AvatarUpload = () => {
   // Check for existing avatar on component mount and show default EspaLuz avatar if needed
   useEffect(() => {
     if (user) {
-      const fileName = `${user.id}/avatar.mp4`;
-      const { data } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(fileName);
-      
-      // Check if user's avatar exists
-      fetch(data.publicUrl, { method: 'HEAD' })
-        .then(response => {
-          if (response.ok) {
-            setAvatarUrl(data.publicUrl);
-          } else {
-            // Show default EspaLuz avatar
-            const defaultAvatarUrl = '/videos/espaluz-avatar.mp4';
-            setAvatarUrl(defaultAvatarUrl);
-          }
-        })
-        .catch(() => {
-          // Show default EspaLuz avatar if fetch fails
-          const defaultAvatarUrl = '/videos/espaluz-avatar.mp4';
-          setAvatarUrl(defaultAvatarUrl);
-        });
+      // The family's own video, newest first, addressed by its version so a replaced file is never shown stale.
+      supabase.storage.from('avatars').list(user.id, { sortBy: { column: 'updated_at', order: 'desc' } })
+        .then(({ data: files }) => {
+          const own = (files ?? []).find((f) => /^avatar\./.test(f.name));
+          if (!own) { setAvatarUrl('/videos/espaluz-avatar.mp4'); return; }
+          const name = `${user.id}/${own.name}`;
+          const { data } = supabase.storage.from('avatars').getPublicUrl(name);
+          setOwnName(name);
+          setAvatarUrl(`${data.publicUrl}?v=${encodeURIComponent(own.updated_at ?? own.created_at ?? '')}`);
+        }, () => setAvatarUrl('/videos/espaluz-avatar.mp4'));
     }
   }, [user]);
 
@@ -171,6 +169,7 @@ export const AvatarUpload = () => {
             <div className="relative rounded-lg overflow-hidden bg-muted">
               <video
                 ref={videoRef}
+                key={avatarUrl}
                 src={avatarUrl}
                 className="w-full h-48 object-cover"
                 loop
@@ -207,17 +206,22 @@ export const AvatarUpload = () => {
                 Replace Video
               </Button>
               
-              <Button
-                variant="outline"
-                onClick={handleDelete}
-                className="text-destructive hover:text-destructive"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+              {ownName && (
+                <Button
+                  variant="outline"
+                  onClick={handleDelete}
+                  className="text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
             </div>
             
-            <p className="text-sm text-green-600">
-              ✓ Avatar video ready! This will be used in video generation.
+            {/* Only what is true: EspaLuz's talking videos use her own face; nothing reads a family's upload yet. */}
+            <p className="text-sm text-muted-foreground">
+              {ownName
+                ? '✓ Your video is saved. EspaLuz’s talking videos still use her own face.'
+                : 'This is EspaLuz. You can upload your own short video here.'}
             </p>
           </div>
         )}
