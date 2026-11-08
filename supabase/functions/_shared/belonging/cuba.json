@@ -1,0 +1,385 @@
+{
+  "country": "cuba",
+  "name": "Cuba",
+  "timezone": "America/Havana",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in Cuba is. No stereotypes, no ethnic labels.",
+    "Stay out of politics: describe everyday life and culture, never judge the government or take sides. Daily conditions (power cuts, transport, school hours) change often - say so and suggest asking neighbours or the school for the current situation."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in Cuba (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Cuba"
+    },
+    "oncuba_ultimo": {
+      "title": "El último (OnCuba News)",
+      "url": "https://oncubanews.com/tendencias/curiosidades/el-ultimo"
+    },
+    "storylearning_cu": {
+      "title": "35 Cuban Slang Words and Phrases (StoryLearning)",
+      "url": "https://storylearning.com/learn/spanish/spanish-tips/cuban-slang"
+    },
+    "frommers_cu": {
+      "title": "Cuba: language (Frommer's)",
+      "url": "https://www.frommers.com/destinations/cuba/in-depth/language/"
+    },
+    "telemundo_asere": {
+      "title": "'Asere' entra al diccionario de la RAE (Telemundo 51)",
+      "url": "https://www.telemundo51.com/noticias/cuba/asere-entra-al-diccionario-de-la-rae-la-palabra-cubana-divide-opiniones/2845695/"
+    },
+    "cubanet_unesco": {
+      "title": "Cuba en la lista del Patrimonio Cultural Inmaterial (Cubanet)",
+      "url": "https://www.cubanet.org/?p=298491"
+    },
+    "diariodecuba_parrandas": {
+      "title": "La UNESCO declara Las Parrandas patrimonio inmaterial (Diario de Cuba, 2018)",
+      "url": "https://diariodecuba.com/cultura/1543435743_43263.html"
+    },
+    "prensalatina_curso": {
+      "title": "Cuba: más de un millón 530 mil estudiantes a las aulas (Prensa Latina, 2025)",
+      "url": "https://www.prensa-latina.cu/2025/09/01/cuba-mas-de-un-millon-530-mil-estudiantes-a-las-aulas/"
+    },
+    "local10_flex": {
+      "title": "Cuba flexibilizará uso de uniforme escolar y horas de clases (Local 10, 2026)",
+      "url": "https://www.local10.com/espanol/2026/08/27/cuba-flexibilizara-uso-de-uniforme-escolar-y-horas-de-clases-cuando-inicie-curso-ante-limitaciones/"
+    },
+    "cibercuba_fin": {
+      "title": "Cuban government advances end of the school year due to lack of conditions (CiberCuba, 2026)",
+      "url": "https://en.cibercuba.com/noticias/2026-05-20-u1-e208933-s27061-nid329751-gobierno-cubano-adelanta-fin-curso-escolar-falta"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "school_start",
+        "text": "The school year starts in early September (1 September in 2025 and 2026).",
+        "es": "el curso escolar",
+        "sources": [
+          "prensalatina_curso",
+          "local10_flex"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "school_flex",
+        "text": "In 2026 the end of the school year was brought forward to June because of power and transport shortages, and the 2026-2027 year started with flexible attendance, hours and uniform rules - ask the school what applies now.",
+        "es": "flexibilización",
+        "sources": [
+          "cibercuba_fin",
+          "local10_flex"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "july_holidays",
+        "text": "25, 26 and 27 July are consecutive public holidays, the heart of the summer.",
+        "es": "26 de julio",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "december_parrandas",
+        "text": "Towns of central Cuba hold 'parrandas', festivals where rival neighbourhoods compete; the best known are in Remedios, at the end of the year.",
+        "es": "las parrandas",
+        "sources": [
+          "diariodecuba_parrandas",
+          "cubanet_unesco"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "new_year",
+        "text": "31 December is a day off for most people; schools and most businesses close, and 1-2 January are holidays too.",
+        "es": "fin de año",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "list",
+        "text": "Public holidays: 1 January (Liberation Day), 2 January (Victory Day), Good Friday (March or April - moves every year), 1 May, 25-27 July (Moncada commemoration), 10 October (Independence Day, start of the 1868 war), 25 December, 31 December.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "christmas_back",
+        "text": "Christmas Day was a working day from 1969 to 1998 and Good Friday became a holiday only in 2012 - older people may remember years without them.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "que_bola",
+        "text": "'¿Qué bolá?' - 'what's up?', the everyday greeting newcomers hear everywhere.",
+        "es": "¿qué bolá?",
+        "sources": [
+          "storylearning_cu",
+          "frommers_cu"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "asere",
+        "text": "'Asere' - friend, buddy, between friends; it is now in the Royal Spanish Academy dictionary.",
+        "es": "asere",
+        "sources": [
+          "storylearning_cu",
+          "telemundo_asere"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "cheek_kiss",
+        "text": "Women are often greeted with one kiss on the cheek, even at first meeting; men shake hands.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "time": [
+      {
+        "id": "queues",
+        "text": "Queues are part of daily life: when you arrive, ask '¿Quién es el último?' (who is last?) and remember that person - then you are 'el último' until the next person asks you.",
+        "es": "¿Quién es el último?",
+        "sources": [
+          "oncuba_ultimo"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "queue_keep_place",
+        "text": "If you need to step away, people often ask the person ahead of or behind them to describe or keep their place.",
+        "sources": [
+          "oncuba_ultimo"
+        ],
+        "status": "checked"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "yuma",
+        "text": "Foreigners may be called 'yuma' - usually not meant as an insult.",
+        "es": "yuma",
+        "sources": [
+          "storylearning_cu",
+          "telemundo_asere"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "neighbours",
+        "text": "Neighbours often help each other find and share what is scarce - the verb for getting by is 'resolver'.",
+        "es": "resolver",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "uniform_priority",
+        "text": "Uniform rules were relaxed for 2026-2027 because of shortages; ask the school what your child should wear.",
+        "es": "el uniforme",
+        "sources": [
+          "local10_flex"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "recesses",
+        "text": "Schools usually break around 31 December-early January and for a week in spring.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "jamar",
+        "text": "'Jamar' - to eat, heartily.",
+        "es": "jamar",
+        "sources": [
+          "storylearning_cu"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "rice_beans",
+        "text": "Rice and black beans ('congrí' or 'moros y cristianos') with pork are the classic family dish, especially for celebrations.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "guagua",
+        "text": "The bus is a 'guagua'.",
+        "es": "la guagua",
+        "sources": [
+          "storylearning_cu"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "pincha",
+        "text": "Work is 'la pincha'; 'pinchar' is to work.",
+        "es": "la pincha",
+        "sources": [
+          "storylearning_cu"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "power_cuts",
+        "text": "Shortages of electricity, fuel and transport affect daily life - in 2026 they even changed the school calendar and hours.",
+        "es": "los apagones",
+        "sources": [
+          "cibercuba_fin",
+          "local10_flex"
+        ],
+        "status": "checked"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "chevere",
+        "text": "'Chévere' - great, cool.",
+        "es": "chévere",
+        "sources": [
+          "storylearning_cu"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "que_vuelta",
+        "text": "'¿Qué vuelta?' / '¿qué bolero?' - other ways to say 'what's up?'.",
+        "es": "¿qué vuelta?",
+        "sources": [
+          "frommers_cu"
+        ],
+        "status": "unverified"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "queues_hard",
+        "text": "The queue system: no physical line, just knowing who is 'el último'.",
+        "sources": [
+          "oncuba_ultimo"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "apagones",
+        "text": "Planning family life around power cuts and changing school hours.",
+        "sources": [
+          "cibercuba_fin",
+          "local10_flex"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "unesco_list",
+        "text": "UNESCO lists four Cuban traditions as Intangible Cultural Heritage: Tumba Francesa (2008), Rumba (2016), Punto Cubano (2017) and Las Parrandas (2018).",
+        "es": "rumba · punto cubano",
+        "sources": [
+          "cubanet_unesco"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "parrandas_old",
+        "text": "The Remedios parrandas are considered by local experts the oldest festival on the island, with rival neighbourhoods San Salvador and El Carmen.",
+        "sources": [
+          "diariodecuba_parrandas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "music_everywhere",
+        "text": "Son, salsa, rumba and reggaeton are heard in streets and homes; dancing is learned young.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "first_queue",
+      "label": "Your first '¿quién es el último?'",
+      "words": [
+        "el último",
+        "el ultimo",
+        "cola",
+        "turno"
+      ]
+    },
+    {
+      "id": "parrandas",
+      "label": "Las Parrandas",
+      "words": [
+        "parrandas",
+        "parranda",
+        "remedios",
+        "carroza"
+      ]
+    },
+    {
+      "id": "july",
+      "label": "The July holidays",
+      "words": [
+        "26 de julio",
+        "julio",
+        "carnaval"
+      ]
+    },
+    {
+      "id": "school_start",
+      "label": "The first day of school",
+      "words": [
+        "inicio del curso",
+        "primer día de clases",
+        "uniforme",
+        "1 de septiembre"
+      ]
+    },
+    {
+      "id": "music",
+      "label": "Music and dancing with neighbours",
+      "words": [
+        "rumba",
+        "son",
+        "salsa",
+        "bailar",
+        "casino"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor",
+        "asere"
+      ]
+    }
+  ]
+}

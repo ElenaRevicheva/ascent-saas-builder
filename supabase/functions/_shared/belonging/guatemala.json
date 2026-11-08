@@ -1,0 +1,442 @@
+{
+  "country": "guatemala",
+  "name": "Guatemala",
+  "timezone": "America/Guatemala",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in Guatemala is. No stereotypes, no ethnic labels.",
+    "Customs change from one department and town to the next (the sources say so themselves). Ask where the family lives before giving local detail."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in Guatemala (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Guatemala"
+    },
+    "agn_noviembre": {
+      "title": "Finde cultural: barriletes gigantes y tradiciones guatemaltecas (AGN, Agencia Guatemalteca de Noticias)",
+      "url": "https://agn.gt/finde-cultural-barriletes-gigantes-y-tradiciones-guatemaltecas-protagonizan-agenda-cultural-del-fin-de-semana/"
+    },
+    "agn_difuntos": {
+      "title": "Guatemala honra a sus difuntos y mantiene vivas sus tradiciones del 1 de noviembre (AGN)",
+      "url": "https://agn.gt/guatemala-honra-a-sus-difuntos-y-mantiene-vivas-sus-tradiciones-del-1-de-noviembre/"
+    },
+    "prensalibre_diablo": {
+      "title": "¿Cuándo es la Quema del Diablo en Guatemala? (Prensa Libre)",
+      "url": "https://www.prensalibre.com/guatemala/comunitario/cuando-es-la-quema-del-diablo-en-guatemala/"
+    },
+    "agn_diablo": {
+      "title": "Emiten recomendaciones para realizar la Quema del Diablo con responsabilidad (AGN)",
+      "url": "https://agn.gt/emiten-recomendaciones-para-realizar-la-quema-del-diablo-con-responsabilidad/"
+    },
+    "emisoras_diablo": {
+      "title": "La Quema del Diablo: tradición, fe e impacto ambiental (Emisoras Unidas, 2025)",
+      "url": "https://emisorasunidas.com/tendencias/2025/11/27/tradicion-quema-del-diablo-en-guatemala/"
+    },
+    "agn_calendario": {
+      "title": "Calendario escolar 2026: fechas clave (AGN)",
+      "url": "https://agn.gt/calendario-escolar-2026-fechas-clave-a-tomar-en-cuenta-durante-el-2026/"
+    },
+    "emisoras_ciclo": {
+      "title": "Mineduc anuncia fecha del ciclo escolar 2026 (Emisoras Unidas, 2025)",
+      "url": "https://emisorasunidas.com/nacional/2025/11/10/ministerio-educacion-fecha-inicio-clases-ciclo-escolar-2026/"
+    },
+    "agn_receso": {
+      "title": "Centros educativos del sector público disfrutan el receso de medio año del 24 al 30 de junio (AGN)",
+      "url": "https://agn.gt/centros-educativos-del-sector-publico-disfrutan-el-receso-de-medio-ano-del-24-al-30-de-junio/"
+    },
+    "rove_independencia": {
+      "title": "Día de la Independencia, Guatemala (Rove.me)",
+      "url": "https://rove.me/to/guatemala/dia-de-la-independencia"
+    },
+    "lig_independencia": {
+      "title": "Día de la Independencia de Guatemala (Living in Guatemala)",
+      "url": "https://livinginguatemala.com/es/eventos/dia-de-la-independencia-guatemala/"
+    },
+    "lig_chapinismos": {
+      "title": "Chapinismos: Guatemalan slang (Living in Guatemala)",
+      "url": "https://livinginguatemala.com/guides/guatemalan-slang-chapinismos/"
+    },
+    "spanishacademy_gt": {
+      "title": "Top 20 Guatemalan Words and Slang Expressions (Spanish Academy)",
+      "url": "https://www.spanish.academy/blog/top-20-guatemalan-words-and-slang-expressions-you-should-know/"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "school_year",
+        "text": "The public school year runs from January/February to October: in 2026 public schools started on 2 February (private schools from mid-January) and the annual daily plan closes on 30 October. So the long holidays are November to January.",
+        "es": "el ciclo escolar",
+        "sources": [
+          "emisoras_ciclo",
+          "agn_calendario"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "june_recess",
+        "text": "Public schools have a one-week mid-year recess in late June (24-30 June) - confirm each year's Mineduc calendar.",
+        "es": "receso de medio año",
+        "sources": [
+          "agn_receso"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "september",
+        "text": "September is the month of Independence (15 September): on the 14th, torch runners carry the 'Antorcha de la Independencia' across the country, followed by parades and school bands.",
+        "es": "la antorcha",
+        "sources": [
+          "rove_independencia",
+          "lig_independencia"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "november_kites",
+        "text": "1 November: families tend the graves of their relatives, share food and eat fiambre; in Sumpango and Santiago Sacatepéquez giant kites rise over the cemeteries.",
+        "es": "Día de Todos los Santos",
+        "sources": [
+          "agn_noviembre",
+          "agn_difuntos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "december_7",
+        "text": "7 December at 6 pm: the 'Quema del Diablo' - many families light bonfires and burn a devil figure on the eve of the Immaculate Conception, to 'clear the way' for the Virgin.",
+        "es": "la Quema del Diablo",
+        "sources": [
+          "prensalibre_diablo",
+          "emisoras_diablo"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "rainy_season",
+        "text": "The rainy season, called 'invierno', runs roughly May to October; the dry 'verano' November to April.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "list",
+        "text": "Public holidays under the Labour Code: 1 January, Holy Thursday, Good Friday and Holy Saturday (March or April - move every year), 1 May, 30 June (Army Day), 15 September (Independence), 20 October (Revolution of 1944), 1 November, 24 December from noon, 25 December, 31 December.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "capital_aug15",
+        "text": "15 August (Assumption) is a holiday only in Guatemala City.",
+        "es": "Asunción",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "vos",
+        "text": "'Vos' is widely used in Guatemala among friends and family; use 'usted' until invited otherwise.",
+        "es": "vos · usted",
+        "sources": [
+          "lig_chapinismos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "cabal",
+        "text": "'¡Es cabal!' - 'exactly, spot on', to show you agree.",
+        "es": "es cabal",
+        "sources": [
+          "spanishacademy_gt",
+          "lig_chapinismos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "buenas",
+        "text": "Greeting everyone when you enter a shop, bus or waiting room ('buenos días') is expected.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "time": [
+      {
+        "id": "diablo_time",
+        "text": "The Quema del Diablo is traditionally at 6 pm on 7 December.",
+        "sources": [
+          "prensalibre_diablo"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "late_social",
+        "text": "Social gatherings often start later than the stated time.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "cemetery_day",
+        "text": "On 1 November families clean and decorate the graves, share food together at the cemetery, and prepare fiambre at home.",
+        "es": "el camposanto",
+        "sources": [
+          "agn_difuntos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "chapin",
+        "text": "People from Guatemala call themselves 'chapines' - with affection.",
+        "es": "chapín · chapina",
+        "sources": [
+          "spanishacademy_gt",
+          "lig_chapinismos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "patojo",
+        "text": "Children and young people are 'patojos' / 'patojas'.",
+        "es": "patojo",
+        "sources": [
+          "spanishacademy_gt",
+          "lig_chapinismos"
+        ],
+        "status": "checked"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "public_private",
+        "text": "Private, cooperative and municipal schools may start earlier than public ones.",
+        "es": "colegio · escuela pública",
+        "sources": [
+          "emisoras_ciclo"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "parades",
+        "text": "September brings school parades with bands and torch runs.",
+        "es": "desfile escolar · banda",
+        "sources": [
+          "lig_independencia",
+          "rove_independencia"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "international_calendar",
+        "text": "Schools with an international plan follow a different calendar starting around August.",
+        "sources": [
+          "agn_calendario"
+        ],
+        "status": "unverified"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "fiambre",
+        "text": "Fiambre is the Guatemalan dish of this time of year, prepared by families for 1 November.",
+        "es": "el fiambre",
+        "sources": [
+          "agn_noviembre",
+          "agn_difuntos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "fiambre_what",
+        "text": "Fiambre is a big cold dish of many meats, sausages, cheeses and pickled vegetables; each family has its own recipe.",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "christmas_tamales",
+        "text": "On Christmas Eve many families eat tamales and drink hot ponche at midnight.",
+        "es": "tamales · ponche",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "pisto",
+        "text": "Money is 'pisto'.",
+        "es": "pisto",
+        "sources": [
+          "spanishacademy_gt",
+          "lig_chapinismos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "diablo_safety",
+        "text": "On 7 December the authorities ask families to avoid burns: no bonfires under power lines and care with fireworks around children.",
+        "sources": [
+          "agn_diablo"
+        ],
+        "status": "checked"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "chilero",
+        "text": "'¡Qué chilero!' - how nice, great.",
+        "es": "chilero",
+        "sources": [
+          "spanishacademy_gt",
+          "lig_chapinismos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "cabal2",
+        "text": "'Cabal' - exactly, precisely.",
+        "es": "cabal",
+        "sources": [
+          "spanishacademy_gt"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "a_huevo",
+        "text": "'¡A huevo!' - 'of course!', very informal; not for school or the office.",
+        "es": "a huevo",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "school_calendar",
+        "text": "The school year ends in October, not June - children arriving from a September-June country need a talk with the school about which grade to join.",
+        "sources": [
+          "agn_calendario",
+          "emisoras_ciclo"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "local_variety",
+        "text": "Traditions change by department and town - what a neighbour describes may differ from the next town.",
+        "sources": [
+          "agn_difuntos"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "kites_unesco",
+        "text": "In 2024 UNESCO inscribed the making of the giant kites of Santiago Sacatepéquez and Sumpango on its Intangible Cultural Heritage list.",
+        "es": "barriletes gigantes",
+        "sources": [
+          "agn_noviembre"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "diablo_meaning",
+        "text": "The Quema del Diablo comes from colonial times: the fire 'cleans the way' for the Immaculate Conception, patron of Guatemala.",
+        "sources": [
+          "prensalibre_diablo"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "antorcha_origin",
+        "text": "The torch run commemorates María Dolores Bedoya, who in 1821 went through the streets with a torch rallying people for independence.",
+        "sources": [
+          "rove_independencia"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "alfombras",
+        "text": "During Holy Week, especially in Antigua, neighbours make carpets of coloured sawdust and flowers for the processions to walk over.",
+        "es": "alfombras de aserrín",
+        "sources": [],
+        "status": "unverified"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "first_antorcha",
+      "label": "Your first Independence torch run",
+      "words": [
+        "antorcha",
+        "15 de septiembre",
+        "independencia",
+        "desfile",
+        "banda escolar"
+      ]
+    },
+    {
+      "id": "first_barriletes",
+      "label": "Giant kites and fiambre",
+      "words": [
+        "barriletes",
+        "barrilete",
+        "fiambre",
+        "sumpango",
+        "todos los santos"
+      ]
+    },
+    {
+      "id": "quema_diablo",
+      "label": "La Quema del Diablo",
+      "words": [
+        "quema del diablo",
+        "7 de diciembre",
+        "diablo",
+        "fogata"
+      ]
+    },
+    {
+      "id": "semana_santa",
+      "label": "Holy Week and sawdust carpets",
+      "words": [
+        "semana santa",
+        "alfombras",
+        "procesión",
+        "procesion"
+      ]
+    },
+    {
+      "id": "school_end",
+      "label": "The end of the school year in October",
+      "words": [
+        "fin de ciclo",
+        "clausura",
+        "vacaciones de fin de año",
+        "graduación"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor",
+        "patojos"
+      ]
+    }
+  ]
+}

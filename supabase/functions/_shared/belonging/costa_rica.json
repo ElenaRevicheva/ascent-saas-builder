@@ -1,0 +1,509 @@
+{
+  "country": "costa_rica",
+  "name": "Costa Rica",
+  "timezone": "America/Costa_Rica",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in Costa Rica is. No stereotypes, no ethnic labels."
+  ],
+  "sources": {
+    "matador_cr": {
+      "title": "Las 13 costumbres ticas que más desconciertan a los extranjeros (Sergio Otegui Palacios, Matador Network, 2017)",
+      "url": "https://matadornetwork.com/es/costumbres-ticas-que-desconciertan-los-extranjeros/"
+    },
+    "wiki_holidays": {
+      "title": "Public holidays in Costa Rica (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Costa_Rica"
+    },
+    "observador_2026": {
+      "title": "Curso lectivo iniciará hasta el 23 de febrero en 2026: conozca el calendario escolar (El Observador)",
+      "url": "https://observador.cr/curso-lectivo-iniciara-hasta-el-23-de-febrero-en-2026-conozca-el-calendario-escolar/"
+    },
+    "teletica_2026": {
+      "title": "MEP da a conocer vacaciones y otras fechas importantes del calendario escolar 2026 (Teletica, 2025)",
+      "url": "https://www.teletica.com/nacional/mep-da-a-conocer-vacaciones-y-otras-fechas-importantes-del-calendario-escolar-2026_399195"
+    },
+    "delfino_2027": {
+      "title": "MEP anuncia el calendario escolar 2027 (Delfino.cr, 2026)",
+      "url": "https://delfino.cr/2026/10/mep-anuncia-el-calendario-escolar-2027-conozca-cuando-empiezan-las-clases-y-las-fechas-de-las-vacaciones"
+    },
+    "observador_lluvias": {
+      "title": "Durante mayo toda Costa Rica entrará a la época lluviosa (El Observador, citing IMN)",
+      "url": "https://observador.cr/durante-mayo-toda-costa-rica-entrara-a-la-epoca-lluviosa-inicia-temporada-de-ondas-tropicales-y-ciclones/"
+    },
+    "observador_seca": {
+      "title": "¿Cuándo inicia la época seca en Costa Rica? IMN prevé fechas para cada región (El Observador)",
+      "url": "https://observador.cr/cuando-inicia-la-epoca-seca-en-costa-rica-imn-preve-fechas-para-cada-region/"
+    },
+    "observador_tarde": {
+      "title": "Mañana calurosa y aguaceros en la tarde pronostica el IMN (El Observador)",
+      "url": "https://observador.cr/manana-calurosa-y-aguaceros-en-la-tarde-pronostica-el-imn-para-este-1-de-mayo/"
+    },
+    "frommers_lang": {
+      "title": "Costa Rica: language (Frommer's)",
+      "url": "https://www.frommers.com/destinations/costa-rica/in-depth/language"
+    },
+    "puravidamoms_slang": {
+      "title": "¡Qué chiva! and other essential Costa Rican slang (Pura Vida Moms)",
+      "url": "https://www.puravidamoms.com/costa-rican-slang/"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "two_seasons",
+        "text": "Two seasons: the rainy season, roughly May to October/November, and the dry season, November to April. The start and end dates differ by region.",
+        "es": "época lluviosa · época seca",
+        "sources": [
+          "observador_lluvias",
+          "observador_seca"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "afternoon_rain",
+        "text": "In the rainy season a hot morning is often followed by afternoon downpours - plan outdoor time for the morning.",
+        "es": "aguaceros en la tarde",
+        "sources": [
+          "observador_tarde"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "school_year_2026",
+        "text": "In 2026 public school classes ran from 23 February to early December, with a Holy Week break and two weeks of mid-year holidays in July (6-17 July).",
+        "es": "curso lectivo",
+        "sources": [
+          "observador_2026",
+          "teletica_2026"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "school_year_2027",
+        "text": "From 2027 the MEP changes the calendar: classes from 1 March to 30 November, 180 class days plus 20 days of teacher training - confirm with the school, private schools may differ.",
+        "es": "calendario escolar 2027",
+        "sources": [
+          "delfino_2027"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "fixed_daylight",
+        "text": "Sunrise and sunset happen at nearly the same time all year, so many people rise around 6-7 am and keep a steady daily rhythm.",
+        "sources": [
+          "matador_cr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "rezo_nino",
+        "text": "From 6 January many families hold the 'Rezo del Niño', a family prayer gathering.",
+        "es": "el Rezo del Niño",
+        "sources": [
+          "matador_cr"
+        ],
+        "status": "checked"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "list",
+        "text": "Public holidays: 1 January, Holy Thursday and Good Friday (March or April - move every year), 11 April (Juan Santamaría), 1 May, 25 July (Annexation of Nicoya), 2 August (Virgen de los Ángeles), 15 August (Mother's Day), 31 August (Day of the Black Person and Afro-Costa Rican Culture), 15 September (Independence), 1 December (Abolition of the Army), 25 December.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "moved_mondays",
+        "text": "In recent years some holidays have been moved to Mondays by decree to encourage domestic tourism - check each year's list.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "mothers_day",
+        "text": "Mother's Day is 15 August and is a public holiday.",
+        "es": "Día de la Madre",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "pura_vida",
+        "text": "'¡Pura vida!' is hello, goodbye, thank you and 'all good' - and a whole attitude to life.",
+        "es": "¡pura vida!",
+        "sources": [
+          "matador_cr",
+          "frommers_lang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "con_gusto",
+        "text": "Thanks are answered with 'con mucho gusto'; people say 'por favor', 'gracias' and 'con permiso' when entering or leaving a table.",
+        "es": "con mucho gusto · con permiso",
+        "sources": [
+          "matador_cr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "don_dona",
+        "text": "Older people are addressed as 'don' or 'doña'.",
+        "es": "don · doña",
+        "sources": [
+          "matador_cr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "por_dicha",
+        "text": "'Todo bien, por dicha' - 'all fine, thank goodness'; 'si Dios lo permite' is common too.",
+        "es": "por dicha",
+        "sources": [
+          "matador_cr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "usted",
+        "text": "Many people use 'usted' even with friends, family and children.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "time": [
+      {
+        "id": "early_days",
+        "text": "Days start early and meals follow fairly fixed times.",
+        "sources": [
+          "matador_cr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "tico_time",
+        "text": "Social plans may start later than the stated time; work and school do not.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "family_first",
+        "text": "Family comes first: special dates are spent with family before going out with friends, and some people bring their parents to parties.",
+        "sources": [
+          "matador_cr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "hablantines",
+        "text": "People are talkative and hospitable, offer help and tell you to ask for it - take them up on it.",
+        "es": "hablantín",
+        "sources": [
+          "matador_cr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "quince",
+        "text": "A girl's 15th birthday (los quince) is often a big celebration.",
+        "sources": [
+          "matador_cr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "baby_shower",
+        "text": "The 'té de canastilla' (baby shower) has become a mixed party with family and friends.",
+        "es": "té de canastilla",
+        "sources": [
+          "matador_cr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "mejenga",
+        "text": "Friends play pick-up football, a 'mejenga'; five-a-side after work is popular - an easy way to make friends.",
+        "es": "una mejenga",
+        "sources": [
+          "matador_cr"
+        ],
+        "status": "checked"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "teacher_training",
+        "text": "Before classes start, teachers have two weeks of national training in February.",
+        "es": "capacitación docente",
+        "sources": [
+          "observador_2026"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "private_schools",
+        "text": "Private schools are not obliged to follow the new 2027 calendar, though national test dates are the same for all.",
+        "sources": [
+          "delfino_2027"
+        ],
+        "status": "checked"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "gallo_pinto",
+        "text": "Rice and beans are the base of meals: 'gallo pinto' or a 'casado' plate shows up at most meals.",
+        "es": "gallo pinto · casado",
+        "sources": [
+          "matador_cr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "fruit",
+        "text": "Fresh fruit juices and fruit salads are available all year.",
+        "sources": [
+          "matador_cr"
+        ],
+        "status": "checked"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "service",
+        "text": "Service staff are usually attentive and polite.",
+        "sources": [
+          "matador_cr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "music",
+        "text": "Cumbia, salsa, merengue and bachata are danced at most parties.",
+        "sources": [
+          "matador_cr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "football_teams",
+        "text": "Football teams have nicknames - morados, manudos, florenses, brumosos - and you will be asked which you support.",
+        "sources": [
+          "matador_cr"
+        ],
+        "status": "checked"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "mae",
+        "text": "'Mae' - 'dude', 'mate', very common among young people.",
+        "es": "mae",
+        "sources": [
+          "matador_cr",
+          "frommers_lang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "tuanis",
+        "text": "'Tuanis' - cool, fine, great.",
+        "es": "tuanis",
+        "sources": [
+          "frommers_lang",
+          "puravidamoms_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "brete",
+        "text": "'Brete' - work: 'mucho brete'.",
+        "es": "brete",
+        "sources": [
+          "matador_cr",
+          "frommers_lang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "chunche",
+        "text": "'Chunche' - thing, whatsit.",
+        "es": "chunche",
+        "sources": [
+          "frommers_lang",
+          "puravidamoms_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "diay",
+        "text": "'Diay' - a filler like 'well...', or 'so what happened?'.",
+        "es": "diay",
+        "sources": [
+          "frommers_lang",
+          "puravidamoms_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "tico",
+        "text": "People from Costa Rica are 'ticos' / 'ticas'.",
+        "es": "tico · tica",
+        "sources": [
+          "frommers_lang"
+        ],
+        "status": "checked"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "rainy_months",
+        "text": "Months of afternoon downpours in the rainy season.",
+        "sources": [
+          "observador_lluvias",
+          "observador_tarde"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "calendar_change",
+        "text": "The school calendar changes in 2027 - advice based on earlier years may be out of date.",
+        "sources": [
+          "delfino_2027",
+          "observador_2026"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "gueon",
+        "text": "Words like 'güevón' are used among friends but can be insults - newcomers should wait before using them.",
+        "sources": [
+          "matador_cr"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "angeles",
+        "text": "2 August is the feast of the Virgen de los Ángeles, patron of Costa Rica.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "romeria",
+        "text": "In the days before 2 August many people walk to the basilica in Cartago in a pilgrimage, the 'romería'.",
+        "es": "la romería",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "afro_day",
+        "text": "31 August is a national day celebrating Afro-Costa Rican culture.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "pride",
+        "text": "Many people are proud of their country and happy to recommend places, food and music.",
+        "sources": [
+          "matador_cr"
+        ],
+        "status": "checked"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "first_rainy",
+      "label": "Your first rainy season",
+      "words": [
+        "época lluviosa",
+        "invierno",
+        "aguacero",
+        "rainy season"
+      ]
+    },
+    {
+      "id": "first_romeria",
+      "label": "The romería to Cartago",
+      "words": [
+        "romería",
+        "romeria",
+        "negrita",
+        "virgen de los ángeles",
+        "cartago"
+      ]
+    },
+    {
+      "id": "sept15",
+      "label": "Independence Day",
+      "words": [
+        "15 de septiembre",
+        "faroles",
+        "antorcha",
+        "independencia",
+        "desfile"
+      ]
+    },
+    {
+      "id": "rezo_nino",
+      "label": "Rezo del Niño",
+      "words": [
+        "rezo del niño",
+        "rezo",
+        "portal",
+        "pasito"
+      ]
+    },
+    {
+      "id": "mejenga",
+      "label": "A mejenga with neighbours",
+      "words": [
+        "mejenga",
+        "fútbol",
+        "futbol",
+        "saprissa",
+        "liga"
+      ]
+    },
+    {
+      "id": "mothers_day",
+      "label": "Mother's Day, 15 August",
+      "words": [
+        "día de la madre",
+        "dia de la madre",
+        "15 de agosto"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor"
+      ]
+    }
+  ]
+}
