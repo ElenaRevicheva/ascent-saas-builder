@@ -1,0 +1,389 @@
+{
+  "country": "venezuela",
+  "name": "Venezuela",
+  "timezone": "America/Caracas",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in Venezuela is. No stereotypes, no ethnic labels.",
+    "Stay out of politics: describe everyday life and culture, never judge the government or take sides. Living conditions (prices, power, services) change often - say so and suggest asking neighbours for the current situation."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in Venezuela (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Venezuela"
+    },
+    "matador_ve": {
+      "title": "Las 13 costumbres venezolanas que más desconciertan a los extranjeros (Maholy Rossell, Matador Network, 2017)",
+      "url": "https://matadornetwork.com/es/costumbres-venezolanas-desconciertan-extranjeros/"
+    },
+    "eldiario_hallaca": {
+      "title": "La hallaca: un plato venezolano con diversidad de sabores para Navidad (El Diario, 2023)",
+      "url": "https://eldiario.com/2023/12/09/hallaca-plato-venezolano-diversidad-sabores-navidad/"
+    },
+    "lapatilla_hallaca": {
+      "title": "Con grandes sacrificios los venezolanos conservan la tradición de elaborar la hallaca en familia (La Patilla, 2019)",
+      "url": "https://lapatilla.com/2019/12/21/con-grandes-sacrificios-los-venezolanos-conserva-la-tradicion-de-elaborar-la-hallaca-en-familia/"
+    },
+    "eldiario_diablos": {
+      "title": "Los Diablos Danzantes de Yare mantienen viva una tradición de 277 años pese a la migración (El Diario, 2026)",
+      "url": "https://eldiario.com/2026/06/04/diablos-danzantes-yare/"
+    },
+    "recursos_diablos": {
+      "title": "Diablos Danzantes de Venezuela reciben certificado UNESCO como Patrimonio de la Humanidad (Recursos Culturales)",
+      "url": "https://www.recursosculturales.com/diablos-danzantes-de-venezuela-reciben-certificado-unesco-como-patrimonio-de-la-humanidad/"
+    },
+    "lingopie_ve": {
+      "title": "17 Venezuelan Slang Terms You Need in Your Vocabulary (Lingopie)",
+      "url": "https://lingopie.com/blog/venezuelan-slang/"
+    },
+    "spanishacademy_ve": {
+      "title": "Talk Like a Venezuelan: Slang Words for Everyday Use (Spanish Academy)",
+      "url": "https://www.spanish.academy/blog/talk-like-a-venezuelan-slang-words-for-everyday-use/"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "december_hallacas",
+        "text": "December is hallaca month: many families gather to make hallacas together for Christmas - each family and region has its own filling.",
+        "es": "hacer hallacas",
+        "sources": [
+          "eldiario_hallaca",
+          "lapatilla_hallaca"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "carnival",
+        "text": "Carnival Monday and Tuesday (February or March - moves every year) are national holidays.",
+        "es": "carnaval",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "corpus_diablos",
+        "text": "On Corpus Christi (May or June) the Dancing Devils of Yare and other towns dance - in Yare a tradition about 277 years old.",
+        "es": "Diablos Danzantes",
+        "sources": [
+          "eldiario_diablos",
+          "recursos_diablos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "july_patrios",
+        "text": "June-July holds three national days: 24 June (Battle of Carabobo), 5 July (Independence) and 24 July (Bolívar's birthday).",
+        "es": "fechas patrias",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "school_year",
+        "text": "The school year runs from about mid-September to July - confirm the ministry's calendar.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "list",
+        "text": "Public holidays: 1 January, Carnival Monday-Tuesday, Holy Week (Palm Sunday to Easter, moves every year), 19 April, 1 May, 24 June, 5 July, 24 July, 12 October (Indigenous Resistance Day), 24, 25 and 31 December.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "extra_days",
+        "text": "The government sometimes announces extra days off at short notice - follow the news.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "bendicion",
+        "text": "Children and young people ask older relatives - and family friends - for their blessing: 'Bendición'.",
+        "es": "¡Bendición!",
+        "sources": [
+          "matador_ve"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "confianza",
+        "text": "People easily start conversations with strangers in the bakery, the bank queue or at the bus stop.",
+        "sources": [
+          "matador_ve"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "epale",
+        "text": "'¡Épale!' - a casual 'hey!'; '¿Qué más?' - 'what's up?'.",
+        "es": "¡épale! · ¿qué más?",
+        "sources": [
+          "spanishacademy_ve",
+          "lingopie_ve"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "loud",
+        "text": "Many people speak loudly without noticing - it is not anger.",
+        "es": "¡yo hablo así!",
+        "sources": [
+          "matador_ve"
+        ],
+        "status": "checked"
+      }
+    ],
+    "time": [
+      {
+        "id": "late_social",
+        "text": "Parties start later than the stated time.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "pana",
+        "text": "A friend is a 'pana' (for men and women); 'chamo / chama' - guy, girl, kid.",
+        "es": "pana · chamo",
+        "sources": [
+          "lingopie_ve",
+          "spanishacademy_ve"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "arroceros",
+        "text": "Uninvited guests at parties - 'arroceros' - are so common that hosts budget for them.",
+        "es": "arroceros",
+        "sources": [
+          "matador_ve"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "humour",
+        "text": "Humour reaches everything, even serious subjects - it is not meant to offend.",
+        "sources": [
+          "matador_ve"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "negrito",
+        "text": "'Negro', 'negrito', 'mi negra' are affectionate nicknames among family and friends, not about skin colour - but a newcomer should not start with them.",
+        "sources": [
+          "matador_ve"
+        ],
+        "status": "checked"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "school_unknown",
+        "text": "Ask the school about uniforms, hours and supplies - conditions vary a lot between schools.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "arepa",
+        "text": "For many families a meal without arepa is not complete - it is eaten at breakfast, dinner and even as a snack.",
+        "es": "la arepa",
+        "sources": [
+          "matador_ve"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "hallaca",
+        "text": "The hallaca - corn dough with a stew filling, wrapped in plantain leaves and tied with string - is the dish of Christmas; in Zulia the dough is made with plantain.",
+        "es": "la hallaca",
+        "sources": [
+          "eldiario_hallaca",
+          "lapatilla_hallaca"
+        ],
+        "status": "checked"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "motos",
+        "text": "Many people are wary of motorbikes passing close at night, because of street crime.",
+        "sources": [
+          "matador_ve"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "red_lights",
+        "text": "At night some drivers do not stop at red lights on empty streets for fear of robbery - pedestrians should take care.",
+        "sources": [
+          "matador_ve"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "superstitions",
+        "text": "Popular beliefs: a black butterfly in the house is a bad omen, a blue one good news; white spots on nails mean you told a lie.",
+        "sources": [
+          "matador_ve"
+        ],
+        "status": "checked"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "chevere",
+        "text": "'Chévere' - great, cool; Venezuelans consider it their word.",
+        "es": "chévere",
+        "sources": [
+          "lingopie_ve",
+          "spanishacademy_ve"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "burda",
+        "text": "'Burda' - very, a lot: 'burda de bueno'.",
+        "es": "burda",
+        "sources": [
+          "lingopie_ve",
+          "spanishacademy_ve"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "fino",
+        "text": "'Todo fino' - all good, fine.",
+        "es": "fino",
+        "sources": [
+          "lingopie_ve"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "marico_warning",
+        "text": "Some very common slang among friends ('marico', 'verga') is rude in other contexts and in other countries - do not copy it at school or work.",
+        "sources": [
+          "matador_ve"
+        ],
+        "status": "checked"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "volume",
+        "text": "The volume of conversation, which can sound like arguing.",
+        "sources": [
+          "matador_ve"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "street_safety",
+        "text": "Night-time street safety habits that locals take for granted.",
+        "sources": [
+          "matador_ve"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "diablos_unesco",
+        "text": "The Dancing Devils of Corpus Christi were inscribed on UNESCO's Intangible Heritage list in 2012.",
+        "es": "patrimonio inmaterial",
+        "sources": [
+          "recursos_diablos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "gaita",
+        "text": "In December, gaita zuliana music from Maracaibo fills radios and parties.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "hallacas",
+      "label": "Making hallacas together",
+      "words": [
+        "hallaca",
+        "hallacas",
+        "pan de jamón",
+        "ensalada de gallina"
+      ]
+    },
+    {
+      "id": "diablos",
+      "label": "The Dancing Devils of Corpus Christi",
+      "words": [
+        "diablos danzantes",
+        "yare",
+        "corpus christi"
+      ]
+    },
+    {
+      "id": "carnival",
+      "label": "Carnival",
+      "words": [
+        "carnaval",
+        "carnival"
+      ]
+    },
+    {
+      "id": "july5",
+      "label": "Independence, 5 July",
+      "words": [
+        "5 de julio",
+        "independencia",
+        "24 de julio",
+        "bolívar"
+      ]
+    },
+    {
+      "id": "gaitas",
+      "label": "Gaitas in December",
+      "words": [
+        "gaita",
+        "gaitas",
+        "furro",
+        "parranda"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor",
+        "pana",
+        "panas"
+      ]
+    }
+  ]
+}

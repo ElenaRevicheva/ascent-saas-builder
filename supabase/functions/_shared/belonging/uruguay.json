@@ -1,0 +1,382 @@
+{
+  "country": "uruguay",
+  "name": "Uruguay",
+  "timezone": "America/Montevideo",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in Uruguay is. No stereotypes, no ethnic labels.",
+    "Uruguay is in the southern hemisphere: summer is December-February, winter June-August."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in Uruguay (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Uruguay"
+    },
+    "montevideo_calendario": {
+      "title": "Calendario escolar 2026: qué días empiezan las clases y cuándo son las vacaciones (Montevideo Portal)",
+      "url": "https://www.montevideo.com.uy/Noticias/Calendario-escolar-2026-que-dias-empiezan-las-clases-y-cuando-son-las-vacaciones-uc953317"
+    },
+    "elobservador_anep": {
+      "title": "ANEP estableció fechas de clases en escuelas, liceos y UTU: calendario 2026 (El Observador, 2026)",
+      "url": "https://www.elobservador.com.uy/nacional/anep-establecio-fechas-clases-escuelas-liceos-y-utu-todo-lo-que-tenes-que-saber-del-calendario-2026-n6032552"
+    },
+    "observador_turismo": {
+      "title": "Por qué en Uruguay la Semana Santa se llama Semana de Turismo (El Observador, Costa Rica)",
+      "url": "https://observador.cr/por-que-en-uruguay-la-semana-santa-se-llama-semana-de-turismo-y-que-dice-del-pais-mas-laico-de-america-latina/amp/"
+    },
+    "montevideo_turismo": {
+      "title": "Semana de Turismo: cuándo es el próximo feriado en Uruguay (Montevideo Portal, 2025)",
+      "url": "https://www.montevideo.com.uy/Noticias/Semana-de-Turismo-2025-cuando-es-el-proximo-feriado-en-Uruguay-uc919265"
+    },
+    "unesco_candombe": {
+      "title": "Decision 4.COM 13.74: Candombe and its socio-cultural space (UNESCO, 2009)",
+      "url": "https://ich.unesco.org/en/decisions/4.COM/13.74"
+    },
+    "mercopress_candombe": {
+      "title": "Uruguay's Afro cultural tradition becomes world heritage (MercoPress, 2009)",
+      "url": "https://en.mercopress.com/2009/10/01/uruguays-afro-cultural-tradition-becomes-world-heritage"
+    },
+    "globalvoices_carnaval": {
+      "title": "What kicked off in Uruguay this month and lasts for 40 days (Global Voices, 2016)",
+      "url": "https://globalvoices.org/2016/02/01/what-kicked-off-in-uruguay-this-month-and-lasts-for-40-days/"
+    },
+    "culturetrip_uy": {
+      "title": "All the Uruguayan slang terms you need to know (Culture Trip)",
+      "url": "https://theculturetrip.com/south-america/uruguay/articles/all-the-uruguayan-slang-terms-you-need-to-know"
+    },
+    "fluentu_uy": {
+      "title": "25 Uruguayan Slang Words and Expressions (FluentU)",
+      "url": "https://www.fluentu.com/blog/spanish/uruguayan-spanish/"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "school_year",
+        "text": "The public school year runs from early March to mid-December: in 2026 from 2 March to 18 December, with a winter week (29 June-3 July) and, new in 2026, a full spring week (21-25 September).",
+        "es": "vacaciones de julio · de primavera",
+        "sources": [
+          "montevideo_calendario",
+          "elobservador_anep"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "turismo_week",
+        "text": "Holy Week is officially called 'Semana de Turismo' (Tourism Week) - a name in law since 1919 - a week of rest with events across the country.",
+        "es": "Semana de Turismo",
+        "sources": [
+          "observador_turismo",
+          "montevideo_turismo"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "semana_criolla",
+        "text": "During Tourism Week, the Semana Criolla at the Prado in Montevideo, organised since 1925, celebrates gaucho traditions with rodeo riding, folk dance and music.",
+        "es": "Semana Criolla",
+        "sources": [
+          "montevideo_turismo",
+          "observador_turismo"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "carnival_long",
+        "text": "Carnival is long - about 40 days or more from late January - with murgas and other groups competing.",
+        "es": "el carnaval",
+        "sources": [
+          "globalvoices_carnaval"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "january_6",
+        "text": "6 January is Children's Day (Día de los Niños); it is not a paid day off.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "paid",
+        "text": "Paid non-working days: 1 January, 1 May, 18 July (Constitution), 25 August (Independence), 25 December (officially 'Family Day').",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "other",
+        "text": "Other holidays: 6 January, Carnival (February or March), Tourism Week (March or April), 19 April, 18 May, 19 June (Artigas), 12 October, 2 November. By law some of these move to a Monday - check each year.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "family_day",
+        "text": "Uruguay is a strongly secular state: 25 December is officially 'Family Day' and Holy Week is 'Tourism Week'.",
+        "es": "Día de la Familia",
+        "sources": [
+          "wiki_holidays",
+          "observador_turismo"
+        ],
+        "status": "checked"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "ta",
+        "text": "'Ta' - 'OK', 'alright', 'done' (from 'está'); you will hear it constantly.",
+        "es": "ta",
+        "sources": [
+          "culturetrip_uy",
+          "fluentu_uy"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "bo",
+        "text": "'Bo' - to get someone's attention, like 'hey' or 'mate'.",
+        "es": "bo",
+        "sources": [
+          "culturetrip_uy",
+          "fluentu_uy"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "voseo",
+        "text": "People use 'vos' ('vos tenés'), and in some areas 'tú' with 'vos' verb forms ('tú tenés').",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "time": [
+      {
+        "id": "late_dinner",
+        "text": "Dinner is often late, around 9 pm or later.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "gurises",
+        "text": "'Gurí / gurisa' (from Guaraní) - kid; 'los gurises' is also a warm word for a group of friends.",
+        "es": "gurí · gurises",
+        "sources": [
+          "culturetrip_uy",
+          "fluentu_uy"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "botija",
+        "text": "'Botija' - a young child (not for adults).",
+        "es": "botija",
+        "sources": [
+          "culturetrip_uy"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "mate",
+        "text": "Many people carry a mate and a thermos everywhere; sharing mate is an invitation into the group.",
+        "es": "mate · termo",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "spring_week_new",
+        "text": "Since 2026 the spring break is a full week in September (it used to be three days).",
+        "es": "receso de primavera",
+        "sources": [
+          "elobservador_anep"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "private_starts",
+        "text": "Some private schools set their own early-March start dates.",
+        "sources": [
+          "montevideo_calendario"
+        ],
+        "status": "checked"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "asado",
+        "text": "Sunday asado (barbecue) with family is a common ritual.",
+        "es": "el asado",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "chivito",
+        "text": "The 'chivito' is a big steak sandwich, a national favourite.",
+        "es": "chivito",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "llamadas_sunday",
+        "text": "On Sundays and many holidays candombe drum groups ('llamadas') walk the streets of the Sur, Palermo and Cordón neighbourhoods of Montevideo.",
+        "es": "las llamadas",
+        "sources": [
+          "unesco_candombe",
+          "mercopress_candombe"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "barbaro",
+        "text": "'¡Bárbaro!' - 'great!', agreement or delight.",
+        "es": "¡bárbaro!",
+        "sources": [
+          "culturetrip_uy",
+          "fluentu_uy"
+        ],
+        "status": "checked"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "ta_repeated",
+        "text": "'Ta, ta' repeated can mean 'OK, I get it' - sometimes with impatience.",
+        "es": "ta, ta",
+        "sources": [
+          "fluentu_uy",
+          "culturetrip_uy"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "bo_name",
+        "text": "'Bo' can replace someone's name in a sentence: '¿Qué hacés, bo?'.",
+        "es": "¿qué hacés, bo?",
+        "sources": [
+          "culturetrip_uy"
+        ],
+        "status": "checked"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "secular_calendar",
+        "text": "Holiday names that differ from the rest of Latin America: Tourism Week, Family Day.",
+        "sources": [
+          "observador_turismo",
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "long_carnival",
+        "text": "A carnival season that lasts more than a month.",
+        "sources": [
+          "globalvoices_carnaval"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "candombe_unesco",
+        "text": "Candombe, the drumming tradition of Afro-Uruguayan origin, was inscribed on UNESCO's Intangible Heritage list in 2009.",
+        "es": "candombe",
+        "sources": [
+          "unesco_candombe",
+          "mercopress_candombe"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "murga",
+        "text": "Murgas are carnival choirs that sing satirical songs about the country and the year.",
+        "es": "la murga",
+        "sources": [
+          "globalvoices_carnaval"
+        ],
+        "status": "checked"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "first_llamadas",
+      "label": "Candombe and the Llamadas",
+      "words": [
+        "candombe",
+        "llamadas",
+        "tambores",
+        "comparsa"
+      ]
+    },
+    {
+      "id": "first_carnaval",
+      "label": "Your first carnival and murgas",
+      "words": [
+        "carnaval",
+        "murga",
+        "murgas",
+        "tablado",
+        "teatro de verano"
+      ]
+    },
+    {
+      "id": "semana_turismo",
+      "label": "Semana de Turismo",
+      "words": [
+        "semana de turismo",
+        "semana criolla",
+        "prado",
+        "turismo"
+      ]
+    },
+    {
+      "id": "dia_ninos",
+      "label": "Día de los Niños, 6 January",
+      "words": [
+        "día de los niños",
+        "dia de los niños",
+        "6 de enero",
+        "reyes"
+      ]
+    },
+    {
+      "id": "winter_break",
+      "label": "Winter and spring school breaks",
+      "words": [
+        "vacaciones de julio",
+        "vacaciones de invierno",
+        "vacaciones de primavera"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor",
+        "gurises"
+      ]
+    }
+  ]
+}

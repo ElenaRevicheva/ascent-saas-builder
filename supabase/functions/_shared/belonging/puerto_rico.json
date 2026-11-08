@@ -1,0 +1,381 @@
+{
+  "country": "puerto_rico",
+  "name": "Puerto Rico",
+  "timezone": "America/Puerto_Rico",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in Puerto Rico is. No stereotypes, no ethnic labels.",
+    "Puerto Rico is a US territory with its own culture: Spanish and English are both used; US federal holidays apply alongside Puerto Rican ones. Visa and residence errands follow US rules - those stay out of this pack."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in Puerto Rico (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Puerto_Rico"
+    },
+    "primerahora_navidad": {
+      "title": "10 tradiciones navideñas que nos distinguen como puertorriqueños (Primera Hora)",
+      "url": "https://www.primerahora.com/suplementos/mi-pequeno-dia/notas/10-tradiciones-navidenas-que-nos-distinguen-como-puertorriquenos/"
+    },
+    "discoverpr_navidad": {
+      "title": "Tradiciones navideñas en Puerto Rico (Discover Puerto Rico)",
+      "url": "https://www.discoverpuertorico.com/es/articulo/tradiciones-navidenas-en-puerto-rico"
+    },
+    "metro_navidad": {
+      "title": "¿Son de Puerto Rico las navidades más largas del mundo? (Metro Puerto Rico, 2024)",
+      "url": "https://www.metro.pr/estilo-vida/2024/12/24/son-de-puerto-rico-las-navidades-mas-largas-del-mundo/"
+    },
+    "primerahora_calendario": {
+      "title": "¿Cuándo empiezan las clases? Este es el calendario escolar 2026-2027 (Primera Hora)",
+      "url": "https://www.primerahora.com/noticias/puerto-rico/notas/cuando-empiezan-las-clases-este-es-el-calendario-escolar-2026-2027/"
+    },
+    "de_calendario": {
+      "title": "Calendario escolar 2026-27 (Departamento de Educación de Puerto Rico)",
+      "url": "https://de.pr.gov/wp-content/uploads/2026/07/Calendario-Legal-26-27.pdf"
+    },
+    "wiki_slang": {
+      "title": "List of Puerto Rican slang words and phrases (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/List_of_Puerto_Rican_slang_words_and_phrases"
+    },
+    "storylearning_pr": {
+      "title": "25 Puerto Rican Slang Words (StoryLearning)",
+      "url": "https://storylearning.com/learn/spanish/spanish-tips/puerto-rican-slang"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "long_christmas",
+        "text": "Christmas season is long: from just after Thanksgiving to mid-January, ending with the Fiestas de la Calle San Sebastián in Old San Juan - people proudly call it 'the longest Christmas in the world'.",
+        "es": "las Navidades más largas del mundo",
+        "sources": [
+          "metro_navidad",
+          "primerahora_navidad"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "octavitas",
+        "text": "After Three Kings Day come the 'Octavitas' (7-14 January): more music, food and games so the season lasts a little longer.",
+        "es": "las Octavitas",
+        "sources": [
+          "primerahora_navidad"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "sanse",
+        "text": "The Fiestas de la Calle San Sebastián ('La SanSe'), usually in the third week of January, close the season with music, comparsas and artisan stalls in Old San Juan.",
+        "es": "La SanSe",
+        "sources": [
+          "primerahora_navidad",
+          "metro_navidad"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "school_year",
+        "text": "The public school year runs from early August to late May: classes for 2026-2027 began in early August, and graduations may start from 24 May 2027.",
+        "es": "el año escolar",
+        "sources": [
+          "primerahora_calendario",
+          "de_calendario"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "hurricane_season",
+        "text": "Hurricane season runs from 1 June to 30 November; follow official alerts from the emergency management office.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "pr_specific",
+        "text": "Puerto Rico's own holidays: 6 January (Three Kings), 2 March (American Citizenship Day), 22 March (Emancipation Day - abolition of slavery), 25 July (Constitution Day), 27 July (José Celso Barbosa), 19 November (Discovery of Puerto Rico), plus Good Friday.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "us_federal",
+        "text": "US federal holidays also apply: New Year, Martin Luther King Jr. Day, Presidents' Day, Memorial Day, Juneteenth, 4 July, Labor Day, Columbus Day, Veterans Day, Thanksgiving, Christmas.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "ay_bendito",
+        "text": "'¡Ay, bendito!' - sympathy, surprise or frustration, depending on tone; you will hear it every day.",
+        "es": "¡ay, bendito!",
+        "sources": [
+          "wiki_slang",
+          "storylearning_pr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "wepa",
+        "text": "'¡Wepa!' - 'yay!', 'woohoo!', joy or approval.",
+        "es": "¡wepa!",
+        "sources": [
+          "storylearning_pr",
+          "wiki_slang"
+        ],
+        "status": "checked"
+      }
+    ],
+    "time": [
+      {
+        "id": "thanksgiving_start",
+        "text": "For many families Christmas begins the day after Thanksgiving.",
+        "sources": [
+          "metro_navidad"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "island_time",
+        "text": "Social plans often start later than the stated time; appointments and school do not.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "parrandas",
+        "text": "In a 'parranda' or 'asalto navideño' a group of friends goes from house to house singing aguinaldos with pandereta, güiro and cuatro; the hosts give food and drink, and the party moves on.",
+        "es": "parranda · asalto",
+        "sources": [
+          "primerahora_navidad",
+          "discoverpr_navidad"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "pasteles_family",
+        "text": "Families gather to make pasteles together - dough of green banana or yuca wrapped in plantain leaves - and share them with friends and neighbours.",
+        "es": "hacer pasteles",
+        "sources": [
+          "primerahora_navidad"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "corillo",
+        "text": "Your group of friends is your 'corillo'; to hang out is 'janguear'.",
+        "es": "el corillo · janguear",
+        "sources": [
+          "storylearning_pr",
+          "wiki_slang"
+        ],
+        "status": "checked"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "teachers_first",
+        "text": "Teachers report a few days before pupils start in August.",
+        "sources": [
+          "primerahora_calendario"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "calendar_portal",
+        "text": "The Education Department publishes the official calendar each summer, with commemorative dates - check it before planning trips.",
+        "sources": [
+          "de_calendario"
+        ],
+        "status": "checked"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "christmas_table",
+        "text": "The Christmas table: lechón asado (roast pork), arroz con gandules, pasteles, and desserts like tembleque, arroz con dulce and majarete.",
+        "es": "lechón · arroz con gandules · tembleque",
+        "sources": [
+          "primerahora_navidad"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "coquito",
+        "text": "Coquito, a coconut eggnog, is the Christmas drink many families make and give as gifts.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "guagua",
+        "text": "A bus is a 'guagua'.",
+        "es": "guagua",
+        "sources": [
+          "storylearning_pr",
+          "wiki_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "chavos",
+        "text": "Money is 'chavos' (in Mexico the same word means young people).",
+        "es": "chavos",
+        "sources": [
+          "storylearning_pr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "bilingual",
+        "text": "Spanish is the everyday language, with many English words mixed in.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "janguear",
+        "text": "'Janguear' - to hang out, from English.",
+        "es": "janguear",
+        "sources": [
+          "storylearning_pr",
+          "wiki_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "boricua",
+        "text": "People from Puerto Rico call themselves 'boricuas', from Borikén, the Taíno name of the island.",
+        "es": "boricua",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "parranda_surprise",
+        "text": "A parranda arriving at your door: hosts are expected to offer food and drink.",
+        "sources": [
+          "primerahora_navidad",
+          "discoverpr_navidad"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "two_holiday_sets",
+        "text": "Two sets of holidays - US federal and Puerto Rican.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "reyes_grass",
+        "text": "On the night of 5 January children put grass for the Kings' camels in shoeboxes; many towns hold Three Kings parades.",
+        "es": "la caja de Reyes",
+        "sources": [
+          "primerahora_navidad"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "santos",
+        "text": "Artisans carve wooden 'santos' figures, part of the Three Kings tradition.",
+        "es": "santos de palo",
+        "sources": [
+          "primerahora_navidad"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "nacimiento",
+        "text": "In the family nativity scene the baby Jesus is placed only on 25 December.",
+        "es": "el nacimiento",
+        "sources": [
+          "primerahora_navidad"
+        ],
+        "status": "checked"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "first_parranda",
+      "label": "Your first parranda",
+      "words": [
+        "parranda",
+        "asalto",
+        "aguinaldo",
+        "aguinaldos",
+        "trulla"
+      ]
+    },
+    {
+      "id": "reyes",
+      "label": "Three Kings: grass in the shoebox",
+      "words": [
+        "reyes",
+        "6 de enero",
+        "caja de zapatos",
+        "camellos",
+        "yerba"
+      ]
+    },
+    {
+      "id": "sanse",
+      "label": "La SanSe",
+      "words": [
+        "san sebastián",
+        "san sebastian",
+        "sanse",
+        "viejo san juan"
+      ]
+    },
+    {
+      "id": "pasteles",
+      "label": "Making pasteles together",
+      "words": [
+        "pasteles",
+        "lechón",
+        "lechon",
+        "arroz con gandules",
+        "coquito"
+      ]
+    },
+    {
+      "id": "school_start",
+      "label": "The school year starts in August",
+      "words": [
+        "año escolar",
+        "inicio de clases",
+        "uniforme",
+        "agosto"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor",
+        "corillo"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,283 @@
+{
+  "country": "equatorial_guinea",
+  "name": "Guinea Ecuatorial",
+  "timezone": "Africa/Malabo",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in Equatorial Guinea is. No stereotypes, no ethnic labels.",
+    "Sourced material on daily life here is scarce: this pack is deliberately short. When unsure, say so honestly and suggest asking neighbours, the school or the parish. Stay out of politics.",
+    "The country has an island region (Bioko, with Malabo) and a mainland region (Río Muni, with Bata) with different climates and customs - ask where the family lives."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in Equatorial Guinea (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Equatorial_Guinea"
+    },
+    "wiki_culture": {
+      "title": "Culture of Equatorial Guinea (Wikipedia; tagged as needing citations)",
+      "url": "https://en.wikipedia.org/wiki/Culture_of_Equatorial_Guinea"
+    },
+    "wiki_spanish_gq": {
+      "title": "Equatoguinean Spanish (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Equatoguinean_Spanish"
+    },
+    "ruiz_martinez": {
+      "title": "Ana María Ruiz Martínez, el español en Guinea Ecuatorial (Ministerio de Educación de España, 2004)",
+      "url": "https://educacionfpydeportes.gob.es/dam/jcr:ce3075b9-5b45-450f-8ac0-d96726637658/2004-esp-09-70ruiz-martinez-pdf.pdf"
+    },
+    "bestdate_malabo": {
+      "title": "Mejor época para visitar Malabo: clima (BestDateWeather)",
+      "url": "https://bestdateweather.com/es/mejor-epoca-malabo"
+    },
+    "weatherspark_gq": {
+      "title": "Climate and average weather year round in Equatorial Guinea (WeatherSpark)",
+      "url": "https://weatherspark.com/countries/GQ"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "malabo_rain",
+        "text": "In Malabo (Bioko island) the wetter season runs roughly April to November and December to March is relatively drier; rainfall is heavy, around 2,000 mm a year.",
+        "es": "temporada de lluvias",
+        "sources": [
+          "bestdate_malabo"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "bata_rain",
+        "text": "On the mainland around Bata the rainiest months are October and November and the driest July and August.",
+        "es": "Bata",
+        "sources": [
+          "weatherspark_gq"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "balele_christmas",
+        "text": "The balélé dance is performed on the coast through the year, and on Bioko especially around Christmas.",
+        "es": "el balélé",
+        "sources": [
+          "wiki_culture"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "school_year",
+        "text": "The school year follows a September/October to June/July rhythm, as in Spain - confirm with the school.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "list",
+        "text": "Public holidays: 1 January, Good Friday (March or April - moves every year), 1 May, 5 June, Corpus Christi (May or June), 3 August (Freedom Day), 15 August (Constitution Day), 12 October (Independence Day), 8 December (Immaculate Conception), 25 December.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "languages",
+        "text": "Spanish is an official language (with French and Portuguese); many families also speak a local Bantu language at home - Fang is the most widely spoken native language, and Bubi is the other one most used.",
+        "es": "lenguas",
+        "sources": [
+          "wiki_culture",
+          "ruiz_martinez"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "spanish_variety",
+        "text": "Equatoguinean Spanish has its own sounds and words from contact with local languages - listen and ask; it is a variety of Spanish in its own right.",
+        "es": "español ecuatoguineano",
+        "sources": [
+          "ruiz_martinez",
+          "wiki_spanish_gq"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "greet_elders",
+        "text": "Greeting elders first and with respect is expected.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "time": [
+      {
+        "id": "rain_plans",
+        "text": "Heavy rain shapes daily plans in the wet months - keep umbrellas and spare clothes for children.",
+        "sources": [
+          "bestdate_malabo",
+          "weatherspark_gq"
+        ],
+        "status": "checked"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "faith",
+        "text": "Most people are Christian, mostly Catholic, often alongside traditional beliefs; parish life is a natural place to meet neighbours.",
+        "es": "la parroquia",
+        "sources": [
+          "wiki_culture"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "extended_family",
+        "text": "Extended family plays a big role in daily life and celebrations.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "spanish_school",
+        "text": "Teaching is in Spanish, so a Spanish-speaking child can follow school from the start - while classmates may speak another language at home.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "food_unknown",
+        "text": "Fish, plantain, cassava (yuca) and malanga are everyday staples; dishes often use palm oil and peanuts.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "island_mainland",
+        "text": "Spanish and Catholic influence is stronger on Bioko island than on the mainland.",
+        "sources": [
+          "wiki_culture"
+        ],
+        "status": "checked"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "loanwords",
+        "text": "Everyday Spanish here includes words borrowed from local languages and from Pichi - ask what new words mean.",
+        "es": "pichi",
+        "sources": [
+          "wiki_spanish_gq",
+          "ruiz_martinez"
+        ],
+        "status": "checked"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "rain",
+        "text": "Long, very wet rainy seasons.",
+        "sources": [
+          "bestdate_malabo"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "two_languages",
+        "text": "Conversations that move between Spanish and a local language, and a Spanish with its own accent and words.",
+        "sources": [
+          "ruiz_martinez",
+          "wiki_spanish_gq"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "mvet",
+        "text": "The mvet, a stringed instrument with up to fifteen strings, is central to Fang music; much traditional music is call-and-response with a chorus and drums.",
+        "es": "el mvet",
+        "sources": [
+          "wiki_culture"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "abira",
+        "text": "The 'abira' is one of the best-known traditional celebrations, believed to cleanse the community of evil.",
+        "es": "abira",
+        "sources": [
+          "wiki_culture"
+        ],
+        "status": "checked"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "balele",
+      "label": "The balélé at Christmas",
+      "words": [
+        "balélé",
+        "balele",
+        "navidad",
+        "christmas"
+      ]
+    },
+    {
+      "id": "independence",
+      "label": "Independence Day, 12 October",
+      "words": [
+        "12 de octubre",
+        "independencia"
+      ]
+    },
+    {
+      "id": "rainy_season",
+      "label": "Your first rainy season",
+      "words": [
+        "temporada de lluvias",
+        "lluvia",
+        "rainy season",
+        "tormenta"
+      ]
+    },
+    {
+      "id": "parish",
+      "label": "Meeting people at the parish",
+      "words": [
+        "parroquia",
+        "misa",
+        "iglesia",
+        "church"
+      ]
+    },
+    {
+      "id": "local_language",
+      "label": "Learning a few words of Fang or Bubi",
+      "words": [
+        "fang",
+        "bubi",
+        "pichi",
+        "lengua local"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor"
+      ]
+    }
+  ]
+}
