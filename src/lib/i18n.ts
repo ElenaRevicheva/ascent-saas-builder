@@ -24,8 +24,11 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'en', // default language
+    // 8 Nov 2026: lng 'en' was forced here, so a family that chose Русский lost it on every reload. Now the choice
+    // saved in this browser wins; anyone who never chose still gets English, exactly as before.
     fallbackLng: 'en',
+    supportedLngs: ['en', 'es', 'ru'],
+    nonExplicitSupportedLngs: true,
     debug: false,
 
     interpolation: {
@@ -33,7 +36,8 @@ i18n
     },
 
     detection: {
-      order: ['localStorage', 'navigator', 'htmlTag'],
+      order: ['localStorage'],
+      lookupLocalStorage: 'espaluz-lang', // fresh key: the old one also held auto-detected browser languages
       caches: ['localStorage'],
     }
   });

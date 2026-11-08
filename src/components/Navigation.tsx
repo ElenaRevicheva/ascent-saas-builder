@@ -107,7 +107,7 @@ const Navigation = () => {
             {t("nav.about")}
           </a>
           <Link to="/classroom" className="text-muted-foreground hover:text-foreground transition-colors">
-            🦥🐒 Kids classroom
+            {t("nav.kids")}
           </Link>
         </div>
 
@@ -115,7 +115,7 @@ const Navigation = () => {
           <LanguageSwitcher />
           {user ? (
             <Link to="/dashboard">
-              <Button variant="hero">Mi EspaLuz / My EspaLuz</Button>
+              <Button variant="hero">{t("nav.myEspaluz")}</Button>
             </Link>
           ) : (
             <>
@@ -139,7 +139,7 @@ const Navigation = () => {
         <div id="menu-phone" className="lg:hidden max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-border bg-card px-3 pb-4 pt-1 shadow-xl">
           <MenuTree onPick={pick} />
           <div className="my-2 border-t border-border" role="separator" />
-          <Link to={user ? "/dashboard" : "/auth"} onClick={pick} className="block rounded-xl px-3 py-3 font-semibold text-primary hover:bg-primary/5">{user ? "Mi EspaLuz / My EspaLuz" : t("nav.signIn")}</Link>
+          <Link to={user ? "/dashboard" : "/auth"} onClick={pick} className="block rounded-xl px-3 py-3 font-semibold text-primary hover:bg-primary/5">{user ? t("nav.myEspaluz") : t("nav.signIn")}</Link>
         </div>
       )}
     </nav>

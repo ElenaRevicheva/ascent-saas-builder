@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import Pricing from "@/components/Pricing";
@@ -40,6 +40,7 @@ import whatsappQr from '@/assets/whatsapp-qr-code.jpg';
 import whatsappQrFace from '@/assets/whatsapp-qr-face.gif';
 
 function FeedbackForm() {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     email: '',
     message: ''
@@ -94,17 +95,17 @@ function FeedbackForm() {
       onSubmit={handleSubmit}
       className="max-w-lg mx-auto bg-white rounded-xl shadow p-6 mt-12 flex flex-col gap-4"
     >
-      <h3 className="text-2xl font-bold text-purple-700 mb-2">We value your feedback!</h3>
+      <h3 className="text-2xl font-bold text-purple-700 mb-2">{t("lp.fbTitle")}</h3>
       
       {submitStatus === 'success' && (
         <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded">
-          Thank you! Your feedback has been submitted successfully!
+          {t("lp.fbThanks")}
         </div>
       )}
       
       {submitStatus === 'error' && (
         <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-          Something went wrong. Please try again.
+          {t("lp.fbError")}
         </div>
       )}
       
@@ -113,14 +114,14 @@ function FeedbackForm() {
         name="email"
         value={formData.email}
         onChange={handleChange}
-        placeholder="Your email (optional)"
+        placeholder={t("lp.fbEmail")}
         className="border rounded px-3 py-2"
       />
       <textarea
         name="message"
         value={formData.message}
         onChange={handleChange}
-        placeholder="Your feedback..."
+        placeholder={t("lp.fbMessage")}
         className="border rounded px-3 py-2 min-h-[100px]"
         required
       />
@@ -129,7 +130,7 @@ function FeedbackForm() {
         disabled={isSubmitting}
         className="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-6 py-2 font-semibold disabled:opacity-50"
       >
-        {isSubmitting ? 'Sending...' : 'Send Feedback'}
+        {isSubmitting ? t("lp.fbSending") : t("lp.fbSend")}
       </button>
     </form>
   );
@@ -168,7 +169,7 @@ const Index = () => {
         </div>
         <div className="-mt-3 mb-6"><TalkingHello variant="landing" /></div>
         {/* Round 4 message, approved by Elena 4 Nov 2026 (cto-aipa docs/espaluz/MESSAGE_DRAFT_2026-11-04.md).
-            Replaced: "Emotionally Intelligent Language Coach" headline, AI-tutor cards, "confident in a couple of weeks",
+            Replaced: "{t("lp.s1")} Language Coach" headline, AI-tutor cards, "confident in a couple of weeks",
             duplicate demo/Telegram buttons. One offer, palette tokens only. */}
         <p className="mx-auto mb-4 max-w-3xl px-4 text-base font-medium leading-relaxed text-primary md:text-lg">{t("hero4.eyebrow")}</p>
         <h1 className="mx-auto mb-5 max-w-4xl px-4 text-3xl font-extrabold leading-tight text-foreground sm:text-4xl md:text-5xl">
@@ -230,8 +231,8 @@ const Index = () => {
             <div className="bg-gradient-to-br from-green-50/80 via-white/80 to-emerald-50/80 backdrop-blur-sm rounded-2xl p-5 border border-green-200">
           <div className="text-center space-y-6">
             <div className="space-y-2">
-              <h3 className="text-2xl md:text-3xl font-bold text-green-600">📱 EspaLuz WhatsApp is Now LIVE!</h3>
-              <p className="text-lg text-green-700 font-medium">Start your Spanish learning journey instantly!</p>
+              <h3 className="text-2xl md:text-3xl font-bold text-green-600">{t("lp.waTitle")}</h3>
+              <p className="text-lg text-green-700 font-medium">{t("lp.waSub")}</p>
             </div>
             
             <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
@@ -240,7 +241,7 @@ const Index = () => {
                   <HeroClip src={heroWhatsapp} poster={heroWhatsappPoster} label="EspaLuz on WhatsApp" className="block h-full w-full object-cover" />
                 </div>
                 <p className="text-base text-gray-700 font-medium max-w-sm text-center">
-                  Scan the QR code or click the button to start chatting with EspaLuz on WhatsApp!
+                  {t("lp.waScanText")}
                 </p>
                 <a 
                   href="https://bit.ly/EspaLuz" 
@@ -249,7 +250,7 @@ const Index = () => {
                 >
                   <Button size="lg" className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
                     <MessageSquare className="mr-3 h-5 w-5" />
-                    💬 Start WhatsApp Chat
+                    {t("lp.waButton")}
                   </Button>
                 </a>
               </div>
@@ -271,7 +272,7 @@ const Index = () => {
                     </span>
                   </span>
                 </div>
-                <p className="text-sm text-green-600 font-semibold bg-green-50 px-4 py-2 rounded-full border border-green-200">✨ Scan to chat instantly! ✨</p>
+                <p className="text-sm text-green-600 font-semibold bg-green-50 px-4 py-2 rounded-full border border-green-200">{t("lp.waScan")}</p>
               </div>
             </div>
 
@@ -283,7 +284,7 @@ const Index = () => {
         <div className="bg-gradient-to-br from-blue-50/80 via-white/80 to-purple-50/80 backdrop-blur-sm rounded-2xl p-5 border border-blue-200">
           <div className="flex flex-col items-center space-y-6">
             <div className="space-y-2">
-              <h3 className="text-2xl md:text-3xl font-bold text-blue-600">🚀 Invite your family!</h3>
+              <h3 className="text-2xl md:text-3xl font-bold text-blue-600">{t("lp.tgTitle")}</h3>
             </div>
             
             <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
@@ -310,11 +311,11 @@ const Index = () => {
             </div>
             
             <div className="space-y-4">
-              <p className="text-sm text-blue-600 font-semibold bg-blue-50 px-4 py-2 rounded-full border border-blue-200">Scan to learn on the go!</p>
+              <p className="text-sm text-blue-600 font-semibold bg-blue-50 px-4 py-2 rounded-full border border-blue-200">{t("lp.tgScan")}</p>
               <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer">
                 <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
                   <MessageSquare className="mr-3 h-5 w-5" />
-                  🚀 Join Telegram Family
+                  {t("lp.tgButton")}
                 </Button>
               </a>
             </div>
@@ -325,43 +326,42 @@ const Index = () => {
             <Item group="start" title={<h3 className="text-lg font-semibold text-foreground">{t("tree.demo")}</h3>}>
               
         <div className="text-center mb-8">
-          <Badge className="mb-3 bg-gradient-primary text-white">20 Free Messages</Badge>
+          <Badge className="mb-3 bg-gradient-primary text-white">{t("lp.demoBadge")}</Badge>
           <h2 className="text-3xl font-bold mb-3 text-primary">
-            Try EspaLuz Risk-Free!
+            {t("lp.demoTitle")}
           </h2>
           <p className="text-base text-foreground max-w-3xl mx-auto mb-6">
-            Experience our emotionally intelligent bilingual AI coach with <strong>no signup required</strong>. 
-            Chat up to 20 messages to see how EspaLuz helps your family learn naturally.
+            <Trans i18nKey="lp.demoIntro" components={{ b: <strong /> }} />
           </p>
         </div>
         
         <div className="grid md:grid-cols-2 gap-8 items-center max-w-6xl mx-auto">
           <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-purple-700 mb-6">Demo Experience</h3>
+            <h3 className="text-2xl font-bold text-purple-700 mb-6">{t("lp.demoH")}</h3>
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
                   <span className="text-green-600 font-bold">✓</span>
                 </div>
-                <span className="text-lg">No signup required - start instantly</span>
+                <span className="text-lg">{t("lp.demo1")}</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
                   <span className="text-green-600 font-bold">✓</span>
                 </div>
-                <span className="text-lg">Experience bilingual conversations in Spanish/English</span>
+                <span className="text-lg">{t("lp.demo2")}</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
                   <span className="text-green-600 font-bold">✓</span>
                 </div>
-                <span className="text-lg">See how EspaLuz adapts to your family's needs</span>
+                <span className="text-lg">{t("lp.demo3")}</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
                   <span className="text-green-600 font-bold">✓</span>
                 </div>
-                <span className="text-lg">Up to 20 demo messages to explore</span>
+                <span className="text-lg">{t("lp.demo4")}</span>
               </div>
             </div>
             
@@ -369,16 +369,16 @@ const Index = () => {
               <div className="flex items-center gap-3 mb-3">
                 <Crown className="h-6 w-6 text-orange-600" />
                 <span className="text-lg font-bold text-orange-700">
-                  Subscribe to Keep Everything Forever!
+                  {t("lp.keepTitle")}
                 </span>
               </div>
               <ul className="text-sm space-y-2 text-gray-700">
-                <li>🔄 <strong>All your demo conversations saved permanently</strong></li>
-                <li>🎯 Unlimited conversations with no message limits</li>
-                <li>🎤 Voice messages and AI voice generation</li>
-                <li>🎬 Personalized avatar videos for kids</li>
-                <li>👨‍👩‍👧‍👦 Family member profiles and progress tracking</li>
-                <li>📊 Learning analytics and personalized lessons</li>
+                <li>🔄 <strong>{t("lp.keep1")}</strong></li>
+                <li>{t("lp.keep2")}</li>
+                <li>{t("lp.keep3")}</li>
+                <li>{t("lp.keep4")}</li>
+                <li>{t("lp.keep5")}</li>
+                <li>{t("lp.keep6")}</li>
               </ul>
             </div>
           </div>
@@ -387,30 +387,30 @@ const Index = () => {
             <CardHeader className="text-center pb-2">
               <Badge className="mb-3 bg-purple-500 text-white">
                 <Star className="h-3 w-3 mr-1" />
-                Live Preview
+                {t("lp.livePreview")}
               </Badge>
-              <CardTitle className="text-2xl text-purple-700">What You'll Experience</CardTitle>
+              <CardTitle className="text-2xl text-purple-700">{t("lp.expTitle")}</CardTitle>
               <CardDescription className="text-gray-600">
-                See EspaLuz in action - emotionally intelligent and bilingual
+                {t("lp.expSub")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-3">
                 <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
                   <MessageSquare className="h-5 w-5 text-purple-600" />
-                  <span className="text-sm">Natural bilingual conversations</span>
+                  <span className="text-sm">{t("lp.exp1")}</span>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
                   <Heart className="h-5 w-5 text-blue-600" />
-                  <span className="text-sm">Emotionally intelligent responses</span>
+                  <span className="text-sm">{t("lp.exp2")}</span>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
                   <Users className="h-5 w-5 text-green-600" />
-                  <span className="text-sm">Family-friendly coaching style</span>
+                  <span className="text-sm">{t("lp.exp3")}</span>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
                   <Globe className="h-5 w-5 text-orange-600" />
-                  <span className="text-sm">Spanish/English cultural adaptation</span>
+                  <span className="text-sm">{t("lp.exp4")}</span>
                 </div>
               </div>
               
@@ -419,27 +419,27 @@ const Index = () => {
                 className="w-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-semibold py-3"
               >
                 <Zap className="mr-2 h-4 w-4" />
-                Start Demo Now - It's FREE!
+                {t("lp.demoStart")}
               </Button>
               
               <p className="text-xs text-center text-gray-500 mt-2">
-                No email required • Instant access • 20 messages to explore
+                {t("lp.demoNote")}
               </p>
             </CardContent>
           </Card>
         </div>
       
             </Item>
-            <Item group="start" title={<h3 className="text-lg font-semibold text-foreground">Try EspaLuz Today</h3>}>
+            <Item group="start" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.todayTitle")}</h3>}>
               
             <Card className="border-border shadow-card">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5" />
-                Try EspaLuz Today
+                {t("lp.todayTitle")}
               </CardTitle>
               <CardDescription>
-                Experience how she understands your family's unique situation
+                {t("lp.todaySub")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -451,17 +451,17 @@ const Index = () => {
                     </div>
                     <div>
                       <p className="font-medium text-sm">Telegram</p>
-                      <p className="text-xs text-muted-foreground">Live & Ready</p>
+                      <p className="text-xs text-muted-foreground">{t("lp.liveReady")}</p>
                     </div>
                   </div>
-                  <Badge variant="default">Live</Badge>
+                  <Badge variant="default">{t("lp.live")}</Badge>
                 </div>
               </div>
 
               {/* Demo Video Section */}
               <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-4 border border-blue-200">
                 <h4 className="text-lg font-semibold text-blue-700 mb-4 flex items-center gap-2">
-                  🎬 Who is EspaLuz?
+                  {t("lp.whoTitle")}
                 </h4>
                 
                 {/* Two Video Grid */}
@@ -478,12 +478,12 @@ const Index = () => {
                       >
                         <source src="/videos/demo.mp4" type="video/mp4" />
                         <p className="flex items-center justify-center h-40 bg-gray-100 text-gray-600 text-center text-sm">
-                          🎬 Video loading...
+                          {t("lp.videoLoading")}
                         </p>
                       </video>
                     </div>
                     <p className="text-xs text-blue-600 text-center font-medium">
-                      Meet Your AI Tutor
+                      {t("lp.video1")}
                     </p>
                   </div>
                   
@@ -499,25 +499,25 @@ const Index = () => {
                       >
                         <source src="/videos/demo1.mp4" type="video/mp4" />
                         <p className="flex items-center justify-center h-40 bg-gray-100 text-gray-600 text-center text-sm">
-                          🎬 Video loading...
+                          {t("lp.videoLoading")}
                         </p>
                       </video>
                     </div>
                     <p className="text-xs text-blue-600 text-center font-medium">
-                      See Family Learning
+                      {t("lp.video2")}
                     </p>
                   </div>
                 </div>
                 
                 <p className="text-xs text-blue-600 text-center">
-                  Watch how families use EspaLuz for real-time Spanish learning
+                  {t("lp.videoNote")}
                 </p>
               </div>
 
               <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer" className="w-full">
                 <Button className="w-full" variant="hero">
                   <MessageSquare className="mr-2 h-4 w-4" />
-                  Open Telegram Chat
+                  {t("lp.openTg")}
                 </Button>
               </a>
 
@@ -530,22 +530,22 @@ const Index = () => {
                     </div>
                     <div>
                       <p className="font-medium text-sm text-green-700">WhatsApp</p>
-                      <p className="text-xs text-green-600">Live & Ready</p>
+                      <p className="text-xs text-green-600">{t("lp.liveReady")}</p>
                     </div>
                   </div>
-                  <Badge variant="default" className="bg-green-100 text-green-700 border-green-300">Live</Badge>
+                  <Badge variant="default" className="bg-green-100 text-green-700 border-green-300">{t("lp.live")}</Badge>
                 </div>
 
                 <a href="https://wa.me/50766623757" target="_blank" rel="noopener noreferrer" className="w-full">
                   <Button className="w-full bg-green-500 hover:bg-green-600 text-white">
                     <MessageSquare className="mr-2 h-4 w-4" />
-                    Open WhatsApp Chat
+                    {t("lp.openWa")}
                   </Button>
                 </a>
 
                 <div className="text-center">
                   <p className="text-sm font-medium text-green-700 bg-green-50 py-2 px-4 rounded-lg border border-green-200">
-                    ✨ 14 days free · then $11/month
+                    {t("lp.priceLine")}
                   </p>
                 </div>
               </div>
@@ -556,33 +556,33 @@ const Index = () => {
             <Item group="start" title={<h3 className="text-lg font-semibold text-foreground">{t("tree.ctaPart")}</h3>}>
               <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-8 shadow-md border-2 border-purple-200 text-center">
             <h3 className="text-2xl font-bold text-purple-700 mb-4">
-              From 🏥 pharmacies to 🏛️ immigration offices... Learn Spanish 🇪🇸 and improve your English 🇬🇧 right where Life happens! 🌍💫
+              {t("lp.holaTitle")}
             </h3>
             <div className="space-y-4">
               <p className="text-xl font-semibold text-gray-700">
-                👉 Ready to start your learning journey on the go?
+                {t("lp.holaReady")}
               </p>
               <p className="text-lg text-gray-700">
-                📲 Just text: <span className="font-bold text-green-600">WhatsApp +507-6662-3757</span> or click the link to Telegram 👉 
+                {t("lp.holaText1")} <span className="font-bold text-green-600">WhatsApp +507-6662-3757</span> {t("lp.holaText2")} 
                 <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-bold ml-1">
                   https://t.me/EspaLuzFamily_bot
                 </a>
               </p>
               <p className="text-xl font-bold text-orange-600">
-                Say "¡Hola!" and watch the magic begin ✨🌟
+                {t("lp.holaSay")}
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
                 <a href="https://api.whatsapp.com/send/?phone=50766623757" target="_blank" rel="noopener noreferrer">
                   <Button size="lg" className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full">
                     <MessageSquare className="mr-2 h-4 w-4" />
-                    💬 Start WhatsApp Chat
+                    {t("lp.waButton")}
                   </Button>
                 </a>
                 <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer">
                   <Button size="lg" variant="outline" className="border-blue-500 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-full">
                     <MessageSquare className="mr-2 h-4 w-4" />
-                    🚀 Join Telegram
+                    {t("lp.joinTg")}
                   </Button>
                 </a>
               </div>
@@ -597,16 +597,14 @@ const Index = () => {
       <section id="features" className="container mx-auto scroll-mt-20 px-4 py-20 bg-white/30 backdrop-blur-[2px] border border-white/50 rounded-3xl shadow-[0_24px_60px_-30px_rgba(91,63,209,.35)]">
         <div className="text-center mb-16">
           <Badge variant="outline" className="mb-6 text-lg px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0">
-            Living Proof of Concept
+            {t("lp.featBadge")}
           </Badge>
           <h2 className="text-4xl md:text-5xl font-extrabold text-foreground mb-6 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-            EspaLuz - AI Family Tutor
+            {t("lp.featTitle")}
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full mb-6"></div>
           <p className="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed font-medium">
-            Your bilingual AI family tutor — <span className="font-bold text-blue-600">emotionally intelligent</span>, 
-            <span className="font-bold text-purple-600"> culturally aware</span>, and ready to help expat families thrive in Spanish-speaking countries, 
-            Spanish speakers upgrading their English, and travelers exploring new cultures.
+            <Trans i18nKey="lp.featLede" components={{ b1: <span className="font-bold text-blue-600" />, b2: <span className="font-bold text-purple-600" /> }} />
           </p>
         </div>
 
@@ -618,11 +616,11 @@ const Index = () => {
               <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <Heart className="h-8 w-8 text-white" />
               </div>
-              <CardTitle className="text-xl font-bold text-red-600 mb-2">Emotionally Intelligent</CardTitle>
+              <CardTitle className="text-xl font-bold text-red-600 mb-2">{t("lp.s1")}</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-700 leading-relaxed font-medium">
-                Understands emotional challenges of cultural adaptation and family transitions
+                {t("lp.s1d")}
               </p>
             </CardContent>
           </Card>
@@ -632,11 +630,11 @@ const Index = () => {
               <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <Globe className="h-8 w-8 text-white" />
               </div>
-              <CardTitle className="text-xl font-bold text-blue-600 mb-2">Bilingual Support</CardTitle>
+              <CardTitle className="text-xl font-bold text-blue-600 mb-2">{t("lp.s2")}</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-700 leading-relaxed font-medium">
-                Fluent in English, Spanish, and Russian with instant translation
+                {t("lp.s2d")}
               </p>
             </CardContent>
           </Card>
@@ -646,11 +644,11 @@ const Index = () => {
               <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <Users className="h-8 w-8 text-white" />
               </div>
-              <CardTitle className="text-xl font-bold text-green-600 mb-2">Family-Focused</CardTitle>
+              <CardTitle className="text-xl font-bold text-green-600 mb-2">{t("lp.s3")}</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-700 leading-relaxed font-medium">
-                Personalized support for both children and adults navigating new environments
+                {t("lp.s3d")}
               </p>
             </CardContent>
           </Card>
@@ -660,17 +658,17 @@ const Index = () => {
               <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <MessageSquare className="h-8 w-8 text-white" />
               </div>
-              <CardTitle className="text-xl font-bold text-purple-600 mb-2">Real-time Chat</CardTitle>
+              <CardTitle className="text-xl font-bold text-purple-600 mb-2">{t("lp.s4")}</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-700 leading-relaxed font-medium">
-                Voice, text, and image support with avatar videos for children
+                {t("lp.s4d")}
               </p>
             </CardContent>
           </Card>
         </div>
           </Part>
-          <Part tag={t("tree.featTag")} name="Current Functionalities" count={t("tree.count8")}>
+          <Part tag={t("tree.featTag")} name={t("lp.funcTitle")} count={t("tree.count8")}>
             <Card className="border-border shadow-magical bg-gradient-to-br from-white to-purple-50/30 overflow-hidden relative">
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-purple-100/50 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
             <CardHeader className="relative">
@@ -678,19 +676,19 @@ const Index = () => {
                 <div className="p-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg shadow-lg">
                   <Bot className="h-6 w-6 text-white" />
                 </div>
-                Current Functionalities
+                {t("lp.funcTitle")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 relative">
               {[
-                { text: "Accepts voice, text, and photos in English, Spanish, and Russian", icon: "🎤", gradient: "from-green-500 to-emerald-500" },
-                { text: "Instantly translates messages into both Spanish and English", icon: "⚡", gradient: "from-yellow-500 to-orange-500" },
-                { text: "Generates bilingual replies with rich, emotional context", icon: "💬", gradient: "from-blue-500 to-cyan-500" },
-                { text: "Creates short avatar videos in Spanish and English for children", icon: "🎬", gradient: "from-purple-500 to-pink-500" },
-                { text: "Sends voice messages with AI voice synthesis", icon: "🔊", gradient: "from-indigo-500 to-purple-500" },
-                { text: "Translates text inside images (OCR) using GPT-4o vision", icon: "👁️", gradient: "from-rose-500 to-red-500" },
-                { text: "Maintains emotional memory throughout conversations", icon: "🧠", gradient: "from-teal-500 to-cyan-500" },
-                { text: "Adapts tone based on detected emotions and personal profiles", icon: "❤️", gradient: "from-pink-500 to-rose-500" }
+                { text: t("lp.f1"), icon: "🎤", gradient: "from-green-500 to-emerald-500" },
+                { text: t("lp.f2"), icon: "⚡", gradient: "from-yellow-500 to-orange-500" },
+                { text: t("lp.f3"), icon: "💬", gradient: "from-blue-500 to-cyan-500" },
+                { text: t("lp.f4"), icon: "🎬", gradient: "from-purple-500 to-pink-500" },
+                { text: t("lp.f5"), icon: "🔊", gradient: "from-indigo-500 to-purple-500" },
+                { text: t("lp.f6"), icon: "👁️", gradient: "from-rose-500 to-red-500" },
+                { text: t("lp.f7"), icon: "🧠", gradient: "from-teal-500 to-cyan-500" },
+                { text: t("lp.f8"), icon: "❤️", gradient: "from-pink-500 to-rose-500" }
               ].map((feature, index) => (
                 <div key={index} className="group flex items-start gap-4 p-3 rounded-xl hover:bg-white/50 transition-all duration-300 hover:shadow-md">
                   <div className={`flex items-center justify-center w-10 h-10 bg-gradient-to-r ${feature.gradient} rounded-full shadow-lg group-hover:scale-110 transition-transform duration-300`}>
@@ -710,195 +708,195 @@ const Index = () => {
       <section id="life" className="container mx-auto scroll-mt-20 px-4 py-16 bg-white/30 backdrop-blur-[2px] border border-white/50 rounded-3xl shadow-[0_24px_60px_-30px_rgba(91,63,209,.35)]">
         <div className="text-center mb-8">
           <h2 className="text-4xl font-bold text-foreground mb-6">
-            🌟 EspaLuz: Your Family's Personal Spanish-English Tutor in WhatsApp or Telegram
+            {t("lp.lifeTitle")}
           </h2>
         </div>
 
         <div className="max-w-4xl mx-auto space-y-4">
           <Part tag={t("tree.lifeTag")} name={t("tree.lifePart")} count={t("tree.topics", { n: 11 })}>
-            <Item group="life" defaultOpen title={<h3 className="text-lg font-semibold text-foreground">📱✨ Send Messages Your Way, Get Learning Magic Back</h3>}>
+            <Item group="life" defaultOpen title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l1")}</h3>}>
             
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
                 <span className="text-xl">🎤💬</span>
-                <span>Talk or type naturally — in 🇬🇧 English, 🇪🇸 Spanish, or 🇷🇺 Russian — just like talking to a friend</span>
+                <span>{t("lp.l1a")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">👧🧒</span>
-                <span>Your kids can ramble, giggle, or ask questions however feels comfortable</span>
+                <span>{t("lp.l1b")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">🔊📖</span>
-                <span>Get back profound audio and text responses in Spanish and English</span>
+                <span>{t("lp.l1c")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">👩‍👩‍👦</span>
-                <span>Perfect for busy parents who want to practice while 🚗 driving or 🍳 cooking</span>
+                <span>{t("lp.l1d")}</span>
               </p>
             </div>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">📝✨ Type Anything – We Make It a Learning Moment</h3>}>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l2")}</h3>}>
             
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
                 <span className="text-xl">💡</span>
-                <span>Text us random thoughts, grocery lists 🛒, or questions about your new country 🌎</span>
+                <span>{t("lp.l2a")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">📚</span>
-                <span>Instantly see your message transformed into beautiful bilingual lessons</span>
+                <span>{t("lp.l2b")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">🏥➡️</span>
-                <span>"Where's the closest pharmacy?" becomes a cultural adventure 🎉</span>
+                <span>{t("lp.l2c")}</span>
               </p>
             </div>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">📸 Point, Snap, Learn – The World Becomes Your Classroom</h3>}>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l3")}</h3>}>
             
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
                 <span className="text-xl">🍴</span>
-                <span>Take photos of restaurant menus, 🚏 street signs, or 📒 your child's homework</span>
+                <span>{t("lp.l3a")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">🔍</span>
-                <span>Watch as we instantly translate everything and explain cultural context 🌐</span>
+                <span>{t("lp.l3b")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">🌟</span>
-                <span>Turn every family outing into a Spanish discovery adventure 🎈</span>
+                <span>{t("lp.l3c")}</span>
               </p>
             </div>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">🎭 Your Family's Emotional Learning Companion</h3>}>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l4")}</h3>}>
             
-            <h4 className="text-xl font-semibold text-pink-600 mb-3">💖 We Remember How You Feel</h4>
+            <h4 className="text-xl font-semibold text-pink-600 mb-3">{t("lp.l4h")}</h4>
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
                 <span className="text-xl">😰</span>
-                <span>Stressed about moving to a new country? We adapt with extra patience 🕊️ and encouragement ✨</span>
+                <span>{t("lp.l4a")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">👶</span>
-                <span>Kids feeling shy about speaking Spanish? We make it playful 🎲 and confidence-building 💪</span>
+                <span>{t("lp.l4b")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">🏡</span>
-                <span>Homesick? We connect your memories 🖼️ to new cultural discoveries 🎶</span>
+                <span>{t("lp.l4c")}</span>
               </p>
             </div>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">👨‍👩‍👧‍👦 Made for Real Families</h3>}>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l5")}</h3>}>
             
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
                 <span className="text-xl">🧑‍💼</span>
-                <span>Recognizes if it's Mom asking about work phrases 💼 or little Sofia practicing 🎨 colors</span>
+                <span>{t("lp.l5a")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">👵👦</span>
-                <span>Adjusts responses for grandparents, teenagers, or curious toddlers 🐣</span>
+                <span>{t("lp.l5b")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">🤝</span>
-                <span>Creates family learning moments that bring everyone together ❤️</span>
+                <span>{t("lp.l5c")}</span>
               </p>
             </div>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">🎥 Learning That Comes Alive</h3>}>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l6")}</h3>}>
             
             <p className="flex items-start gap-2 text-gray-700">
               <span className="text-xl">🎬</span>
-              <span>Personalized video lessons — every conversation creates a short, engaging avatar video 🎨 your kid will love 💛</span>
+              <span>{t("lp.l6a")}</span>
             </p>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">🗣️ Your Personal Spanish and English Coach</h3>}>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l7")}</h3>}>
             
-            <h4 className="text-xl font-semibold text-purple-600 mb-3">🌎 Your Cultural Bridge to LATAM</h4>
+            <h4 className="text-xl font-semibold text-purple-600 mb-3">{t("lp.l7h")}</h4>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">🏠 Country-Specific Wisdom</h3>}>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l8")}</h3>}>
             
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
                 <span className="text-xl">🇲🇽</span>
-                <span>Moving to Mexico? Learn about compadrazgo culture 🤝 and proper greetings 👋</span>
+                <span>{t("lp.l8a")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">🇨🇴</span>
-                <span>In Colombia? Discover regional food 🍲, transport 🚌, and family customs 🎶</span>
+                <span>{t("lp.l8b")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">🌍</span>
-                <span>Covers 20+ Spanish-speaking countries with insider knowledge 📖</span>
+                <span>{t("lp.l8c")}</span>
               </p>
             </div>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">🚗 Real-Life Survival Skills</h3>}>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l9")}</h3>}>
             
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
                 <span className="text-xl">📍</span>
-                <span>"How do I tell the taxi driver my address?"</span>
+                <span>{t("lp.l9a")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">🏫</span>
-                <span>"What's the polite way to ask for help at my child's school?"</span>
+                <span>{t("lp.l9b")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">👋</span>
-                <span>"How do I make friends with other parents in the neighborhood?"</span>
+                <span>{t("lp.l9c")}</span>
               </p>
             </div>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">✨ The Magic Happens Instantly</h3>}>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l10")}</h3>}>
             
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
                 <span className="text-xl">⚡</span>
-                <span>Zero learning curve — just scan QR for WhatsApp or Telegram 🔗 and start chatting on the go 🚀</span>
+                <span>{t("lp.l10a")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">📱</span>
-                <span>No apps to download, no passwords 🔑 to remember</span>
+                <span>{t("lp.l10b")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">🌐</span>
-                <span>Works on any phone, anywhere in the world</span>
+                <span>{t("lp.l10c")}</span>
               </p>
             </div>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">🔄 Always Getting Smarter</h3>}>
+            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l11")}</h3>}>
             
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
                 <span className="text-xl">🧠</span>
-                <span>Remembers your family's learning style 🎯 and adjusts</span>
+                <span>{t("lp.l11a")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">📈</span>
-                <span>Builds on previous conversations to deepen understanding</span>
+                <span>{t("lp.l11b")}</span>
               </p>
               <p className="flex items-start gap-2">
                 <span className="text-xl">🌟</span>
-                <span>Grows with your family as your Spanish improves 🌹</span>
+                <span>{t("lp.l11c")}</span>
               </p>
             </div>
           </Item>
           </Part>
-          <Part tag={t("tree.lifeTag")} name="🎯 Why Families Choose EspaLuz">
+          <Part tag={t("tree.lifeTag")} name={t("lp.whyTitle")}>
             
             <div className="space-y-4 text-gray-700">
               <blockquote className="border-l-4 border-orange-400 pl-4 italic">
                 <p className="flex items-start gap-2">
                   <span className="text-xl">💬</span>
-                  <span>"Finally, a Spanish tutor that understands my 4-year-old's attention span 🧸 AND helps me navigate parent-teacher conferences in Mexico City!" — Maria, expat mom</span>
+                  <span>{t("lp.q1")}</span>
                 </p>
               </blockquote>
               <blockquote className="border-l-4 border-orange-400 pl-4 italic">
                 <p className="flex items-start gap-2">
                   <span className="text-xl">💬</span>
-                  <span>"It's like having a bilingual best friend 👯‍♀️ who's also a teacher 👩‍🏫, cultural expert 🌎, and patient grandparent 👵 all in one." — Carmen, multigenerational family in Panama</span>
+                  <span>{t("lp.q2")}</span>
                 </p>
               </blockquote>
             </div>
@@ -961,7 +959,7 @@ const Index = () => {
               </Part>
             </div>
 
-<Part tag={t("tree.contactTag")} name={t("creator.connectTitle")} count="QR · PDF · Portfolio">            <aside className="space-y-6">
+<Part tag={t("tree.contactTag")} name={t("creator.connectTitle")} count={t("lp.contactCount")}>            <aside className="space-y-6">
               <div className="rounded-2xl border border-border bg-card p-6 text-center" style={{ boxShadow: "var(--shadow-card)" }}>
                 <h3 className="text-lg text-foreground">{t("creator.connectTitle")}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t("creator.connectBody")}</p>
@@ -995,17 +993,16 @@ const Index = () => {
 
         {/* 5 Nov 2026 (Elena): the AIdeazz blocks that sat under the plans belong with the creator. Moved here unchanged, closed. */}
         <div className="mx-auto mt-6 max-w-5xl space-y-4">
-          <Part tag="Our philosophy" name="AI-augmented engineering">
+          <Part tag={t("lp.philTag")} name={t("lp.philName")}>
         {/* Philosophy Section */}
         <div className="container mx-auto px-4 py-16">
           <div className="text-center mb-12">
             {/* Elena 4 Nov 2026: "turn vibe coding into AI-augmented engineering". Same four parts, modern wording,
                 palette icons, no "AI consciousness" line. */}
-            <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-primary">Our philosophy</p>
-            <h2 className="mb-3 text-3xl text-foreground md:text-4xl">AI-augmented engineering</h2>
+            <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-primary">{t("lp.philTag")}</p>
+            <h2 className="mb-3 text-3xl text-foreground md:text-4xl">{t("lp.philName")}</h2>
             <p className="mx-auto max-w-3xl text-lg leading-relaxed text-muted-foreground">
-              We build AI that understands not only what you say but how you feel, and remembers not only what you ask
-              but who you are becoming: the way your family grows and changes, on the go.
+              {t("lp.philLede")}
             </p>
           </div>
 
@@ -1013,11 +1010,11 @@ const Index = () => {
             <Card className="text-center border-border shadow-card">
               <CardHeader>
                 <Heart className="h-12 w-12 text-primary mx-auto mb-4" />
-                <CardTitle>Emotional intelligence</CardTitle>
+                <CardTitle>{t("lp.p1")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  AI that notices how you feel and answers with patience and care.
+                  {t("lp.p1d")}
                 </p>
               </CardContent>
             </Card>
@@ -1025,11 +1022,11 @@ const Index = () => {
             <Card className="text-center border-border shadow-card">
               <CardHeader>
                 <Brain className="h-12 w-12 mx-auto mb-4" style={{ color: "hsl(var(--espaluz-orange))" }} />
-                <CardTitle>Adaptive learning</CardTitle>
+                <CardTitle>{t("lp.p2")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Systems that learn your family's pace and preferences and grow alongside you.
+                  {t("lp.p2d")}
                 </p>
               </CardContent>
             </Card>
@@ -1037,11 +1034,11 @@ const Index = () => {
             <Card className="text-center border-border shadow-card">
               <CardHeader>
                 <Users className="h-12 w-12 mx-auto mb-4" style={{ color: "hsl(var(--espaluz-green))" }} />
-                <CardTitle>Human-centred design</CardTitle>
+                <CardTitle>{t("lp.p3")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Technology built around human needs, not the other way around. Simple, clear and useful every day.
+                  {t("lp.p3d")}
                 </p>
               </CardContent>
             </Card>
@@ -1049,31 +1046,30 @@ const Index = () => {
 
           <div className="mx-auto mb-16 max-w-4xl rounded-2xl p-8 text-center" style={{ background: "hsl(var(--accent) / 0.22)", border: "1px solid hsl(var(--accent))" }}>
             <h3 className="mb-4 text-2xl text-foreground md:text-3xl">
-              AI-augmented engineering → emotional intelligence → memory that lasts
+              {t("lp.philChain")}
             </h3>
             <p className="text-lg leading-relaxed text-foreground/80">
-              AI-augmented engineering is not a shortcut. It is one builder working with AI tools to design, test and
-              ship production systems: aware of how you feel, remembering your family's journey, and evolving with it.
+              {t("lp.philBody")}
             </p>
           </div>
         </div>
 
 
           </Part>
-          <Part tag="AIdeazz" name="The Birthplace of EspaLuz" count="What is AIdeazz?">
+          <Part tag="AIdeazz" name={t("lp.birthTitle")} count={t("lp.birthSub")}>
         {/* Platform Overview */}
         <div className="container mx-auto px-4 py-16">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">The Birthplace of EspaLuz</h2>
-            <h3 className="text-3xl md:text-4xl font-semibold text-primary mb-8">What is AIdeazz?</h3>
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">{t("lp.birthTitle")}</h2>
+            <h3 className="text-3xl md:text-4xl font-semibold text-primary mb-8">{t("lp.birthSub")}</h3>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto mb-8 leading-relaxed">
-              EspaLuz was born from the <a href="https://www.aideazz.xyz" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold">AIdeazz.xyz</a> ecosystem — a visionary platform being developed for crafting and evolving emotionally intelligent AI Personal Assistants (AIPAs).
+              <Trans i18nKey="lp.birthBody" components={{ a: <a href="https://www.aideazz.xyz" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold" /> }} />
             </p>
             
             {/* AIPA Demo Video */}
             <div className="mb-8">
               <div className="max-w-4xl mx-auto">
-                <h4 className="text-xl font-semibold text-foreground mb-4">See AIPA in Action</h4>
+                <h4 className="text-xl font-semibold text-foreground mb-4">{t("lp.aipaVideo")}</h4>
                 <div className="relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-r from-purple-100 to-orange-100 p-1">
                   <video 
                     controls 
@@ -1081,7 +1077,7 @@ const Index = () => {
                     poster=""
                   >
                     <source src="/videos/demo2.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
+                    {t("lp.noVideo")}
                   </video>
                 </div>
               </div>
@@ -1089,38 +1085,38 @@ const Index = () => {
             
             <div className="bg-gradient-to-r from-purple-50 to-orange-50 border border-purple-200 rounded-lg p-4 max-w-2xl mx-auto">
               <p className="text-purple-800 font-medium">
-                🚧 <strong>Currently in Development</strong> — The full AIdeazz ecosystem is being built to revolutionize how we interact with AI. Get ready for a new era of emotionally intelligent assistants! EspaLuz is our first graduate, showcasing the incredible potential of truly empathetic AI.
+                <Trans i18nKey="lp.devNote" components={{ b: <strong /> }} />
               </p>
             </div>
           </div>
 
           <div className="text-center mb-16">
             <h3 className="text-4xl md:text-5xl font-bold text-foreground mb-8">
-              Built Not to Replace People — But to Help Humans Thrive
+              {t("lp.notReplace")}
             </h3>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-              AIdeazz empowers human potential through AI that truly understands, adapts, and grows with you. This is AI for human flourishing.
+              {t("lp.notReplaceBody")}
             </p>
           </div>
         </div>
 
 
           </Part>
-          <Part tag="AIdeazz" name="Join the Revolution" count="Chat now · Invest & Partner">
+          <Part tag="AIdeazz" name={t("lp.joinTitle")} count={t("lp.joinCount")}>
         {/* CTA Section */}
         <section className="container mx-auto px-4 py-16">
           <div className="text-center">
-            <h2 className="text-4xl font-bold text-foreground mb-4">Join the Revolution</h2>
+            <h2 className="text-4xl font-bold text-foreground mb-4">{t("lp.joinTitle")}</h2>
             <div className="grid md:grid-cols-1 gap-6 max-w-2xl mx-auto">
               <Card className="border-border shadow-card">
                 <CardHeader>
-                  <CardTitle>Experience <span className="text-3xl font-extrabold bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 bg-clip-text text-transparent">AIevolution</span></CardTitle>
-                  <CardDescription>Try our live AIPA and see emotional AI in action</CardDescription>
+                  <CardTitle>{t("lp.experience")} <span className="text-3xl font-extrabold bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 bg-clip-text text-transparent">AIevolution</span></CardTitle>
+                  <CardDescription>{t("lp.tryAipa")}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Link to="/auth">
                     <Button className="w-full" variant="hero">
-                      Chat Now
+                      {t("lp.chatNow")}
                     </Button>
                   </Link>
                 </CardContent>
@@ -1131,8 +1127,8 @@ const Index = () => {
 
         <div className="text-center mt-12">
           <div className="mt-8 flex flex-col items-center gap-4">
-            <h4 className="text-xl font-bold bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 bg-clip-text text-transparent">Invest & Partner</h4>
-            <p className="text-md text-muted-foreground">Join us in building the future of emotional AI</p>
+            <h4 className="text-xl font-bold bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 bg-clip-text text-transparent">{t("lp.invest")}</h4>
+            <p className="text-md text-muted-foreground">{t("lp.investBody")}</p>
             <a
               href="https://aideazz.xyz/pitch.html"
               target="_blank"
@@ -1140,7 +1136,7 @@ const Index = () => {
               className="w-full inline-block px-8 py-3 text-lg font-bold rounded bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 text-white text-center shadow-lg hover:opacity-90 transition z-[9999]"
               style={{ pointerEvents: 'auto', position: 'relative', zIndex: 9999 }}
             >
-              Learn More
+              {t("lp.learnMore")}
             </a>
           </div>
         </div>
@@ -1163,8 +1159,8 @@ const Index = () => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-center">
               <MessageSquare className="h-5 w-5 text-orange-500" />
-              Try EspaLuz Free Trial
-              <Badge variant="outline" className="ml-2">20 Free Messages</Badge>
+              {t("lp.modalTitle")}
+              <Badge variant="outline" className="ml-2">{t("lp.demoBadge")}</Badge>
             </DialogTitle>
           </DialogHeader>
           <div className="mt-4">
@@ -1180,7 +1176,7 @@ const Index = () => {
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="text-center">
-              🚀 Subscribe to EspaLuz Family!
+              {t("lp.subTitle")}
             </DialogTitle>
           </DialogHeader>
           <SubscriptionFlow

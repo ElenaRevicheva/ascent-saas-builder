@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { X, Cookie } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const CookieConsent = () => {
+  const { t } = useTranslation();
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
@@ -33,9 +35,9 @@ export const CookieConsent = () => {
         <div className="flex items-start gap-3">
           <Cookie className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <h3 className="font-semibold text-foreground mb-2">Cookie Consent</h3>
+            <h3 className="font-semibold text-foreground mb-2">{t("cookie.title")}</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              We use cookies to enhance your experience and analyze usage. By continuing, you agree to our use of cookies.
+              {t("cookie.body")}
             </p>
             <div className="flex gap-2 mb-2">
               <Button 
@@ -43,7 +45,7 @@ export const CookieConsent = () => {
                 size="sm" 
                 className="flex-1"
               >
-                Accept
+                {t("cookie.accept")}
               </Button>
               <Button 
                 onClick={declineCookies} 
@@ -51,14 +53,14 @@ export const CookieConsent = () => {
                 size="sm"
                 className="flex-1"
               >
-                Decline
+                {t("cookie.decline")}
               </Button>
             </div>
             <Link 
               to="/privacy-policy" 
               className="text-xs text-primary hover:underline"
             >
-              Learn more about our privacy practices
+              {t("cookie.more")}
             </Link>
           </div>
           <Button

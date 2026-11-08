@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
@@ -10,6 +11,7 @@ import { buyOnPlay, playBillingAvailable, playPrice } from '@/lib/playBilling';
  * A family signs in first, so the purchase is tied to their EspaLuz account (play-verify checks it with Google).
  */
 export function PlaySubscribe({ onSuccess }: { onSuccess?: (id: string) => void }) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [ready, setReady] = useState<boolean | null>(null);
   const [price, setPrice] = useState<string | null>(null);
@@ -30,29 +32,29 @@ export function PlaySubscribe({ onSuccess }: { onSuccess?: (id: string) => void 
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">
-        <CardTitle>EspaLuz {price ? `· ${price} / mes · month` : ''}</CardTitle>
+        <CardTitle>EspaLuz {price ? `· ${price} / ${t('play.month')}` : ''}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3 text-center">
         {!user ? (
           <>
-            <p className="text-sm">Primero entra a tu cuenta. / Please sign in first.</p>
-            <Button className="w-full" onClick={() => window.location.assign('/auth')}>Entrar / Sign in</Button>
+            <p className="text-sm">{t("play.signFirst")}</p>
+            <Button className="w-full" onClick={() => window.location.assign('/auth')}>{t("play.signIn")}</Button>
           </>
         ) : ready === false ? (
           <p className="text-sm text-muted-foreground">
-            Google Play no está disponible ahora. Inténtalo más tarde. / Google Play is not available right now. Please try later.
+            {t("play.na")}
           </p>
         ) : state === 'done' ? (
-          <p className="text-sm font-semibold">¡Listo! Tu suscripción está activa. / Done! Your subscription is active.</p>
+          <p className="text-sm font-semibold">{t("play.done")}</p>
         ) : (
           <>
             <Button className="w-full" size="lg" disabled={ready !== true || state === 'buying'} onClick={buy}>
-              {state === 'buying' ? '…' : 'Suscribirme con Google Play / Subscribe with Google Play'}
+              {state === 'buying' ? '…' : t("play.buy")}
             </Button>
             {state === 'failed' && (
-              <p className="text-sm text-red-600">No se completó. No se cobró nada extra. / It did not complete. Nothing extra was charged.</p>
+              <p className="text-sm text-red-600">{t("play.fail")}</p>
             )}
-            <p className="text-xs text-muted-foreground">Cancela cuando quieras en Google Play. / Cancel any time in Google Play.</p>
+            <p className="text-xs text-muted-foreground">{t("play.cancel")}</p>
           </>
         )}
       </CardContent>
