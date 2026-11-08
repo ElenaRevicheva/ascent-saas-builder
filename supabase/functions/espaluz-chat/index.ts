@@ -4,7 +4,27 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
 import { kidsTidyReply, kidsClassDaysDone, kidsGreetedRecently } from './kids_tidy.ts';
 // 8 Nov 2026 (Elena: "what lasts is your new life"): the checked belonging pack, one file for web + WhatsApp + Telegram.
+import argentinaPack from '../_shared/belonging/argentina.json' with { type: 'json' };
+import boliviaPack from '../_shared/belonging/bolivia.json' with { type: 'json' };
+import chilePack from '../_shared/belonging/chile.json' with { type: 'json' };
+import colombiaPack from '../_shared/belonging/colombia.json' with { type: 'json' };
+import costaRicaPack from '../_shared/belonging/costa_rica.json' with { type: 'json' };
+import cubaPack from '../_shared/belonging/cuba.json' with { type: 'json' };
+import dominicanRepublicPack from '../_shared/belonging/dominican_republic.json' with { type: 'json' };
+import ecuadorPack from '../_shared/belonging/ecuador.json' with { type: 'json' };
+import elSalvadorPack from '../_shared/belonging/el_salvador.json' with { type: 'json' };
+import equatorialGuineaPack from '../_shared/belonging/equatorial_guinea.json' with { type: 'json' };
+import guatemalaPack from '../_shared/belonging/guatemala.json' with { type: 'json' };
+import hondurasPack from '../_shared/belonging/honduras.json' with { type: 'json' };
+import mexicoPack from '../_shared/belonging/mexico.json' with { type: 'json' };
+import nicaraguaPack from '../_shared/belonging/nicaragua.json' with { type: 'json' };
 import panamaPack from '../_shared/belonging/panama.json' with { type: 'json' };
+import paraguayPack from '../_shared/belonging/paraguay.json' with { type: 'json' };
+import peruPack from '../_shared/belonging/peru.json' with { type: 'json' };
+import puertoRicoPack from '../_shared/belonging/puerto_rico.json' with { type: 'json' };
+import spainPack from '../_shared/belonging/spain.json' with { type: 'json' };
+import uruguayPack from '../_shared/belonging/uruguay.json' with { type: 'json' };
+import venezuelaPack from '../_shared/belonging/venezuela.json' with { type: 'json' };
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -159,7 +179,29 @@ fee, a rule), say so plainly and say where to confirm it. Never make it up.`;
 // 8 Nov 2026: LIFE IN <country> - only the pack's CHECKED lines, so EspaLuz talks about customs, the year's rhythm and
 // local words from sourced facts, never from guesses. TWIN of belonging_block() in both bots' espaluz_enhancements.py.
 type BelongingPack = { name: string; timezone: string; sections: Record<string, { text: string; status: string }[]> };
-const BELONGING_PACKS: Record<string, BelongingPack> = { panama: panamaPack as BelongingPack };
+const BELONGING_PACKS: Record<string, BelongingPack> = {
+  argentina: argentinaPack as BelongingPack,
+  bolivia: boliviaPack as BelongingPack,
+  chile: chilePack as BelongingPack,
+  colombia: colombiaPack as BelongingPack,
+  costa_rica: costaRicaPack as BelongingPack,
+  cuba: cubaPack as BelongingPack,
+  dominican_republic: dominicanRepublicPack as BelongingPack,
+  ecuador: ecuadorPack as BelongingPack,
+  el_salvador: elSalvadorPack as BelongingPack,
+  equatorial_guinea: equatorialGuineaPack as BelongingPack,
+  guatemala: guatemalaPack as BelongingPack,
+  honduras: hondurasPack as BelongingPack,
+  mexico: mexicoPack as BelongingPack,
+  nicaragua: nicaraguaPack as BelongingPack,
+  panama: panamaPack as BelongingPack,
+  paraguay: paraguayPack as BelongingPack,
+  peru: peruPack as BelongingPack,
+  puerto_rico: puertoRicoPack as BelongingPack,
+  spain: spainPack as BelongingPack,
+  uruguay: uruguayPack as BelongingPack,
+  venezuela: venezuelaPack as BelongingPack,
+};
 function belongingBlock(country = 'panama'): string {
   const pack = BELONGING_PACKS[country];
   if (!pack) return '';
@@ -170,6 +212,31 @@ function belongingBlock(country = 'panama'): string {
     `lecture. A date that moves every year (Carnival, Holy Week, the school calendar): give the month and say to confirm this ` +
     `year's official calendar. About customs and local life, say nothing beyond these facts and what the family told you; if ` +
     `you are not sure, say so and suggest asking a neighbour or the school.\n${lines.join('\n')}\n`;
+}
+
+// 8 Nov 2026: "About your new life" - the family's own answers, the same note on web, WhatsApp and Telegram. TWIN of
+// profile_line() in both bots' espaluz_enhancements.py. Missing answers are asked later, lightly, never as a form.
+const PROFILE_ASK: [string, string][] = [
+  ['country_from', 'which country their story began in'], ['native_language', 'which language their heart speaks'],
+  ['moved_when', 'how long they have been here'], ['household', 'who is on this adventure with them'],
+  ['spanish_feel', 'how Spanish feels for them today'], ['focus', 'what would make the biggest difference this month'],
+  ['miss_most', 'what they miss most from home'],
+];
+function profileLine(profile: Record<string, any> | undefined): string {
+  const p = profile ?? {};
+  const has = (k: string) => Array.isArray(p[k]) ? p[k].length > 0 : !!p[k];
+  const nowName = p.country_now ? (BELONGING_PACKS[p.country_now]?.name ?? String(p.country_now)) : '';
+  const known = [
+    nowName && `they live in ${nowName}`, has('country_from') && `their story began in ${p.country_from}`,
+    has('native_language') && `their native language is ${p.native_language}`, has('moved_when') && `they moved: ${p.moved_when}`,
+    has('household') && `household: ${p.household}`, has('spanish_feel') && `Spanish today: ${p.spanish_feel}`,
+    has('focus') && `what matters most now: ${[].concat(p.focus).join(', ')}`, has('miss_most') && `they miss most from home: ${p.miss_most}`,
+  ].filter(Boolean);
+  const missing = PROFILE_ASK.filter(([k]) => !has(k)).map(([, q]) => q);
+  return (known.length ? `\nTHIS FAMILY'S NEW LIFE (their own answers): ${known.join('; ')}. Let it shape what you bring up: build bridges between where ` +
+      `they come from and life here, start from what matters most to them now, and when Spanish gets hard you may explain a word in their native language.` : '') +
+    (missing.length ? `\nNot known yet: ${missing.slice(0, 4).join('; ')}. Only when it truly fits - never as a form, at most ONE such question in a ` +
+      `conversation - you may ask one of these lightly, like a friend getting to know them.\n` : '\n');
 }
 
 function formatClaudeRequest(userMessage: string, familyMember: any, emotion: any, conversationHistory: any[], isVoiceInput?: boolean, originalLanguage?: string, familyFacts: string[] = [], familyNotes: any = null) {
@@ -200,7 +267,7 @@ THIS FAMILY: ${familyNotes.members.map((m: any) => `${m.name} (${m.role}${m.age 
 Recent classroom lessons with the child: ${familyNotes.lessons.join(' | ')}. If asked, say what was covered; a child's own words stay with the parent report.` : ''}
 ` : ''}
 ${ESPALUZ_COMPANION_RULES}
-${belongingBlock()}
+${belongingBlock(familyNotes?.profile?.country_now || 'panama')}${familyNotes ? profileLine(familyNotes.profile) : ''}
 RESPONSE FORMAT - two parts:
 1️⃣ Your reply, following HOW YOU TALK above (their length; a short message gets a short answer). Never use asterisks.
 2️⃣ A short spoken line for the video, 1-2 sentences in Spanish and English, no emojis:
@@ -1318,20 +1385,24 @@ function namesGrounded(fact: string, text: string, allowed: string[]): boolean {
   return true;
 }
 
-type FamilyNotes = { rows: any[]; facts: string[]; members: { name: string; role: string; age: number | null }[]; speaker: string; lessons: string[] };
+type FamilyNotes = { rows: any[]; facts: string[]; members: { name: string; role: string; age: number | null }[]; speaker: string; lessons: string[]; profile: Record<string, any> };
 const notebook = () => createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
 
 // The web account is the parent's window: it reads shared notes and the parent's private ones.
 async function readFamilyNotes(userId: string): Promise<FamilyNotes> {
   const db = notebook();
-  const [{ data: rows, error }, { data: fam }, { data: les }] = await Promise.all([
+  const [{ data: rows, error }, { data: fam }, { data: les }, { data: prof }] = await Promise.all([
     db.from('learning_sessions').select('id, content').eq('user_id', userId).eq('session_type', 'analytics').eq('content->>event', 'family_fact')
       .order('created_at', { ascending: false }).limit(80),
     db.from('family_members').select('name, role, age, created_at').eq('user_id', userId).eq('is_active', true).order('created_at', { ascending: false }),
     db.from('learning_sessions').select('content').eq('user_id', userId).eq('session_type', 'classroom')
       .gte('created_at', new Date(Date.now() - 7 * 86400000).toISOString()).order('created_at', { ascending: false }).limit(60),
+    // 8 Nov 2026: "About your new life" - the newest family_profile note (web questionnaire or a bot's first-day answers).
+    db.from('learning_sessions').select('content').eq('user_id', userId).eq('session_type', 'analytics').eq('content->>event', 'family_profile')
+      .order('created_at', { ascending: false }).limit(1),
   ]);
   if (error) console.error('[memory] read failed:', error.message);
+  const { event: _ev, ...profile } = (prof?.[0]?.content ?? {}) as Record<string, any>;
   const seen = new Set<string>();
   const members = (fam ?? []).filter((m: any) => { const k = String(m.name).toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; })
     .map((m: any) => ({ name: m.name, role: m.role, age: m.age }));
@@ -1340,7 +1411,7 @@ async function readFamilyNotes(userId: string): Promise<FamilyNotes> {
   const live = (rows ?? []).filter((r: any) => !r.content?.retired && r.content?.fact !== '[object Object]' && (!r.content?.until || String(r.content.until) >= today));
   const visible = live.filter((r: any) => !r.content?.private || (speaker && r.content?.speaker === speaker));
   const lessons = [...new Set((les ?? []).map((r: any) => String(r.content?.class_label ?? '').slice(0, 120)).filter(Boolean))].slice(0, 3) as string[];
-  return { rows: live, facts: visible.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean), members, speaker, lessons };
+  return { rows: live, facts: visible.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean), members, speaker, lessons, profile };
 }
 
 const factWords = (t: string) => new Set(t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/[a-z0-9]+/g) ?? []);
@@ -1673,6 +1744,10 @@ ${asked}` : ''}`;
     // A grown-up's notebook, on any channel. The classroom and the anonymous trial never read or write it.
     const familyNotes = !kids && !fromBot && userId ? await readFamilyNotes(userId) : null;
     const familyFacts = familyNotes?.facts ?? [];
+    if (!kids && !fromBot) {
+      const bc = familyNotes?.profile?.country_now && BELONGING_PACKS[familyNotes.profile.country_now] ? familyNotes.profile.country_now : 'panama';
+      console.log(`[belonging] web pack=${bc} lines=${belongingBlock(bc).split('\n- ').length - 1} from=${familyNotes?.profile?.country_now ? 'profile' : 'default'} profile_fields=${Object.keys(familyNotes?.profile ?? {}).length}`);
+    }
 
     // Sentences the child said in earlier lessons come back first (Buddy.ai: tiny vocabulary, repeated and grown; 30 Oct 2026).
     const known: string[] = Array.isArray(kids?.known)
@@ -1874,7 +1949,7 @@ ${asked}` : ''}`;
     }
 
     if (!kids && !fromBot && userId && !body.image) {
-      const noting = rememberFamilyFacts(userId, message, familyNotes ?? { rows: [], facts: [], members: [], speaker: '', lessons: [] });
+      const noting = rememberFamilyFacts(userId, message, familyNotes ?? { rows: [], facts: [], members: [], speaker: '', lessons: [], profile: {} });
       const runtime = (globalThis as any).EdgeRuntime;
       if (runtime?.waitUntil) runtime.waitUntil(noting); else await noting;
     }

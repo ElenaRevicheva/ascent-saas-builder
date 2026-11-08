@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle2, Users, Smile, MessageCircle, Phone, Send, Gift, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Users, Smile, MessageCircle, Phone, Send, Gift, ArrowRight, Compass } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { OurStoryCard } from './OurStoryCard';
+import { FamilyProfileDialog, readFamilyProfile, PACK_COUNTRIES } from './FamilyProfileDialog';
 
 /*
  * 4 Nov 2026 (Elena): the roadmap stays visible for every family - trial or paying - and ticks the steps it has
@@ -15,7 +16,7 @@ import { OurStoryCard } from './OurStoryCard';
 
 type StepState = { done: boolean; fact: string };
 type Facts = {
-  family: StepState; classroom: StepState; webChat: StepState;
+  profile: StepState; family: StepState; classroom: StepState; webChat: StepState;
   whatsapp: StepState; telegram: StepState; invite: StepState;
 };
 
@@ -46,6 +47,9 @@ export const FamilyRoadmap = () => {
   const [expanded, setExpanded] = useState(false);
   // 8 Nov 2026: card 7 (OurStoryCard) reports whether EspaLuz already knows this family; it counts like the six steps.
   const [storyDone, setStoryDone] = useState(false);
+  // 8 Nov 2026 (Elena): step 1 is "About your new life" - the questionnaire every family meets first.
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [profileTick, setProfileTick] = useState(0);
 
   useEffect(() => {
     if (!user) return;
@@ -56,7 +60,7 @@ export const FamilyRoadmap = () => {
         const { count: n } = await q;
         return n ?? 0;
       };
-      const [members, kidsWeb, kidsWa, chats, bots, invites] = await Promise.all([
+      const [members, kidsWeb, kidsWa, chats, bots, invites, profile] = await Promise.all([
         supabase.from('family_members').select('role').eq('user_id', uid).eq('is_active', true),
         count(supabase.from('learning_sessions').select('id', { count: 'exact', head: true })
           .eq('user_id', uid).eq('session_type', 'classroom').eq('source', 'web')),
@@ -66,6 +70,7 @@ export const FamilyRoadmap = () => {
           .eq('user_id', uid).in('session_type', ['dashboard_chat', 'chat'])),
         supabase.from('connected_bots').select('platform, connected_at, is_active').eq('user_id', uid),
         count(supabase.from('referrals').select('id', { count: 'exact', head: true }).eq('referrer_user_id', uid)),
+        readFamilyProfile(uid),
       ]);
       if (cancelled) return;
 
@@ -77,7 +82,12 @@ export const FamilyRoadmap = () => {
       const tg = bot('telegram');
       const lessons = kidsWeb + kidsWa;
 
+      const home = PACK_COUNTRIES.find(([k]) => k === profile?.country_now)?.[1];
       setFacts({
+        profile: {
+          done: !!home,
+          fact: home ? `Home now: ${home}${profile?.country_from ? ` · from ${profile.country_from}` : ''}` : 'Where you live, where you come from',
+        },
         family: {
           done: memberRows.length > 0,
           fact: memberRows.length
@@ -105,7 +115,7 @@ export const FamilyRoadmap = () => {
     return () => {
       cancelled = true;
     };
-  }, [user]);
+  }, [user, profileTick]);
 
   type Step = {
     key: keyof Facts; title: string; who: string; color: string; icon: typeof Users;
@@ -113,6 +123,8 @@ export const FamilyRoadmap = () => {
   };
 
   const steps: Step[] = [
+    { key: 'profile', title: 'About your new life', who: 'Everyone', color: '--espaluz-purple', icon: Compass,
+      action: facts?.profile.done ? 'See or change' : 'Start here', onClick: () => setProfileOpen(true) },
     { key: 'family', title: 'Your family', who: 'Everyone', color: '--espaluz-pink', icon: Users,
       action: 'Family members', onClick: () => scrollToSelector('[data-family-members]', !facts?.family.done) },
     { key: 'classroom', title: "Pere & Titi's classroom", who: 'Kids 6-7', color: '--espaluz-yellow', icon: Smile,
@@ -162,6 +174,8 @@ export const FamilyRoadmap = () => {
         <ul className="mt-4 grid gap-4">
           <OurStoryCard index={total} onDone={setStoryDone} />
         </ul>
+      <FamilyProfileDialog open={profileOpen} onOpenChange={setProfileOpen} onSaved={() => setProfileTick((t) => t + 1)}
+        onOpenFamily={() => scrollToSelector('[data-family-members]', !facts?.family.done)} />
       </section>
     );
   }
@@ -238,6 +252,8 @@ export const FamilyRoadmap = () => {
         })}
         <OurStoryCard index={total} onDone={setStoryDone} />
       </ol>
+      <FamilyProfileDialog open={profileOpen} onOpenChange={setProfileOpen} onSaved={() => setProfileTick((t) => t + 1)}
+        onOpenFamily={() => scrollToSelector('[data-family-members]', !facts?.family.done)} />
     </section>
   );
 };

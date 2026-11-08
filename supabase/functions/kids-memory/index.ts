@@ -82,7 +82,7 @@ serve(async (req) => {
       console.log(`[classroom-link] made on ${platform}, ${found?.[0]?.user_id ? 'existing' : 'new'} family`);
       return json({ ok: true, url: gen.properties.action_link });
     }
-    if (mode === 'facts_get' || mode === 'facts_add' || mode === 'who_set') {
+    if (mode === 'facts_get' || mode === 'facts_add' || mode === 'who_set' || mode === 'profile_fill') {
       const { facts, speaker: said } = body;
       const tg = telegram_user_id != null && telegram_user_id !== '';
       const platform = tg ? 'telegram' : 'whatsapp';
@@ -92,6 +92,22 @@ serve(async (req) => {
         .order('connected_at', { ascending: false }).limit(1);
       const userId = link?.[0]?.user_id;
       if (!userId) return json({ linked: false, facts: [] });
+      // 8 Nov 2026: what a bot learned at its first-day questions (Telegram onboarding, WhatsApp country answer) joins
+      // the family profile - only fields still empty, so the family's own answers on the web are never overwritten.
+      if (mode === 'profile_fill') {
+        const KEYS = ['country_now', 'country_from', 'native_language', 'moved_when', 'household', 'spanish_feel', 'miss_most'];
+        const given = Object.fromEntries(Object.entries(body.profile ?? {}).filter(([k, v]) => KEYS.includes(k) && typeof v === 'string' && v.trim())
+          .map(([k, v]) => [k, String(v).trim().slice(0, 60)]));
+        const { data: cur } = await db.from('learning_sessions').select('content').eq('user_id', userId).eq('session_type', 'analytics')
+          .eq('content->>event', 'family_profile').order('created_at', { ascending: false }).limit(1);
+        const now = (cur?.[0]?.content ?? {}) as Record<string, unknown>;
+        const fill = Object.fromEntries(Object.entries(given).filter(([k]) => !now[k]));
+        if (!Object.keys(fill).length) return json({ linked: true, filled: 0 });
+        await db.from('learning_sessions').insert({ user_id: userId, session_type: 'analytics', source: platform,
+          content: { ...now, event: 'family_profile', ...fill } });
+        console.log(`[profile] ${Object.keys(fill).join(',')} filled from ${platform}`);
+        return json({ linked: true, filled: Object.keys(fill).length });
+      }
       // Who this number belongs to: one row per link, no schema change. The newest answer wins.
       if (mode === 'who_set') {
         const name = String(said ?? '').trim().slice(0, 40);
@@ -126,8 +142,13 @@ serve(async (req) => {
         // 6 Nov 2026 (Elena: Telegram exactly like WhatsApp): a family that pays on one channel is paying on all of them.
         const { data: paidRows } = await db.from('user_subscriptions').select('id').eq('user_id', userId).eq('status', 'active')
           .gt('current_period_end', new Date().toISOString()).limit(1);
+        // 8 Nov 2026: the family profile ("About your new life", web questionnaire or a bot's first-day answers) - the
+        // same note for all three channels: country now, country of origin, native language, when they moved, ...
+        const { data: prof } = await db.from('learning_sessions').select('content').eq('user_id', userId).eq('session_type', 'analytics')
+          .eq('content->>event', 'family_profile').order('created_at', { ascending: false }).limit(1);
+        const { event: _e, ...profile } = (prof?.[0]?.content ?? {}) as Record<string, unknown>;
         return json({ linked: true, family_paying: !!paidRows?.length, facts: visible.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean).slice(0, 15),
-          members, speaker, lessons, lesson_turns: les?.length ?? 0 });
+          members, speaker, lessons, lesson_turns: les?.length ?? 0, profile });
       }
       const words = (t: string) => new Set(t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/[a-z0-9]+/g) ?? []);
       const same = (a: string, b: string) => { const A = words(a), B = words(b); if (!A.size || !B.size) return false;
