@@ -1,0 +1,367 @@
+{
+  "country": "el_salvador",
+  "name": "El Salvador",
+  "timezone": "America/El_Salvador",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in El Salvador is. No stereotypes, no ethnic labels."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in El Salvador (Wikipedia; marked incomplete)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_El_Salvador"
+    },
+    "eds_agostinas": {
+      "title": "Vacaciones de fiestas agostinas: asueto nacional (El Diario de Hoy / elsalvador.com, 2026)",
+      "url": "https://www.elsalvador.com/noticias/nacional/vacaciones-fiestas-agostinas-el-salvador-asueto-nacional/1284556/2026/"
+    },
+    "eds_desfile": {
+      "title": "Fiestas agostinas: desfile, Sívarland y ruedas (elsalvador.com, 2026)",
+      "url": "https://www.elsalvador.com/turismo/cultura-viva/fiestas-agostinas-desfile-sivarland-ruedas/1285410/2026/"
+    },
+    "elmundo_asueto": {
+      "title": "Estos son los días de asueto durante las vacaciones de agosto (Diario El Mundo)",
+      "url": "https://diario.elmundo.sv/economia/estos-son-los-dias-de-asueto-durante-las-vacaciones-de-agosto"
+    },
+    "edh_pupusa": {
+      "title": "Día de la Pupusa: actividades y festejos (El Diario de Hoy, 2025)",
+      "url": "https://www.eldiariodehoy.com/arte-y-cultura/dia-pupusa-actividades-festejos-olocuilta-parque-balboa-puerta-diablo-gastronomia/45689/2025/"
+    },
+    "prensa_pupusa": {
+      "title": "Los salvadoreños le rinden culto a la pupusa, su plato nacional (La Prensa, Panamá / EFE)",
+      "url": "https://www.prensa.com/cultura/salvadorenos-rinden-culto-pupusa-nacional_0_3250174974.html"
+    },
+    "fluentu_sv": {
+      "title": "13 El Salvador Slang Terms to Sound Like a Local (FluentU)",
+      "url": "https://www.fluentu.com/blog/spanish/el-salvador-slang/"
+    },
+    "lingopie_sv": {
+      "title": "17 Best Salvadoran Slang You Need to Learn (Lingopie)",
+      "url": "https://lingopie.com/blog/best-salvadoran-slang/"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "agostinas",
+        "text": "1-6 August: the 'fiestas agostinas', San Salvador's patron festival for the Divino Salvador del Mundo, with the Desfile del Correo parade, a fair and the 'Bajada' on 5 August; 6 August is the main day.",
+        "es": "fiestas agostinas · la Bajada",
+        "sources": [
+          "eds_agostinas",
+          "eds_desfile"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "agostinas_days_off",
+        "text": "6 August is a national day off; two more August days off apply only to workers in the San Salvador district.",
+        "es": "vacaciones agostinas",
+        "sources": [
+          "eds_agostinas",
+          "elmundo_asueto"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "pupusa_day",
+        "text": "The second Sunday of November is National Pupusa Day, by a 2005 law that declared the pupusa the national dish; towns like Olocuilta hold pupusa festivals.",
+        "es": "Día Nacional de la Pupusa",
+        "sources": [
+          "edh_pupusa",
+          "prensa_pupusa"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "school_year",
+        "text": "The public school year starts in late January or early February and ends around November - confirm the ministry's (MINEDUCYT) calendar.",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "rainy_season",
+        "text": "Rainy season roughly May to October, dry season November to April.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "list",
+        "text": "Public holidays include: 1 January, Holy Week (Thursday to Sunday; Wednesday is a bank holiday), 1 May, 10 May (Mother's Day), 17 June (Father's Day), 15 September (Independence), 2 November (All Souls), 24 December from noon, 25 December, 31 December from noon. The list is incomplete - check the official calendar.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "agosto6",
+        "text": "6 August (Divino Salvador del Mundo) is a national day off under the Labour Code.",
+        "sources": [
+          "eds_agostinas"
+        ],
+        "status": "checked"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "chero",
+        "text": "'Chero / chera' - friend: 'es mi chero'.",
+        "es": "chero · chera",
+        "sources": [
+          "fluentu_sv",
+          "lingopie_sv"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "vaya_pues",
+        "text": "'Vaya pues' - a friendly 'OK then, see you'.",
+        "es": "vaya pues",
+        "sources": [
+          "fluentu_sv"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "mothers_day",
+        "text": "Mother's Day (10 May) is a public holiday",
+        "es": "Día de la Madre",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "time": [
+      {
+        "id": "holy_week_long",
+        "text": "Holy Week is a long break: Thursday to Sunday are holidays, and banks also close on Wednesday.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "bicho",
+        "text": "Children are 'bichos' / 'bichas' (literally 'bugs') - affectionate, not rude.",
+        "es": "bicho · bicha",
+        "sources": [
+          "fluentu_sv"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "fathers_day",
+        "text": "Father's Day, 17 June, is also a public holiday.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "agosto_break",
+        "text": "School holidays include the August festival week.",
+        "sources": [
+          "eds_agostinas"
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "calendar",
+        "text": "Teacher training and enrolment happen in January before classes start - ask the school for dates.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "pupusa",
+        "text": "The pupusa is the national dish and a source of national pride.",
+        "es": "pupusas",
+        "sources": [
+          "prensa_pupusa",
+          "edh_pupusa"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "pupusa_how",
+        "text": "Pupusas are eaten with 'curtido' (pickled cabbage) and tomato salsa, often with the hands.",
+        "es": "curtido",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "pista",
+        "text": "Money is 'pisto' or 'pista' in slang.",
+        "es": "pisto · pista",
+        "sources": [
+          "fluentu_sv"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "sivarland",
+        "text": "During the August fiestas there is a big fair with rides in San Salvador.",
+        "sources": [
+          "eds_desfile"
+        ],
+        "status": "checked"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "chivo",
+        "text": "'¡Qué chivo!' - 'how cool!'; 'chivo' also means 'OK, fine'.",
+        "es": "¡qué chivo!",
+        "sources": [
+          "fluentu_sv",
+          "lingopie_sv"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "puchica",
+        "text": "'¡Púchica!' - a mild 'oh, man!', 'darn!'.",
+        "es": "¡púchica!",
+        "sources": [
+          "fluentu_sv"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "cabal",
+        "text": "'¡Cabal!' - 'exactly'.",
+        "es": "cabal",
+        "sources": [
+          "fluentu_sv"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "bayunco",
+        "text": "'Bayunco' - silly, crazy (in a playful way).",
+        "es": "bayunco",
+        "sources": [
+          "fluentu_sv"
+        ],
+        "status": "checked"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "district_holidays",
+        "text": "August days off that apply in San Salvador but not in other districts.",
+        "sources": [
+          "eds_agostinas",
+          "elmundo_asueto"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "half_days",
+        "text": "Half-day holidays on 24 and 31 December - offices close at noon.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "bajada",
+        "text": "The 'Bajada' on 5 August, when the image of the Divino Salvador del Mundo is brought down and transfigured, is the religious centre of the fiestas.",
+        "sources": [
+          "eds_agostinas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "desfile_correo",
+        "text": "The 'Desfile del Correo' is one of the traditional events of the fiestas agostinas.",
+        "sources": [
+          "eds_desfile"
+        ],
+        "status": "checked"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "agostinas",
+      "label": "Your first fiestas agostinas",
+      "words": [
+        "fiestas agostinas",
+        "agostinas",
+        "divino salvador",
+        "bajada",
+        "desfile del correo",
+        "sívarland"
+      ]
+    },
+    {
+      "id": "pupusa_day",
+      "label": "Pupusa Day",
+      "words": [
+        "pupusa",
+        "pupusas",
+        "día de la pupusa",
+        "olocuilta",
+        "curtido"
+      ]
+    },
+    {
+      "id": "sept15",
+      "label": "Your first 15 de septiembre",
+      "words": [
+        "15 de septiembre",
+        "independencia",
+        "desfile",
+        "banda"
+      ]
+    },
+    {
+      "id": "mothers_day",
+      "label": "Mother's Day, 10 May",
+      "words": [
+        "día de la madre",
+        "dia de la madre",
+        "10 de mayo"
+      ]
+    },
+    {
+      "id": "semana_santa",
+      "label": "Holy Week",
+      "words": [
+        "semana santa",
+        "procesión",
+        "alfombras"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor",
+        "chero",
+        "chera"
+      ]
+    }
+  ]
+}

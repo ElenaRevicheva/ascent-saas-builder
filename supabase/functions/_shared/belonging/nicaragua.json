@@ -1,0 +1,385 @@
+{
+  "country": "nicaragua",
+  "name": "Nicaragua",
+  "timezone": "America/Managua",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in Nicaragua is. No stereotypes, no ethnic labels.",
+    "Stay out of politics: describe everyday life and culture, never judge the government or take sides."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in Nicaragua (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Nicaragua"
+    },
+    "hiplatina_griteria": {
+      "title": "A Primer on La Gritería: A Nicaraguan Holiday Tradition (Priscilla Blossom, HipLatina, 2018)",
+      "url": "https://hiplatina.com/nicaragua-la-griteria/"
+    },
+    "voa_griteria": {
+      "title": "Nicaragua celebró su fiesta religiosa más importante, la Gritería (Voz de América)",
+      "url": "https://www.vozdeamerica.com/a/nicaragua-celebro-su-fiesta-religiosa-mas-importante-la-griteria-/6344964.html"
+    },
+    "laprensa_calendario": {
+      "title": "Calendario escolar del Mined: desfiles y vacaciones (La Prensa, Nicaragua, 2026)",
+      "url": "https://www.laprensani.com/2026/06/29/nacionales/3725544-calendario-escolar-mined-desfiles-vacaciones"
+    },
+    "laprensa_findes": {
+      "title": "Estos son los fines de semana largos que tendrán los nicaragüenses en 2026 (La Prensa, Nicaragua)",
+      "url": "https://www.laprensani.com/2026/01/10/nacionales/3592952-estos-son-los-fines-de-semana-largos-que-tendran-los-nicaraguenses-en-2026"
+    },
+    "lingopie_ni": {
+      "title": "19 Nicaraguan Slang That'll Surprise You (Lingopie)",
+      "url": "https://lingopie.com/blog/nicaraguan-slang/"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "purisima_season",
+        "text": "Late November to 7 December is the season of La Purísima: many Catholic families set up an altar to the Virgin Mary at home, and on the evening of 7 December comes La Gritería, Nicaragua's biggest religious festival.",
+        "es": "La Purísima · La Gritería",
+        "sources": [
+          "hiplatina_griteria",
+          "voa_griteria"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "holy_week_beach",
+        "text": "Holy Week (March or April - moves every year) is a national holiday and many families go to the beach.",
+        "es": "Semana Santa",
+        "sources": [
+          "laprensa_findes",
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "september_parades",
+        "text": "From mid-August to 15 September schools hold patriotic parades; 14 September (Battle of San Jacinto) and 15 September (Independence) are national holidays.",
+        "es": "desfiles patrios",
+        "sources": [
+          "laprensa_calendario",
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "managua_august",
+        "text": "In Managua, 1 and 10 August are paid days off for the Santo Domingo de Guzmán festivities, the city's patron saint.",
+        "es": "fiestas de Santo Domingo",
+        "sources": [
+          "laprensa_calendario",
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "school_year",
+        "text": "The public school year runs from about February to early December - confirm the Mined calendar each year.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "national",
+        "text": "National holidays: 1 January, Holy Thursday and Good Friday, 1 May, 19 July, 14 and 15 September, 8 December (Immaculate Conception, after La Gritería on the 7th), 25 December.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "local",
+        "text": "Many towns have their own patron-saint days off: Santiago (25 July) in Boaco and Somoto, Santa Ana (26 July) in Nandaime and Ometepe, San Jerónimo (30 September) in Masaya, Crab Soup Day (27 August) on the Corn Islands.",
+        "es": "fiestas patronales",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "all_souls",
+        "text": "2 November: families visit cemeteries to pray and leave flowers.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "kiubole",
+        "text": "'¡Kiubole!' - a casual 'what's up?'.",
+        "es": "kiubole",
+        "sources": [
+          "lingopie_ni"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "dale_pues",
+        "text": "'Dale pues' - 'OK, go ahead', also to close a conversation.",
+        "es": "dale pues",
+        "sources": [
+          "lingopie_ni"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "maje",
+        "text": "'Maje' - 'dude'; tone decides whether it is friendly or rude.",
+        "es": "maje",
+        "sources": [
+          "lingopie_ni"
+        ],
+        "status": "checked"
+      }
+    ],
+    "time": [
+      {
+        "id": "griteria_time",
+        "text": "On 7 December fireworks announce La Gritería from early morning; door-to-door visits to altars start around 6 pm.",
+        "sources": [
+          "hiplatina_griteria"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "new_year_fireworks",
+        "text": "Christmas Eve and New Year's Eve are family nights with fireworks, at midnight and through the night.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "altar_visits",
+        "text": "During La Gritería people of all ages go from altar to altar; at each one they shout '¿Quién causa tanta alegría?' and answer '¡La Concepción de María!', sing, and receive small gifts - sweets, fruit, drinks, small toys.",
+        "es": "¿Quién causa tanta alegría? - ¡La Concepción de María!",
+        "sources": [
+          "hiplatina_griteria"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "host_meal",
+        "text": "Families who host an altar often invite guests to sing and then share a meal, often nacatamales.",
+        "es": "nacatamales",
+        "sources": [
+          "hiplatina_griteria"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "chavalo",
+        "text": "Children and young people are 'chavalos' / 'chavalas'; 'chinear' is to hold or cuddle a baby.",
+        "es": "chavalo · chinear",
+        "sources": [
+          "lingopie_ni"
+        ],
+        "status": "checked"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "parades_august",
+        "text": "The Education Ministry schedules school parades from mid-to-late August ahead of 14-15 September.",
+        "es": "desfile escolar",
+        "sources": [
+          "laprensa_calendario"
+        ],
+        "status": "checked"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "nacatamal",
+        "text": "Nacatamales and other typical dishes are served at Purísima gatherings, with fresco de cacao for visitors.",
+        "es": "nacatamal · fresco de cacao",
+        "sources": [
+          "hiplatina_griteria"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "gallo_pinto",
+        "text": "Gallo pinto (rice and red beans) is eaten at most meals.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "coyotero",
+        "text": "Street money changers who swap dollars for córdobas are called 'coyoteros'.",
+        "es": "coyotero",
+        "sources": [
+          "lingopie_ni"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "chunche",
+        "text": "'Chunche' / 'chochada' - thing, stuff (careful: 'chunche' can also be vulgar).",
+        "es": "chunche",
+        "sources": [
+          "lingopie_ni"
+        ],
+        "status": "checked"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "tuani",
+        "text": "'Tuani' / 'salvaje' - cool, great.",
+        "es": "tuani",
+        "sources": [
+          "lingopie_ni"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "ideay",
+        "text": "'¡Ideay!' - surprise or annoyance: 'what?!', 'come on!'.",
+        "es": "¡ideay!",
+        "sources": [
+          "lingopie_ni"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "tapudo",
+        "text": "'Tapudo' - someone who talks too much or gossips; 'fachento' - show-off.",
+        "es": "tapudo · fachento",
+        "sources": [
+          "lingopie_ni"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "bacanal",
+        "text": "'Un bacanal' - a big, lively party.",
+        "es": "bacanal",
+        "sources": [
+          "lingopie_ni"
+        ],
+        "status": "checked"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "fireworks",
+        "text": "Fireworks at dawn on 7 December and through Christmas and New Year's nights - warn small children and pets.",
+        "sources": [
+          "hiplatina_griteria",
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "local_days",
+        "text": "Local patron-saint days off differ from town to town.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "purisima_origin",
+        "text": "La Purísima began in León in the 18th century; the 'gritería' shout was added in 1857.",
+        "es": "León",
+        "sources": [
+          "hiplatina_griteria"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "abroad",
+        "text": "La Gritería is the country's most important religious festival, kept alive by Nicaraguans abroad too.",
+        "sources": [
+          "voa_griteria"
+        ],
+        "status": "checked"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "first_griteria",
+      "label": "Your first Gritería",
+      "words": [
+        "gritería",
+        "griteria",
+        "purísima",
+        "purisima",
+        "quién causa tanta alegría",
+        "concepción de maría",
+        "altar"
+      ]
+    },
+    {
+      "id": "santo_domingo",
+      "label": "Santo Domingo festivities",
+      "words": [
+        "santo domingo",
+        "fiestas de agosto",
+        "minguito"
+      ]
+    },
+    {
+      "id": "sept_parades",
+      "label": "School parades in September",
+      "words": [
+        "desfile",
+        "desfiles patrios",
+        "14 de septiembre",
+        "15 de septiembre",
+        "banda"
+      ]
+    },
+    {
+      "id": "semana_santa_beach",
+      "label": "Holy Week at the beach",
+      "words": [
+        "semana santa",
+        "playa",
+        "vacaciones"
+      ]
+    },
+    {
+      "id": "nacatamal",
+      "label": "Nacatamales at the table",
+      "words": [
+        "nacatamal",
+        "nacatamales",
+        "gallo pinto",
+        "vigorón",
+        "vigoron"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor",
+        "chavalos"
+      ]
+    }
+  ]
+}

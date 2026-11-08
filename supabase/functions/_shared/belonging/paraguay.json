@@ -1,0 +1,379 @@
+{
+  "country": "paraguay",
+  "name": "Paraguay",
+  "timezone": "America/Asuncion",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in Paraguay is. No stereotypes, no ethnic labels.",
+    "Paraguay has two official languages, Spanish and Guaraní; never treat Guaraní as a lesser language. Southern hemisphere: summer December-February, winter June-August."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in Paraguay (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Paraguay"
+    },
+    "hoy_calendario": {
+      "title": "MEC confirma calendario escolar para el 2026 y fecha de inicio de clases (Hoy, 2025)",
+      "url": "https://www.hoy.com.py/nacionales/2025/12/16/mec-confirma-calendario-escolar-para-el-2026-y-fecha-de-inicio-de-clases"
+    },
+    "uh_terere_unesco": {
+      "title": "El tereré y el pohã ñana ya son oficialmente Patrimonio Cultural Inmaterial de la Humanidad (Última Hora)",
+      "url": "https://www.ultimahora.com/el-terere-y-el-poha-nana-ya-son-oficialmente-patrimonio-cultural-inmaterial-la-humanidad-n2960660"
+    },
+    "abc_terere_dia": {
+      "title": "Mañana sábado 26 de febrero se recuerda el Día Nacional del Tereré (ABC Color, 2022)",
+      "url": "https://www.abc.com.py/estilo-de-vida/2022/02/25/manana-sabado-26-de-febrero-se-recuerda-el-dia-nacional-del-terere/"
+    },
+    "lanacion_terere": {
+      "title": "El tereré es la mística del compartir más tradicional de Paraguay (La Nación, Paraguay, 2026)",
+      "url": "https://www.lanacion.com.py/pais/2026/02/28/el-terere-es-la-mistica-del-compartir-mas-tradicional-de-paraguay/"
+    },
+    "lanacion_ar_jopara": {
+      "title": "Jopara, la combinación del guaraní y el español que se convirtió en la tercera lengua de Paraguay (La Nación, Argentina, 2025)",
+      "url": "https://www.lanacion.com.ar/lifestyle/en-las-redes/jopara-la-combinacion-del-guarani-y-el-espanol-que-se-convirtio-en-la-tercera-lengua-de-paraguay-nid30012025/"
+    },
+    "abc_sanjuan": {
+      "title": "¿Por qué se celebra San Juan en Paraguay? Historia y raíces de la fiesta (ABC Color, 2023)",
+      "url": "https://www.abc.com.py/nacionales/2023/06/22/los-origenes-de-la-fiesta-de-san-juan-en-paraguay/"
+    },
+    "lanacion_sanjuan": {
+      "title": "San Juan Ara, tradición paraguaya propicia para celebrar en los hogares (La Nación, Paraguay, 2021)",
+      "url": "https://www.lanacion.com.py/pais/2021/06/24/san-juan-ara-tradicion-paraguaya-propicia-para-celebrar-en-los-hogares-pese-a-la-pandemia/"
+    },
+    "uh_todo_terere": {
+      "title": "Todo el tereré (Última Hora)",
+      "url": "https://www.ultimahora.com/todo-el-terere-n880767"
+    },
+    "uh_terere_clases": {
+      "title": "El tereré, bebida que traspasa clases sociales y define la paraguayidad (Última Hora)",
+      "url": "https://www.ultimahora.com/el-terere-bebida-que-traspasa-clases-sociales-y-define-la-paraguayidad-n970249"
+    },
+    "expatexchange_py": {
+      "title": "Moving to Paraguay: 10 Things to Know (Expat Exchange)",
+      "url": "https://www.expatexchange.com/ctryguide/19021/157/Paraguay/Moving-to-Paraguay-10-Things-to-Know-Before-Moving-to-Paraguay"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "school_year",
+        "text": "The school year runs from late February to 30 November: classes started on 23 February in 2026, with winter holidays in July - confirm each year's MEC calendar, as dates can change.",
+        "es": "el año lectivo",
+        "sources": [
+          "hoy_calendario"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "terere_day",
+        "text": "The last Saturday of February is National Tereré Day, by a 2011 law that made tereré the national drink.",
+        "es": "Día Nacional del Tereré",
+        "sources": [
+          "abc_terere_dia",
+          "uh_terere_unesco"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "san_juan",
+        "text": "June is the month of San Juan festivals: the feast is 24 June and starts on the night of the 23rd with music, dancing and traditional games around a big bonfire; 'San Juan ára' events continue through the month.",
+        "es": "San Juan ára",
+        "sources": [
+          "abc_sanjuan",
+          "lanacion_sanjuan"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "caacupe",
+        "text": "8 December is the day of the Virgen de Caacupé, patron of Paraguay, and a national holiday.",
+        "es": "Caacupé",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "list",
+        "text": "Public holidays: 1 January, 1 March (National Heroes), Holy Thursday and Good Friday (March or April - move every year), 1 May, 14 May (Independence), 12 June (Chaco Peace), 20 June (Constitution), 15 August (Founding of Asunción), 29 September (Battle of Boquerón), 8 December (Caacupé), 25 December. Confirm each year's official list.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "guarani_official",
+        "text": "Spanish and Guaraní are both official languages; many people switch between them, even in one sentence. This mix is called 'jopará' ('mixture').",
+        "es": "jopará",
+        "sources": [
+          "lanacion_ar_jopara"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "learn_greeting",
+        "text": "A few Guaraní words win hearts: 'Mba'éichapa?' (how are you?) - 'Iporã' (fine), 'Aguyje' (thank you).",
+        "es": "Mba'éichapa · Aguyje",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "time": [
+      {
+        "id": "terere_any_time",
+        "text": "Tereré is above all about sharing - being offered a round is a friendly gesture.",
+        "es": "una ronda de tereré",
+        "sources": [
+          "lanacion_terere"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "siesta",
+        "text": "The siesta is a deeply rooted tradition, especially in rural areas.",
+        "es": "la siesta",
+        "sources": [
+          "expatexchange_py"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "terere_hours",
+        "text": "In rural areas many believe tereré belongs between mid-morning and siesta time.",
+        "es": "media mañana",
+        "sources": [
+          "uh_todo_terere"
+        ],
+        "status": "checked"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "terere_round",
+        "text": "Tereré - yerba mate with cold water - is tied to the Guaraní culture of medicinal herbs ('pohã ñana') and is shared in a round.",
+        "es": "tereré · pohã ñana",
+        "sources": [
+          "uh_terere_unesco",
+          "lanacion_terere"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "san_juan_games",
+        "text": "Traditional San Juan games include 'toro candil', 'kambuchi jejoka', 'pelota tatá' and the burning of a 'Judas' figure ('Judas kái').",
+        "es": "kambuchi jejoka · Judas kái",
+        "sources": [
+          "lanacion_sanjuan"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "youngest_serves",
+        "text": "By custom the youngest in the group serves the tereré to the elders; today anyone may serve, and children join the round too.",
+        "es": "el que ceba",
+        "sources": [
+          "uh_todo_terere"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "terere_welcome",
+        "text": "Newcomers are usually invited to tereré - it is the country's way of sharing and making community.",
+        "es": "¿Tereré?",
+        "sources": [
+          "uh_terere_clases"
+        ],
+        "status": "checked"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "mec_calendar",
+        "text": "Schools open for administrative work about two weeks before classes; teachers work until mid-December.",
+        "es": "MEC",
+        "sources": [
+          "hoy_calendario"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "san_juan_school",
+        "text": "Many schools hold their own San Juan festival in June, where families bring typical food.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "sanjuan_food",
+        "text": "Typical foods appear at San Juan: chipa, sopa paraguaya, mbejú, pastel mandi'o and more.",
+        "es": "chipa · sopa paraguaya · mbejú",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "sopa_paraguaya",
+        "text": "'Sopa paraguaya' is not a soup but a savoury corn and cheese bake.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "terere_heat",
+        "text": "In the heat, many people carry a thermos ('termo') of iced water and their tereré cup everywhere.",
+        "es": "el termo",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "pohã_sellers",
+        "text": "Street stalls sell fresh herbs (pohã ñana) to crush into the tereré water, each said to help with a different ailment.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "jopara_words",
+        "text": "Everyday speech mixes Spanish and Guaraní words - learning a few Guaraní expressions is the quickest way to connect.",
+        "es": "jopará",
+        "sources": [
+          "lanacion_ar_jopara"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "nde",
+        "text": "'Nde' (you, in Guaraní) appears in many expressions; 'che' (my/I) too: 'che ra'a' - my friend.",
+        "es": "che ra'a",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "two_languages",
+        "text": "Understanding conversations that switch between Spanish and Guaraní.",
+        "sources": [
+          "lanacion_ar_jopara"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "calendar_changes",
+        "text": "School holiday dates that can be changed during the year - follow the MEC's announcements.",
+        "sources": [
+          "hoy_calendario"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "siesta_hours",
+        "text": "Quiet early afternoons outside the big cities, when many people rest.",
+        "sources": [
+          "expatexchange_py"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "terere_unesco",
+        "text": "In December 2020 UNESCO inscribed the practices and knowledge of tereré in the culture of pohã ñana on its Intangible Cultural Heritage list.",
+        "es": "patrimonio inmaterial",
+        "sources": [
+          "uh_terere_unesco"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "san_juan_roots",
+        "text": "San Juan is a religious feast that mixes Catholic and popular traditions.",
+        "es": "San Juan",
+        "sources": [
+          "abc_sanjuan"
+        ],
+        "status": "checked"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "terere_round",
+      "label": "Your first tereré round",
+      "words": [
+        "tereré",
+        "terere",
+        "termo",
+        "guampa",
+        "yuyo",
+        "pohã"
+      ]
+    },
+    {
+      "id": "san_juan",
+      "label": "Your first San Juan",
+      "words": [
+        "san juan",
+        "kambuchi",
+        "toro candil",
+        "pelota tatá",
+        "judas kái",
+        "chipa"
+      ]
+    },
+    {
+      "id": "caacupe",
+      "label": "Caacupé, 8 December",
+      "words": [
+        "caacupé",
+        "caacupe",
+        "8 de diciembre",
+        "peregrinación"
+      ]
+    },
+    {
+      "id": "guarani_words",
+      "label": "Your first words in Guaraní",
+      "words": [
+        "guaraní",
+        "guarani",
+        "jopará",
+        "jopara",
+        "mba'éichapa",
+        "aguyje"
+      ]
+    },
+    {
+      "id": "independence",
+      "label": "Independence, 14-15 May",
+      "words": [
+        "14 de mayo",
+        "15 de mayo",
+        "independencia",
+        "día de la madre"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor"
+      ]
+    }
+  ]
+}
