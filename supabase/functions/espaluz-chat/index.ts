@@ -1411,8 +1411,13 @@ async function familyStory(userId: string, body: any): Promise<Record<string, un
   const activeBots = (bots ?? []).filter((b: any) => b.is_active !== false);
   const sameName = (a: string, b: string) => !!a && !!b && a.split(/\s+/)[0].toLowerCase() === b.split(/\s+/)[0].toLowerCase();
 
+  // Pere & Titi's classroom is the child's place. A child often plays while the parent's profile is selected, so in a
+  // one-child family every classroom turn is the child's; a parent is never shown with classroom talks.
+  const kids = members.filter((m: any) => m.role === 'child');
+  const kidIds = new Set(kids.map((m: any) => m.id));
   const out = members.map((m: any) => {
-    const lessons = lessonRows.filter((l: any) => l.member === m.id);
+    const lessons = m.role !== 'child' ? []
+      : lessonRows.filter((l: any) => l.member === m.id || (kids.length === 1 && !kidIds.has(l.member)));
     const days = new Set(lessons.map((l: any) => day(l.created_at)));
     const lastLabel = [...lessons].reverse().find((l: any) => l.label)?.label ?? null;
     const channels = activeBots.filter((b: any) => sameName(whoOn.get(`${b.platform}:${b.platform_user_id}`) ?? '', m.name))

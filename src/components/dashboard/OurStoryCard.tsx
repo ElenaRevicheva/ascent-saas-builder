@@ -137,7 +137,8 @@ export const OurStoryCard = ({ index, onDone }: { index: number; onDone?: (done:
                   <p className="text-sm text-foreground">
                     <span className="font-semibold">{m.name}</span>{m.age ? `, ${m.age}` : ''}
                     {personLine(m) && <span className="text-muted-foreground"> — {personLine(m)}</span>}
-                    {m.notes[0] && <span className="text-muted-foreground"> · remembers: “{m.notes[0].fact}”</span>}
+                    {/* The notes themselves stay inside the panel: the card face can be seen by anyone near the screen. */}
+                    {m.notes.length > 0 && <span className="text-muted-foreground"> · EspaLuz remembers {plural(m.notes.length, 'thing', 'things')}</span>}
                   </p>
                 </li>
               ))}
@@ -147,7 +148,7 @@ export const OurStoryCard = ({ index, onDone }: { index: number; onDone?: (done:
           <div className="mt-3 flex flex-wrap gap-2 text-sm">
             {next && (
               <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1 text-foreground">
-                <CalendarDays className="h-4 w-4" aria-hidden /> Coming up: {next.fact} · {day(next.until)}
+                <CalendarDays className="h-4 w-4" aria-hidden /> Coming up: {plural(story.comingUp.length, 'thing', 'things')}, next {day(next.until)}
               </span>
             )}
             {moments.length > 0 && (
