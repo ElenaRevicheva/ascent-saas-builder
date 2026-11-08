@@ -3,6 +3,8 @@ import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
 import { kidsTidyReply, kidsClassDaysDone, kidsGreetedRecently } from './kids_tidy.ts';
+// 8 Nov 2026 (Elena: "what lasts is your new life"): the checked belonging pack, one file for web + WhatsApp + Telegram.
+import panamaPack from '../_shared/belonging/panama.json' with { type: 'json' };
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -154,6 +156,22 @@ PRACTICAL HELP: you can explain a photographed document, draft a message to a la
 write a short phone script in Spanish - offer it when it fits. If you are not sure about a local fact (office hours, a
 fee, a rule), say so plainly and say where to confirm it. Never make it up.`;
 
+// 8 Nov 2026: LIFE IN <country> - only the pack's CHECKED lines, so EspaLuz talks about customs, the year's rhythm and
+// local words from sourced facts, never from guesses. TWIN of belonging_block() in both bots' espaluz_enhancements.py.
+type BelongingPack = { name: string; timezone: string; sections: Record<string, { text: string; status: string }[]> };
+const BELONGING_PACKS: Record<string, BelongingPack> = { panama: panamaPack as BelongingPack };
+function belongingBlock(country = 'panama'): string {
+  const pack = BELONGING_PACKS[country];
+  if (!pack) return '';
+  const today = new Intl.DateTimeFormat('en-GB', { timeZone: pack.timezone, weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
+  const lines = Object.values(pack.sections).flat().filter((i) => i.status === 'checked').map((i) => `- ${i.text}`);
+  return `\nLIFE IN ${pack.name.toUpperCase()} (today there is ${today}) - checked facts for helping this family belong here, not only get ` +
+    `errands done. Use one when it fits, the way a friend who lives here would: woven into your answer, never as a list or a ` +
+    `lecture. A date that moves every year (Carnival, Holy Week, the school calendar): give the month and say to confirm this ` +
+    `year's official calendar. About customs and local life, say nothing beyond these facts and what the family told you; if ` +
+    `you are not sure, say so and suggest asking a neighbour or the school.\n${lines.join('\n')}\n`;
+}
+
 function formatClaudeRequest(userMessage: string, familyMember: any, emotion: any, conversationHistory: any[], isVoiceInput?: boolean, originalLanguage?: string, familyFacts: string[] = [], familyNotes: any = null) {
   const voiceInputContext = isVoiceInput ? `\n\nVOICE INPUT CONTEXT:
 - This message was received via voice input
@@ -182,7 +200,7 @@ THIS FAMILY: ${familyNotes.members.map((m: any) => `${m.name} (${m.role}${m.age 
 Recent classroom lessons with the child: ${familyNotes.lessons.join(' | ')}. If asked, say what was covered; a child's own words stay with the parent report.` : ''}
 ` : ''}
 ${ESPALUZ_COMPANION_RULES}
-
+${belongingBlock()}
 RESPONSE FORMAT - two parts:
 1️⃣ Your reply, following HOW YOU TALK above (their length; a short message gets a short answer). Never use asterisks.
 2️⃣ A short spoken line for the video, 1-2 sentences in Spanish and English, no emojis:
