@@ -69,6 +69,15 @@ serve(async (req) => {
           headers: { 'x-goog-api-key': Deno.env.get('GEMINI_TTS_API_KEY')! }, signal: AbortSignal.timeout(VOICE_TIMEOUT_MS) });
         return new Response(await r.text(), { status: r.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
       }
+      // TEMPORARY (8 Nov 2026, one-time Azure listening test, Elena's OK): speak through Azure directly, skipping Gemini.
+      // Same lock as the rest of the lab. Removed again right after the test.
+      if (body.testProvider === 'azure') {
+        const who = AZURE_VOICES[String(body.testWho)] ? String(body.testWho) : 'usual';
+        const audio = await generateAzureVoice(who, cleanTextForTTS(String(text ?? '')));
+        console.log(`voice lab: spoken by azure-${who}`);
+        return new Response(JSON.stringify({ audioContent: audio, mimeType: 'audio/mpeg', spokenBy: `azure-${who}` }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
       const audio = await generateGeminiVoice('usual', cleanTextForTTS(String(text ?? '')),
         String(body.testVoice ?? ''), String(body.testStyle ?? ''), String(body.testModel ?? ''));
       return new Response(JSON.stringify({ audioContent: audio, mimeType: 'audio/wav' }),
