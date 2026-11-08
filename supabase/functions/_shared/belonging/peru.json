@@ -1,0 +1,489 @@
+{
+  "country": "peru",
+  "name": "Perú",
+  "timezone": "America/Lima",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in Peru is. No stereotypes, no ethnic labels.",
+    "Peru has coast, highlands and Amazon with very different climates and customs; most facts below are about Lima unless said. Ask where the family lives."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in Peru (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Peru"
+    },
+    "matador_pe": {
+      "title": "10 señales de que creciste en Perú (Isabel Guerra, Matador Network, 2015)",
+      "url": "https://matadornetwork.com/es/10-senales-de-que-creciste-en-peru/"
+    },
+    "eltiempo_minedu": {
+      "title": "Clases escolares empezarán el 16 de marzo de 2026 en todo el Perú, anuncia Minedu (El Tiempo, Piura)",
+      "url": "https://eltiempo.pe/nacional/clases-escolares-empezaran-el-16-de-marzo-de-2026-en-todo-el-peru-anuncia-minedu/"
+    },
+    "larepublica_vacaciones": {
+      "title": "Vacaciones escolares de invierno 2026: Minedu confirma la fecha oficial (La República)",
+      "url": "https://larepublica.pe/sociedad/2026/06/16/vacaciones-escolares-de-invierno-2026-minedu-confirma-la-fecha-oficial-para-estudiantes-a-nivel-nacional-1498704"
+    },
+    "larepublica_tv": {
+      "title": "Youtuber canadiense cuenta lo que más le sorprende de los peruanos (La República, 2024)",
+      "url": "https://larepublica.pe/tendencias/video-viral/2024/03/13/youtube-viral-extranjera-que-vive-en-peru-revela-lo-que-le-sorprende-mas-de-los-peruanos-duermen-en-todos-lados-video-canadiense-cuenta-experiencia-en-peru-viral-redes-sociales-368888"
+    },
+    "trome_costumbres": {
+      "title": "Cinco costumbres peruanas que no hallarás en otro lugar del mundo (Trome)",
+      "url": "https://trome.com/actualidad/cinco-costumbres-peruanas-que-no-hallaras-en-otro-lugar-del-mundo-fotos-nczp-noticia/"
+    },
+    "matador_expr_pe": {
+      "title": "Guía de expresiones peruanas e iberoamericanas (Matador Network)",
+      "url": "https://matadornetwork.com/es/guia-de-expresiones-peruanas-e-iberoamericanas-una-conversacion-con-willy/"
+    },
+    "nd_lima_slang": {
+      "title": "Slang in Lima (University of Notre Dame, study abroad blog, 2019)",
+      "url": "https://sites.nd.edu/sla2019/?p=1144"
+    },
+    "howtoperu_slang": {
+      "title": "50+ Peruvian Slang Words and Phrases (How to Peru)",
+      "url": "https://howtoperu.com/?p=534"
+    },
+    "peru21_milagros": {
+      "title": "Señor de los Milagros: seis datos curiosos de la tradición (Perú21)",
+      "url": "https://peru21.pe/lima/senor-milagros-seis-datos-curiosos-tradicion-129056-noticia/"
+    },
+    "larepublica_turron": {
+      "title": "¿Por qué se come turrón de Doña Pepa en octubre? (La República, 2025)",
+      "url": "https://larepublica.pe/datos-lr/2025/10/03/por-que-se-come-turron-de-dona-pepa-en-octubre-y-cual-es-su-relacion-con-el-senor-de-los-milagros-lrtm-107970"
+    },
+    "andina_garua": {
+      "title": "Inició el invierno: ¿persistirá la garúa en Lima? (Andina, agencia peruana de noticias)",
+      "url": "https://andina.pe/agencia/noticia-inicio-invierno-persistira-garua-lima-durante-presente-estacion-1080136.aspx"
+    },
+    "laprensa_lima": {
+      "title": "Lima, la ciudad donde nunca llueve (La Prensa, Honduras)",
+      "url": "https://www.laprensa.hn/mundo/lima-la-ciudad-donde-nunca-llueve-EDLP1173236"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "lima_winter",
+        "text": "In Lima, winter (June to September) is grey and damp, around 19 °C by day and 12 °C at night, with a fine drizzle called 'garúa' and humidity over 90%. Bring layers, not an umbrella.",
+        "es": "la garúa",
+        "sources": [
+          "laprensa_lima",
+          "andina_garua"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "lima_summer",
+        "text": "Lima's summer runs from December to April, hot and humid; it almost never truly rains in Lima.",
+        "es": "el verano",
+        "sources": [
+          "laprensa_lima"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "school_year",
+        "text": "The public school year starts in March (16 March in 2026, 36 teaching weeks) and ends in December, with short recess weeks in May and October and a two-week break at the end of July and start of August - confirm each year's Minedu calendar.",
+        "es": "el año escolar",
+        "sources": [
+          "eltiempo_minedu",
+          "larepublica_vacaciones"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "july_patrias",
+        "text": "Late July is Fiestas Patrias: Independence on 28 and 29 July, plus 23 July - a long national holiday when many families travel.",
+        "es": "Fiestas Patrias",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "october_purple",
+        "text": "October is 'the purple month' in Lima: the procession of the Señor de los Milagros goes out several times, many devotees wear purple, and bakeries sell turrón de Doña Pepa.",
+        "es": "el mes morado",
+        "sources": [
+          "peru21_milagros",
+          "larepublica_turron"
+        ],
+        "status": "checked"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "list",
+        "text": "Public holidays: 1 January, Holy Thursday and Good Friday (March or April - move every year), 1 May, 7 June (Flag Day), 29 June (Saints Peter and Paul), 23 July (Air Force Day), 28-29 July (Independence), 6 August (Battle of Junín), 30 August (Santa Rosa de Lima), 8 October (Battle of Angamos), 1 November, 8 December, 9 December (Battle of Ayacucho), 25 December.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "confirm_decree",
+        "text": "The government sometimes declares extra non-working days for public employees around holidays - check each year's announcements.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "oye_pues_ya",
+        "text": "Everyday speech is full of 'oye', 'pues' and 'ya': '¡Ya, pues!' can mean 'OK then', and a long 'ahhh yaaa' means 'now I get it'.",
+        "es": "¡Ya, pues!",
+        "sources": [
+          "matador_pe"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "cheek_kiss",
+        "text": "Women are often greeted with one kiss on the right cheek; men shake hands.",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "usted_elders",
+        "text": "Use 'usted' with older people and in offices until you are invited to use 'tú'.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "time": [
+      {
+        "id": "hora_peruana",
+        "text": "Peruvians themselves joke about 'la hora peruana' - arriving when you feel like it - for social plans; work and school are another matter.",
+        "es": "la hora peruana",
+        "sources": [
+          "matador_pe"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "al_toque",
+        "text": "'Al toque' means 'right away', but like 'mañana' it can stretch to hours.",
+        "es": "al toque",
+        "sources": [
+          "howtoperu_slang",
+          "nd_lima_slang"
+        ],
+        "status": "checked"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "loud_parties",
+        "text": "Parties are often loud, with music played at full volume.",
+        "sources": [
+          "matador_pe"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "haircut_party",
+        "text": "In some families a child's first haircut is a celebration: the guests do the cutting and give money to the family in return.",
+        "es": "el primer corte de pelo",
+        "sources": [
+          "trome_costumbres"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "shared_glass",
+        "text": "In the highlands, friends often share beer from one glass passed from hand to hand; the first drops spilled on the ground are an offering to the earth (Pachamama).",
+        "sources": [
+          "trome_costumbres"
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "sleep_bus",
+        "text": "People nap on public transport without a second thought - a newcomer notices how normal it is.",
+        "sources": [
+          "larepublica_tv"
+        ],
+        "status": "checked"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "minedu_calendar",
+        "text": "Public and private schools follow the Minedu calendar in blocks of weeks with recess weeks between them.",
+        "es": "Minedu",
+        "sources": [
+          "eltiempo_minedu"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "winter_recess",
+        "text": "The mid-year break falls around Fiestas Patrias at the end of July and start of August.",
+        "es": "vacaciones de medio año",
+        "sources": [
+          "larepublica_vacaciones"
+        ],
+        "status": "checked"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "ceviche",
+        "text": "Ceviche is a point of national pride - asking where the best cevichería is opens any conversation.",
+        "es": "una cevichería",
+        "sources": [
+          "matador_pe"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "rice",
+        "text": "A good portion of rice comes with almost every meal.",
+        "sources": [
+          "matador_pe"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "inca_kola",
+        "text": "Inca Kola, a sweet yellow soda, is drunk with meals - many newcomers say it tastes of bubble gum.",
+        "sources": [
+          "matador_pe"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "pisco",
+        "text": "Pisco and the pisco sour are considered unquestionably Peruvian - do not say otherwise at the table.",
+        "es": "pisco sour",
+        "sources": [
+          "matador_pe"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "turron",
+        "text": "Turrón de Doña Pepa, an aniseed nougat with sweets on top, is eaten in October; the Ministry of Culture declared it national cultural heritage in 2009.",
+        "es": "turrón de Doña Pepa",
+        "sources": [
+          "larepublica_turron"
+        ],
+        "status": "checked"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "shoes_inside",
+        "text": "Most people wear the same shoes outside and inside the home.",
+        "sources": [
+          "larepublica_tv"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "plastic_bags",
+        "text": "Shops hand out plastic bags generously, even for one item - bring your own if you prefer.",
+        "sources": [
+          "larepublica_tv"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "bring_layers",
+        "text": "Lima's humidity makes winter feel colder than the thermometer says - children need a jacket for school.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "pata_causa",
+        "text": "'Pata', 'causa', 'batería' - friend, mate. 'Causa' is also a potato dish.",
+        "es": "pata · causa",
+        "sources": [
+          "nd_lima_slang",
+          "matador_expr_pe"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "jato",
+        "text": "'Jato' - home ('vamos a mi jato'), from a Quechua word for roof or shelter.",
+        "es": "jato",
+        "sources": [
+          "matador_expr_pe",
+          "howtoperu_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "chamba",
+        "text": "'Chamba' - work, job.",
+        "es": "chamba",
+        "sources": [
+          "howtoperu_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "bacan",
+        "text": "'Bacán' - great, cool.",
+        "es": "bacán",
+        "sources": [
+          "howtoperu_slang"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "huachafo",
+        "text": "'Huachafo' - tacky, pretentious; every Peruvian knows its shades of meaning.",
+        "es": "huachafo",
+        "sources": [
+          "matador_pe"
+        ],
+        "status": "checked"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "grey_winter",
+        "text": "Lima's long grey winter with months of drizzle and no real rain.",
+        "sources": [
+          "laprensa_lima",
+          "andina_garua"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "hora_peruana_gap",
+        "text": "Social plans start late ('la hora peruana') while school and work do not.",
+        "sources": [
+          "matador_pe"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "al_toque_gap",
+        "text": "'Al toque' and 'ahorita' that are not right away.",
+        "sources": [
+          "howtoperu_slang"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "milagros",
+        "text": "The Señor de los Milagros procession has gone out every October since 1687, from the Nazarenas church in Lima, accompanied by its brotherhood.",
+        "es": "la Hermandad",
+        "sources": [
+          "peru21_milagros"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "santa_rosa",
+        "text": "30 August, Santa Rosa de Lima, patron saint of Lima and of the Americas, is a national holiday.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "inti_raymi",
+        "text": "In Cusco, 24 June brings Inti Raymi, the festival of the sun, with a large re-enactment.",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "cancion_criolla",
+        "text": "31 October is Día de la Canción Criolla: música criolla (vals, festejo) in peñas and schools.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "fiestas_patrias",
+      "label": "Your first Fiestas Patrias",
+      "words": [
+        "fiestas patrias",
+        "28 de julio",
+        "independencia",
+        "desfile militar",
+        "bandera"
+      ]
+    },
+    {
+      "id": "mes_morado",
+      "label": "The purple month",
+      "words": [
+        "señor de los milagros",
+        "senor de los milagros",
+        "mes morado",
+        "procesión",
+        "turrón",
+        "turron"
+      ]
+    },
+    {
+      "id": "first_garua",
+      "label": "Your first Lima winter",
+      "words": [
+        "garúa",
+        "garua",
+        "invierno",
+        "humedad",
+        "neblina"
+      ]
+    },
+    {
+      "id": "haircut_party",
+      "label": "A first-haircut party",
+      "words": [
+        "corte de pelo",
+        "primer corte"
+      ]
+    },
+    {
+      "id": "ceviche",
+      "label": "Ceviche with new friends",
+      "words": [
+        "ceviche",
+        "cevichería",
+        "cevicheria",
+        "pisco sour",
+        "inca kola"
+      ]
+    },
+    {
+      "id": "school_start",
+      "label": "The first day of school in March",
+      "words": [
+        "inicio de clases",
+        "año escolar",
+        "uniforme",
+        "útiles"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor",
+        "jato"
+      ]
+    }
+  ]
+}

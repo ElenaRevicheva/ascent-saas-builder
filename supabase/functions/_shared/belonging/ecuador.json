@@ -1,0 +1,423 @@
+{
+  "country": "ecuador",
+  "name": "Ecuador",
+  "timezone": "America/Guayaquil",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in Ecuador is. No stereotypes, no ethnic labels.",
+    "Ecuador has two school calendars: Sierra-Amazonía (Quito, Cuenca) and Costa-Galápagos (Guayaquil, Manta). Ask which city the family lives in before giving school dates. Galápagos is one hour behind (Pacific/Galapagos)."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in Ecuador (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Ecuador"
+    },
+    "elmercurio_colada": {
+      "title": "Colada morada y guaguas de pan (El Mercurio, Cuenca)",
+      "url": "https://elmercurio.com.ec/?p=1288730"
+    },
+    "expreso_difuntos": {
+      "title": "Tradiciones del Día de Difuntos en Ecuador explicadas (Expreso)",
+      "url": "https://www.expreso.ec/actualidad/tradiciones-dia-difuntos-ecuador-explicadas-origen-28623.html"
+    },
+    "vistazo_difuntos": {
+      "title": "Día de difuntos: comer y beber junto a los muertos (Vistazo)",
+      "url": "https://www.vistazo.com/amp/portada/dia-difuntos-muertos-tradicion-familias-difuntos-JC6253029"
+    },
+    "eluniverso_finano": {
+      "title": "Lista de tradiciones para celebrar este fin de año (El Universo, 2024)",
+      "url": "https://www.eluniverso.com/larevista/sociedad/lista-de-tradiciones-para-celebrar-este-fin-de-ano-2024-nota/"
+    },
+    "telemetro_monigotes": {
+      "title": "Monigotes moribundos de fin de año en Ecuador (EFE / Telemetro, 2012)",
+      "url": "https://www.telemetro.com/internacionales/2012/12/30/monigotes-moribundos-fin-ano-ecuador/1911328.html"
+    },
+    "primicias_monigotes": {
+      "title": "Evite multas: la forma correcta de quemar un monigote en Quito (Primicias)",
+      "url": "https://primicias.ec/quito/quema-monigotes-calles-veredas-multas-contenedores-basura-86321"
+    },
+    "elcomercio_sierra": {
+      "title": "Así será el regreso escalonado a clases en Sierra y Amazonía en septiembre de 2026 (El Comercio)",
+      "url": "https://www.elcomercio.com/actualidad/ecuador/asi-sera-regreso-escalonado-clases-sierra-amazonia/"
+    },
+    "eldiario_costa": {
+      "title": "Estudiantes del régimen Costa y Galápagos regresarán a clases desde el 4 de mayo de 2026 (El Diario, Manabí)",
+      "url": "https://www.eldiario.ec/ecuador/estudiantes-del-regimen-costa-y-galapagos-regresaran-a-clases-desde-el-4-de-mayo-de-2026-13032026/"
+    },
+    "spanishdict_ec": {
+      "title": "How to Sound like a Local in Ecuador (SpanishDict)",
+      "url": "https://www.spanishdict.com/guide/how-to-sound-like-a-local-in-ecuador"
+    },
+    "storylearning_ec": {
+      "title": "Ecuadorian Spanish (StoryLearning)",
+      "url": "https://storylearning.com/learn/spanish/spanish-tips/ecuadorian-spanish"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "two_calendars",
+        "text": "School years differ by region: Sierra-Amazonía starts in September (1 September 2026, staggered by level) and ends around June-July; Costa-Galápagos starts in late April or May (4 May 2026) and ends in late February. About 200 school days in three terms.",
+        "es": "régimen Sierra · régimen Costa",
+        "sources": [
+          "elcomercio_sierra",
+          "eldiario_costa"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "difuntos_season",
+        "text": "Late October to 2 November is the season of colada morada and guaguas de pan for the Day of the Dead; colada is sold almost only in this season.",
+        "es": "colada morada · guaguas de pan",
+        "sources": [
+          "elmercurio_colada",
+          "expreso_difuntos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "new_year_monigotes",
+        "text": "On New Year's Eve many families make or buy a 'monigote' (a stuffed figure of the old year) and burn it at midnight to leave the bad things behind.",
+        "es": "el año viejo · el monigote",
+        "sources": [
+          "eluniverso_finano",
+          "telemetro_monigotes"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "carnival",
+        "text": "Carnival Monday and Tuesday (February or March - moves every year) are national holidays; many families travel.",
+        "es": "carnaval",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "foundation_quito",
+        "text": "6 December, the Foundation of Quito, is a holiday; 3 November is Cuenca's and 9 October is Guayaquil's.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "list",
+        "text": "National holidays: 1 January, Carnival Monday-Tuesday, Good Friday, 1 May, 24 May (Battle of Pichincha), 10 August (First Cry of Independence), 9 October (Independence of Guayaquil), 2 November (All Souls), 3 November (Independence of Cuenca), 6 December (Foundation of Quito), 25 December.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "moved",
+        "text": "Several holidays (1 May, 24 May, 9 October) are 'floating' and can be moved to another day - check the government's announcement each year.",
+        "es": "feriado trasladado",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "galapagos",
+        "text": "12 February is Galápagos Day, the province's own day.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "usted",
+        "text": "Many people use 'usted' even with friends and family, especially in the Sierra; follow the other person's lead.",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "que_fue",
+        "text": "'¿Qué fue?' - an informal 'what's up?' on the coast.",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "cheek_kiss",
+        "text": "Women are often greeted with one kiss on the right cheek; men shake hands.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "time": [
+      {
+        "id": "late_social",
+        "text": "Social plans often start later than the stated time; school and official appointments do not.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "cemetery_meal",
+        "text": "On 2 November many families visit the cemetery and eat beside the graves of their relatives, sometimes bringing the person's favourite food.",
+        "es": "Día de Difuntos",
+        "sources": [
+          "vistazo_difuntos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "guagua_meaning",
+        "text": "The guaguas de pan represent loved ones who have died and are sometimes left as offerings on graves.",
+        "es": "guagua = bebé (kichwa)",
+        "sources": [
+          "expreso_difuntos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "viudas",
+        "text": "On 31 December men dressed as 'widows' of the old year stop traffic asking for coins for its 'funeral' - usually for the neighbourhood party. ",
+        "es": "las viudas",
+        "sources": [
+          "eluniverso_finano",
+          "telemetro_monigotes"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "ñaño",
+        "text": "'Ñaño / ñaña' - brother / sister, also used for close friends.",
+        "es": "ñaño · ñaña",
+        "sources": [
+          "spanishdict_ec",
+          "storylearning_ec"
+        ],
+        "status": "checked"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "staggered_start",
+        "text": "The first days of school are staggered by level - check which day your child's grade starts.",
+        "es": "regreso escalonado",
+        "sources": [
+          "elcomercio_sierra"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "regime_matters",
+        "text": "Moving between Quito and Guayaquil can mean changing school calendars - ask the district office how transfers work.",
+        "sources": [
+          "eldiario_costa",
+          "elcomercio_sierra"
+        ],
+        "status": "checked"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "colada",
+        "text": "Colada morada is a thick purple drink of purple corn flour with fruit (mortiño, blackberry, naranjilla) and spices like cinnamon and ishpingo.",
+        "es": "colada morada",
+        "sources": [
+          "elmercurio_colada"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "guagua_bread",
+        "text": "Guaguas de pan are sweet breads shaped like a baby; 'guagua' is the Kichwa word for baby or child.",
+        "es": "guagua de pan",
+        "sources": [
+          "elmercurio_colada",
+          "expreso_difuntos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "regional_food",
+        "text": "Encebollado (fish soup) is a coastal breakfast classic; locro de papa (potato soup) is a highland one.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "monigote_rules",
+        "text": "Quito and Guayaquil fine people who burn monigotes in the wrong place - check the city's rules for where to burn.",
+        "es": "multas",
+        "sources": [
+          "primicias_monigotes"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "altitude",
+        "text": "Quito and Cuenca are high (around 2,500-2,800 m): take the first days easy.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "chuta",
+        "text": "'¡Chuta!' - 'darn!', surprise or annoyance.",
+        "es": "¡chuta!",
+        "sources": [
+          "spanishdict_ec",
+          "storylearning_ec"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "achachay",
+        "text": "'¡Achachay!' - 'brrr, it's cold!'; '¡Arrarray!' - 'ouch, it's hot!' (both from Kichwa).",
+        "es": "¡achachay! · ¡arrarray!",
+        "sources": [
+          "spanishdict_ec",
+          "storylearning_ec"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "de_ley",
+        "text": "'De ley' - 'for sure', 'definitely'.",
+        "es": "de ley",
+        "sources": [
+          "spanishdict_ec",
+          "storylearning_ec"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "chevere",
+        "text": "'Chévere' - great, cool.",
+        "es": "chévere",
+        "sources": [
+          "spanishdict_ec"
+        ],
+        "status": "checked"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "two_regimes",
+        "text": "The two school calendars: friends in another city may be on holiday while your children are at school.",
+        "sources": [
+          "eldiario_costa",
+          "elcomercio_sierra"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "year_end_fires",
+        "text": "New Year's Eve bonfires of monigotes in the street.",
+        "sources": [
+          "eluniverso_finano",
+          "primicias_monigotes"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "monigote_origin",
+        "text": "Before burning, the monigote is often struck to let out the year's frustrations.",
+        "es": "quemar el año viejo",
+        "sources": [
+          "eluniverso_finano"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "difuntos_roots",
+        "text": "Colada morada has Andean roots that go back long before the Spanish.",
+        "sources": [
+          "expreso_difuntos"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "testamento",
+        "text": "Some families read a joking 'testament' of the old year before burning the monigote.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "first_difuntos",
+      "label": "Colada morada and guaguas de pan",
+      "words": [
+        "colada morada",
+        "guagua de pan",
+        "guaguas",
+        "difuntos",
+        "día de difuntos"
+      ]
+    },
+    {
+      "id": "first_ano_viejo",
+      "label": "Burning the año viejo",
+      "words": [
+        "año viejo",
+        "monigote",
+        "monigotes",
+        "viudas",
+        "nochevieja",
+        "testamento"
+      ]
+    },
+    {
+      "id": "carnival",
+      "label": "Your first Carnival",
+      "words": [
+        "carnaval",
+        "carnival"
+      ]
+    },
+    {
+      "id": "school_start",
+      "label": "The new school year",
+      "words": [
+        "régimen sierra",
+        "régimen costa",
+        "inicio de clases",
+        "matrícula",
+        "matriculas"
+      ]
+    },
+    {
+      "id": "fiestas_quito",
+      "label": "Fiestas de Quito",
+      "words": [
+        "fiestas de quito",
+        "6 de diciembre",
+        "chiva"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor",
+        "ñaño",
+        "ñaña"
+      ]
+    }
+  ]
+}

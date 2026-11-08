@@ -1,0 +1,494 @@
+{
+  "country": "chile",
+  "name": "Chile",
+  "timezone": "America/Santiago",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, migration office, shops) stay in the country contexts file. Wired into prompts only after Elena's go.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree, holidays moved to a Monday) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every one of the people who live in Chile is. No stereotypes, no ethnic labels.",
+    "Chile is in the southern hemisphere (summer December-February, winter June-August) and over 4,000 km long; school winter breaks differ by region. Ask which region the family lives in."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in Chile (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Chile"
+    },
+    "matador_cl": {
+      "title": "Las 11 costumbres chilenas que más desconciertan a los extranjeros (Fran Norero, Matador Network, 2017)",
+      "url": "https://matadornetwork.com/es/costumbres-chilenas-que-desconciertan-los-extranjeros/"
+    },
+    "matador_patrias": {
+      "title": "Las 8 costumbres de las fiestas patrias chilenas que más nos asombran a los extranjeros (Alesandra Tovar, Matador Network, 2018)",
+      "url": "https://matadornetwork.com/es/costumbres-de-las-fiestas-patrias-chilenas-que-asombran-a-extranjeros/"
+    },
+    "eldinamo_expr": {
+      "title": "21 expresiones chilenas que los extranjeros escuchan y no pueden parar de reír (El Dínamo, 2015)",
+      "url": "https://www.eldinamo.cl/entretencion/2015/03/12/21-expresiones-chilenas-que-los-extranjeros-escuchan-y-no-pueden-parar-de-reir/"
+    },
+    "calendariochile_modismos": {
+      "title": "Origen y significado de los modismos chilenos más usados (Calendario Chile)",
+      "url": "https://www.calendariochile.com/chile/origen-y-significado-de-los-modismos-chilenos-mas-usados-guia-para-entender-el-habla-local"
+    },
+    "spanishdict_chile": {
+      "title": "How to Sound like a Local in Chile (SpanishDict)",
+      "url": "https://www.spanishdict.com/guide/how-to-sound-like-a-local-in-chile"
+    },
+    "latercera_calendario": {
+      "title": "Clases desde el 4 de marzo y vacaciones de invierno diferenciadas por región: Mineduc da a conocer el calendario escolar 2026 (La Tercera)",
+      "url": "https://www.latercera.com/nacional/noticia/clases-desde-el-4-de-marzo-y-vacaciones-de-invierno-diferenciadas-por-region-mineduc-da-a-conocer-el-calendario-escolar-2026/"
+    },
+    "cnn_invierno": {
+      "title": "Vacaciones de invierno escolares 2026 (CNN Chile)",
+      "url": "https://www.cnnchile.com/servicios/vacaciones-invierno-escolares-2026/"
+    },
+    "mineduc_simulacro": {
+      "title": "Seguridad escolar: establecimientos participan en simulacro de terremoto (Mineduc)",
+      "url": "https://www.mineduc.cl/?p=34291"
+    },
+    "wiki_pise": {
+      "title": "Francisca Cooper Integral Evacuation and School Safety Plan (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Francisca_Cooper_Integral_Evacuation_and_School_Safety_Plan"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "school_year",
+        "text": "The school year starts in early March (4 March 2026 for pupils) and ends in December; winter holidays are two weeks between late June and July, with dates that differ by region - confirm your region's Mineduc calendar.",
+        "es": "el año escolar",
+        "sources": [
+          "latercera_calendario"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "winter_break_rm",
+        "text": "In 2026 the Santiago region (Región Metropolitana) had its winter break from 22 June to 3 July; other regions differ.",
+        "es": "vacaciones de invierno",
+        "sources": [
+          "cnn_invierno"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "summer_christmas",
+        "text": "Christmas falls in summer: the 'Viejito Pascuero' (Father Christmas) sweats in his red suit, and children are warned they will get no presents if they misbehave.",
+        "es": "el Viejito Pascuero",
+        "sources": [
+          "matador_cl"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "september",
+        "text": "September is the month of the Fiestas Patrias (18 and 19 September): for weeks before, streets, shops, windows and cars are decorated in white, red and blue.",
+        "es": "el dieciocho",
+        "sources": [
+          "matador_patrias",
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "summer_holidays",
+        "text": "January and February are the summer school holidays, when many families go to the coast or the south; Santiago empties in February.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "mandatory",
+        "text": "The 'mandatory' holidays: 1 January, 1 May, 18 September, 19 September, 25 December.",
+        "es": "feriados irrenunciables",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "others",
+        "text": "Other national holidays: Good Friday and Holy Saturday (March or April - move every year), 21 May (Navy Day), National Indigenous Peoples Day on the winter solstice (around 20-21 June), 29 June (Saints Peter and Paul, may move to Monday), 16 July (Virgen del Carmen), 15 August, 12 October (Encuentro de Dos Mundos, may move to Monday), 31 October (Evangelical and Protestant Churches Day, may move to a Friday), 1 November, 8 December.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "regional",
+        "text": "Some holidays are regional only, such as 7 June in Arica and Parinacota.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "chilean_speech",
+        "text": "Chilean Spanish is fast, swallows syllables and uses many diminutives - it takes everyone a while; asking people to repeat is normal.",
+        "es": "¿cómo?",
+        "sources": [
+          "matador_cl"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "double_meaning",
+        "text": "Humour is quick and full of double meanings; in time you start to catch the jokes.",
+        "sources": [
+          "matador_cl"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "po",
+        "text": "'Po' (from 'pues') is added for emphasis: 'sí po', 'ya po'.",
+        "es": "sí po · ya po",
+        "sources": [
+          "calendariochile_modismos",
+          "spanishdict_chile"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "cachai",
+        "text": "'¿Cachai?' - 'you get it?', checking that you are following.",
+        "es": "¿cachai?",
+        "sources": [
+          "calendariochile_modismos",
+          "spanishdict_chile"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "cheek_kiss",
+        "text": "Many people greet with one kiss on the right cheek, including when meeting someone new; men usually shake hands.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "time": [
+      {
+        "id": "once",
+        "text": "'La once' is tea time between about 6 and 8 pm: tea with bread (marraqueta is the favourite) and things to put on it - in many homes it replaces dinner.",
+        "es": "la once · marraqueta",
+        "sources": [
+          "matador_cl"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "late_parties",
+        "text": "Parties ('carretes') start with a 'previa' at home around 9-10 pm and can go on until dawn.",
+        "es": "carrete · previa",
+        "sources": [
+          "matador_cl"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "al_tiro",
+        "text": "'Al tiro' means 'right away', though in practice it can mean 'soon'.",
+        "es": "al tiro",
+        "sources": [
+          "calendariochile_modismos",
+          "spanishdict_chile"
+        ],
+        "status": "checked"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "asado",
+        "text": "An asado (barbecue) marks almost any occasion: a match, a farewell, a new home, the end of term.",
+        "es": "un asado",
+        "sources": [
+          "matador_cl"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "pololo",
+        "text": "A boyfriend or girlfriend is a 'pololo' / 'polola'; dating is 'pololear'.",
+        "es": "pololo · polola",
+        "sources": [
+          "calendariochile_modismos",
+          "spanishdict_chile"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "weon",
+        "text": "'Weón' among friends usually means 'mate' - but it is an insult in other tones; leave it to close friends.",
+        "sources": [
+          "matador_cl",
+          "eldinamo_expr"
+        ],
+        "status": "checked"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "regional_calendar",
+        "text": "Each region has its own Mineduc calendar resolution; the start date is national but winter holidays differ.",
+        "es": "calendario escolar regional",
+        "sources": [
+          "latercera_calendario"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "earthquake_drills",
+        "text": "Schools have an integral safety plan (PISE) and take part in earthquake and evacuation drills - ask your child's school about its plan.",
+        "es": "simulacro · PISE",
+        "sources": [
+          "mineduc_simulacro",
+          "wiki_pise"
+        ],
+        "status": "checked"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "fiestas_food",
+        "text": "September food at the 'fondas' and 'ramadas': empanadas, anticuchos, choripán, sopaipillas with pebre, and mote con huesillo.",
+        "es": "empanadas · mote con huesillo",
+        "sources": [
+          "matador_patrias"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "wine_seasons",
+        "text": "Wine follows the seasons: hot wine with orange and cinnamon in winter, cold wine with strawberries or melon in summer.",
+        "es": "vino navegado",
+        "sources": [
+          "matador_cl"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "chupar_bigotes",
+        "text": "A delicious dish is 'para chuparse los bigotes'.",
+        "es": "para chuparse los bigotes",
+        "sources": [
+          "eldinamo_expr"
+        ],
+        "status": "checked"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "tremors_calm",
+        "text": "People stay calm in small tremors and often guess the magnitude straight away; only strong quakes cause alarm.",
+        "sources": [
+          "matador_cl"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "drills_public",
+        "text": "Schools take part in large, coordinated earthquake drills.",
+        "es": "simulacro",
+        "sources": [
+          "mineduc_simulacro"
+        ],
+        "status": "checked"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "bacan_fome",
+        "text": "'Bacán' - great; 'fome' - boring, dull.",
+        "es": "bacán · fome",
+        "sources": [
+          "calendariochile_modismos",
+          "spanishdict_chile"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "pato",
+        "text": "'Estoy pato' / 'ando pato' - I'm broke.",
+        "es": "estoy pato",
+        "sources": [
+          "matador_cl",
+          "eldinamo_expr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "chancho",
+        "text": "'Lo pasamos chancho' - we had a great time.",
+        "es": "lo pasamos chancho",
+        "sources": [
+          "matador_cl"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "filete",
+        "text": "'¡Está filete!' - it's very good.",
+        "es": "está filete",
+        "sources": [
+          "eldinamo_expr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "peludo",
+        "text": "'Está peludo' - it's tough, difficult.",
+        "es": "está peludo",
+        "sources": [
+          "eldinamo_expr"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "pendejo",
+        "text": "'Pendejo' usually means a kid or someone childish - not the strong insult it is elsewhere.",
+        "sources": [
+          "matador_cl"
+        ],
+        "status": "checked"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "accent",
+        "text": "Understanding the speed and the slang of Chilean Spanish.",
+        "sources": [
+          "matador_cl"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "once_not_dinner",
+        "text": "Being invited 'a tomar once' and finding there is no dinner after it.",
+        "sources": [
+          "matador_cl"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "earthquakes",
+        "text": "Earthquakes: locals stay calm, newcomers do not - learn the drill at home and school.",
+        "sources": [
+          "matador_cl"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "upside_down_year",
+        "text": "The upside-down year: Christmas at the beach and winter in July.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "cueca",
+        "text": "The cueca, the national dance, fills September: stamping, clapping and waving white handkerchiefs. Many newcomers try to learn it in a couple of weeks.",
+        "es": "la cueca",
+        "sources": [
+          "matador_patrias"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "fondas",
+        "text": "The 'fondas' and 'ramadas' - fairground halls with food, music and dancing - are at the heart of the Fiestas Patrias.",
+        "es": "las fondas",
+        "sources": [
+          "matador_patrias"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "terremoto",
+        "text": "The 'terremoto' drink (pipeño wine, pineapple ice cream, grenadine) belongs to September - and its 'réplicas' the next morning. Adults only.",
+        "es": "el terremoto",
+        "sources": [
+          "matador_patrias"
+        ],
+        "status": "checked"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "first_dieciocho",
+      "label": "Your first Dieciocho",
+      "words": [
+        "dieciocho",
+        "fiestas patrias",
+        "18 de septiembre",
+        "fonda",
+        "fondas",
+        "ramada",
+        "cueca"
+      ]
+    },
+    {
+      "id": "first_once",
+      "label": "Invited to 'once'",
+      "words": [
+        "once",
+        "tomar once",
+        "marraqueta"
+      ]
+    },
+    {
+      "id": "first_tremor",
+      "label": "Your first tremor",
+      "words": [
+        "temblor",
+        "sismo",
+        "terremoto",
+        "simulacro"
+      ]
+    },
+    {
+      "id": "summer_christmas",
+      "label": "A summer Christmas",
+      "words": [
+        "viejito pascuero",
+        "navidad",
+        "pan de pascua"
+      ]
+    },
+    {
+      "id": "winter_break",
+      "label": "Winter school holidays",
+      "words": [
+        "vacaciones de invierno"
+      ]
+    },
+    {
+      "id": "first_asado",
+      "label": "Your first asado",
+      "words": [
+        "asado",
+        "parrilla",
+        "choripán"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "nos invitaron",
+        "invited us",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor",
+        "carrete"
+      ]
+    }
+  ]
+}
