@@ -30,12 +30,23 @@ const RouteCounter = () => {
   return null;
 };
 
+// 8 Nov 2026: a new page opens at its top (React Router keeps the old scroll position otherwise), except when the link
+// asks for a place on the page (#chat, or the "go to chat" state - those scroll themselves a moment later).
+const ScrollToTop = () => {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (!hash) window.scrollTo(0, 0);
+  }, [pathname, hash]);
+  return null;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
       <RouteCounter />
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/auth" element={<Auth />} />

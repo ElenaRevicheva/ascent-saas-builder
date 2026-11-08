@@ -85,8 +85,13 @@ export const ChatWithEspaluz = ({ onUpgradeClick }: ChatWithEspaluzProps) => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
+  // 8 Nov 2026 (Elena: "after sign-in I land in the middle of the page, where referrals are"): scrollIntoView moved the
+  // WHOLE PAGE to the chat's last message every time messages loaded, so opening the dashboard jumped past the top.
+  // Now only the chat's own box scrolls to its newest message; the page stays where the family is.
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const end = messagesEndRef.current;
+    const box = end?.closest('[data-radix-scroll-area-viewport]') as HTMLElement | null;
+    if (box) box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' });
   };
 
   useEffect(() => {
