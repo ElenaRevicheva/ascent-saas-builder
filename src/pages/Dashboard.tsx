@@ -7,9 +7,6 @@ import { Badge } from '@/components/ui/badge';
 import { Clock, Crown } from 'lucide-react';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { AccountStatusCard } from '@/components/dashboard/AccountStatusCard';
-import { QuickActionsCard } from '@/components/dashboard/QuickActionsCard';
-import { LearningProgressCard } from '@/components/dashboard/LearningProgressCard';
-import { FeatureAccessCard } from '@/components/dashboard/FeatureAccessCard';
 import { ChatWithEspaluz } from '@/components/dashboard/ChatWithEspaluz';
 import { FamilyMembersManager } from '@/components/dashboard/FamilyMembersManager';
 import { AvatarUpload } from '@/components/dashboard/AvatarUpload';
@@ -135,22 +132,16 @@ const Dashboard = () => {
           <LearningAnalytics />
         </div>
 
-        {/* Main Dashboard Cards */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
-          <div data-account-status>
-            <AccountStatusCard 
-              planType={planType}
-              isTrialActive={isTrialActive}
-              trialDaysLeft={trialDaysLeft}
-              isSubscriptionActive={isSubscriptionActive}
-            />
-          </div>
-          
-          <QuickActionsCard />
-          
-          <LearningProgressCard hasFeatureAccess={hasFeatureAccess} />
-          
-          <FeatureAccessCard hasFeatureAccess={hasFeatureAccess} />
+        {/* 8 Nov 2026 (Elena: "remove all stale and fake data"): one honest plan card. QuickActionsCard (a "Connect" button
+            shown to connected families), LearningProgressCard ("24 this week / 7 days" typed into the code) and
+            FeatureAccessCard (tiers and support that do not exist) are off the dashboard; their files stay. */}
+        <div className="mb-8 max-w-2xl" data-account-status>
+          <AccountStatusCard 
+            planType={planType}
+            isTrialActive={isTrialActive}
+            trialDaysLeft={trialDaysLeft}
+            isSubscriptionActive={isSubscriptionActive}
+          />
         </div>
 
         {/* Telegram Progress - High Priority */}
