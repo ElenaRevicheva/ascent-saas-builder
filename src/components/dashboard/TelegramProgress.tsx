@@ -357,8 +357,9 @@ export const TelegramProgress = () => {
             Last updated: {lastRefresh.toLocaleTimeString()} | Found {sessions.length} conversations
           </div>
           
-          {/* ENHANCED Debug Information */}
-          {debugInfo && (
+          {/* ENHANCED Debug Information. 8 Nov 2026 (Elena): a developer tool, never shown to families on the live site -
+              it printed the account id and raw records. Still there when a developer runs the app locally. */}
+          {debugInfo && import.meta.env.DEV && (
             <div className="mt-3 p-4 bg-red-500/10 rounded-lg text-xs border border-red-500/30">
               <details>
                 <summary className="cursor-pointer font-medium text-red-600">🐛 ENHANCED Debug Info - Why No Recent Sessions? (click to expand)</summary>
