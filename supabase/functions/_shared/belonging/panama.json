@@ -1,0 +1,685 @@
+{
+  "country": "panama",
+  "name": "Panamá",
+  "version": "1.0",
+  "checked_on": "2026-11-08",
+  "purpose": "Belonging pack (Elena, 8 Nov 2026): what lasts when the errands end - the rhythm of the year and the day, how people greet and keep time, family and school life, holidays, food, the words people really use, and what newcomers find hard. Shared by web, WhatsApp and Telegram. Errands (bank, Migración, shops) stay in the country contexts file.",
+  "rules": [
+    "Use only items with status 'checked' as facts. An 'unverified' item may be offered only as 'many people say... ask a neighbour', never as fact.",
+    "Dates that move every year (Carnival, Holy Week, school calendar, the official holiday decree) are never stated as this year's date: say the month and tell the family to confirm the year's official calendar.",
+    "Describe customs as what many people do, never as what every Panamanian is. No stereotypes, no ethnic labels."
+  ],
+  "sources": {
+    "wiki_holidays": {
+      "title": "Public holidays in Panama (Wikipedia; tagged as needing citations)",
+      "url": "https://en.wikipedia.org/wiki/Public_holidays_in_Panama"
+    },
+    "relofirm_fiestas": {
+      "title": "5 Things to Know About Fiestas Patrias in Panama (Relofirm)",
+      "url": "https://www.relofirm.com/blog/5_things_to_know_about_fiestas_patrias_in_panama/"
+    },
+    "tvn_school_2025": {
+      "title": "Año Escolar 2025: Ministerio de Educación oficializa la fecha de inicio y el calendario (TVN)",
+      "url": "https://www.tvn-2.com/nacionales/ano-escolar-2025-calendario-ministerio-educacion_1_2152904.html"
+    },
+    "estrella_vacaciones_2026": {
+      "title": "Primeras vacaciones escolares 2026, calendario del Meduca (La Estrella de Panamá)",
+      "url": "https://www.laestrella.com.pa/panama/informacion-util/primeras-vacaciones-escolares-2026-esto-dice-el-calendario-del-meduca-ID22470190"
+    },
+    "pa_america_2024": {
+      "title": "Oficializan calendario escolar 2024 (Panamá América)",
+      "url": "https://www.panamaamerica.com.pa/sociedad/oficializan-calendario-escolar-2024-1230608/amp"
+    },
+    "roughguides_climate": {
+      "title": "Best time to visit Panama (Rough Guides)",
+      "url": "https://www.roughguides.com/destinations/central-america-and-the-caribbean/panama/when-to-go"
+    },
+    "worldbank_climate": {
+      "title": "Panama - Climate data (World Bank Climate Knowledge Portal)",
+      "url": "https://climateknowledgeportal.worldbank.org/country/Panama/climate-data-historical"
+    },
+    "matador_customs": {
+      "title": "Las 10 costumbres panameñas que más desconciertan a los extranjeros (Natalie Jurado, Matador Network, 2019)",
+      "url": "https://matadornetwork.com/es/las-10-costumbres-panamenas-que-mas-desconciertan-los-extranjeros/"
+    },
+    "matador_friends": {
+      "title": "10 cosas que deberías saber antes de hacerte amigo de un panameño (Natalie Jurado, Matador Network, 2018)",
+      "url": "https://matadornetwork.com/es/10-cosas-que-deberias-saber-antes-de-hacerte-amigo-de-un-panameno/"
+    },
+    "matador_expresiones": {
+      "title": "23 expresiones autóctonas que debes conocer si vienes de visita a Panamá (Matador Network)",
+      "url": "https://matadornetwork.com/es/23-expresiones-autoctonas-que-debes-conocer-si-vienes-de-visita-panama/"
+    },
+    "expatexchange_fauxpas": {
+      "title": "10 Cultural Faux Pas to Avoid While Living in Panama (Expat Exchange)",
+      "url": "https://www.expatexchange.com/article/33839/Living-in-Panama-10-Cultural-Faux-Pas-to-Avoid-While-Living-in-Panama"
+    },
+    "expatfocus_leisure": {
+      "title": "Panama leisure and entertainment (Expat Focus)",
+      "url": "https://www.expatfocus.com/panama/guide/panama-leisure-and-entertainment"
+    },
+    "baselang_slang": {
+      "title": "Panamanian Slang: 16 Spanish Words That Only Make Sense In Panama (BaseLang)",
+      "url": "https://baselang.com/blog/vocabulary/panamanian-slang/"
+    },
+    "wiktionary_pa": {
+      "title": "Appendix: Glossary of Panamanian Spanish (Wiktionary)",
+      "url": "https://en.wiktionary.org/wiki/Appendix:Glossary_of_Panamanian_Spanish"
+    },
+    "catedra_juegavivo": {
+      "title": "Juega vivo in Panama (Cátedra, Universidad de Panamá, 2021)",
+      "url": "https://revistas.up.ac.pa/index.php/catedra/article/download/2117/1968"
+    },
+    "estrella_juegavivo": {
+      "title": "Panamá: educación, cultura y juega vivo (La Estrella de Panamá)",
+      "url": "https://www.laestrella.com.pa/panama/nacional/juega-panama-cultura-educacion-DLLE131662"
+    },
+    "rove_mejorana": {
+      "title": "Festival de la Mejorana (Rove.me)",
+      "url": "https://rove.me/to/panama/festival-de-la-mejorana"
+    },
+    "stopover_pollera": {
+      "title": "Pollera Festival (Panama Stopover)",
+      "url": "https://panama-stopover.com/en/know-panama/culture-history/pollera-festival"
+    },
+    "embassy_culture": {
+      "title": "Panama's Culture (Embassy of Panama)",
+      "url": "https://www.embassyofpanama.org/culture"
+    },
+    "wiki_tamborito": {
+      "title": "Tamborito (Wikipedia)",
+      "url": "https://en.wikipedia.org/wiki/Tamborito"
+    },
+    "bizlatinhub_etiquette": {
+      "title": "Business etiquette in Panama (Biz Latin Hub)",
+      "url": "https://www.bizlatinhub.com/guides/panama/business-etiquette-in-panama/"
+    },
+    "countryreports_es": {
+      "title": "Panamá - costumbres (CountryReports, older overview)",
+      "url": "https://www.countryreports.org/country/Panama/espanol.htm"
+    }
+  },
+  "sections": {
+    "rhythm_of_the_year": [
+      {
+        "id": "seasons",
+        "text": "Two seasons, not four: the dry season, which people call 'verano' (summer), roughly mid-December to mid-April, and the rainy season, called 'invierno' (winter), roughly May to November. The edges move a little every year.",
+        "es": "verano = temporada seca · invierno = temporada de lluvias",
+        "sources": [
+          "roughguides_climate",
+          "worldbank_climate"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "rain_afternoons",
+        "text": "In the rainy season mornings are often sunny and the heavy rain comes in the afternoon - plan errands and the park for the morning.",
+        "sources": [
+          "roughguides_climate"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "veranito",
+        "text": "Some years a short dry spell in July or August, the 'veranito'.",
+        "sources": [
+          "roughguides_climate"
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "november_patria",
+        "text": "November is the month of the homeland, 'el mes de la patria': several national holidays close together, school parades with marching bands, flags everywhere. Offices close on the holidays and errands wait.",
+        "es": "las fiestas patrias",
+        "sources": [
+          "relofirm_fiestas",
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "carnival",
+        "text": "Carnival comes before Lent (February or early March, the date moves every year): street parties, music, and people getting soaked with water in the heat - many families travel to the interior or the beach.",
+        "sources": [
+          "matador_customs",
+          "matador_friends",
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "new_year_water",
+        "text": "On New Year's Day many families go to a river or the beach together to start the year fresh.",
+        "sources": [
+          "matador_customs"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "fireworks",
+        "text": "Fireworks mark almost every celebration - New Year, Carnival, weddings, big events.",
+        "sources": [
+          "matador_customs"
+        ],
+        "status": "checked"
+      }
+    ],
+    "holidays": [
+      {
+        "id": "jan1",
+        "text": "1 January - New Year's Day.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "jan9",
+        "text": "9 January - Martyrs' Day (Día de los Mártires).",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "carnival_tuesday",
+        "text": "Carnival Tuesday - date moves every year.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "good_friday",
+        "text": "Good Friday (Viernes Santo) - date moves every year.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "may1",
+        "text": "1 May - Labour Day.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "nov3",
+        "text": "3 November - Separation of Panama from Colombia.",
+        "sources": [
+          "wiki_holidays",
+          "relofirm_fiestas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "nov4",
+        "text": "4 November - Flag Day: observed by public offices and all schools, not a day off for most private companies.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "nov5",
+        "text": "5 November - Colón Day (patriotic day of the city of Colón).",
+        "sources": [
+          "wiki_holidays",
+          "relofirm_fiestas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "nov10",
+        "text": "10 November - First Cry of Independence in La Villa de Los Santos (sources differ on whether it is a day off everywhere).",
+        "sources": [
+          "wiki_holidays",
+          "relofirm_fiestas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "nov28",
+        "text": "28 November - Independence from Spain.",
+        "sources": [
+          "wiki_holidays",
+          "relofirm_fiestas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "dec8",
+        "text": "8 December - Mother's Day, a national holiday.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "dec20",
+        "text": "20 December - Day of National Mourning.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "dec25",
+        "text": "25 December - Christmas Day.",
+        "sources": [
+          "wiki_holidays"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "holiday_rule",
+        "text": "The government sets each year's official list and any moved days by decree - confirm the year's calendar before planning around a holiday.",
+        "sources": [
+          "relofirm_fiestas"
+        ],
+        "status": "checked"
+      }
+    ],
+    "greetings_and_courtesy": [
+      {
+        "id": "greet_by_time",
+        "text": "Greet first, then ask: 'buenos días', 'buenas tardes', 'buenas noches' when you walk into a shop, an office or a waiting room. Skipping the greeting reads as rude.",
+        "es": "Buenos días, ¿cómo está?",
+        "sources": [
+          "expatexchange_fauxpas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "handshake_kiss",
+        "text": "A handshake in formal settings; a light kiss on the cheek is common between women, and between men and women who are friends.",
+        "sources": [
+          "expatexchange_fauxpas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "titles",
+        "text": "At work and in offices people are often addressed by title - 'Licenciado/a', 'Ingeniero/a' - first names come later.",
+        "es": "Buenos días, licenciada.",
+        "sources": [
+          "bizlatinhub_etiquette"
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "please_thanks",
+        "text": "'Por favor' and 'gracias' are valued; patience and warmth get further than insistence.",
+        "sources": [
+          "expatexchange_fauxpas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "relationship_first",
+        "text": "Small talk before business: ask how the person is before going to your request.",
+        "sources": [
+          "countryreports_es"
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "gestures",
+        "text": "Many people talk with their hands and the whole body - it is expression, not anger.",
+        "sources": [
+          "matador_friends"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "sovereignty",
+        "text": "Panama's sovereignty and the Canal are a proud, sensitive subject - never joke that Panama is or was part of the United States.",
+        "sources": [
+          "matador_friends"
+        ],
+        "status": "checked"
+      }
+    ],
+    "time": [
+      {
+        "id": "ahorita",
+        "text": "'Ahora' and 'ahorita' usually mean 'in a while', not 'right now'.",
+        "es": "Ahorita voy. = I'll come in a while.",
+        "sources": [
+          "matador_customs",
+          "matador_expresiones"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "hora_panamena",
+        "text": "Social plans start late ('hora panameña'): 15-30 minutes is normal for a party or a visit. Offices, doctors and schools still expect you on time.",
+        "sources": [
+          "expatexchange_fauxpas",
+          "matador_friends",
+          "expatfocus_leisure"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "tranque",
+        "text": "Traffic jams are 'el tranque' - and the usual reason given for being late.",
+        "es": "Había un tranque terrible.",
+        "sources": [
+          "matador_customs"
+        ],
+        "status": "checked"
+      }
+    ],
+    "family_and_friends": [
+      {
+        "id": "family_core",
+        "text": "Family is the centre: extended families often live close and gather often; expect invitations to birthdays and celebrations.",
+        "sources": [
+          "expatexchange_fauxpas",
+          "matador_friends"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "friend_family",
+        "text": "A Panamanian friend often brings you into the whole family, who treat you as one of their own - this is how belonging usually starts.",
+        "sources": [
+          "matador_friends"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "kids_parties",
+        "text": "Children's birthday parties are often big, themed events.",
+        "sources": [
+          "matador_friends"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "birthday_out",
+        "text": "For an adult's birthday, friends often take the person out to dinner and to celebrate.",
+        "sources": [
+          "matador_friends"
+        ],
+        "status": "checked"
+      }
+    ],
+    "school_life": [
+      {
+        "id": "school_year",
+        "text": "The public school year starts in early March (2 March in 2026, 10 March in 2025) and runs in three trimesters with short breaks between them, ending in December. Confirm each year's Meduca calendar.",
+        "sources": [
+          "estrella_vacaciones_2026",
+          "tvn_school_2025",
+          "pa_america_2024"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "school_parades",
+        "text": "In November schools march in the patriotic parades ('desfiles') with their bands; practice starts weeks before. A child in the band or the parade is a proud family moment.",
+        "sources": [
+          "relofirm_fiestas"
+        ],
+        "status": "checked"
+      }
+    ],
+    "food_and_table": [
+      {
+        "id": "rice",
+        "text": "Rice is at lunch and dinner in most homes.",
+        "sources": [
+          "matador_customs"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "breakfast",
+        "text": "When there is time, breakfast can be big: meat or liver, fried corn tortillas, plantains.",
+        "sources": [
+          "matador_customs"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "sancocho",
+        "text": "Sancocho, the chicken soup, is the traditional soup.",
+        "sources": [
+          "embassy_culture"
+        ],
+        "status": "checked"
+      }
+    ],
+    "everyday_life": [
+      {
+        "id": "landmarks",
+        "text": "Directions use landmarks ('after the gas station, the blue house') more than street names and numbers.",
+        "sources": [
+          "matador_friends"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "taxi_ask",
+        "text": "With street taxis you ask first where the driver is going - drivers may choose the ride. Apps are the common alternative.",
+        "sources": [
+          "matador_customs"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "aircon_layers",
+        "text": "Air conditioning is strong in offices, buses, cinemas and malls: carry a sweater, also for the children.",
+        "sources": [
+          "matador_customs"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "rain_no_umbrella",
+        "text": "Many people do not carry umbrellas: the downpour is heavy but brief, so they wait it out.",
+        "sources": [
+          "matador_customs"
+        ],
+        "status": "checked"
+      }
+    ],
+    "local_expressions": [
+      {
+        "id": "xopa",
+        "text": "'¿Qué xopá?' (sounds like 'sopá') - 'what's up?', between friends only, never with strangers or in formal places.",
+        "sources": [
+          "baselang_slang",
+          "wiktionary_pa"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "chuleta",
+        "text": "'¡Chuleta!' - an exclamation of surprise or annoyance ('wow!', 'darn!'), a soft replacement for a ruder word.",
+        "sources": [
+          "baselang_slang",
+          "wiktionary_pa"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "juega_vivo",
+        "text": "'Juega vivo' - taking advantage, cutting corners, from small cheekiness to real dishonesty. Panamanians themselves debate it as a habit to correct; it is not a compliment and not 'be smart'.",
+        "sources": [
+          "catedra_juegavivo",
+          "estrella_juegavivo"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "tranque_word",
+        "text": "'Tranque' - traffic jam.",
+        "sources": [
+          "matador_customs"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "me_regalas",
+        "text": "'¿Me regalas...?' - a polite way to ask for something in a shop ('¿me regalas un agua?'), not asking for a gift.",
+        "sources": [],
+        "status": "unverified"
+      },
+      {
+        "id": "a_la_orden",
+        "text": "'A la orden' - 'at your service', said by shop staff and as 'you're welcome'.",
+        "sources": [],
+        "status": "unverified"
+      }
+    ],
+    "newcomers_find_hard": [
+      {
+        "id": "time_gap",
+        "text": "The gap between office time (be punctual) and social time (start late) - newcomers often feel either rude or stood up.",
+        "sources": [
+          "expatexchange_fauxpas",
+          "matador_friends"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "november_closed",
+        "text": "November holidays stop offices and errands for days at a time - plan paperwork for October or December.",
+        "sources": [
+          "relofirm_fiestas"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "closeness",
+        "text": "Personal space is closer and conversation warmer and louder than many newcomers are used to.",
+        "sources": [
+          "expatexchange_fauxpas"
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "slang_barrier",
+        "text": "Even with good Spanish, local expressions make people hard to follow at first - it gets better with friends who translate.",
+        "sources": [
+          "matador_friends"
+        ],
+        "status": "checked"
+      }
+    ],
+    "folk_culture": [
+      {
+        "id": "pollera",
+        "text": "The pollera is the embroidered national dress for women, worn for the tamborito dance and festivals; men wear the montuno. The Pollera Festival is held in Las Tablas on 22 July.",
+        "sources": [
+          "wiki_tamborito",
+          "stopover_pollera",
+          "rove_mejorana"
+        ],
+        "status": "checked"
+      },
+      {
+        "id": "mejorana",
+        "text": "The Festival de la Mejorana in Guararé (late September) is the great folklore festival: ox-cart parades, music and dance contests.",
+        "sources": [
+          "rove_mejorana"
+        ],
+        "status": "checked"
+      }
+    ]
+  },
+  "belonging_moments": [
+    {
+      "id": "first_fiestas_patrias",
+      "label": "Your first Fiestas Patrias",
+      "words": [
+        "fiestas patrias",
+        "desfile",
+        "desfiles",
+        "mes de la patria",
+        "3 de noviembre",
+        "28 de noviembre",
+        "parade",
+        "patriotic"
+      ]
+    },
+    {
+      "id": "first_carnival",
+      "label": "Your first Carnival",
+      "words": [
+        "carnaval",
+        "carnival",
+        "culecos",
+        "mojadera"
+      ]
+    },
+    {
+      "id": "school_parade",
+      "label": "A school parade or band",
+      "words": [
+        "banda",
+        "desfile escolar",
+        "school band",
+        "school parade"
+      ]
+    },
+    {
+      "id": "mothers_day",
+      "label": "Mother's Day, 8 December",
+      "words": [
+        "día de las madres",
+        "dia de las madres",
+        "mother's day"
+      ]
+    },
+    {
+      "id": "rainy_season",
+      "label": "Your first rainy season",
+      "words": [
+        "invierno",
+        "temporada de lluvia",
+        "rainy season",
+        "aguacero"
+      ]
+    },
+    {
+      "id": "dry_season",
+      "label": "Your first verano",
+      "words": [
+        "verano",
+        "dry season",
+        "temporada seca"
+      ]
+    },
+    {
+      "id": "local_food",
+      "label": "Local food at your table",
+      "words": [
+        "sancocho",
+        "patacones",
+        "carimañolas",
+        "carimanolas",
+        "hojaldras",
+        "tortilla changa"
+      ]
+    },
+    {
+      "id": "local_friends",
+      "label": "Invited by a local family",
+      "words": [
+        "cumpleaños de",
+        "invited us",
+        "nos invitaron",
+        "vecina",
+        "vecino",
+        "neighbour",
+        "neighbor"
+      ]
+    }
+  ]
+}

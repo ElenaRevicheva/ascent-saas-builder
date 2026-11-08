@@ -807,7 +807,9 @@ The video script will be used to generate an avatar video with synchronized audi
         </Alert>
       )}
 
-      <Card className="border-border/50 shadow-magical h-96" style={{ background: 'var(--gradient-card)' }}>
+      {/* 8 Nov 2026: the card had a fixed h-96 while its content took h-full PLUS the header, so the message box hung out
+          below the card and touched the next block once the chat moved up. Now the content fills only what is left. */}
+      <Card className="border-border/50 shadow-magical h-[30rem] flex flex-col" style={{ background: 'var(--gradient-card)' }}>
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
@@ -821,7 +823,7 @@ The video script will be used to generate an avatar video with synchronized audi
           </CardTitle>
         </CardHeader>
       
-      <CardContent className="space-y-4 h-full flex flex-col">
+      <CardContent className="space-y-4 flex-1 min-h-0 flex flex-col">
         {/* Messages Area */}
         <ScrollArea className="flex-1 pr-4">
           <div className="space-y-4">
