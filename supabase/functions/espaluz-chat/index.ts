@@ -172,7 +172,7 @@ WHAT YOU REMEMBER ABOUT THIS FAMILY (from earlier talks on any channel; true not
 ${familyFacts.map((f) => `- ${f}`).join('\n')}
 Bring up at most ONE, only when it truly fits, the way a friend would. Never list them, never add to them.
 ` : ''}${familyNotes?.members?.length ? `
-THIS FAMILY: ${familyNotes.members.map((m: any) => `${m.name} (${m.role}${m.age ? `, ${m.age}` : ''})`).join('; ')}. Use these exact name spellings.${familyNotes.speaker ? ` You are talking with ${familyNotes.speaker}.` : ''}${familyNotes.lessons?.length ? `
+THIS FAMILY: ${familyNotes.members.map((m: any) => `${m.name} (${m.role}${m.age ? `, ${m.age}` : ''})`).join('; ')}. Use these exact name spellings. These are ALL the members of this family's account. If asked who is in the family or about a member, ANSWER from this list first (name, role, age), then teach. Never invent a relative, spouse, surname or age and never merge two people.${familyNotes.speaker ? ` You are talking with ${familyNotes.speaker}.` : ''}${familyNotes.lessons?.length ? `
 Recent classroom lessons with the child: ${familyNotes.lessons.join(' | ')}. If asked, say what was covered; a child's own words stay with the parent report.` : ''}
 ` : ''}
 ${ESPALUZ_COMPANION_RULES}
@@ -1268,7 +1268,31 @@ const FACTS_SYSTEM = "You keep a small private notebook about a family for their
   "paperwork, school enrolment, doctor), with the day as said ('on Thursday'). NEVER write the NUMBERS themselves: passwords, ID, " +
   "passport or cédula numbers, phone numbers, emails, street addresses, card or bank details; and no health details beyond 'has a " +
   "doctor's appointment'. If nothing lasting: reply NONE." +
-  " Use the exact spellings in FAMILY NAMES: if a name sounds like one of them (Elisa for Alisa), write the family spelling. Write the SPEAKER's name, never 'the user'. If a fact has a natural end (this week's holiday, Monday's appointment), end its line with [until YYYY-MM-DD], working from TODAY. Start the line with [private] for any worry, money or health matter. If the message corrects a KNOWN FACT, write instead: REPLACES: <the known fact, exactly> => <the corrected fact>.";
+  " Use the exact spellings in FAMILY NAMES: if a name sounds like one of them (Elisa for Alisa), write the family spelling. Write the SPEAKER's name, never 'the user'. If a fact has a natural end (this week's holiday, Monday's appointment), end its line with [until YYYY-MM-DD], working from TODAY. Start the line with [private] for any worry, money or health matter. If the message corrects a KNOWN FACT, write instead: REPLACES: <the known fact, exactly> => <the corrected fact>." +
+  " A question is not a fact. Never restate, combine or guess from KNOWN FACTS: write only what THIS message newly says, and never join two people into one name.";
+
+// 8 Nov 2026 (Elena's family test): she ASKED "Who is my family?" and the bots noted "Elena is a single parent" and "Alisa
+// Marshall, daughter" (two people merged) - restated from older notes, never said. Twins of has_statement / names_grounded
+// in the bots' espaluz_memory.py: a question gives no notes; a note names only people the message, the family list or the
+// speaker names.
+const CYR: Record<string, string> = Object.fromEntries([...'абвгдеёжзийклмнопрстуфхцчшщъыьэюя'].map((c, i) =>
+  [c, ['a','b','v','g','d','e','e','zh','z','i','i','k','l','m','n','o','p','r','s','t','u','f','kh','ts','ch','sh','shch','','y','','e','yu','ya'][i]]));
+const PLAIN_WORDS = new Set(('the a an her his their she he they i family daughter son mother father mom dad wife husband child children kids ' +
+  'baby grandmother grandfather grandma grandpa dog cat pet school next on in every both spanish english russian monday tuesday wednesday ' +
+  'thursday friday saturday sunday january february march april may june july august september october november december migracion ' +
+  'christmas easter').split(' '));
+const foldWord = (t: string) => [...String(t ?? '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')].map((c) => CYR[c] ?? c).join('');
+const hasStatement = (text: string) => (String(text ?? '').match(/[^.!?\n]+[.!?]?/g) ?? []).map((p) => p.trim())
+  .some((p) => p && !p.endsWith('?') && p.split(/\s+/).length >= 2);
+function namesGrounded(fact: string, text: string, allowed: string[]): boolean {
+  const said = new Set(foldWord(text).match(/[a-z0-9]+/g) ?? []);
+  const ok = new Set(allowed.filter(Boolean).map(foldWord));
+  for (const tok of String(fact ?? '').match(/\b[A-ZÁÉÍÓÚÑ][A-Za-zÁÉÍÓÚÑáéíóúñü'-]+/g) ?? []) {
+    const w = foldWord(tok).split("'")[0];
+    if (!said.has(w) && !ok.has(w) && !PLAIN_WORDS.has(w)) return false;
+  }
+  return true;
+}
 
 type FamilyNotes = { rows: any[]; facts: string[]; members: { name: string; role: string; age: number | null }[]; speaker: string; lessons: string[] };
 const notebook = () => createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
@@ -1304,6 +1328,7 @@ async function rememberFamilyFacts(userId: string, text: string, notes: FamilyNo
   try {
     const said = text.trim();
     if (said.length < 15 || said.startsWith('/')) return;
+    if (!hasStatement(said)) return; // 8 Nov 2026: a question gives no notes
     const today = new Date().toISOString().slice(0, 10);
     const user = `TODAY: ${today}\nSPEAKER: ${notes.speaker || 'unknown'}\nFAMILY NAMES: ${notes.members.map((m) => m.name).join(', ') || 'unknown'}\n` +
       `KNOWN FACTS:\n${notes.facts.slice(0, 20).map((f) => `- ${f}`).join('\n') || 'none'}\nUSER MESSAGE:\n${said.slice(0, 1200)}`;
@@ -1330,6 +1355,7 @@ async function rememberFamilyFacts(userId: string, text: string, notes: FamilyNo
       const until = body.match(/\[until (\d{4}-\d{2}-\d{2})\]\s*$/i)?.[1];
       const fact = body.replace(/\s*\[until \d{4}-\d{2}-\d{2}\]\s*$/i, '').trim();
       if (fact.length < 8 || fact.length > 160 || /^none/i.test(fact)) continue;
+      if (!namesGrounded(fact, said, [...notes.members.map((m) => m.name), notes.speaker])) { console.log('[memory] note dropped: names someone the message did not'); continue; }
       if (replaces) {
         const old = notes.rows.find((r: any) => String(r.content?.fact ?? '').toLowerCase() === replaces.toLowerCase());
         if (old) { await db.from('learning_sessions').update({ content: { ...old.content, retired: true } }).eq('id', old.id); corrected++; }
