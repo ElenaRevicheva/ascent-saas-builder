@@ -114,6 +114,19 @@ serve(async (req) => {
         console.error(`free gemini voice failed, trying the next voice:`, geminiError);
       }
     }
+    // 7 Nov 2026 (Elena: "try each free possibility to keep Pere and Titi their own personalities"): Azure AI Speech on
+    // the FREE F0 tier (500,000 characters a month, resource espaluz-voices, East US) answers after the free Gemini
+    // voices and before the paid OpenAI one. Over the free quota Azure refuses (429), it never bills - the next voice
+    // answers. Without the AZURE_SPEECH_KEY secret this step is skipped and nothing else changes.
+    if (!base64Audio && Deno.env.get('AZURE_SPEECH_KEY')) {
+      try {
+        base64Audio = await generateAzureVoice(hero && AZURE_VOICES[hero] ? hero : 'usual', cleanedText);
+        spokenBy = `azure-${hero || 'usual'}`;
+        mimeType = 'audio/mpeg';
+      } catch (azureError) {
+        console.error(`free azure voice failed, trying the next voice:`, azureError);
+      }
+    }
     if (!base64Audio) {
       // 7 Nov 2026 (Alisa's class): Gemini's free voices stop after 10 a day, and from then on Pere and Titi both spoke as
       // "nova" - one woman's voice for two characters. The last fallback now keeps each hero's own voice.
@@ -244,6 +257,38 @@ function pcmToWav(pcm: Uint8Array, rate: number): Uint8Array {
   tag(36, 'data'); v.setUint32(40, pcm.length, true);
   out.set(pcm, 44);
   return out;
+}
+
+// Azure neural voices per speaker (bilingual "Multilingual" voices read the Spanish and the English line alike);
+// each can be changed without code through AZURE_<WHO>_VOICE / _PITCH / _RATE secrets.
+const AZURE_VOICES: Record<string, { voice: string; pitch: string; rate: string }> = {
+  usual: { voice: Deno.env.get('AZURE_USUAL_VOICE') ?? 'en-US-EmmaMultilingualNeural', pitch: '+0%', rate: '-5%' },
+  pere: { voice: Deno.env.get('AZURE_PERE_VOICE') ?? 'en-US-BrianMultilingualNeural',
+          pitch: Deno.env.get('AZURE_PERE_PITCH') ?? '-8%', rate: Deno.env.get('AZURE_PERE_RATE') ?? '-18%' },
+  titi: { voice: Deno.env.get('AZURE_TITI_VOICE') ?? 'en-US-AndrewMultilingualNeural',
+          pitch: Deno.env.get('AZURE_TITI_PITCH') ?? '+18%', rate: Deno.env.get('AZURE_TITI_RATE') ?? '+0%' },
+};
+
+async function generateAzureVoice(who: string, text: string): Promise<string> {
+  const v = AZURE_VOICES[who];
+  const region = Deno.env.get('AZURE_SPEECH_REGION') || 'eastus';
+  const spoken = text.replace(/\s*\/\s*/g, '. ').slice(0, 900)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='es-MX'>` +
+    `<voice name='${v.voice}'><prosody pitch='${v.pitch}' rate='${v.rate}'>${spoken}</prosody></voice></speak>`;
+  const r = await fetch(`https://${region}.tts.speech.microsoft.com/cognitiveservices/v1`, {
+    method: 'POST',
+    headers: {
+      'Ocp-Apim-Subscription-Key': Deno.env.get('AZURE_SPEECH_KEY')!,
+      'Content-Type': 'application/ssml+xml',
+      'X-Microsoft-OutputFormat': 'audio-24khz-48kbitrate-mono-mp3',
+      'User-Agent': 'espaluz-generate-voice',
+    },
+    body: ssml,
+    signal: AbortSignal.timeout(VOICE_TIMEOUT_MS),
+  });
+  if (!r.ok) throw new Error(`Azure TTS ${r.status}: ${(await r.text()).slice(0, 160)}`);
+  return bytesToBase64(new Uint8Array(await r.arrayBuffer()));
 }
 
 // The OpenAI fallback per speaker: EspaLuz stays nova; Pere (the calm sloth) a deep, slow voice; Titi (the quick monkey)
