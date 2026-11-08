@@ -32,6 +32,11 @@ const RouteCounter = () => {
 
 // 8 Nov 2026: a new page opens at its top (React Router keeps the old scroll position otherwise), except when the link
 // asks for a place on the page (#chat, or the "go to chat" state - those scroll themselves a moment later).
+// 8 Nov 2026 (Elena, signed in on her own account: "it takes me to the middle where referrals are"): on a reload or a
+// reopened tab the BROWSER put back the last scroll spot (measured: 3600 px = "Refer Friends"), after our scrollTo(0,0).
+// 'manual' tells the browser to stop doing that, so every full page load starts at the top too.
+if (typeof window !== 'undefined' && 'scrollRestoration' in window.history) window.history.scrollRestoration = 'manual';
+
 const ScrollToTop = () => {
   const { pathname, hash } = useLocation();
   useEffect(() => {
