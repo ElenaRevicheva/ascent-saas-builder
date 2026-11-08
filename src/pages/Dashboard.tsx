@@ -121,6 +121,15 @@ const Dashboard = () => {
           <FamilyRoadmap />
         </div>
 
+        {/* Chat Section - Full Width. 8 Nov 2026 (Elena): right after the family map, before the learning journey. */}
+        <div className="mb-8" id="chat" ref={chatRef}>
+          <ChatWithEspaluz 
+            onUpgradeClick={() => {
+              setShowSubscriptionDialog(true);
+            }}
+          />
+        </div>
+
         {/* Learning Analytics */}
         <div className="mb-8" data-learning-analytics>
           <LearningAnalytics />
@@ -164,15 +173,7 @@ const Dashboard = () => {
         <div className="mb-8" data-referrals>
           <ReferralSystem />
         </div>
-        
-        {/* Chat Section - Full Width */}
-        <div className="mt-8" id="chat" ref={chatRef}>
-          <ChatWithEspaluz 
-            onUpgradeClick={() => {
-              setShowSubscriptionDialog(true);
-            }}
-          />
-        </div>
+
       </div>
 
       {/* Direct Subscription Dialog */}
