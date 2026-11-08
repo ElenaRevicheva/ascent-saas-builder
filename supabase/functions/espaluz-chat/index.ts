@@ -1329,6 +1329,126 @@ const factWords = (t: string) => new Set(t.toLowerCase().normalize('NFD').replac
 const sameFact = (a: string, b: string) => { const A = factWords(a), B = factWords(b); if (!A.size || !B.size) return false;
   let n = 0; for (const w of A) if (B.has(w)) n++; return n / Math.min(A.size, B.size) >= 0.75; };
 
+// 8 Nov 2026 (Elena: card 7, "Your life in Panama, with EspaLuz" - "show that EspaLuz is bonded to each family member").
+// The parent's window onto the bond, built ONLY from stored records: no model writes a word of it, so it cannot
+// invent. Same notebook and the same filters as readFamilyNotes (twin): retired notes are gone everywhere, a private
+// note is shown only to the person who said it (the web account is the parent), and a past dated note becomes a moment
+// of the family's story instead of disappearing. Forget = the notebook's existing `retired` mark (never a delete),
+// and only a note the parent forgot here can be brought back (a bot's correction stays a correction).
+const FORGOT_ON_WEB = 'parent_web';
+const STORY_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+async function familyStory(userId: string, body: any): Promise<Record<string, unknown>> {
+  const db = notebook();
+  if (body.memory === 'forget' || body.memory === 'restore') {
+    const id = String(body.id ?? '');
+    if (!STORY_UUID.test(id)) return { ok: false };
+    const { data: row } = await db.from('learning_sessions').select('id, content').eq('id', id).eq('user_id', userId)
+      .eq('session_type', 'analytics').eq('content->>event', 'family_fact').maybeSingle();
+    if (!row) return { ok: false };
+    const c: Record<string, unknown> = { ...(row.content ?? {}) };
+    if (body.memory === 'forget') {
+      if (c.retired) return { ok: true };
+      Object.assign(c, { retired: true, retired_by: FORGOT_ON_WEB, retired_at: new Date().toISOString() });
+    } else {
+      if (c.retired_by !== FORGOT_ON_WEB) return { ok: false };
+      delete c.retired; delete c.retired_by; delete c.retired_at;
+    }
+    const { error } = await db.from('learning_sessions').update({ content: c }).eq('id', id).eq('user_id', userId);
+    if (error) throw error;
+    console.log(`[memory] parent used ${body.memory} on the web`);
+    return { ok: true };
+  }
+
+  const pages = async (q: () => any, max = 5) => {
+    const out: any[] = [];
+    for (let p = 0; p < max; p++) {
+      const { data, error } = await q().range(p * 1000, p * 1000 + 999);
+      if (error) throw error;
+      out.push(...(data ?? []));
+      if (!data || data.length < 1000) break;
+    }
+    return out;
+  };
+  const [factRows, { data: fam }, lessonRows, { data: bots }, { data: links }, { count: webTalks }] = await Promise.all([
+    pages(() => db.from('learning_sessions').select('id, content, source, created_at').eq('user_id', userId)
+      .eq('session_type', 'analytics').eq('content->>event', 'family_fact').order('created_at', { ascending: false }), 2),
+    db.from('family_members').select('id, name, role, age, interests, name_variants, created_at').eq('user_id', userId)
+      .eq('is_active', true).order('created_at', { ascending: true }),
+    pages(() => db.from('learning_sessions').select('created_at, member:content->>family_member_id, label:content->>class_label')
+      .eq('user_id', userId).eq('session_type', 'classroom').order('created_at', { ascending: true })),
+    db.from('connected_bots').select('platform, platform_user_id, connected_at, is_active').eq('user_id', userId),
+    db.from('learning_sessions').select('content, created_at').eq('user_id', userId).eq('session_type', 'analytics')
+      .eq('content->>event', 'family_link').order('created_at', { ascending: false }).limit(40),
+    db.from('learning_sessions').select('id', { count: 'exact', head: true }).eq('user_id', userId).in('session_type', ['dashboard_chat', 'chat']),
+  ]);
+
+  const seen = new Set<string>();
+  const members = (fam ?? []).filter((m: any) => { const k = String(m.name).toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; });
+  const parent = members.find((m: any) => m.role === 'parent')?.name ?? '';
+  const today = new Date().toISOString().slice(0, 10);
+  const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+  const day = (iso: string) => String(iso).slice(0, 10);
+  const notes = factRows.filter((r: any) => !r.content?.retired && typeof r.content?.fact === 'string' && r.content.fact !== '[object Object]');
+  const mine = (r: any) => !r.content?.private || (!!parent && r.content?.speaker === parent);
+  const note = (r: any) => ({ id: r.id, fact: String(r.content.fact), source: r.source ?? '', at: r.created_at,
+    until: r.content?.until ?? null, isNew: r.created_at >= weekAgo });
+  const hiddenNotes = notes.filter((r: any) => !mine(r)).map((r: any) => ({ id: r.id, by: String(r.content?.speaker ?? ''), at: r.created_at }));
+  const shown = notes.filter(mine);
+  const comingUp = shown.filter((r: any) => r.content?.until && String(r.content.until) >= today)
+    .sort((a: any, b: any) => String(a.content.until).localeCompare(String(b.content.until))).map(note);
+  const pastDated = shown.filter((r: any) => r.content?.until && String(r.content.until) < today);
+  const standing = shown.filter((r: any) => !r.content?.until);
+
+  // A note belongs to a person when it names them (name or a saved variant), the same word test the guards use.
+  const namesOf = (m: any) => [m.name, ...(m.name_variants ?? [])].map((n: string) => String(n).split(/\s+/)[0]).filter(Boolean)
+    .map((n: string) => [...factWords(n)][0]).filter(Boolean);
+  const about = (r: any, m: any) => { const w = factWords(String(r.content.fact)); return namesOf(m).some((n: string) => w.has(n)); };
+
+  // Which phone is whose: the newest family_link answer per number (the bots ask "who is writing?").
+  const whoOn = new Map<string, string>();
+  for (const l of links ?? []) { const k = `${l.content?.platform}:${l.content?.platform_user_id}`; if (!whoOn.has(k)) whoOn.set(k, String(l.content?.member ?? '')); }
+  const activeBots = (bots ?? []).filter((b: any) => b.is_active !== false);
+  const sameName = (a: string, b: string) => !!a && !!b && a.split(/\s+/)[0].toLowerCase() === b.split(/\s+/)[0].toLowerCase();
+
+  const out = members.map((m: any) => {
+    const lessons = lessonRows.filter((l: any) => l.member === m.id);
+    const days = new Set(lessons.map((l: any) => day(l.created_at)));
+    const lastLabel = [...lessons].reverse().find((l: any) => l.label)?.label ?? null;
+    const channels = activeBots.filter((b: any) => sameName(whoOn.get(`${b.platform}:${b.platform_user_id}`) ?? '', m.name))
+      .map((b: any) => ({ platform: b.platform, since: b.connected_at }));
+    return {
+      id: m.id, name: m.name, role: m.role, age: m.age, interests: (m.interests ?? []).slice(0, 4),
+      talks: lessons.length, days: days.size, firstLesson: lessons[0]?.created_at ?? null, lastLesson: lessons.at(-1)?.created_at ?? null,
+      lastTheme: lastLabel ? String(lastLabel).slice(0, 90) : null,
+      channels, webTalks: m.name === parent ? (webTalks ?? 0) : 0,
+      notes: standing.filter((r: any) => about(r, m)).map(note),
+    };
+  });
+  const placed = new Set(out.flatMap((m: any) => m.notes.map((n: any) => n.id)));
+  const otherNotes = standing.filter((r: any) => !placed.has(r.id)).map(note);
+  const unnamedChannels = activeBots.filter((b: any) => !members.some((m: any) => sameName(whoOn.get(`${b.platform}:${b.platform_user_id}`) ?? '', m.name)))
+    .map((b: any) => ({ platform: b.platform, since: b.connected_at }));
+
+  // The family's story: real dated moments only. A past appointment is a moment lived together, not a deleted line.
+  const story: { date: string; text: string; kind: string; id?: string }[] = [];
+  for (const m of out) if (m.firstLesson) story.push({ date: m.firstLesson, kind: 'lesson', text: `${m.name}'s first class with Pere & Titi` });
+  for (const b of activeBots) if (b.connected_at) story.push({ date: b.connected_at, kind: 'channel',
+    text: `EspaLuz joined your ${b.platform === 'telegram' ? 'Telegram' : b.platform === 'whatsapp' ? 'WhatsApp' : b.platform}` });
+  for (const r of pastDated) story.push({ date: String(r.content.until), kind: 'moment', text: String(r.content.fact), id: r.id });
+  const firstNote = factRows.length ? factRows[factRows.length - 1].created_at : null;
+  if (firstNote) story.push({ date: firstNote, kind: 'memory', text: 'EspaLuz wrote her first note about your family' });
+  story.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  const starts = [firstNote, lessonRows[0]?.created_at, ...activeBots.map((b: any) => b.connected_at), ...members.map((m: any) => m.created_at)]
+    .filter(Boolean).map(String).sort();
+
+  return {
+    ok: true, since: starts[0] ?? null, members: out, otherNotes, hiddenNotes, comingUp, story: story.slice(0, 80),
+    unnamedChannels, newThisWeek: shown.filter((r: any) => r.created_at >= weekAgo).length,
+    remembered: shown.length,
+  };
+}
+
 // Free models only (Claude excluded, like the bots). A notebook failure never touches the reply.
 async function rememberFamilyFacts(userId: string, text: string, notes: FamilyNotes): Promise<void> {
   try {
@@ -1450,6 +1570,12 @@ serve(async (req) => {
       } else {
         userId = user.id;
       }
+    }
+
+    // 8 Nov 2026: card 7 on the family map reads and corrects the family notebook here (signed-in parent only).
+    if (body.memory) {
+      if (fromBot || !userId) throw new Error('Unauthorized');
+      return new Response(JSON.stringify(await familyStory(userId, body)), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     const { isVoiceInput, originalLanguage, kids } = body;

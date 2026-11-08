@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { CheckCircle2, Users, Smile, MessageCircle, Phone, Send, Gift, ArrowRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { OurStoryCard } from './OurStoryCard';
 
 /*
  * 4 Nov 2026 (Elena): the roadmap stays visible for every family - trial or paying - and ticks the steps it has
@@ -43,6 +44,8 @@ export const FamilyRoadmap = () => {
   const [facts, setFacts] = useState<Facts | null>(null);
   // Polish (4 Nov): when every step is done the map stays visible as ONE slim row; 'Show map' opens it.
   const [expanded, setExpanded] = useState(false);
+  // 8 Nov 2026: card 7 (OurStoryCard) reports whether EspaLuz already knows this family; it counts like the six steps.
+  const [storyDone, setStoryDone] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -124,8 +127,9 @@ export const FamilyRoadmap = () => {
       action: 'Invite', onClick: () => scrollToSelector('[data-referrals]') },
   ];
 
-  const doneCount = facts ? steps.filter((s) => facts[s.key].done).length : 0;
-  const allDone = !!facts && doneCount === steps.length;
+  const total = steps.length + 1;
+  const doneCount = facts ? steps.filter((s) => facts[s.key].done).length + (storyDone ? 1 : 0) : 0;
+  const allDone = !!facts && doneCount === total;
 
   if (allDone && !expanded) {
     return (
@@ -135,7 +139,7 @@ export const FamilyRoadmap = () => {
           <h2 className="text-lg text-foreground">Your EspaLuz map</h2>
           <span className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold text-white"
             style={{ background: 'hsl(var(--espaluz-green))' }}>
-            <CheckCircle2 className="h-3.5 w-3.5" aria-hidden /> All {steps.length} set up
+            <CheckCircle2 className="h-3.5 w-3.5" aria-hidden /> All {total} set up
           </span>
           <ul className="flex flex-1 flex-wrap items-center gap-2">
             {steps.map((s) => {
@@ -155,6 +159,9 @@ export const FamilyRoadmap = () => {
             Show map
           </button>
         </div>
+        <ul className="mt-4 grid gap-4">
+          <OurStoryCard index={total} onDone={setStoryDone} />
+        </ul>
       </section>
     );
   }
@@ -170,7 +177,7 @@ export const FamilyRoadmap = () => {
         </div>
         <div className="flex items-center gap-3">
           <p className="text-sm font-semibold text-foreground" aria-live="polite">
-            {facts ? `${doneCount} of ${steps.length} done` : 'Checking…'}
+            {facts ? `${doneCount} of ${total} done` : 'Checking…'}
           </p>
           {allDone && (
             <button type="button" onClick={() => setExpanded(false)} className="text-sm font-semibold text-primary hover:underline">
@@ -180,8 +187,8 @@ export const FamilyRoadmap = () => {
         </div>
       </div>
       <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-muted" role="progressbar"
-        aria-valuemin={0} aria-valuemax={steps.length} aria-valuenow={doneCount}>
-        <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${(doneCount / steps.length) * 100}%` }} />
+        aria-valuemin={0} aria-valuemax={total} aria-valuenow={doneCount}>
+        <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${(doneCount / total) * 100}%` }} />
       </div>
 
       <ol className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -229,6 +236,7 @@ export const FamilyRoadmap = () => {
             </li>
           );
         })}
+        <OurStoryCard index={total} onDone={setStoryDone} />
       </ol>
     </section>
   );
