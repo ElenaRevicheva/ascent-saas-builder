@@ -64,10 +64,22 @@ export const FamilyProfileDialog = ({ open, onOpenChange, onSaved, onOpenFamily 
   const [typed, setTyped] = useState('');
   const [saving, setSaving] = useState(false);
 
+  // 9 Nov 2026 (Elena's run-through): "Open your family list" closed the questions without keeping the answers, and
+  // reopening began at question 1 - she added her children and had to start again. Half-way answers now wait in this
+  // browser tab (sessionStorage, never the server) and reopening continues at the same question.
+  const draftKey = user ? `espaluz-profile-draft-${user.id}` : '';
+  const keepDraft = (cur: FamilyProfile, at: number) => {
+    try { if (draftKey) sessionStorage.setItem(draftKey, JSON.stringify({ p: cur, i: at })); } catch { /* private mode */ }
+  };
   useEffect(() => {
     if (!open || !user) return;
-    setI(0);
-    readFamilyProfile(user.id).then((got) => { const { event: _e, ...rest } = (got ?? {}) as FamilyProfile & { event?: string }; setP(rest); });
+    let draft: { p: FamilyProfile; i: number } | null = null;
+    try { draft = JSON.parse(sessionStorage.getItem(draftKey) || 'null'); } catch { draft = null; }
+    if (draft && draft.p) { setP(draft.p); setI(Math.min(Math.max(0, Number(draft.i) || 0), QUESTIONS.length - 1)); }
+    else {
+      setI(0);
+      readFamilyProfile(user.id).then((got) => { const { event: _e, ...rest } = (got ?? {}) as FamilyProfile & { event?: string }; setP(rest); });
+    }
     supabase.from('family_members').select('name, age, role').eq('user_id', user.id).eq('is_active', true)
       .then(({ data }) => setKids((data ?? []).filter((m) => m.role === 'child').map((m) => `${m.name}${m.age ? `, ${m.age}` : ''}`)));
   }, [open, user]);
@@ -85,6 +97,7 @@ export const FamilyProfileDialog = ({ open, onOpenChange, onSaved, onOpenFamily 
       content: { event: 'family_profile', ...final } });
     setSaving(false);
     if (error) { toast.error('Could not save. Please try again.'); return; }
+    try { sessionStorage.removeItem(draftKey); } catch { /* private mode */ }
     toast.success('Thank you. EspaLuz will use this on the web, WhatsApp and Telegram.');
     onSaved?.(final);
     onOpenChange(false);
@@ -136,7 +149,8 @@ export const FamilyProfileDialog = ({ open, onOpenChange, onSaved, onOpenFamily 
                 {kids.length ? <p className="text-foreground">Children in your family list: {kids.join(' · ')}</p>
                   : <p className="text-muted-foreground">No children in your family list yet.</p>}
                 <button type="button" className="mt-2 font-semibold text-primary hover:underline"
-                  onClick={() => { onOpenChange(false); onOpenFamily?.(); }}>Open your family list →</button>
+                  onClick={() => { keepDraft(withTyped(), i); onOpenChange(false); onOpenFamily?.(); }}>Open your family list →</button>
+                <p className="mt-1 text-xs text-muted-foreground">Your answers wait for you: press "Start here" again and you continue from this question.</p>
               </div>
             )}
 

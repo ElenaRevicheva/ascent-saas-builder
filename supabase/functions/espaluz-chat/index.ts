@@ -211,7 +211,13 @@ function belongingBlock(country = 'panama'): string {
     `errands done. Use one when it fits, the way a friend who lives here would: woven into your answer, never as a list or a ` +
     `lecture. A date that moves every year (Carnival, Holy Week, the school calendar): give the month and say to confirm this ` +
     `year's official calendar. About customs and local life, say nothing beyond these facts and what the family told you; if ` +
-    `you are not sure, say so and suggest asking a neighbour or the school.\n${lines.join('\n')}\n`;
+    `you are not sure, say so and suggest asking a neighbour or the school. ` +
+    // 9 Nov 2026 (Elena's run-through): "Which hospital is the best" got one Bogota hospital called "well-rated and affordable" -
+    // a guess dressed as advice. Places are named only from the facts above.
+    `Never name a specific hospital, clinic, doctor, school, lawyer, bank or business as best, good, safe or cheap unless ` +
+    `it is in these facts: say you have not checked places, explain how locals choose (their health insurance or public ` +
+    `system, the official ministry list, neighbours, the school) and give the Spanish words to ask. In an emergency, ` +
+    `give the emergency number if it is in these facts.\n${lines.join('\n')}\n`;
 }
 
 // 8 Nov 2026: "About your new life" - the family's own answers, the same note on web, WhatsApp and Telegram. TWIN of
@@ -1097,6 +1103,10 @@ function groqParams(model: string, maxTokens: number): Record<string, unknown> {
 }
 // 1 Nov 2026: gemini-2.5-* answer 404 "no longer available to new users"; Google's own example uses the -latest alias.
 const GEMINI_MODEL = Deno.env.get('GEMINI_MODEL') || 'gemini-flash-latest';
+// 9 Nov 2026 (Elena: "fix free model capacity before ads"): in 24 h Gemini flash answered 0 of 11 web turns (5 timeouts,
+// 4 "high demand", 2 quota) and Groq's free models allow 8,000 tokens a minute each (~3,000 a turn). Probe from the server:
+// gemini-flash-lite-latest answered in 0.7 s on the same free key. It now answers first; flash stays right behind it.
+const GEMINI_LITE_MODEL = Deno.env.get('GEMINI_LITE_MODEL') || 'gemini-flash-lite-latest';
 
 // 31 Oct 2026: gpt-oss-120b's free daily tokens were spent by midday and every classroom turn fell to gpt-oss-20b, the
 // weakest model. Grok (xAI API, ~$0.0002 a reply, the bots' llm_chain uses it) now sits between the strong Groq model
@@ -1170,8 +1180,8 @@ async function callOpenAI(apiKey: string, request: any): Promise<any> {
 // ("Signal timed out") or a slow 503 before Groq and Grok were tried. A healthy Gemini answers in 1-3 s, so a short
 // wait only cuts a step that was failing anyway, and the next provider answers at once (Elena's waterfall rule).
 const GEMINI_TIMEOUT_MS = Number(Deno.env.get('GEMINI_TIMEOUT_MS') || 6000);
-async function callGemini(apiKey: string, request: any): Promise<any> {
-  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`, {
+async function callGemini(apiKey: string, request: any, model: string = GEMINI_MODEL): Promise<any> {
+  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: 'POST',
     headers: { 'x-goog-api-key': apiKey, 'content-type': 'application/json' },
     body: JSON.stringify({
@@ -1181,13 +1191,13 @@ async function callGemini(apiKey: string, request: any): Promise<any> {
     }),
     signal: AbortSignal.timeout(GEMINI_TIMEOUT_MS),
   });
-  if (!r.ok) throw new Error(`Gemini ${GEMINI_MODEL}: ${r.status} ${(await r.text()).slice(0, 200)}`);
+  if (!r.ok) throw new Error(`Gemini ${model}: ${r.status} ${(await r.text()).slice(0, 200)}`);
   const j = await r.json();
   const text = j.candidates?.[0]?.content?.parts?.map((p: any) => p.text).join('') ;
   if (!text) throw new Error('Gemini: empty answer');
   // 5 Nov 2026: its hidden thinking eats the token limit, so an answer can stop mid-sentence ("/ A new"). Next provider instead.
   if (j.candidates?.[0]?.finishReason === 'MAX_TOKENS') throw new Error('Gemini: answer cut off at the token limit');
-  return { content: [{ text }], model: GEMINI_MODEL, usage: j.usageMetadata };
+  return { content: [{ text }], model, usage: j.usageMetadata };
 }
 
 // 31 Oct 2026 (Elena: "photos in the web classroom, like Telegram"): the child shows a toy, a drawing or her lunch and
@@ -1323,6 +1333,7 @@ async function callChain(request: any): Promise<{ result: any; provider: string 
     // 1 Nov 2026 (Elena: "sure, wire the Gemini free tier"): GEMINI_API_KEY was never set here, so this step was skipped
     // on every turn (Alisa's 63 turns went Claude -> Groq 429 -> Grok). The free no-billing key the voices use now
     // answers first; a paid GEMINI_API_KEY, if one is ever added, is tried right after it. Model from GEMINI_MODEL.
+    ['gemini-lite', Deno.env.get('GEMINI_TTS_API_KEY'), (k, r) => callGemini(k, r, GEMINI_LITE_MODEL)],
     ['gemini', Deno.env.get('GEMINI_TTS_API_KEY'), callGemini],
     ['gemini-paid', Deno.env.get('GEMINI_API_KEY'), callGemini],
     ['groq', Deno.env.get('GROQ_API_KEY'), (k, r) => callGroq(k, r, GROQ_STRONG)],
