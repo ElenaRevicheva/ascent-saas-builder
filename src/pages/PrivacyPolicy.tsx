@@ -76,7 +76,8 @@ const PrivacyPolicy = () => (
           account (if you use only WhatsApp or Telegram, tell us your number or Telegram name in the email). We delete it
           within 30 days and tell you when it is done: your account, conversations, family notes, the classroom work and voice
           recordings, and the questionnaire answers. We do not keep card details; payment records stay with PayPal or Google Play
-          under their own rules. To delete only some notes, use "forget" on the family memory card, or tell us in the email.
+          under their own rules. To have only some data deleted, tell us which in the email. ("Forget" on the family memory card stops EspaLuz using a
+          note right away; the email request deletes it.)
         </p>
 
         <h2 className="terms-section-title">6. Security</h2>
