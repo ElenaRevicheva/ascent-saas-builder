@@ -62,6 +62,7 @@ const PrivacyPolicy = () => (
         <h2 className="terms-section-title">4. Children</h2>
         <ul>
           <li>The classroom opens only after a grown-up signs in. A child does not create an account.</li>
+          <li>Before the first lesson, the parent ticks "I am this child's parent or guardian and I agree"; we keep the date of that agreement.</li>
           <li>We keep only what the lesson needs: what the child said or drew, and how the lesson went.</li>
           <li>A child's own words are shown only to their parent (in the report), never to other users.</li>
           <li>There is no advertising and no advertising ID in EspaLuz.</li>

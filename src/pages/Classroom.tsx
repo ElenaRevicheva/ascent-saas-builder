@@ -267,6 +267,24 @@ const Classroom = () => {
   // 31 Oct 2026 (Elena: "every time I press Empezar, Pere explains again that he speaks despacito"): the recorded
   // introduction plays only for a child who has never had a lesson on this account (any device). After that the class
   // opens with the heroes' short hello, which brings back something she told them last time.
+  // 9 Nov 2026 (Elena: "obtain the explicit 'I'm the parent and I agree' tick before the first lesson"; Google Play Families
+  // policy + COPPA/GDPR for a child's words and voice): one note in the family notebook (learning_sessions, event
+  // parent_consent), read once per visit. null = still reading; no note = the parent screen comes before any lesson.
+  const [consent, setConsent] = useState<boolean | null>(null);
+  const [consentTicked, setConsentTicked] = useState(false);
+  useEffect(() => {
+    if (!user?.id) return;
+    supabase.from("learning_sessions").select("id").eq("user_id", user.id).eq("session_type", "analytics")
+      .eq("content->>event", "parent_consent").limit(1)
+      .then(({ data, error }) => setConsent(error ? false : (data ?? []).length > 0));
+  }, [user?.id]);
+  const giveConsent = async () => {
+    if (!user?.id || !consentTicked) return;
+    const { error } = await supabase.from("learning_sessions").insert({ user_id: user.id, session_type: "analytics", source: "web",
+      content: { event: "parent_consent", version: "2026-11-09", agreed_at: new Date().toISOString() } });
+    if (error) { toast.error("No se pudo guardar. Inténtalo otra vez. / Could not save. Please try again."); return; }
+    setConsent(true);
+  };
   const [metBefore, setMetBefore] = useState(false);
   useEffect(() => {
     if (!user?.id) return;
@@ -579,6 +597,35 @@ const Classroom = () => {
           <h1 className="text-3xl font-bold mb-2">La clase de Pere y Titi</h1>
           <p className="text-lg mb-6">Pere and Titi's classroom. A parent signs in first.</p>
           <Button asChild size="lg"><Link to="/auth?next=/classroom">Entrar / Sign in</Link></Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Nothing of the classroom shows (so nothing can be said or sent) until the parent note has been read.
+  if (user && consent === null) {
+    return <div className="min-h-screen bg-cover bg-center" style={{ backgroundImage: "url(/classroom/classroom-cover.jpg)" }} />;
+  }
+  if (user && consent === false) {
+    return (
+      <div className="min-h-screen bg-cover bg-center flex items-start justify-center p-4 pt-6 md:pt-10" style={{ backgroundImage: "url(/classroom/classroom-cover.jpg)" }}>
+        <div className="bg-white/95 rounded-3xl px-6 py-5 max-w-lg shadow-xl space-y-3 text-slate-800">
+          <h1 className="text-2xl font-bold text-center">Antes de la primera clase · Before the first lesson</h1>
+          <p className="text-sm font-semibold text-center">Para mamá o papá · For the parent</p>
+          <p className="text-sm">La clase de Pere y Titi es para niños con un adulto cerca. Lo que tu hijo dice, dibuja o muestra en una foto
+            se envía a servicios de IA para crear las respuestas de Pere y Titi, y se guarda para que lo veas en tu informe.</p>
+          <p className="text-sm">Pere and Titi's classroom is for children with a grown-up nearby. What your child says, draws or shows in a photo
+            is sent to AI services to make Pere and Titi's replies, and kept so you can see the lesson in your report.</p>
+          <p className="text-sm">Sin anuncios, sin perfil público, nadie más lo ve. Puedes pedir verlo o borrarlo cuando quieras. ·
+            No ads, no public profile, nobody else sees it. You can ask to see or delete it at any time:{" "}
+            <a className="underline" href="mailto:aipa@aideazz.xyz">aipa@aideazz.xyz</a> ·{" "}
+            <Link className="underline" to="/privacy-policy">Privacidad / Privacy</Link></p>
+          <label className="flex items-start gap-3 rounded-xl border border-slate-300 bg-white p-3 cursor-pointer">
+            <input type="checkbox" className="mt-1 h-5 w-5" checked={consentTicked} onChange={(e) => setConsentTicked(e.target.checked)} />
+            <span className="text-sm font-semibold">Soy la madre, el padre o el tutor de este niño y estoy de acuerdo. ·
+              I am this child's parent or guardian and I agree.</span>
+          </label>
+          <Button size="lg" className="w-full" disabled={!consentTicked} onClick={giveConsent}>Empezar la clase / Start the classroom</Button>
         </div>
       </div>
     );
