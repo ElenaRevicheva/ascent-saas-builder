@@ -69,7 +69,7 @@ const PrivacyPolicy = () => (
           <li>A parent can ask us at any time to see or delete what we keep about their child.</li>
         </ul>
 
-        <h2 className="terms-section-title">5. How long we keep it, and how to delete it</h2>
+        <h2 id="delete" className="terms-section-title">5. How long we keep it, and how to delete it</h2>
         <p>
           We keep your data while your account is active. To delete your account and everything we keep about your family,
           email <strong>aipa@aideazz.xyz</strong> with the subject <strong>"Delete my data"</strong> from the email of your
@@ -86,7 +86,7 @@ const PrivacyPolicy = () => (
         <h2 className="terms-section-title">7. Cookies and local storage</h2>
         <p>
           We use what the app needs to work (keeping you signed in, small settings in your browser) and the Google Analytics
-          cookie that counts visits, described in section 3. No advertising cookies. The kids classroom does not load it.
+          cookie that counts visits, described in section 3. No advertising cookies. The kids classroom does not load it, and neither does the EspaLuz app from Google Play.
         </p>
 
         <h2 className="terms-section-title">8. Changes</h2>
