@@ -1,3 +1,5 @@
+import { insidePlayApp } from '@/lib/playBilling';
+
 /**
  * Counting for app.espaluz.lat (6 Nov 2026, Elena: "we can't see visits, first messages or where people stop").
  * Same GA4 property as aideazz.xyz/espaluz, so the Monday funnel line reads both.
@@ -50,8 +52,12 @@ function cleanLocation() {
   return `${origin}${pathname}${query ? `?${query}` : ''}`;
 }
 
+// 9 Nov 2026 (Google Play Families policy, Elena: "make sure we follow this"): the Play app declares children 6-8 in its
+// audience, so inside the Play app Google Analytics is never loaded at all - not only on /classroom. Play Console counts
+// installs; the website keeps its counting. Reuses the payment screens' own check.
+
 function loadGoogle() {
-  if (loaded || !isLive() || isInternal()) return;
+  if (loaded || !isLive() || isInternal() || insidePlayApp()) return;
   // A sign-in link carries its token in the address; wait for the next page.
   if (window.location.hash.includes('access_token')) return;
   loaded = true;
