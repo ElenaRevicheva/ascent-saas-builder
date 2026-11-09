@@ -74,7 +74,9 @@ const PrivacyPolicy = () => (
           We keep your data while your account is active. To delete your account and everything we keep about your family,
           email <strong>aipa@aideazz.xyz</strong> with the subject <strong>"Delete my data"</strong> from the email of your
           account (if you use only WhatsApp or Telegram, tell us your number or Telegram name in the email). We delete it
-          within 30 days and tell you when it is done.
+          within 30 days and tell you when it is done: your account, conversations, family notes, the classroom work and voice
+          recordings, and the questionnaire answers. We do not keep card details; payment records stay with PayPal or Google Play
+          under their own rules. To delete only some notes, use "forget" on the family memory card, or tell us in the email.
         </p>
 
         <h2 className="terms-section-title">6. Security</h2>
