@@ -41,6 +41,36 @@ serve(async (req) => {
       .single();
 
     if (codeError || !connectionCode) {
+      // 9 Nov 2026 (Elena's sign-up run-through): the Start button linked her (200), she then typed the same code too and
+      // was told "wrong or expired" - a stranger would believe it failed. The same code from the SAME app account that
+      // it already linked is answered "connected" again (idempotent). Any other account still gets the 404.
+      const { data: usedCode } = await supabase
+        .from('bot_connection_codes')
+        .select('user_id')
+        .eq('code', code.toUpperCase())
+        .in('platform', ['telegram', 'whatsapp'])
+        .not('used_at', 'is', null)
+        .gt('used_at', new Date(Date.now() - 60 * 60 * 1000).toISOString())
+        .order('used_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (usedCode) {
+        const { data: link } = await supabase
+          .from('connected_bots')
+          .select('id')
+          .eq('user_id', usedCode.user_id)
+          .eq('platform', platform)
+          .eq('platform_user_id', platformUserId)
+          .eq('is_active', true)
+          .maybeSingle();
+        if (link) {
+          console.log('Connect bot: code already used by this same account - answered connected', { platform });
+          return new Response(JSON.stringify({
+            success: true, already_connected: true,
+            message: '¡Bot conectado exitosamente! Ahora puedes practicar español.'
+          }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+        }
+      }
       console.log('Invalid connection code:', code, codeError);
       return new Response(JSON.stringify({ error: 'Invalid or expired connection code' }), {
         status: 404,
