@@ -214,7 +214,7 @@
     "tg": "✈️ Telegram — invita a tu familia",
     "demo": "💬 Demo web gratis — 20 mensajes, sin registro",
     "featTag": "Por dentro",
-    "strengths": "Cuatro fortalezas",
+    "strengths": "Lo que solo EspaLuz hace",
     "count4": "4 tarjetas",
     "count8": "8 funciones",
     "videosChats": "videos · Telegram · WhatsApp",
@@ -222,7 +222,8 @@
     "lifePart": "Momentos en que EspaLuz ayuda",
     "topics": "{{n}} temas",
     "feedbackTag": "Escríbenos",
-    "feedback": "Envíanos tu opinión"
+    "feedback": "Envíanos tu opinión",
+    "count10": "10 ayudantes"
   },
   "menu": {
     "thisPage": "Esta página",

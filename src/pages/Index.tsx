@@ -668,7 +668,7 @@ const Index = () => {
           </Card>
         </div>
           </Part>
-          <Part tag={t("tree.featTag")} name={t("lp.funcTitle")} count={t("tree.count8")}>
+          <Part tag={t("tree.featTag")} name={t("lp.funcTitle")} count={t("tree.count10")}>
             <Card className="border-border shadow-magical bg-gradient-to-br from-white to-purple-50/30 overflow-hidden relative">
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-purple-100/50 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
             <CardHeader className="relative">
@@ -681,14 +681,17 @@ const Index = () => {
             </CardHeader>
             <CardContent className="space-y-4 relative">
               {[
+                // 9 Nov 2026 (Elena): only what the code does today; the first three lines kept from before, polished.
                 { text: t("lp.f1"), icon: "🎤", gradient: "from-green-500 to-emerald-500" },
                 { text: t("lp.f2"), icon: "⚡", gradient: "from-yellow-500 to-orange-500" },
                 { text: t("lp.f3"), icon: "💬", gradient: "from-blue-500 to-cyan-500" },
-                { text: t("lp.f4"), icon: "🎬", gradient: "from-purple-500 to-pink-500" },
-                { text: t("lp.f5"), icon: "🔊", gradient: "from-indigo-500 to-purple-500" },
-                { text: t("lp.f6"), icon: "👁️", gradient: "from-rose-500 to-red-500" },
-                { text: t("lp.f7"), icon: "🧠", gradient: "from-teal-500 to-cyan-500" },
-                { text: t("lp.f8"), icon: "❤️", gradient: "from-pink-500 to-rose-500" }
+                { text: t("lp.f4"), icon: "📸", gradient: "from-rose-500 to-red-500" },
+                { text: t("lp.f5"), icon: "✉️", gradient: "from-teal-500 to-cyan-500" },
+                { text: t("lp.f6"), icon: "🔊", gradient: "from-indigo-500 to-purple-500" },
+                { text: t("lp.f7"), icon: "🎬", gradient: "from-purple-500 to-pink-500" },
+                { text: t("lp.f8"), icon: "🧭", gradient: "from-sky-500 to-blue-500" },
+                { text: t("lp.f9"), icon: "🗓️", gradient: "from-amber-500 to-orange-500" },
+                { text: t("lp.f10"), icon: "🙂", gradient: "from-pink-500 to-rose-500" }
               ].map((feature, index) => (
                 <div key={index} className="group flex items-start gap-4 p-3 rounded-xl hover:bg-white/50 transition-all duration-300 hover:shadow-md">
                   <div className={`flex items-center justify-center w-10 h-10 bg-gradient-to-r ${feature.gradient} rounded-full shadow-lg group-hover:scale-110 transition-transform duration-300`}>
