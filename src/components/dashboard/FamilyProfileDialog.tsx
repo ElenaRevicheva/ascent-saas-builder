@@ -34,7 +34,7 @@ const QUESTIONS: Q[] = [
   { key: 'native_language', ask: 'Which language does your heart speak?', why: 'So when Spanish gets too hard, she can explain a word in your language.',
     options: ['English', 'Russian', 'Ukrainian', 'Portuguese', 'French', 'German', 'Italian', 'Chinese', 'Arabic', 'Hindi'], free: 'Another language' },
   { key: 'moved_when', ask: 'How long have you been here?', why: 'The first months are about getting by; later it is about belonging. She meets you where you are.',
-    options: ['Still planning the move', 'Less than 6 months', '6 to 12 months', '1 to 3 years', 'More than 3 years'] },
+    options: ['Still planning the move', 'Traveling - still looking for my place', 'Less than 6 months', '6 to 12 months', '1 to 3 years', 'More than 3 years'] },
   { key: 'household', ask: 'Who is on this adventure with you?', why: 'So she talks to your real family, not a generic one.',
     options: ['Two parents with children', 'Single parent with children', 'A couple', 'Grandparents with grandchildren', 'On my own', 'Another family shape'] },
   { key: 'family', ask: 'Who are the little ones?', why: "So Pere & Titi know each child by name. Names and ages live in your family list." },
