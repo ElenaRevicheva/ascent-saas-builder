@@ -1257,18 +1257,12 @@ const PHOTO_PROMPT = "A 6-year-old girl is showing this photo to her Spanish tut
 const ADULT_PHOTO_PROMPT = "A Spanish learner in Panama took this photo to ask their tutor about it. First copy any " +
   "written text in it exactly as written (Spanish or English, keep line breaks). Then say in one or two English sentences " +
   "what the photo shows. Never name or describe a real person: say only 'a person'.";
+// 10 Nov 2026 (Elena: "the free photo reader already exists in my fleet - reuse it, Grok credit will run out"): the
+// classroom now uses the SAME free-first vision waterfall as VibeJobHunter's screenshot reader
+// (scripts/judge_feedback_sync.py _read_screenshot, live since 1 Nov): free Gemini -> Groq qwen vision (free) -> paid
+// Claude -> paid Grok. Alisa's 10 Nov class: all 9 photos went to Grok because the free readers were not in this chain.
+const GROQ_VISION_MODEL = Deno.env.get('GROQ_VISION_MODEL') || 'qwen/qwen3.8-27b';
 async function describePhoto(b64: string, prompt = PHOTO_PROMPT, maxTokens = 120): Promise<string> {
-  const claudeKey = Deno.env.get('ANTHROPIC_API_KEY');
-  if (claudeKey) {
-    try {
-      const r = await callClaude(claudeKey, { max_tokens: maxTokens, messages: [{ role: 'user', content: [
-        { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } }, { type: 'text', text: prompt }] }] });
-      const t = r?.content?.[0]?.text?.trim();
-      if (t) { console.log('photo read by claude'); return t; }
-    } catch (e) { console.error('photo claude failed, trying free gemini:', (e as Error).message); }
-  }
-  // 10 Nov 2026 (Alisa's class: all 9 photos were read by Grok, on paid xAI credit, because Claude is dry): the free
-  // no-billing Gemini key that already answers the text turns reads photos too. Grok stays behind it, unchanged.
   const geminiKey = Deno.env.get('GEMINI_TTS_API_KEY');
   if (geminiKey) {
     for (const model of [GEMINI_LITE_MODEL, GEMINI_MODEL]) {
@@ -1288,6 +1282,36 @@ async function describePhoto(b64: string, prompt = PHOTO_PROMPT, maxTokens = 120
         return t;
       } catch (e) { console.error(`photo gemini ${model} failed, trying the next:`, (e as Error).message); }
     }
+  }
+  // Groq's free vision model, OpenAI-compatible (VJH _vision_compat); its hidden <think> part is cut off.
+  const groqKey = Deno.env.get('GROQ_API_KEY');
+  if (groqKey) {
+    try {
+      const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${groqKey}`, 'content-type': 'application/json' },
+        body: JSON.stringify({ model: GROQ_VISION_MODEL, max_tokens: Math.max(400, maxTokens * 3), temperature: 0.2,
+          messages: [{ role: 'user', content: [{ type: 'text', text: prompt },
+            { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${b64}` } }] }] }),
+        signal: AbortSignal.timeout(PROVIDER_TIMEOUT_MS),
+      });
+      if (!r.ok) throw new Error(`${r.status} ${(await r.text()).slice(0, 160)}`);
+      const raw = String((await r.json()).choices?.[0]?.message?.content ?? '');
+      const t = raw.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+      if (!t) throw new Error('empty answer');
+      console.log(`photo read by groq (${GROQ_VISION_MODEL})`);
+      return t;
+    } catch (e) { console.error('photo groq failed, trying the paid readers:', (e as Error).message); }
+  }
+  // Paid readers last: a top-up is still used automatically, but only when both free readers fail.
+  const claudeKey = Deno.env.get('ANTHROPIC_API_KEY');
+  if (claudeKey && Date.now() >= claudeRestingUntil) {
+    try {
+      const r = await callClaude(claudeKey, { max_tokens: maxTokens, messages: [{ role: 'user', content: [
+        { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } }, { type: 'text', text: prompt }] }] });
+      const t = r?.content?.[0]?.text?.trim();
+      if (t) { console.log('photo read by claude'); return t; }
+    } catch (e) { console.error('photo claude failed, trying grok:', (e as Error).message); }
   }
   const xaiKey = Deno.env.get('XAI_API_KEY');
   if (!xaiKey) throw new Error('no vision provider');
