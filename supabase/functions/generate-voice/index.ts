@@ -105,26 +105,37 @@ serve(async (req) => {
         console.error(`hero voice ${hero} failed, trying the free voice:`, heroError);
       }
     }
-    if (!base64Audio && Deno.env.get('GEMINI_TTS_API_KEY')) {
-      try {
-        base64Audio = await generateGeminiVoice(hero && GEMINI_HEROES[hero] ? hero : 'usual', cleanedText);
-        spokenBy = `gemini-${hero || 'usual'}`;
-        mimeType = 'audio/wav';
-      } catch (geminiError) {
-        console.error(`free gemini voice failed, trying the next voice:`, geminiError);
+    // 10 Nov 2026 (Alisa's 30-minute class, 17:23-17:53 UTC): Gemini's free voices give 10 lines a day per model, about
+    // 30 a day for ALL families together, so every class began in Gemini's voice and switched to Azure's mid-lesson
+    // (Pere 20 lines + 17, Titi 13 + 13) - two different Peres in one class. And each Azure line first waited for three
+    // Gemini refusals. Azure F0 (500,000 characters a month, voices Elena chose by ear on 8 Nov) now speaks FIRST for
+    // the heroes, so each hero keeps ONE free voice all day; Gemini stays right behind it as the backup. The grown-up
+    // voice keeps the old order. Env FREE_HERO_VOICE_ORDER="gemini,azure" restores the old order with no deploy of code.
+    const heroLine = !!(hero && (AZURE_VOICES[hero] || GEMINI_HEROES[hero]));
+    const freeOrder = (heroLine ? (Deno.env.get('FREE_HERO_VOICE_ORDER') || 'azure,gemini') : 'gemini,azure')
+      .split(',').map((x) => x.trim());
+    for (const step of freeOrder) {
+      if (base64Audio) break;
+      if (step === 'gemini' && Deno.env.get('GEMINI_TTS_API_KEY')) {
+        try {
+          base64Audio = await generateGeminiVoice(hero && GEMINI_HEROES[hero] ? hero : 'usual', cleanedText);
+          spokenBy = `gemini-${hero || 'usual'}`;
+          mimeType = 'audio/wav';
+        } catch (geminiError) {
+          console.error(`free gemini voice failed, trying the next voice:`, geminiError);
+        }
       }
-    }
-    // 7 Nov 2026 (Elena: "try each free possibility to keep Pere and Titi their own personalities"): Azure AI Speech on
-    // the FREE F0 tier (500,000 characters a month, resource espaluz-voices, East US) answers after the free Gemini
-    // voices and before the paid OpenAI one. Over the free quota Azure refuses (429), it never bills - the next voice
-    // answers. Without the AZURE_SPEECH_KEY secret this step is skipped and nothing else changes.
-    if (!base64Audio && Deno.env.get('AZURE_SPEECH_KEY')) {
-      try {
-        base64Audio = await generateAzureVoice(hero && AZURE_VOICES[hero] ? hero : 'usual', cleanedText);
-        spokenBy = `azure-${hero || 'usual'}`;
-        mimeType = 'audio/mpeg';
-      } catch (azureError) {
-        console.error(`free azure voice failed, trying the next voice:`, azureError);
+      // 7 Nov 2026 (Elena: "try each free possibility to keep Pere and Titi their own personalities"): Azure AI Speech on
+      // the FREE F0 tier (500,000 characters a month, resource espaluz-voices, East US). Over the free quota Azure refuses
+      // (429), it never bills - the next voice answers. Without the AZURE_SPEECH_KEY secret this step is skipped.
+      if (step === 'azure' && Deno.env.get('AZURE_SPEECH_KEY')) {
+        try {
+          base64Audio = await generateAzureVoice(hero && AZURE_VOICES[hero] ? hero : 'usual', cleanedText);
+          spokenBy = `azure-${hero || 'usual'}`;
+          mimeType = 'audio/mpeg';
+        } catch (azureError) {
+          console.error(`free azure voice failed, trying the next voice:`, azureError);
+        }
       }
     }
     if (!base64Audio) {

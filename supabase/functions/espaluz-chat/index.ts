@@ -800,8 +800,17 @@ const KIDS_BREAK_LINES: [string, string][] = [
   ["finger counting", "Titi [cheer]: ¡Pausa de energía, 20 segundos! Toca cada dedito con el pulgar: uno, dos, tres, cuatro... ¡y la otra mano! / Energy break, 20 seconds! Touch each finger with your thumb: one, two, three, four... and the other hand!"],
   ["veo veo", "Titi [cheer]: ¡Pausa de energía, 20 segundos! Veo veo... ¿algo de color verde por la ventana? ¡Dímelo en español y en inglés! / Energy break, 20 seconds! I spy... something green out of the window? Tell me in Spanish and English!"],
 ];
-const kidsBreakLine = (asked: string): string =>
-  (KIDS_BREAK_LINES.find(([key]) => asked.includes(key)) ?? KIDS_BREAK_LINES[0])[1];
+// 10 Nov 2026 (Alisa's class: the SAME cross-crawl line 6 times in 31 turns): the key was searched in the whole system
+// prompt, and the base prompt itself names "cross-crawl", so every break matched the first entry. Now only the
+// BRAIN BREAK NOW instruction is searched, so the planned break (rotating every 4 turns) is the one said.
+const kidsBreakLine = (asked: string): string => {
+  const at = asked.indexOf('BRAIN BREAK NOW');
+  const planned = at >= 0 ? asked.slice(at, at + 200) : '';
+  return (KIDS_BREAK_LINES.find(([key]) => planned.includes(key)) ?? KIDS_BREAK_LINES[0])[1];
+};
+// She corrects the heroes ("No, no, es que el unicornio es un juguete", "Es la taza de mi mamá") or shows a new
+// photo: that turn belongs to her words, never to a scheduled game.
+const KIDS_CORRECTS = /^\s*(no[,.!]?\s+no\b|no,|no es\b|es que\b|that'?s not|it'?s not|it is not)|\bno es (un|una|el|la)\b|\bes (la|el|mi|un|una) [^.?!]{0,30}\bde mi (mam[aá]|pap[aá]|herman[oa]|abuel[oa])(?![a-záéíóúñ])/i;
 
 /** Today's fresh idea (one a day, by the Panama day). */
 const kidsFreshToday = () => KIDS_FRESH[Math.floor((Date.now() - 5 * 3600 * 1000) / 86400000) % KIDS_FRESH.length];
@@ -875,6 +884,15 @@ async function kidsResumeFrom(supabase: any, userId: string, stepsLength: number
   return done > 0 && done < stepsLength - 1 ? done : 0;
 }
 
+/** Two of the unit's syllables next to each other ("da  de", "ra, re, ro") = the syllables were shown, not just used. */
+function kidsSyllableLine(classUnit: number): RegExp {
+  const t = KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length].trace.map((x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  return new RegExp(`(^|[\\s«"(])(${t.join('|')})[\\s,·.-]+(${t.join('|')})(?=[\\s,·.»")!?]|$)`, 'i');
+}
+function kidsPractised(hist: any[], classUnit: number): boolean {
+  const re = kidsSyllableLine(classUnit);
+  return hist.some((m: any) => m?.role === 'assistant' && re.test(String(m?.content ?? '')));
+}
 function kidsTurnContext(kids: any, message: string, avoid: string[] = [], classUnit = -1, resume = 0): string {
   const hist = Array.isArray(kids?.history) ? kids.history : [];
   const raw = Number.isInteger(kids?.turn) ? kids.turn : Math.floor(hist.length / 2);
@@ -1013,14 +1031,20 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
     "the flamingo: stand on one foot and count to 10 in Spanish, then the other foot",
     "rojo salta, azul congela: on \"rojo\" she jumps, on \"azul\" she freezes like a statue",
   ];
-  if (turn > 0 && turn % 4 === 0) {
+  const herTurn = KIDS_CORRECTS.test(message) || message.trim().startsWith('📷');
+  if (KIDS_CORRECTS.test(message)) {
+    out.push("SHE IS CORRECTING YOU: your FIRST line agrees warmly and says the right version in both languages " +
+      "(\"¡Tienes razón! Es la taza de café de mamá. / You are right! It is mom's coffee cup.\"); never argue, never " +
+      "repeat the wrong version, and praise her for telling you. No movement game this turn.");
+  }
+  if (turn > 0 && turn % 4 === 0 && !herTurn) {
     // Leaply's session flow (docs/espaluz/LEAPLY_INSIDE_2026-11-03.md): a short framing that says how long, the
     // exercise, a one-line wrap-up. Plain games - never a health or brain claim.
     out.push(`BRAIN BREAK NOW (Titi leads, about 20 seconds, then back to the lesson): ${TITI_BREAKS[(turn / 4) % TITI_BREAKS.length]}. ` +
       "Three short beats: 1) Titi frames it with energy and says how long (\"Titi [jump]: ¡Pausa de energía, 20 segundos! / " +
       "Energy break, 20 seconds!\"); 2) the movement, counting with her in Spanish; 3) a one-line wrap-up that asks how her " +
       "body feels now (\"¿Cómo se siente tu cuerpo ahora? / How does your body feel now?\"). Keep it to this one break.");
-  } else if (turn > 4 && turn % 4 === 1) {
+  } else if (turn > 4 && turn % 4 === 1 && !herTurn) {
     // Pere's calm side, with the cues Leaply's practices use (in/out counts, warm hands, gentle self-massage, body scan).
     const PERE_CALM = [
       "slow breathing with counts: in through the nose while Pere counts \"uno, dos, tres\", out slowly \"cuatro, cinco, seis\", three times",
@@ -1030,6 +1054,16 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
     ];
     out.push(`CALM AFTER THE BREAK (Pere leads, slow and soft): ${PERE_CALM[Math.floor(turn / 4) % PERE_CALM.length]}. ` +
       "One line to invite it (\"Pere [breathing]: Ahora, despacito... / Now, slowly...\"), do it with her, then continue the lesson.");
+  }
+  // 10 Nov 2026 (Alisa's 31-turn class on Unit 5: the d / r syllables came up 0 times): "her idea always wins" stays,
+  // but after 6 turns the plan ran out into free talk and the reading corner never happened. Now, in a class, until
+  // the unit's syllables have been shown, every 4th turn (offset from the break) bridges FROM her topic to them.
+  if (classUnit >= 0 && turn >= 2 && turn % 4 === 2 && !herTurn && !kidsPractised(hist, classUnit)) {
+    const u = KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length];
+    out.push(`SOUNDS BRIDGE NOW (today's reading: ${u.es}): stay on HER topic and use it - find a word she just said or ` +
+      `showed that has one of these syllables (${u.trace.join(', ')}), or a word about it that does; Pere shows 2-3 of ` +
+      `them big and alone on ONE short line ("${u.trace.slice(0, 3).join('  ')}"), says each slowly, she says them after him; ` +
+      "Titi reads one wrong on purpose so she catches him. End with ONE question asking her to read one by herself.");
   }
   if (turn > 0 && kidsStuck(hist, message)) {
     out.push("THE TALK IS STUCK (she gives tiny answers or says she is bored): drop the current topic NOW. TITI bursts in, " +
@@ -1204,9 +1238,12 @@ async function callGemini(apiKey: string, request: any, model: string = GEMINI_M
 // the heroes talk about it. Same order as the bot's process_photo: paid first (Claude refuses in a split second when
 // dry), then Grok vision on the key we already have. Groq lists no vision model today. The photo itself is never
 // stored; only the one-line description goes into the lesson (and from there into her memory).
+// 10 Nov 2026 (Alisa's class: the heroes called mom's coffee "hot chocolate" and said a toy unicorn "could fly"; she
+// had to correct them): only what is plainly visible.
 const PHOTO_PROMPT = "A 6-year-old girl is showing this photo to her Spanish tutors. In ONE short English sentence, say " +
-  "what is in it (objects, toys, animals, food, a drawing; colours). Never name or describe a real person: say only " +
-  "'a person'. No guesses about where it was taken.";
+  "what is in it (objects, toys, animals, food, a drawing; colours). Only what you can clearly see: never guess what a " +
+  "cup or bowl contains, what a toy can do, or anything you are not sure of - name it plainly (\"a mug\", \"a toy\"). " +
+  "Never name or describe a real person: say only 'a person'. No guesses about where it was taken.";
 // 1 Nov 2026 (Elena: "the camera in the grown-up web chat too, like WhatsApp and Telegram"): a parent photographs a
 // menu, a sign, a school note or a form. The bots' process_photo reads the text first, so this prompt does the same.
 const ADULT_PHOTO_PROMPT = "A Spanish learner in Panama took this photo to ask their tutor about it. First copy any " +
@@ -1220,7 +1257,29 @@ async function describePhoto(b64: string, prompt = PHOTO_PROMPT, maxTokens = 120
         { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: b64 } }, { type: 'text', text: prompt }] }] });
       const t = r?.content?.[0]?.text?.trim();
       if (t) { console.log('photo read by claude'); return t; }
-    } catch (e) { console.error('photo claude failed, trying grok:', (e as Error).message); }
+    } catch (e) { console.error('photo claude failed, trying free gemini:', (e as Error).message); }
+  }
+  // 10 Nov 2026 (Alisa's class: all 9 photos were read by Grok, on paid xAI credit, because Claude is dry): the free
+  // no-billing Gemini key that already answers the text turns reads photos too. Grok stays behind it, unchanged.
+  const geminiKey = Deno.env.get('GEMINI_TTS_API_KEY');
+  if (geminiKey) {
+    for (const model of [GEMINI_LITE_MODEL, GEMINI_MODEL]) {
+      try {
+        const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+          method: 'POST',
+          headers: { 'x-goog-api-key': geminiKey, 'content-type': 'application/json' },
+          body: JSON.stringify({ contents: [{ role: 'user', parts: [
+              { inline_data: { mime_type: 'image/jpeg', data: b64 } }, { text: prompt }] }],
+            generationConfig: { maxOutputTokens: Math.max(1024, maxTokens * 4), temperature: 0.2 } }),
+          signal: AbortSignal.timeout(Math.max(GEMINI_TIMEOUT_MS, 12000)),
+        });
+        if (!r.ok) throw new Error(`${r.status} ${(await r.text()).slice(0, 160)}`);
+        const t = (await r.json()).candidates?.[0]?.content?.parts?.map((p: any) => p.text ?? '').join('').trim();
+        if (!t) throw new Error('empty answer');
+        console.log(`photo read by gemini (${model})`);
+        return t;
+      } catch (e) { console.error(`photo gemini ${model} failed, trying the next:`, (e as Error).message); }
+    }
   }
   const xaiKey = Deno.env.get('XAI_API_KEY');
   if (!xaiKey) throw new Error('no vision provider');
@@ -1798,8 +1857,9 @@ ${asked}` : ''}`;
       (isHello && !resume ? memory.hello : (memory.hello.startsWith('\nSHE TOLD YOU') ? memory.hello.split('\n\nTHIS HELLO')[0] : '')) +
       (kids && message.startsWith('📷') ? (photoDescription
         ? `\nSHE IS SHOWING YOU A PHOTO: ${photoDescription}\nTalk about what is in it with real curiosity first (name ` +
-          "the thing and its colour in Spanish and English), then build this turn's sentence from it. Never comment on a " +
-          "person in it."
+          "the thing and its colour in Spanish and English), then build this turn's sentence from it. Say only what the " +
+          "description says - never add what a cup holds, what a toy can do or who made it; if you want to know, ASK her " +
+          "(\"¿Qué hay en la taza? / What is in the cup?\"). Never comment on a person in it."
         : "\nShe tried to show you a photo but you could not see it: say so kindly in one line and ask her to tell you what is in it.") : '');
     const claudeRequest = kids
       ? { max_tokens: 500, temperature: 0.7, system: kidsSystem,
@@ -1862,8 +1922,22 @@ ${asked}` : ''}`;
         fullResponse = `Titi [cheer]: ¡Oye, oye! ¿Sabías que...? ${f.es}. / Hey, hey! Did you know...? ${f.en}.\n` +
           "Titi [silly]: ¿Tú lo sabías? / Did you know that?";
       } else if (asked.includes('BRAIN BREAK NOW') && !KIDS_MOVED.test(fullResponse)) {
-        const first = fullResponse.split('\n').map((l: string) => l.trim()).find((l: string) => l && !l.includes('?')) ?? '';
-        fullResponse = [first, kidsBreakLine(asked)].filter(Boolean).join('\n');
+        // 10 Nov 2026 (17:46 UTC): when every line had a question, this kept nothing but the break - she had just
+        // spoken and got no answer. The first line (the answer to HER) always stays, without its question, and the
+        // turn still ends with a question so she knows it is her turn.
+        const first = (fullResponse.split('\n').map((l: string) => l.trim()).find(Boolean) ?? '')
+          .split(/(?<=[.!])\s+/).filter((x: string) => !x.includes('?')).join(' ').trim();
+        const brk = kidsBreakLine(asked);
+        fullResponse = [/^\w+ \[[^\]]*\]:?\s*$/.test(first) ? '' : first, brk,
+          brk.includes('?') ? '' : 'Titi [cheer]: ¿Cómo se siente tu cuerpo ahora? / How does your body feel now?']
+          .filter(Boolean).join('\n');
+      } else if (asked.includes('SOUNDS BRIDGE NOW') && classUnit >= 0 && !kidsSyllableLine(classUnit).test(fullResponse)) {
+        // The free model skipped the reading bridge: the code says it, the same way the break and the judge are enforced.
+        const tri = KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length].trace.slice(0, 3);
+        const keep = fullResponse.split('\n').map((l: string) => l.trim()).filter((l: string) => l && !l.includes('?')).slice(0, 2);
+        fullResponse = [...keep,
+          `Pere [thinking]: Mira estas sílabas: «${tri.join('  ')}». Dilas conmigo, despacito: ${tri.join('... ')}. / Look at these syllables: «${tri.join('  ')}». Say them with me, slowly: ${tri.join('... ')}.`,
+          'Titi [silly]: ¿Cuál lees tú solita? / Which one can you read all by yourself?'].join('\n');
       }
       // 31 Oct 2026 (15:56): "No te escuché bien. ¿Me lo dices otra vez?" was followed in the same reply by "¡Salta
       // tres veces!" and a question about "the phone" she never said. Not heard = ask again, and nothing else.
