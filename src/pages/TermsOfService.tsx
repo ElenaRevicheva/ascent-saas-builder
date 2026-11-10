@@ -8,7 +8,7 @@ const TermsOfService = () => (
       <div className="absolute -top-8 -left-8 w-32 h-32 bg-gradient-to-br from-pink-200 via-yellow-200 to-blue-200 rounded-full opacity-30 blur-2xl pointer-events-none"></div>
       <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-tr from-blue-200 via-pink-200 to-yellow-200 rounded-full opacity-30 blur-2xl pointer-events-none"></div>
       <h1 className="text-4xl md:text-5xl font-extrabold text-center text-primary mb-2 tracking-tight drop-shadow-lg">Terms of Service</h1>
-      <p className="text-center text-muted-foreground mb-8 text-sm font-medium">Last updated: July 15, 2025</p>
+      <p className="text-center text-muted-foreground mb-8 text-sm font-medium">Last updated: November 10, 2026</p>
       <div className="prose prose-base md:prose-lg max-w-none text-foreground">
         <h2 className="terms-section-title">1. Acceptance of Terms</h2>
         <p>By accessing or using EspaLuz, you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any part of these terms, you may not use the service.</p>
@@ -25,7 +25,8 @@ const TermsOfService = () => (
         <ul>
           <li>Free trials and paid subscription plans are available</li>
           <li>Subscription fees are billed in advance and are generally non-refundable unless required by law or specified in our refund policy</li>
-          <li>You may cancel your subscription anytime through your account settings</li>
+          <li>You may cancel your subscription anytime: a web subscription through PayPal, and a subscription bought in the EspaLuz app from Google Play through Google Play (Play Store → Payments &amp; subscriptions)</li>
+          <li>If you subscribed through Google Play, payment, renewal, cancellation and refunds are handled by Google Play under its terms</li>
           <li>We will notify you of any price changes at least 30 days in advance</li>
           <li>Unpaid or failed payments may result in suspension or termination of your access</li>
         </ul>
