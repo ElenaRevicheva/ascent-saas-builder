@@ -887,23 +887,8 @@ const Index = () => {
             </div>
           </Item>
           </Part>
-          <Part tag={t("tree.lifeTag")} name={t("lp.whyTitle")}>
-            
-            <div className="space-y-4 text-gray-700">
-              <blockquote className="border-l-4 border-orange-400 pl-4 italic">
-                <p className="flex items-start gap-2">
-                  <span className="text-xl">💬</span>
-                  <span>{t("lp.q1")}</span>
-                </p>
-              </blockquote>
-              <blockquote className="border-l-4 border-orange-400 pl-4 italic">
-                <p className="flex items-start gap-2">
-                  <span className="text-xl">💬</span>
-                  <span>{t("lp.q2")}</span>
-                </p>
-              </blockquote>
-            </div>
-          </Part>
+          {/* 10 Nov 2026 (Elena): the two quotes here ("Maria", "Carmen") were not from real people - removed.
+              Only real, permitted family words go back in this place. */}
           
         </div>
       </section>
