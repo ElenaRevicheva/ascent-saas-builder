@@ -1063,7 +1063,12 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
     out.push(`SOUNDS BRIDGE NOW (today's reading: ${u.es}): stay on HER topic and use it - find a word she just said or ` +
       `showed that has one of these syllables (${u.trace.join(', ')}), or a word about it that does; Pere shows 2-3 of ` +
       `them big and alone on ONE short line ("${u.trace.slice(0, 3).join('  ')}"), says each slowly, she says them after him; ` +
-      "Titi reads one wrong on purpose so she catches him. End with ONE question asking her to read one by herself.");
+      "Titi reads one wrong on purpose so she catches him. End with ONE question asking her to read one by herself." +
+      // 10 Nov 2026 (Elena caught it: "ra, ro, ru" from her dinosaur "arrodón" is the STRONG rr, a-rro-dón): Unit 5
+      // teaches the soft r. Teaching rr as the soft sound would teach a six-year-old the wrong sound.
+      (/soft r/.test(u.es) ? " The SOFT r is a single r between vowels (pe-ro, ca-ra, to-ro); a double rr (pe-rro, " +
+        "a-rro-dón) or an r at the start of a word (ra-tón, ro-jo) is the STRONG r - never use those as today's soft r. " +
+        "From a word like \"arrodón\" take the d syllable (dón) instead." : ''));
   }
   if (turn > 0 && kidsStuck(hist, message)) {
     out.push("THE TALK IS STUCK (she gives tiny answers or says she is bored): drop the current topic NOW. TITI bursts in, " +
