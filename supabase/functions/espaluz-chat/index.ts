@@ -228,6 +228,41 @@ const PROFILE_ASK: [string, string][] = [
   ['spanish_feel', 'how Spanish feels for them today'], ['focus', 'what would make the biggest difference this month'],
   ['miss_most', 'what they miss most from home'],
 ];
+// 11 Nov 2026 (Elena: "no simulated questions"): four answers were only a sentence the model could ignore
+// (docs/espaluz/QUESTIONNAIRE_AUDIT_2026-11-11.md in cto-aipa). Each now carries an explicit rule. The reply form stays
+// Spanish + English pairs (BILINGUAL_LAST); the level changes HOW the Spanish is pitched, never drops English.
+const LEVEL_RULES: Record<string, string> = {
+  "I'm just starting": 'SPANISH LEVEL - just starting: very short, simple Spanish sentences (present tense, everyday words); at most 2 new words or phrases per reply, each shown once with its meaning; no idioms unless explained.',
+  'I get by': 'SPANISH LEVEL - gets by: natural everyday Spanish in short sentences; 2-3 useful new phrases per reply; you may use past and future tenses; explain a local expression when you use one.',
+  "I'm comfortable": 'SPANISH LEVEL - comfortable: speak like a local friend - natural speed, local expressions from the country facts, richer vocabulary; keep the English line short and only for the less obvious parts.',
+};
+// "What would make the biggest difference this month?" -> which situations and which country-pack topics come first.
+const FOCUS_RULES: Record<string, string> = {
+  "The children's school": "the children's school (talking with teachers, school notes, homework, school days and holidays from the country facts)",
+  'Doctors and health': 'doctors and health (booking, describing symptoms, the pharmacy; public and low-cost way first)',
+  'Work': 'work (colleagues, messages, meetings, local work rhythm and time customs)',
+  'Papers and offices': 'papers and offices (what to bring, phrases for the window, phone scripts; what newcomers find hard here)',
+  'Friends and neighbours': 'friends and neighbours (greetings and courtesy, invitations, small talk from the country facts)',
+  'Feeling at home': 'feeling at home (the rhythm of the year, holidays, food and folk culture from the country facts)',
+  'Speaking with confidence': 'speaking with confidence (local expressions, short phrases to say out loud, gentle corrections)',
+};
+function profileRules(p: Record<string, any>): string {
+  const out: string[] = [];
+  const lang = String(p.native_language ?? '').trim();
+  if (lang && !/^(english|spanish|español|espanol)$/i.test(lang))
+    out.push(`HEART LANGUAGE - ${lang}: when a Spanish word or grammar point is hard, add ONE short gloss in ${lang} for that word only ` +
+      `(e.g. "madrugar - ${lang}: <the word>"), then go on in Spanish + English. If they write in ${lang}, understand it and answer as usual.`);
+  if (p.country_from)
+    out.push(`BRIDGES - their story began in ${p.country_from}: when it fits, compare ONE custom here (from the country facts) with home. ` +
+      `Say something about ${p.country_from} only if you are sure; otherwise ASK them how it is done there - that is the bridge.`);
+  if (LEVEL_RULES[p.spanish_feel]) out.push(LEVEL_RULES[p.spanish_feel]);
+  const focus = ([] as string[]).concat(p.focus ?? []).map((f) => FOCUS_RULES[f]).filter(Boolean);
+  if (focus.length)
+    out.push(`START FROM WHAT MATTERS NOW: ${focus.join('; ')}. When they start without a topic or ask what to practise, open with ONE ` +
+      `useful phrase or tip for the first of these, and prefer country facts on these topics when you choose one to weave in.`);
+  return out.length ? '\n' + out.join('\n') : '';
+}
+
 function profileLine(profile: Record<string, any> | undefined): string {
   const p = profile ?? {};
   const has = (k: string) => Array.isArray(p[k]) ? p[k].length > 0 : !!p[k];
@@ -240,7 +275,7 @@ function profileLine(profile: Record<string, any> | undefined): string {
   ].filter(Boolean);
   const missing = PROFILE_ASK.filter(([k]) => !has(k)).map(([, q]) => q);
   return (known.length ? `\nTHIS FAMILY'S NEW LIFE (their own answers): ${known.join('; ')}. Let it shape what you bring up: build bridges between where ` +
-      `they come from and life here, start from what matters most to them now, and when Spanish gets hard you may explain a word in their native language.` : '') +
+      `they come from and life here, start from what matters most to them now, and when Spanish gets hard you may explain a word in their native language.` + profileRules(p) : '') +
     (missing.length ? `\nNot known yet: ${missing.slice(0, 4).join('; ')}. Only when it truly fits - never as a form, at most ONE such question in a ` +
       `conversation - you may ask one of these lightly, like a friend getting to know them.\n` : '\n');
 }
