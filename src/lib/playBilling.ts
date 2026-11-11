@@ -19,10 +19,23 @@ type DigitalGoodsService = {
   listPurchases: () => Promise<{ itemId: string; purchaseToken: string }[]>;
 };
 
-/** True when the page runs inside the EspaLuz Play app (the TWA opens with an android-app:// referrer). */
+/**
+ * True when the page runs inside the EspaLuz Play app. The TWA opens /dashboard?source=app (espaluz-android
+ * twa-manifest launchUrl) and usually with an android-app:// referrer; the referrer is easily lost (sign-in redirects),
+ * so either signal counts. Kept in sessionStorage = this app tab only: the TWA shares Chrome's localStorage, and the
+ * Play button must never show in a normal browser, where Play Billing does not exist (12 Nov 2026, Elena's test).
+ */
+function markPlayApp(): void {
+  try {
+    const fromApp = new URLSearchParams(window.location.search).get('source') === 'app';
+    if (fromApp || document.referrer.startsWith('android-app://')) sessionStorage.setItem('espaluz-play-app', '1');
+  } catch { /* storage blocked: treated as a normal browser */ }
+}
+markPlayApp(); // on first load, before any redirect drops ?source=app
+
 export function insidePlayApp(): boolean {
   try {
-    if (document.referrer.startsWith('android-app://')) sessionStorage.setItem('espaluz-play-app', '1');
+    markPlayApp();
     return sessionStorage.getItem('espaluz-play-app') === '1';
   } catch {
     return false;
