@@ -16,6 +16,10 @@ interface DashboardHeaderProps {
 
 export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHeaderProps) => {
   const { t } = useTranslation();
+  // 11 Nov 2026: greet by first name only ("Hello, Kira!"), the way a friend would. The email fallback is gone:
+  // "Hello, kiravelerevich!" reads like a login, not a person. No name -> plain "Hello!".
+  const firstName = String(user?.user_metadata?.full_name ?? '').trim().split(/\s+/)[0] || '';
+
   return (
     <div className="relative overflow-hidden">
       <div 
@@ -37,7 +41,7 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
                   <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-500 via-pink-400 to-purple-600 bg-clip-text text-transparent">
                     {t('dashboard.title')}
                   </h1>
-                  <p className="text-sm text-rose-600">{t('dashboard.greeting')}{(user?.user_metadata?.full_name || user?.email?.split('@')[0]) ? `, ${user?.user_metadata?.full_name || user?.email?.split('@')[0]}` : ''}! ✨</p>
+                  <p className="text-sm text-rose-600">{t('dashboard.greeting')}{firstName ? `, ${firstName}` : ''}! ✨</p>
                 </div>
               </div>
               <div className="flex flex-wrap items-center gap-2 sm:gap-4">
