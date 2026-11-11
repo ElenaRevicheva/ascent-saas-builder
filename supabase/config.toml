@@ -51,3 +51,10 @@ verify_jwt = true
 
 [functions.play-rtdn]
 verify_jwt = false
+
+# 11 Nov 2026: Russian classroom (Mishka Medok & Lisa Alisa) - separate from Pere & Titi; signed-in families only.
+[functions.kids-ru]
+verify_jwt = true
+
+[functions.voice-ru]
+verify_jwt = true
