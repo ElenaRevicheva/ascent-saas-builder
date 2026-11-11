@@ -15,7 +15,25 @@ interface FeatureGateProps {
   showUpgrade?: boolean;
 }
 
-export const FeatureGate = ({ 
+/**
+ * 11 Nov 2026 (Elena: "how can the trial end if it has just started today? … he will think it's a scam").
+ * A family that opens the Android app with an account made long ago (her test account: July 2025) saw only
+ * "Your free trial has ended". True, but with no dates it reads like a trick. Same clock as
+ * get_user_subscription_status: app_metadata.trial_until (bot families) or account creation + 14 days.
+ */
+const trialEndedText = (user: { created_at?: string; app_metadata?: Record<string, unknown> } | null): string => {
+  const fmt = (d: Date) => d.toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
+  const created = user?.created_at ? new Date(user.created_at) : null;
+  const fromBot = typeof user?.app_metadata?.trial_until === 'string' ? new Date(user.app_metadata.trial_until as string) : null;
+  const end = fromBot ?? (created ? new Date(created.getTime() + 14 * 86400000) : null);
+  if (!end || isNaN(end.getTime())) return 'Your 14 free days are over - EspaLuz Family unlocks it again';
+  if (!fromBot && created) {
+    return `Your 14 free days started when this account was created (${fmt(created)}) and ended on ${fmt(end)}. EspaLuz Family unlocks it again.`;
+  }
+  return `Your 14 free days ended on ${fmt(end)}. EspaLuz Family unlocks it again.`;
+};
+
+export const FeatureGate = ({
   feature, 
   children, 
   fallback, 
@@ -81,7 +99,7 @@ export const FeatureGate = ({
         <CardDescription>
           {isTrialActive 
             ? `This feature is available during your free trial. ${trialDaysLeft} days remaining.`
-            : 'Your free trial has ended - EspaLuz Family unlocks it again'
+            : trialEndedText(user)
           }
         </CardDescription>
       </CardHeader>
