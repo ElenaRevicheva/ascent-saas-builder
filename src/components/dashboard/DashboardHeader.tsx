@@ -30,17 +30,17 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
       <div className="relative z-10 bg-gradient-to-r from-[#fff0e6]/90 via-[#fce4ec]/70 to-transparent">
         <header className="border-b border-border/50 bg-background/80 backdrop-blur-sm">
           <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex min-w-0 items-center gap-4">
                 <img src={brandAvatar1} alt="Brand" className="h-16 w-16 rounded-full border-4 border-orange-300 shadow-lg object-cover bg-white" />
                 <div>
                   <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-500 via-pink-400 to-purple-600 bg-clip-text text-transparent">
                     {t('dashboard.title')}
                   </h1>
-                  <p className="text-sm text-rose-600">{t('dashboard.greeting')}, {user?.user_metadata?.full_name || user?.email?.split('@')[0]}! ✨</p>
+                  <p className="text-sm text-rose-600">{t('dashboard.greeting')}{(user?.user_metadata?.full_name || user?.email?.split('@')[0]) ? `, ${user?.user_metadata?.full_name || user?.email?.split('@')[0]}` : ''}! ✨</p>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4">
                 <LanguageSwitcher variant="select" size="sm" />
                 {getStatusBadge()}
                 <Button asChild variant="hero" size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg">

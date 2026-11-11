@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSubscription } from '@/hooks/useSubscription';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
@@ -39,9 +39,17 @@ const Dashboard = () => {
   const chatRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
-  // Instantly hide onboarding for fast loading
+  const navigate = useNavigate();
+
+  // 11 Nov 2026: the dashboard is for a signed-in family only. The Android app opens /dashboard, and with no session it
+  // used to show "Hello, !" and a trial badge to nobody. useAuth sets loading=false before the session is read, so we
+  // ask Supabase for the session here and send a visitor to the home page (palms + avatar films) instead.
   useEffect(() => {
-    setCheckingOnboarding(false);
+    insidePlayApp(); // remember "inside the Play app" before the referrer is lost
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) navigate({ pathname: '/', search: location.search }, { replace: true });
+      else setCheckingOnboarding(false);
+    }).catch(() => navigate({ pathname: '/', search: location.search }, { replace: true }));
   }, []);
 
   // 7 Nov 2026: inside the Play app, a subscription bought earlier (or on another phone) is checked with Google on open,
