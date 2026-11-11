@@ -19,6 +19,7 @@ import SubscriptionComplete from "./pages/SubscriptionComplete";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Classroom from "./pages/Classroom";
+import ClassroomRu from "./pages/ClassroomRu";
 
 trackDoorClicks();
 
@@ -65,6 +66,7 @@ const App = () => (
         <Route path="/subscription-complete" element={<SubscriptionComplete />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/classroom" element={<Classroom />} />
+        <Route path="/classroom-ru" element={<ClassroomRu />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
