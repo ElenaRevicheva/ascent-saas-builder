@@ -30,7 +30,7 @@ const PrivacyPolicy = () => (
           <li><strong>On WhatsApp and Telegram:</strong> your phone number or Telegram account ID, and WhatsApp's user ID for
             you, so we know it is the same family.</li>
           <li><strong>Payments:</strong> whether your subscription is active. Card or bank details stay with the payment
-            company (PayPal, PagueloFacil or Gumroad); we never see them.</li>
+            company (PayPal or PagueloFacil on the web, Google Play in the Android app); we never see them.</li>
           <li><strong>Reports:</strong> when you tap "Report", the text of that reply, with nothing about you.</li>
         </ul>
         <p>The free chat on the website without an account is <strong>not saved</strong>.</p>
@@ -51,7 +51,7 @@ const PrivacyPolicy = () => (
           <li><strong>Video of EspaLuz speaking:</strong> Runway, for paying families.</li>
           <li><strong>Messaging:</strong> WhatsApp (Meta), through Twilio, and Telegram.</li>
           <li><strong>Hosting and storage:</strong> Supabase, Oracle Cloud and Lovable.</li>
-          <li><strong>Payments:</strong> PayPal, PagueloFacil and Gumroad on the web; Google Play in the Android app.</li>
+          <li><strong>Payments:</strong> PayPal and PagueloFacil on the web; Google Play in the Android app.</li>
           <li><strong>Visit counting:</strong> Google Analytics on app.espaluz.lat counts page visits and taps on buttons
             (for example, a first chat message or the WhatsApp button), so we can see where people get stuck. It receives
             page addresses and event names only, never what you write or say, and it is switched off in the kids classroom.
