@@ -4,7 +4,9 @@ import { Sparkles } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
 import familyLearningSpanish from '@/assets/family-learning-spanish.jpg';
-import brandAvatar1 from '@/assets/brand-avatar-1.jpg';
+// 11 Nov 2026 (Elena): the dashboard wore the old cartoon avatar and gradient title. It now matches the home page:
+// the photoreal EspaLuz face (same as the hello video) and the same Espa<b>Luz</b> wordmark as the site header.
+import espaluzFace from '@/assets/heroes/hello-poster.jpg';
 import { LearningRoadmap } from './LearningRoadmap';
 import { Link } from 'react-router-dom';
 
@@ -36,11 +38,9 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
           <div className="container mx-auto px-4 py-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex min-w-0 items-center gap-4">
-                <img src={brandAvatar1} alt="Brand" className="h-16 w-16 rounded-full border-4 border-orange-300 shadow-lg object-cover bg-white" />
+                <img src={espaluzFace} alt="EspaLuz" className="h-16 w-16 shrink-0 rounded-full border-2 border-white object-cover object-[50%_35%] shadow-lg ring-2 ring-purple-300" />
                 <div>
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-500 via-pink-400 to-purple-600 bg-clip-text text-transparent">
-                    {t('dashboard.title')}
-                  </h1>
+                  <h1 className="text-2xl font-bold text-foreground"><span className="brand-wordmark">Espa<b>Luz</b></span></h1>
                   <p className="text-sm text-rose-600">{t('dashboard.greeting')}{firstName ? `, ${firstName}` : ''}! ✨</p>
                 </div>
               </div>
