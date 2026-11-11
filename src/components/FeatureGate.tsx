@@ -110,8 +110,8 @@ export const FeatureGate = ({
               (Payments policy). This line named PayPal and PágueloFácil in the app - a review risk. The website keeps it. */}
           <p className="text-xs text-muted-foreground">
             {insidePlayApp()
-              ? 'Monthly subscription through Google Play (first charge 2 weeks after you subscribe)'
-              : '$11/month by PayPal (first charge 2 weeks after you subscribe) • or $11 for 30 days with PágueloFácil: type pagar in EspaLuz WhatsApp'}
+              ? '$11/month through Google Play - cancel any time'
+              : '$11/month by PayPal - cancel any time • or $11 for 30 days with PágueloFácil: type pagar in EspaLuz WhatsApp'}
           </p>
         </div>
       </CardContent>

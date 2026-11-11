@@ -10,9 +10,10 @@ export const PAYPAL_CONFIG = {
   // PayPal Subscription Plan IDs (you'll create these in PayPal Dashboard)
   plans: {
     standard: {
-      // 1 Nov 2026 (Elena): ONE price on every channel - $11/month, first PayPal charge 2 weeks after subscribing.
-      // Families already on the $7.77 plan (P-38A73508FY163121MNCJXTYY) keep it; the payment truth reads both.
-      id: 'P-6GR95409C95293139NFSBJJY',
+      // 11 Nov 2026 (Elena): ONE set of terms everywhere - 14 days free in the app (no card), then $11/month from the day
+      // you subscribe (PayPal, PagueloFacil and Google Play alike). New PayPal plan has no trial of its own.
+      // Families already on P-6GR95409C95293139NFSBJJY (2-week PayPal trial) or the $7.77 plan keep theirs.
+      id: 'P-94X46784TP366873JNL2MWXA',
       name: 'EspaLuz Family',
       price: '$11/month'
     },
