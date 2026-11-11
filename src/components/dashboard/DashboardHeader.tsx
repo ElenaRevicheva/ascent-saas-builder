@@ -55,11 +55,13 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
                   size="lg"
                   className="bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg"
                   onClick={() => {
-                    const qr = document.querySelector('img[alt="EspaLuz QR"]');
-                    if (qr) qr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // 11 Nov 2026: this scrolled to a QR image that is no longer on the dashboard, so the button did nothing.
+                    // It now opens the existing Family Members card (add each person: name, age, level).
+                    const target = document.querySelector('[data-family-members]');
+                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }}
                 >
-                  🎉 Invite your family!
+                  👨‍👩‍👧 Add your family
                 </Button>
                 <Button variant="ghost" size="sm" onClick={signOut}>
                   {t('dashboard.signOut')}
