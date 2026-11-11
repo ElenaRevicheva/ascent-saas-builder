@@ -9,7 +9,7 @@ const PrivacyPolicy = () => (
       <div className="absolute -top-8 -left-8 w-32 h-32 bg-gradient-to-br from-pink-200 via-yellow-200 to-blue-200 rounded-full opacity-30 blur-2xl pointer-events-none"></div>
       <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-gradient-to-tr from-blue-200 via-pink-200 to-yellow-200 rounded-full opacity-30 blur-2xl pointer-events-none"></div>
       <h1 className="text-4xl md:text-5xl font-extrabold text-center text-primary mb-2 tracking-tight drop-shadow-lg">Privacy Policy</h1>
-      <p className="text-center text-muted-foreground mb-8 text-sm font-medium">Last updated: November 7, 2026</p>
+      <p className="text-center text-muted-foreground mb-8 text-sm font-medium">Last updated: November 10, 2026</p>
       <div className="prose prose-base md:prose-lg max-w-none text-foreground">
         <p>
           EspaLuz is an AI companion that helps families live in Spanish and English: a chat on the web, on WhatsApp and on
@@ -46,12 +46,12 @@ const PrivacyPolicy = () => (
         <h2 className="terms-section-title">3. Who else processes it</h2>
         <p>To work, EspaLuz sends what you write or say to these services. Each one only processes it to give you an answer:</p>
         <ul>
-          <li><strong>AI models that write the replies and voices:</strong> Google (Gemini), Groq, xAI (Grok), OpenAI and Anthropic (Claude); Replicate for Pere and Titi's voices.</li>
+          <li><strong>AI models that write the replies and voices:</strong> Google (Gemini), Groq, xAI (Grok), OpenAI and Anthropic (Claude). Pere and Titi's voices: Microsoft (Azure Speech) first, then Google (Gemini), OpenAI or Replicate as backups, or your phone's own voice.</li>
           <li><strong>Speech to text:</strong> Groq and OpenAI (Whisper).</li>
           <li><strong>Video of EspaLuz speaking:</strong> Runway, for paying families.</li>
           <li><strong>Messaging:</strong> WhatsApp (Meta), through Twilio, and Telegram.</li>
           <li><strong>Hosting and storage:</strong> Supabase, Oracle Cloud and Lovable.</li>
-          <li><strong>Payments:</strong> PayPal, PagueloFacil and Gumroad.</li>
+          <li><strong>Payments:</strong> PayPal, PagueloFacil and Gumroad on the web; Google Play in the Android app.</li>
           <li><strong>Visit counting:</strong> Google Analytics on app.espaluz.lat counts page visits and taps on buttons
             (for example, a first chat message or the WhatsApp button), so we can see where people get stuck. It receives
             page addresses and event names only, never what you write or say, and it is switched off in the kids classroom.

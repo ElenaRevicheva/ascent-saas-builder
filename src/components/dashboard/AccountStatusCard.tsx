@@ -25,7 +25,7 @@ const INCLUDES = [
   'EspaLuz for grown-ups here on the web, on WhatsApp and on Telegram',
   'One family memory across all of them - see and correct it in card 7 of your map',
   'Life in your new country: customs, holidays and local words from checked sources',
-  'Voice replies, and the talking EspaLuz on the paid plan',
+  'Voice replies, and a few short videos of EspaLuz speaking each month on the paid plan',
   'Your weekly overview: the days you practised and what your child worked on',
 ];
 
