@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Lock, Crown, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { insidePlayApp } from '@/lib/playBilling';
 
 interface FeatureGateProps {
   feature: string;
@@ -105,8 +106,12 @@ export const FeatureGate = ({
               {isTrialActive ? 'Upgrade to Continue' : 'Get EspaLuz Family'}
             </Button>
           </Link>
+          {/* 11 Nov 2026: inside the Play app Google allows ONLY Google Play billing and no mention of other ways to pay
+              (Payments policy). This line named PayPal and PágueloFácil in the app - a review risk. The website keeps it. */}
           <p className="text-xs text-muted-foreground">
-            $11/month by PayPal (first charge 2 weeks after you subscribe) • or $11 for 30 days with PágueloFácil: type pagar in EspaLuz WhatsApp
+            {insidePlayApp()
+              ? 'Monthly subscription through Google Play (first charge 2 weeks after you subscribe)'
+              : '$11/month by PayPal (first charge 2 weeks after you subscribe) • or $11 for 30 days with PágueloFácil: type pagar in EspaLuz WhatsApp'}
           </p>
         </div>
       </CardContent>

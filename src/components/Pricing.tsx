@@ -55,7 +55,8 @@ const Pricing = () => {
         t("pr.fam4"),
         t("pr.fam5"),
         t("pr.fam6"),
-        t("pr.fam7")
+        // 11 Nov 2026: no other way to pay is named inside the Play app (Google Payments policy).
+        ...(insidePlayApp() ? [] : [t("pr.fam7")])
       ],
       popular: true,
       paypal: true,
