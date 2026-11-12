@@ -27,15 +27,27 @@ const HERO = {
 } as const;
 const KID_FONT = '"Nunito", "Baloo 2", ui-rounded, "Segoe UI", system-ui, sans-serif';
 
-/** One clip per hero line, chosen from what the line says (same idea as Pere & Titi, Russian words, own 8 clips). */
+/** One clip per hero line, chosen from what the line says (same idea as Pere & Titi, Russian words, own clips).
+ *  11 Nov 2026 (Elena: "they are just together … make this classroom a little more interesting"): 7 more shots -
+ *  the bear's reading corner and the fox's dance solo, honey, counting, high-five - and lines of the same kind
+ *  ROTATE through their pool, so two lines in a row never repeat one picture.
+ *  Cyrillic word edges: JS `\b` only knows Latin letters, so `\bпока\b` never matched; `w()` checks Russian letters. */
+let clipTurn = 0;
+const pick = (pool: string[]) => pool[clipTurn++ % pool.length];
+const w = (word: string) => new RegExp(`(?<![а-яё])(${word})(?![а-яё])`);
 function clipFor(who: Hero, ru: string, firstOfLesson: boolean): string {
   const t = ru.toLowerCase();
   const has = (re: RegExp) => re.test(t);
-  if (has(/до свидания|до завтра|до встречи|\bпока\b/)) return "duo-goodbye";
+  if (has(/до свидания|до завтра|до встречи/) || has(w("пока"))) return "duo-goodbye";
   if (firstOfLesson && has(/привет|здравствуй|здравствуйте/)) return "duo-hello";
-  if (has(/молод(ец|чина)|умни(ца|чка)|отлично|браво|\bура\b|супер|здорово|целое предложение|правильно/)) return "fox-cheer";
-  if (who === "mishka" && has(/подума|вспомн|\bхм+\b|интересно|как ты думаешь|угадай/)) return "bear-thinking";
-  return who === "mishka" ? "bear-talking" : "fox-talking";
+  if (has(/молод(ец|чина)|умни(ца|чка)|отлично|браво|супер|здорово|целое предложение|правильно/) || has(w("ура")))
+    return pick(["fox-cheer", "duo-highfive", "fox-dance"]);
+  if (has(w("мёд|мед[аоуе]?|медок|мёдом")) || has(/вкусн/)) return "bear-honey";
+  if (has(/посчита|считать|считаем|сколько/) || has(w("раз|два|три|четыре|пять"))) return "fox-counting";
+  if (has(/танц|пляс|потанцу/)) return "fox-dance";
+  if (who === "mishka" && has(/сказк|книг|почита|читать|читаем|жили-были|жил-был/)) return "bear-reading";
+  if (who === "mishka" && (has(/подума|вспомн|интересно|как ты думаешь|угадай/) || has(w("хм+")))) return "bear-thinking";
+  return who === "mishka" ? pick(["bear-talking", "bear-talking-2", "bear-reading"]) : pick(["fox-talking", "fox-talking-2"]);
 }
 
 /** The free fallback voice: the phone's own Russian voice. Bear low and slow, fox high and quick. */
