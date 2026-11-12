@@ -188,9 +188,12 @@ function turnContext(message: string, turn: number, mode: string, unit: number, 
       `Answer the grown-up warmly and briefly (Russian + English, as always), then bring ${child} back into the game with ONE easy question for her. ` +
       "The parent's words are not the child's: put nothing in \"said_ru\". The lesson does not move to its next step this turn.";
   }
-  const heard = turn > 0 ? `\n\nTHE CHILD (${child}) JUST SAID (speech-to-text, may be imperfect): "${message.slice(0, 300)}". Your FIRST line answers it.` + PRAISE_RULE : '';
-  const out = [heard];
   const act = turn > 0 ? ACTIVITY.find(([re]) => re.test(message.trim())) : undefined;
+  // 12 Nov 2026 (live test): a painting got "you said a whole sentence!" - a pad turn is something she DID, not said.
+  const heard = turn > 0 ? (act
+    ? `\n\nTHE CHILD (${child}) JUST DID THIS ON THE TABLET (she did not speak): "${message.slice(0, 300)}". Your FIRST line reacts to it; never praise her for saying a sentence this turn.`
+    : `\n\nTHE CHILD (${child}) JUST SAID (speech-to-text, may be imperfect): "${message.slice(0, 300)}". Your FIRST line answers it.` + PRAISE_RULE) : '';
+  const out = [heard];
   if (act) {
     out.push(`THIS TURN: ${act[1]} No new lesson step this turn. (Next turn: ${step})`);
     out.push("BOTH heroes speak in this reply: at least one \"mishka\" line AND one \"lisa\" line.");
@@ -309,13 +312,17 @@ async function describePhoto(b64: string): Promise<string> {
   throw new Error('no free photo reader answered');
 }
 
+// 12 Nov 2026 (live test): the model put the speaker's name before the line ("Лиса Алиса: Какого цвета листок?").
+// The page already shows who speaks, so a leading hero name is cut by code.
+const noName = (t: string) => t.trim().replace(/^(лиса\s+алиса|лиса|мишка\s+медок|мишка|lisa\s+alice|lisa|mishka)\s*:\s*/i, '');
+
 /** Only well-formed bilingual lines from the two heroes survive; anything else counts as a failed provider. */
 export function parseLesson(raw: string) {
   const s = raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1);
   const j = JSON.parse(s);
   const lines = (Array.isArray(j.lines) ? j.lines : [])
     .filter((l: any) => (l?.who === 'mishka' || l?.who === 'lisa') && typeof l.ru === 'string' && l.ru.trim())
-    .slice(0, 3).map((l: any) => ({ who: l.who, ...splitPair(String(l.ru).trim(), typeof l.en === 'string' ? l.en.trim() : '') }))
+    .slice(0, 3).map((l: any) => ({ who: l.who, ...splitPair(noName(String(l.ru)), typeof l.en === 'string' ? noName(l.en) : '') }))
     .map((l: any) => ({ who: l.who, ru: l.ru.slice(0, 300), en: l.en.slice(0, 300) }));
   if (!lines.length) throw new Error('no hero lines');
   if (lines.some((l: any) => !l.en)) throw new Error('a line without English');
