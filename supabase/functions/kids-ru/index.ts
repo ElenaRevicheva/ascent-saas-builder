@@ -149,7 +149,7 @@ async function memoryOf(sb: any, userId: string, nowSaid: Set<string>): Promise<
   for (const r of rows) {
     const words = String(r.content?.user_message ?? '').trim();
     if (!mission && typeof r.content?.mission === 'string' && r.content.mission) mission = r.content.mission;
-    if (!words || words.startsWith('(') || nowSaid.has(words) || EMERGENCY.test(words)) continue;
+    if (!words || words.startsWith('(') || r.content?.speaker === 'parent' || nowSaid.has(words) || EMERGENCY.test(words)) continue;
     if (said.length < 10 && !said.includes(words.slice(0, 120))) said.push(words.slice(0, 120));
   }
   if (!said.length && !mission) return { card: '', unit: Math.floor(classStarts / 2), greeted };
@@ -162,7 +162,18 @@ async function memoryOf(sb: any, userId: string, nowSaid: Set<string>): Promise<
   return { card, unit: Math.floor(classStarts / 2), greeted };
 }
 
-function turnContext(message: string, turn: number, mode: string, unit: number, child: string): string {
+// 12 Nov 2026 (Elena: "the same paintings, music ... photos with explanations"): the page's pads and the camera send
+// their own messages. Each gets the same treatment as in Pere & Titi's classroom, in Russian + English.
+const ACTIVITY: [RegExp, string][] = [
+  [/^📷/, "SHE SHOWED A PHOTO (the description in brackets is what a camera reader saw; only that is true). Mishka names what is in it in one simple Russian sentence and teaches ONE Russian word from it; Lisa asks her ONE question about it that she can answer in Russian (\"Что это? / What is it?\", \"Какого цвета? / What colour?\"). Never guess what a cup holds or what a toy can do; never describe a person beyond \"человек / a person\"."],
+  [/^✏️/, "SHE TRACED IT WITH HER FINGER on the tablet. Praise exactly that (name the letter or word), then ask her to SAY it out loud in Russian."],
+  [/^🎨/, "SHE PAINTED A PICTURE (what and which colours are in her message). Praise one real thing (a colour she used), then ONE step of See-Think-Wonder, never all three: \"Что происходит на твоём рисунке? / What is happening in your picture?\" or \"Почему ты выбрала этот цвет? / Why did you choose that colour?\" or \"О чём ты хочешь узнать? / What do you wonder about it?\". If a place is named, Mishka may tell ONE true fact about it."],
+  [/^🎵/, "SHE PLAYED MUSIC (a rhythm game, or she listened to a real piece and said what she heard). React to exactly what she did; for a piece, the fact in brackets is the true answer - agree or gently correct with it. Teach ONE music word in Russian (быстро / медленно / громко / тихо / ритм)."],
+  [/^🦊/, "SHE PROGRAMMED LISA (arrow blocks to the berries). Lisa thanks her for leading her; Mishka names the idea: \"программа - это команды по порядку / a program is instructions in order\". Ask her to say one direction in Russian (направо / налево / вверх / вниз)."],
+  [/^🎲/, "SHE PLAYED A GAME (numbers or Russian sounds) and the score is in her message. Praise the effort, name the score, ask ONE tiny follow-up in Russian."],
+];
+
+function turnContext(message: string, turn: number, mode: string, unit: number, child: string, speaker = 'child', speakerName = ''): string {
   if (EMERGENCY.test(message)) {
     return `\n\nSOMEONE SAID THERE IS AN EMERGENCY. THIS TURN OVERRIDES EVERY RULE: no lesson, no game, no question. Exactly two calm lines: ` +
       `Mishka: "Будь рядом с мамой и делай, что она говорит. / Stay close to your mom and do what she says." Lisa: "Мы ждём тебя здесь. / We will be here when you come back."`;
@@ -172,8 +183,19 @@ function turnContext(message: string, turn: number, mode: string, unit: number, 
   const steps = mode === 'class' ? classSteps(UNITS[unit % UNITS.length]) : STEPS;
   const step = turn < steps.length ? steps[turn] : STEP_FREE;
   const story = STORIES[isoWeek(new Date()) % STORIES.length];
+  if (turn > 0 && speaker === 'parent') {
+    return `\n\nA PARENT (${speakerName || 'mom or dad'}) JUST SAID (speech-to-text, may be imperfect): "${message.slice(0, 300)}". ` +
+      `Answer the grown-up warmly and briefly (Russian + English, as always), then bring ${child} back into the game with ONE easy question for her. ` +
+      "The parent's words are not the child's: put nothing in \"said_ru\". The lesson does not move to its next step this turn.";
+  }
   const heard = turn > 0 ? `\n\nTHE CHILD (${child}) JUST SAID (speech-to-text, may be imperfect): "${message.slice(0, 300)}". Your FIRST line answers it.` + PRAISE_RULE : '';
   const out = [heard];
+  const act = turn > 0 ? ACTIVITY.find(([re]) => re.test(message.trim())) : undefined;
+  if (act) {
+    out.push(`THIS TURN: ${act[1]} No new lesson step this turn. (Next turn: ${step})`);
+    out.push("BOTH heroes speak in this reply: at least one \"mishka\" line AND one \"lisa\" line.");
+    return out.join('\n');
+  }
   if (turn > 0 && QUESTION.test(message)) {
     out.push(`THIS TURN: she ASKED A QUESTION. ANSWER IT FIRST, truly and simply (one real fact; never invent). Stay on her topic; no game or new step this turn. (Next turn: ${step})`);
   } else {
@@ -243,6 +265,50 @@ function splitPair(ru: string, en: string): { ru: string; en: string } {
   return { ru, en };
 }
 
+// The photo reader: the same free-first order as Pere & Titi's (espaluz-chat describePhoto, VJH's screenshot reader) -
+// free Gemini, then Groq's free vision model. No paid reader here: if both are busy the heroes say they could not see it.
+// The photo itself is never stored; only the one-line description goes into the lesson.
+const PHOTO_PROMPT = "A 6-year-old child is showing this photo to her Russian tutors. In ONE short English sentence, say " +
+  "what is in it (objects, toys, animals, food, a drawing; colours). Only what you can clearly see: never guess what a " +
+  "cup or bowl contains, what a toy can do, or anything you are not sure of - name it plainly (\"a mug\", \"a toy\"). " +
+  "Never name or describe a real person: say only 'a person'. No guesses about where it was taken.";
+const GROQ_VISION_MODEL = Deno.env.get('GROQ_VISION_MODEL') || 'qwen/qwen3.8-27b';
+async function describePhoto(b64: string): Promise<string> {
+  const gKey = Deno.env.get('GEMINI_TTS_API_KEY');
+  if (gKey) {
+    for (const model of [GEMINI_LITE, GEMINI_FLASH]) {
+      try {
+        const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+          method: 'POST',
+          headers: { 'x-goog-api-key': gKey, 'content-type': 'application/json' },
+          body: JSON.stringify({ contents: [{ role: 'user', parts: [{ inline_data: { mime_type: 'image/jpeg', data: b64 } }, { text: PHOTO_PROMPT }] }],
+            generationConfig: { maxOutputTokens: 1024, temperature: 0.2 } }),
+          signal: AbortSignal.timeout(15000),
+        });
+        if (!r.ok) throw new Error(`${r.status}`);
+        const t = (await r.json()).candidates?.[0]?.content?.parts?.map((p: any) => p.text ?? '').join('').trim();
+        if (t) { console.log(`[kids-ru] photo read by gemini (${model})`); return t; }
+      } catch (e) { console.error(`[kids-ru] photo gemini ${model} failed: ${String(e).slice(0, 120)}`); }
+    }
+  }
+  const qKey = Deno.env.get('GROQ_API_KEY');
+  if (qKey) {
+    try {
+      const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${qKey}`, 'content-type': 'application/json' },
+        body: JSON.stringify({ model: GROQ_VISION_MODEL, max_tokens: 400, temperature: 0.2, messages: [{ role: 'user', content: [
+          { type: 'text', text: PHOTO_PROMPT }, { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${b64}` } }] }] }),
+        signal: AbortSignal.timeout(20000),
+      });
+      if (!r.ok) throw new Error(`${r.status}`);
+      const t = String((await r.json()).choices?.[0]?.message?.content ?? '').replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+      if (t) { console.log(`[kids-ru] photo read by groq (${GROQ_VISION_MODEL})`); return t; }
+    } catch (e) { console.error(`[kids-ru] photo groq failed: ${String(e).slice(0, 120)}`); }
+  }
+  throw new Error('no free photo reader answered');
+}
+
 /** Only well-formed bilingual lines from the two heroes survive; anything else counts as a failed provider. */
 export function parseLesson(raw: string) {
   const s = raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1);
@@ -276,7 +342,16 @@ Deno.serve(async (req) => {
       .filter((m: any) => (m?.role === 'user' || m?.role === 'assistant') && typeof m?.content === 'string')
       .slice(-16).map((m: any) => ({ role: m.role, content: String(m.content).slice(0, 800) }));
     if (!history.length || history[history.length - 1].role !== 'user') history.push({ role: 'user', content: '(урок начинается)' });
+    // A photo: what the camera reader saw replaces the "look at my photo" line, so this and later turns know it.
+    if (typeof body.image === 'string' && body.image.length > 100) {
+      if (body.image.length > 2_000_000) return json({ error: 'photo too large' }, 413);
+      let seen = '';
+      try { seen = (await describePhoto(body.image)).replace(/\s+/g, ' ').slice(0, 300); } catch (e) { console.error('[kids-ru] photo not read:', String(e).slice(0, 120)); }
+      history[history.length - 1].content = seen ? `📷 (фото: ${seen})` : '📷 (фото, которое не получилось рассмотреть / a photo that could not be seen)';
+    }
     const message = history[history.length - 1].content;
+    const speaker = body.speaker === 'parent' ? 'parent' : 'child';
+    const speakerName = typeof body.speaker_name === 'string' ? body.speaker_name.slice(0, 30) : '';
     const turn = Number.isInteger(body.turn) && body.turn >= 0 ? body.turn : Math.floor(history.length / 2);
     const mode = body.mode === 'class' ? 'class' : 'talk';
 
@@ -290,7 +365,7 @@ Deno.serve(async (req) => {
     const mem = await memoryOf(sb, user.id, new Set(history.filter((m: any) => m.role === 'user').map((m: any) => m.content.trim())));
     const unit = mem.unit;
     const system = BASE_PROMPT(child, age, family) + (turn === 0 || turn < 3 ? mem.card : '') +
-      turnContext(message, turn, mode, unit, child) + FORMAT;
+      turnContext(message, turn, mode, unit, child, speaker, speakerName) + FORMAT;
 
     const gKey = Deno.env.get('GEMINI_TTS_API_KEY');
     const qKey = Deno.env.get('GROQ_API_KEY');
@@ -306,12 +381,13 @@ Deno.serve(async (req) => {
         const reply = out.lines.map((l: any) => `${l.who === 'mishka' ? 'Мишка' : 'Лиса'}: ${l.ru} / ${l.en}`).join('\n');
         const { error: saveErr } = await sb.from('learning_sessions').insert({
           user_id: user.id, session_type: 'classroom_ru', source: 'web',
-          content: { user_message: turn === 0 ? '' : message.slice(0, 500), ai_response: reply, turn, mode,
-            said_ru: out.said_ru, new_words: out.new_words, mission: out.mission,
+          content: { user_message: turn === 0 ? '' : message.slice(0, 500), ai_response: reply, turn, mode, speaker,
+            said_ru: speaker === 'parent' ? [] : out.said_ru, new_words: out.new_words, mission: out.mission,
             ...(mode === 'class' ? { class_unit: unit + 1, class_label: classLabel(unit), ...(turn === 0 ? { class_start: 'true' } : {}) } : {}) },
         });
         if (saveErr) console.error(`[kids-ru] save failed: ${saveErr.message}`);
-        return json({ ...out, model: name, mode, unit: unit + 1, unitTheme: UNITS[unit % UNITS.length].theme,
+        if (speaker === 'parent') out.said_ru = [];
+        return json({ ...out, userMessage: message, model: name, mode, unit: unit + 1, unitTheme: UNITS[unit % UNITS.length].theme,
           trace: mode === 'class' ? UNITS[unit % UNITS.length].trace : [] });
       } catch (e) {
         console.error(`[kids-ru] ${name} failed: ${String(e).slice(0, 160)}`);
