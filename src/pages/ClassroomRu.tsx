@@ -55,22 +55,75 @@ const KID_FONT = '"Nunito", "Baloo 2", ui-rounded, "Segoe UI", system-ui, sans-s
  *  the bear's reading corner and the fox's dance solo, honey, counting, high-five - and lines of the same kind
  *  ROTATE through their pool, so two lines in a row never repeat one picture.
  *  Cyrillic word edges: JS `\b` only knows Latin letters, so `\bпока\b` never matched; `w()` checks Russian letters. */
-let clipTurn = 0;
-const pick = (pool: string[]) => pool[clipTurn++ % pool.length];
+// Each pool keeps its own turn (12 Nov test: with one shared counter, alternating bear and fox lines skipped two bear shots).
+const turns = new Map<string[], number>();
+const pick = (pool: string[]) => { const n = turns.get(pool) ?? 0; turns.set(pool, n + 1); return pool[n % pool.length]; };
 const w = (word: string) => new RegExp(`(?<![а-яё])(${word})(?![а-яё])`);
-function clipFor(who: Hero, ru: string, firstOfLesson: boolean): string {
+// 12 Nov 2026 (Elena: "make more shots ... make sure all of them are actually wired and used in practice"; "the rest in
+// different national costumes"): 11 more Grok Imagine shots - breathing, the jump break, freeze, oops, clap, the chalkboard,
+// looking at a photo, a duo dance, and the winter-costume hello and talking shots. Every shot below has a way in:
+// a word in the hero's line, the kind of turn (a photo), or a rotating pool. scripts: cto-aipa docs/espaluz/russian-classroom-art.
+export const HELLO = ["duo-hello", "duo-hello-winter"];
+export const PRAISE = ["fox-cheer", "duo-highfive", "bear-clap", "fox-dance", "duo-dance"];
+export const DANCE = ["fox-dance", "duo-dance"];
+export const BEAR_TALK = ["bear-talking", "bear-talking-2", "bear-talking-winter", "bear-reading"];
+export const FOX_TALK = ["fox-talking", "fox-talking-2", "fox-talking-winter"];
+export function clipFor(who: Hero, ru: string, firstOfLesson: boolean, ctx: { photo?: boolean; firstLine?: boolean } = {}): string {
   const t = ru.toLowerCase();
   const has = (re: RegExp) => re.test(t);
   if (has(/до свидания|до завтра|до встречи/) || has(w("пока"))) return "duo-goodbye";
-  if (firstOfLesson && has(/привет|здравствуй|здравствуйте/)) return "duo-hello";
+  if (firstOfLesson && has(/привет|здравствуй|здравствуйте/)) return pick(HELLO);
+  if (ctx.photo && ctx.firstLine) return "duo-curious"; // she is showing them a photo
   if (has(/молод(ец|чина)|умни(ца|чка)|отлично|браво|супер|здорово|целое предложение|правильно/) || has(w("ура")))
-    return pick(["fox-cheer", "duo-highfive", "fox-dance"]);
+    return pick(PRAISE);
+  if (has(/вдох|выдох|дыш|дыхани/)) return "bear-breathing";
+  if (has(/замр|замира|статуя|статую/)) return "fox-freeze";
+  if (has(/прыг|разминк|колен|присед|потопа/)) return "fox-jump";
+  if (has(/упс|ошиблась|ошибся|перепутала|ой-ой/) || has(w("ой"))) return "fox-oops";
   if (has(w("мёд|мед[аоуе]?|медок|мёдом")) || has(/вкусн/)) return "bear-honey";
   if (has(/посчита|считать|считаем|сколько/) || has(w("раз|два|три|четыре|пять"))) return "fox-counting";
-  if (has(/танц|пляс|потанцу/)) return "fox-dance";
+  if (has(/танц|пляс|потанцу/)) return pick(DANCE);
+  if (who === "mishka" && has(/доск|букв|слог|прочитай|прочитаем|читай/)) return "bear-board";
   if (who === "mishka" && has(/сказк|книг|почита|читать|читаем|жили-были|жил-был/)) return "bear-reading";
   if (who === "mishka" && (has(/подума|вспомн|интересно|как ты думаешь|угадай/) || has(w("хм+")))) return "bear-thinking";
-  return who === "mishka" ? pick(["bear-talking", "bear-talking-2", "bear-reading"]) : pick(["fox-talking", "fox-talking-2"]);
+  return who === "mishka" ? pick(BEAR_TALK) : pick(FOX_TALK);
+}
+
+// 12 Nov 2026 (Elena: "wire some shots with EspaLuz the way you wired her into Pere and Titi so that she helps the team
+// when stuff is stuck"; lines approved the same day, docs/espaluz/RUSSIAN_CLASSROOM_ESPALUZ_LINES_2026-11-12.md): six
+// pre-made clips in public/mentora-ru - a free Grok scene of EspaLuz with Mishka and Lisa, voiced free (no Runway). Same
+// rules as Pere & Titi: the child's own words only, each feeling once a lesson, two visits at most ("wants to stop"
+// always), a request for quiet never calls her, the mic silences her, and possible real harm gets no soothing clip.
+export const ESPALUZ_LINES: Record<string, { ru: string; en: string }> = {
+  annoyed: { ru: "Ой, кажется, Мишка и Лиса совсем тебя заболтали? Я их тихонько попросила: теперь они будут больше слушать тебя. Им очень интересно, что скажешь ты.",
+    en: "Oh, I think Mishka and Lisa have been chattering a lot! I quietly asked them to listen to you more. They really want to hear what you have to say." },
+  bored: { ru: "Кажется, тебе стало немножко скучно? Давай придумаем что-нибудь интересное! Хочешь порисовать, послушать музыку или поиграть с Лисой? Выбирай ты.",
+    en: "Feeling a little bored? Let's find something fun! Would you like to paint, listen to music, or play with Lisa? You choose." },
+  quit: { ru: "Хочется отдохнуть? Конечно, можно. Мишка и Лиса всегда тебе рады. Поиграем ещё капельку или попрощаемся до завтра?",
+    en: "Want to take a break? Of course you can. Mishka and Lisa are always happy to see you. Shall we play a tiny bit more, or say goodbye until tomorrow?" },
+  "calm-1": { ru: "Похоже, тебе сейчас грустно. Так иногда бывает у всех, даже у взрослых. Я рядом. Давай вместе тихонько вдохнём... и выдохнем.",
+    en: "It looks like you feel sad right now. Everyone feels like that sometimes, even grown-ups. I'm right here. Let's breathe in slowly together... and breathe out." },
+  "calm-2": { ru: "Всё, что ты чувствуешь, очень важно. Если захочешь, расскажи Мишке. Он умеет слушать бережно и никуда не торопится.",
+    en: "Everything you feel really matters. If you want, tell Mishka. He listens gently and is never in a hurry." },
+  stuck: { ru: "Трудно подобрать слова? Так бывает. Можно сказать всего одно словечко, хоть по-русски, хоть по-английски. Мишка и Лиса тебе помогут.",
+    en: "Hard to find the words? That happens. You can say just one little word, in Russian or in English. Mishka and Lisa will help you." },
+};
+const RU_HURT = /бь[её]т|бьют|ударил|обижает меня|делает (мне )?больно|не хочу жить|хочу умереть|hits? me|hurts? me|want to die/i;
+const RU_QUIET = /помолч|замолч|тише|не говор|много говор|be quiet|stop talking|talk(ing)? too much/i;
+const RU_QUIT = /хочу (закончить|остановиться|уйти|спать|отдохнуть|домой)|не хочу больше|больше не хочу|(?<![а-яё])хватит|i want to (stop|quit|go)|i'?m tired|no more/i;
+const RU_ANNOYED = /надоел|надоело|отстань|раздража|бесит|annoying|leave me alone/i;
+const RU_BORED = /скучн|скука|bored|boring/i;
+const RU_UPSET = /грустн|печальн|мне плохо|обидн|плачу|хочу плакать|страшно|боюсь|злюсь|сержусь|i'?m (sad|upset|scared|angry)|i feel (sad|bad)/i;
+const RU_STUCK = /^\s*(я\s+)?(не знаю|не помню|забыл[аи]?)[\s.!?…]*$|^\s*i (don'?t|do not) know[\s.!?]*$|^\s*dunno/i;
+/** Which EspaLuz clip the child's own words call for, if any. */
+export function espaluzFor(said: string): string | null {
+  if (RU_HURT.test(said) || RU_QUIET.test(said)) return null;
+  if (RU_QUIT.test(said)) return "quit";
+  if (RU_ANNOYED.test(said)) return "annoyed";
+  if (RU_BORED.test(said)) return "bored";
+  if (RU_UPSET.test(said)) return Math.random() < 0.5 ? "calm-1" : "calm-2";
+  if (RU_STUCK.test(said)) return "stuck";
+  return null;
 }
 
 /** The free fallback voice: the phone's own voices, Russian then English. Bear low and slow, fox high and quick. */
@@ -135,6 +188,11 @@ const ClassroomRu = () => {
   const chunks = useRef<Blob[]>([]);
   const audio = useRef<HTMLAudioElement | null>(null);
   const hush = useRef(false);
+  const [mentora, setMentora] = useState<string | null>(null); // the EspaLuz clip on screen, with sound
+  const mentoraEnded = useRef<(() => void) | null>(null);
+  const mentoraVideo = useRef<HTMLVideoElement | null>(null);
+  const skipHeroes = useRef(false); // the mic during her clip: she stops and the heroes do not talk over the child
+  const visits = useRef<Set<string>>(new Set());
 
   useEffect(() => () => { audio.current?.pause(); window.speechSynthesis?.cancel(); }, []);
 
@@ -203,6 +261,23 @@ const ClassroomRu = () => {
 
   const nameOf = (w: Who) => (w === "child" ? childName || "Ты" : PARENT[w].name);
 
+  const espaluzSay = (clip: string) => new Promise<void>((done) => {
+    const finish = () => { clearTimeout(safety); mentoraEnded.current = null; setMentora(null); done(); };
+    const safety = setTimeout(finish, 40000);
+    mentoraEnded.current = finish;
+    setMentora(clip);
+  });
+  // A browser that refuses sound without a fresh tap skips the clip: the lesson never waits for it. One row per clip with
+  // its name only (never the child's words), so we can see in practice which clips really play.
+  useEffect(() => {
+    if (!mentora) return;
+    const log = (outcome: string) => {
+      if (user?.id) supabase.from("learning_sessions").insert({ user_id: user.id, session_type: "analytics", source: "web",
+        content: { event: "classroom_ru_clip", clip: mentora, outcome } }).then(({ error }) => { if (error) console.error("clip log", error.message); });
+    };
+    mentoraVideo.current?.play().then(() => log("played")).catch(() => { log("skipped"); mentoraEnded.current?.(); });
+  }, [mentora]); // eslint-disable-line react-hooks/exhaustive-deps
+
   /** Every 5 stars: Lisa's dance fills the screen and the new sticker is said in Russian and English. */
   const celebrate = async (n: number) => {
     setReward(n);
@@ -230,7 +305,7 @@ const ClassroomRu = () => {
       }
       const first = history.length === 0;
       const spoken: Line[] = data.lines.map((l: { who: Hero; ru: string; en?: string }, i: number) =>
-        ({ who: l.who, ru: l.ru, en: l.en ?? "", clip: clipFor(l.who, l.ru, first && i === 0) }));
+        ({ who: l.who, ru: l.ru, en: l.en ?? "", clip: clipFor(l.who, l.ru, first && i === 0, { photo: Boolean(image), firstLine: i === 0 }) }));
       // A photo turn comes back as "📷 (фото: ...)", so the next turns still know what she showed.
       const said0 = typeof data.userMessage === "string" && data.userMessage ? data.userMessage : childSays;
       if (said0 && said0 !== childSays) setHeard(said0);
@@ -245,6 +320,14 @@ const ClassroomRu = () => {
       const star = Boolean(childSays) && !parent && (said.length > 0 || ACTIVITY.test(childSays ?? ""));
       if (star) setStars((s) => s + 1);
       if (childSays && !parent && said.length) setSaidToday((w) => [...w, ...said.filter((x) => !w.includes(x))].slice(-30));
+      // EspaLuz comes when the child is stuck, bored, annoyed, sad or wants to stop - before the heroes answer.
+      const visit = !parent && childSays && !ACTIVITY.test(childSays) ? espaluzFor(childSays) : null;
+      const kind = visit?.replace(/-\d$/, "");
+      if (visit && kind && !visits.current.has(kind) && (visits.current.size < 2 || kind === "quit")) {
+        visits.current.add(kind);
+        await espaluzSay(visit);
+      }
+      if (skipHeroes.current) { skipHeroes.current = false; return; }
       await speak(spoken);
       if (star && (stars + 1) % 5 === 0 && !hush.current) await celebrate(stars + 1);
     } catch (e) {
@@ -296,6 +379,7 @@ const ClassroomRu = () => {
       r.start();
       setRecording(true);
       hush.current = true; // one tap silences the heroes and she speaks
+      if (mentoraEnded.current) { skipHeroes.current = true; mentoraEnded.current(); }
       audio.current?.pause();
       window.speechSynthesis?.cancel();
     } catch {
@@ -340,7 +424,7 @@ const ClassroomRu = () => {
   }
 
   const now = shot >= 0 ? lines[shot] : null;
-  const clip = reward ? "fox-dance" : recording || (!speaking && history.length)
+  const clip = reward ? DANCE[Math.floor(reward / 5) % DANCE.length] : recording || (!speaking && history.length)
     ? (lastWho === "mishka" ? "bear-listening" : "fox-listening")
     : now?.clip ?? "duo-hello";
   const stickers = Math.floor(stars / 5);
@@ -367,9 +451,24 @@ const ClassroomRu = () => {
         </div>
       )}
 
-      <video key={`${clip}-${shot}`} src={`${CLIPS}/${clip}.mp4`} poster="/classroom-ru/cover.jpg"
-        autoPlay loop muted playsInline
-        className="w-full max-w-[720px] aspect-video rounded-[2rem] shadow-2xl border-8 border-white/80 object-cover" />
+      {mentora ? (
+        <>
+          <video ref={mentoraVideo} key={`espaluz-${mentora}`} src={`/mentora-ru/${mentora}.mp4`} poster="/classroom-ru/cover.jpg"
+            playsInline onEnded={() => mentoraEnded.current?.()} onError={() => mentoraEnded.current?.()}
+            className="w-full max-w-[720px] aspect-video rounded-[2rem] shadow-2xl border-8 border-white/80 object-cover" />
+          {ESPALUZ_LINES[mentora] && (
+            <div className="w-full max-w-[680px] rounded-[1.75rem] px-5 py-3 shadow-xl border-4 border-white bg-teal-50">
+              <div className="text-sm font-extrabold uppercase tracking-wide text-teal-700">EspaLuz</div>
+              <div className="text-xl font-bold leading-snug text-slate-900">{ESPALUZ_LINES[mentora].ru}</div>
+              <div className="text-base leading-snug text-slate-600 mt-1">{ESPALUZ_LINES[mentora].en}</div>
+            </div>
+          )}
+        </>
+      ) : (
+        <video key={`${clip}-${shot}`} src={`${CLIPS}/${clip}.mp4`} poster="/classroom-ru/cover.jpg"
+          autoPlay loop muted playsInline
+          className="w-full max-w-[720px] aspect-video rounded-[2rem] shadow-2xl border-8 border-white/80 object-cover" />
+      )}
 
       {reward > 0 && (
         <div className="rounded-full bg-yellow-300 border-4 border-white shadow-2xl px-8 py-3 text-2xl font-extrabold text-slate-900 animate-bounce text-center">
@@ -491,7 +590,7 @@ const ClassroomRu = () => {
           </button>
           <button
             onClick={recording ? stopRecording : startRecording}
-            disabled={busy && !recording && !speaking}
+            disabled={busy && !recording && !speaking && !mentora}
             className={`w-32 h-32 rounded-full shadow-2xl flex flex-col items-center justify-center text-white text-lg font-bold transition
               ${recording ? "bg-red-500 animate-pulse" : busy && !speaking ? "bg-gray-400"
                 : who === "child" ? "bg-green-500 hover:bg-green-600" : "bg-violet-500 hover:bg-violet-600"}`}
