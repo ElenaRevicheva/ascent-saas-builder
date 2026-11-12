@@ -41,7 +41,7 @@ const BASE_PROMPT = (child: string, age: string, family: string) => `You are the
 The child: ${child}. ${family}
 
 How to talk:
-- BILINGUAL, ALWAYS: every line is said in Russian first, then the SAME idea in English. Put the Russian in "ru" and the English in "en". Real, complete sentences, never single words.
+- BILINGUAL, ALWAYS: every line is said in Russian first, then the SAME idea in English. Put ONLY Russian in "ru" and ONLY English in "en" (never both in one field, never " / " inside a field). Real, complete sentences, never single words.
 - The FIRST line of every reply answers what the child just said. If she asked a question, answer it; if she told you something, REACT like a friend who heard it (a feeling, a funny thought, what you would do) - do NOT tell her back what she said. Say her words back ONLY to correct a real mistake, once. Never repeat a sentence already said in this lesson.
 - Clear for a 6-7 year old (6-12 words per sentence). 2-3 short lines per reply. Warm and playful. No markdown, at most one emoji.
 - End every reply with ONE simple NEW question about exactly what she just said or did - curious, like a friend. Never the same kind of question twice in a row. Invite a whole sentence only now and then.
@@ -89,7 +89,7 @@ const classLabel = (unit: number): string => {
 };
 const classSteps = (u: typeof UNITS[number]): string[] => [
   `CLASS HELLO: both heroes say hello in 1-2 short lines and announce today's class in one happy line, in natural Russian ` +
-    `(e.g. "Наш урок сегодня: «${u.theme.split(' / ')[0]}»! / Today's class: ${u.theme.split(' / ')[1]}!" - never "поговорим о «...»").`,
+    `(ru: "Наш урок сегодня: «${u.theme.split(' / ')[0]}»!", en: "Today's class: ${u.theme.split(' / ')[1]}!" - never "поговорим о «...»").`,
   `READING CORNER (Mishka, slow and clear): today's Russian reading is ${u.ru}. She is a BEGINNING reader: show at most 3 ` +
     "letters or syllables, big and alone on ONE short line (\"МА  МО  МУ\"); Mishka says each SOUND slowly, she says it after " +
     "him, then she tries to read ONE by herself; Lisa reads one WRONG on purpose so she catches her; then she TRACES one " +
@@ -230,13 +230,27 @@ async function groq(key: string, model: string, system: string, messages: any[])
   return text;
 }
 
+// 12 Nov 2026 (live test): the model sometimes wrote "Привет! / Hello!" into "ru" and the same pair again into "en".
+// The pair is split by code: Russian = the side with Cyrillic, English = the side without.
+const CYR = /[а-яё]/i;
+function splitPair(ru: string, en: string): { ru: string; en: string } {
+  const halves = (t: string) => { const i = t.lastIndexOf(' / '); return i < 0 ? null : [t.slice(0, i).trim(), t.slice(i + 3).trim()]; };
+  const r = halves(ru);
+  if (r && CYR.test(r[0]) && !CYR.test(r[1])) { ru = r[0]; if (!en || CYR.test(en)) en = r[1]; }
+  const e = halves(en);
+  if (e && CYR.test(e[0]) && !CYR.test(e[1])) en = e[1];
+  if (CYR.test(en)) en = '';
+  return { ru, en };
+}
+
 /** Only well-formed bilingual lines from the two heroes survive; anything else counts as a failed provider. */
 export function parseLesson(raw: string) {
   const s = raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1);
   const j = JSON.parse(s);
   const lines = (Array.isArray(j.lines) ? j.lines : [])
     .filter((l: any) => (l?.who === 'mishka' || l?.who === 'lisa') && typeof l.ru === 'string' && l.ru.trim())
-    .slice(0, 3).map((l: any) => ({ who: l.who, ru: String(l.ru).trim().slice(0, 300), en: typeof l.en === 'string' ? l.en.trim().slice(0, 300) : '' }));
+    .slice(0, 3).map((l: any) => ({ who: l.who, ...splitPair(String(l.ru).trim(), typeof l.en === 'string' ? l.en.trim() : '') }))
+    .map((l: any) => ({ who: l.who, ru: l.ru.slice(0, 300), en: l.en.slice(0, 300) }));
   if (!lines.length) throw new Error('no hero lines');
   if (lines.some((l: any) => !l.en)) throw new Error('a line without English');
   const words = (a: unknown) => (Array.isArray(a) ? a : []).filter((w) => typeof w === 'string').map((w) => w.slice(0, 40)).slice(0, 10);
