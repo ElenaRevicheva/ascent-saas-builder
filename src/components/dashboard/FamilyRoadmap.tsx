@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { CheckCircle2, Users, Smile, MessageCircle, Phone, Send, Gift, ArrowRight, Compass } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { insidePlayApp } from '@/lib/playBilling';
 import { OurStoryCard } from './OurStoryCard';
 import { FamilyProfileDialog, readFamilyProfile, PACK_COUNTRIES } from './FamilyProfileDialog';
 
@@ -238,13 +239,22 @@ export const FamilyRoadmap = () => {
                 ) : null}
               </div>
               <p className="mt-2 flex-1 text-sm text-muted-foreground">{f?.fact ?? ' '}</p>
-              <div className="mt-3">
+              <div className="mt-3 flex flex-wrap items-center gap-2">
                 {s.to ? (
                   <Link to={s.to}>{button}</Link>
                 ) : s.href ? (
                   <a href={s.href} target="_blank" rel="noopener noreferrer">{button}</a>
                 ) : (
                   <button type="button" onClick={s.onClick}>{button}</button>
+                )}
+                {/* 12 Nov 2026 (Elena): the Russian classroom sits HERE, in step 3, on the website only - never in the
+                    site header and never inside the Google Play app (Spanish only there). */}
+                {s.key === 'classroom' && !insidePlayApp() && (
+                  <Link to="/classroom-ru"
+                    className="inline-flex items-center gap-1 rounded-full border-2 px-4 py-1.5 text-sm font-semibold"
+                    style={{ borderColor: tint, color: 'hsl(var(--foreground))' }}>
+                    🐻🦊 Мишка &amp; Лиса · Russian <span className="text-xs font-normal text-muted-foreground">beta</span>
+                  </Link>
                 )}
               </div>
             </li>
