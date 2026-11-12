@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>Сарафан и кокошник / Sarafan and kokoshnik</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 330 150 C 315 40 485 40 470 150 C 440 128 360 128 330 150 Z"/>
+<path d="M 352 132 C 350 78 450 78 448 132"/>
+<circle cx="338" cy="89" r="7"/>
+<circle cx="364" cy="68" r="7"/>
+<circle cx="400" cy="60" r="7"/>
+<circle cx="436" cy="68" r="7"/>
+<circle cx="462" cy="89" r="7"/>
+<circle cx="400" cy="185" r="48"/>
+<circle cx="383" cy="180" r="5"/><circle cx="417" cy="180" r="5"/>
+<path d="M 386 205 Q 400 214 414 205"/>
+<path d="M 446 200 C 470 240 470 300 458 345 L 474 360 L 446 360 L 448 345"/>
+<path d="M 380 230 L 420 230 L 420 250 L 380 250 Z"/>
+<path d="M 360 250 C 320 245 290 270 285 320 C 300 335 320 330 335 300 L 345 280"/>
+<path d="M 440 250 C 480 245 510 270 515 320 C 500 335 480 330 465 300 L 455 280"/>
+<circle cx="292" cy="345" r="18"/><circle cx="508" cy="345" r="18"/>
+<path d="M 350 250 L 450 250 L 530 515 L 270 515 Z"/>
+<path d="M 375 250 L 365 300"/><path d="M 425 250 L 435 300"/>
+<path d="M 365 300 L 435 300"/>
+<path d="M 400 300 L 400 515"/>
+<circle cx="400" cy="335" r="9"/><circle cx="400" cy="375" r="9"/><circle cx="400" cy="415" r="9"/>
+<path d="M 282 475 L 518 475"/>
+<path d="M 288 475 L 305 495 L 322 475 L 339 495 L 356 475 L 373 495 L 390 475 L 407 495 L 424 475 L 441 495 L 458 475 L 475 495 L 492 475 L 509 495"/>
+<ellipse cx="360" cy="532" rx="30" ry="14"/><ellipse cx="440" cy="532" rx="30" ry="14"/>
+<circle cx="120" cy="470" r="8"/>
+<ellipse cx="141" cy="470" rx="13" ry="8" transform="rotate(0 141 470)"/>
+<ellipse cx="130" cy="488" rx="13" ry="8" transform="rotate(60 130 488)"/>
+<ellipse cx="110" cy="488" rx="13" ry="8" transform="rotate(120 110 488)"/>
+<ellipse cx="99" cy="470" rx="13" ry="8" transform="rotate(180 99 470)"/>
+<ellipse cx="109" cy="452" rx="13" ry="8" transform="rotate(240 109 452)"/>
+<ellipse cx="130" cy="452" rx="13" ry="8" transform="rotate(300 130 452)"/><circle cx="680" cy="470" r="8"/>
+<ellipse cx="701" cy="470" rx="13" ry="8" transform="rotate(0 701 470)"/>
+<ellipse cx="690" cy="488" rx="13" ry="8" transform="rotate(60 690 488)"/>
+<ellipse cx="670" cy="488" rx="13" ry="8" transform="rotate(120 670 488)"/>
+<ellipse cx="659" cy="470" rx="13" ry="8" transform="rotate(180 659 470)"/>
+<ellipse cx="670" cy="452" rx="13" ry="8" transform="rotate(240 670 452)"/>
+<ellipse cx="690" cy="452" rx="13" ry="8" transform="rotate(300 690 452)"/><path d="M 40 560 L 760 560"/>
+</g>
+</svg>

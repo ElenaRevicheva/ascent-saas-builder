@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>Пельмени / Pelmeni dumplings</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 150 300 L 650 300 C 640 430 540 500 400 500 C 260 500 160 430 150 300 Z"/>
+<ellipse cx="400" cy="300" rx="250" ry="40"/>
+<path d="M 330 500 L 320 535 L 480 535 L 470 500"/>
+<path d="M 245 300 C 245 245 335 245 335 300 C 310 312 270 312 245 300 Z"/>
+<path d="M 345 285 C 345 230 435 230 435 285 C 410 297 370 297 345 285 Z"/>
+<path d="M 445 300 C 445 245 535 245 535 300 C 510 312 470 312 445 300 Z"/>
+<path d="M 295 260 C 295 205 385 205 385 260 C 360 272 320 272 295 260 Z"/>
+<path d="M 405 255 C 405 200 495 200 495 255 C 470 267 430 267 405 255 Z"/>
+<path d="M 300 200 C 280 170 320 150 300 120"/><path d="M 400 190 C 380 160 420 140 400 110"/><path d="M 500 200 C 480 170 520 150 500 120"/>
+<path d="M 640 260 L 720 120 L 740 128 L 662 268"/>
+<ellipse cx="732" cy="112" rx="22" ry="32" transform="rotate(28 732 112)"/>
+<path d="M 40 560 L 760 560"/>
+</g>
+</svg>

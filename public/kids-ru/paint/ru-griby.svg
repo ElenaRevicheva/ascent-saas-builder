@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>Грибы: боровик и мухомор / Mushrooms</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 220 560 C 200 480 210 400 240 360 L 330 360 C 360 400 370 480 350 560 Z"/>
+<path d="M 130 370 C 130 240 440 240 440 370 C 400 385 170 385 130 370 Z"/>
+<path d="M 470 560 L 490 380 L 560 380 L 580 560 Z"/>
+<path d="M 490 470 C 510 485 560 485 575 470"/>
+<path d="M 400 390 C 390 250 660 250 650 390 C 600 405 450 405 400 390 Z"/>
+<ellipse cx="450" cy="340" rx="16" ry="11"/>
+<ellipse cx="520" cy="310" rx="16" ry="11"/>
+<ellipse cx="590" cy="330" rx="16" ry="11"/>
+<ellipse cx="620" cy="370" rx="16" ry="11"/>
+<ellipse cx="480" cy="375" rx="16" ry="11"/>
+<ellipse cx="560" cy="360" rx="16" ry="11"/>
+<path d="M 60 560 L 72 520 L 84 560 M 640 560 L 652 515 L 664 560 M 700 560 L 712 525 L 724 560"/>
+<ellipse cx="700" cy="200" rx="20" ry="12" transform="rotate(-30 700 200)"/><ellipse cx="90" cy="180" rx="20" ry="12" transform="rotate(30 90 180)"/>
+<path d="M 40 560 L 760 560"/>
+</g>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>Жар-птица / The Firebird</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<ellipse cx="300" cy="300" rx="110" ry="70" transform="rotate(-15 300 300)"/>
+<path d="M 360 260 C 400 230 410 180 400 150"/>
+<circle cx="405" cy="135" r="38"/>
+<path d="M 440 130 L 485 140 L 440 150 Z"/>
+<circle cx="415" cy="125" r="7"/>
+<path d="M 395 98 L 380 50 L 405 90 L 410 40 L 420 92 L 445 55 L 425 102"/>
+<circle cx="380" cy="50" r="8"/><circle cx="410" cy="40" r="8"/><circle cx="445" cy="55" r="8"/>
+<path d="M 250 270 C 200 200 230 130 300 150 C 280 190 300 230 330 255"/>
+<path d="M 280 230 C 270 200 280 180 295 175"/>
+<path d="M 200 330 C 140 380 120 470 160 560 C 190 480 210 420 240 360"/>
+<path d="M 230 345 C 220 420 250 500 320 560 C 310 470 290 410 280 360"/>
+<path d="M 205 315 C 120 320 60 380 40 460 C 100 420 160 380 215 350"/>
+<ellipse cx="170" cy="490" rx="18" ry="28"/><circle cx="170" cy="490" r="8"/>
+<ellipse cx="290" cy="500" rx="18" ry="28" transform="rotate(-20 290 500)"/><circle cx="290" cy="500" r="8"/>
+<ellipse cx="90" cy="420" rx="18" ry="28" transform="rotate(50 90 420)"/><circle cx="90" cy="420" r="8"/>
+<path d="M 320 365 L 330 420 L 310 440 M 330 420 L 350 440"/>
+<path d="M 560 560 L 560 250"/>
+<path d="M 560 330 L 500 360 L 560 345 M 560 300 L 620 270 L 560 290"/>
+<circle cx="610" cy="380" r="22"/><path d="M 600 360 C 605 345 620 345 625 360"/>
+<circle cx="520" cy="420" r="22"/><path d="M 510 400 C 515 385 530 385 535 400"/>
+<path d="M 560 400 L 610 380 M 560 430 L 520 420"/>
+<path d="M 40 560 L 760 560"/>
+</g>
+</svg>

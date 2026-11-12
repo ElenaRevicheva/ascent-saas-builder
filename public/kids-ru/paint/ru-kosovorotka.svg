@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>Косоворотка и балалайка / Kosovorotka shirt and balalaika</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 285 120 C 285 70 375 60 400 95 L 395 120 Z"/>
+<path d="M 275 122 L 410 122 L 405 135 L 270 135 Z"/>
+<circle cx="340" cy="175" r="45"/>
+<circle cx="325" cy="170" r="5"/><circle cx="357" cy="170" r="5"/>
+<path d="M 326 195 Q 340 204 354 195"/>
+<path d="M 285 225 L 395 225 L 425 330 L 395 335 L 392 300 L 392 390 L 288 390 L 288 300 L 285 335 L 255 330 Z"/>
+<path d="M 325 225 L 325 275 L 345 275"/>
+<circle cx="333" cy="245" r="5"/><circle cx="333" cy="262" r="5"/>
+<path d="M 288 365 L 392 365 L 392 382 L 288 382 Z"/>
+<path d="M 300 382 L 292 420 M 312 382 L 312 422"/>
+<path d="M 295 390 L 300 490 L 335 490 L 338 390"/>
+<path d="M 345 390 L 342 490 L 377 490 L 385 390"/>
+<path d="M 292 490 L 340 490 L 345 525 L 280 525 Z"/>
+<path d="M 340 490 L 388 490 L 395 525 L 332 525 Z"/>
+<circle cx="268" cy="345" r="16"/><circle cx="412" cy="345" r="16"/>
+<path d="M 470 470 L 640 470 L 555 300 Z"/>
+<circle cx="555" cy="420" r="16"/>
+<path d="M 545 300 L 545 130 L 565 130 L 565 300"/>
+<path d="M 535 130 L 575 130 L 570 90 L 540 90 Z"/>
+<path d="M 550 140 L 550 460 M 555 140 L 555 460 M 560 140 L 560 460"/>
+<path d="M 40 560 L 760 560"/>
+</g>
+</svg>

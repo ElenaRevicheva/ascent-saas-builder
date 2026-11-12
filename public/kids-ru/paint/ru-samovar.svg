@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>Самовар с баранками / Samovar with bagels</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 330 120 L 330 85 L 370 85 L 370 120"/>
+<path d="M 300 150 C 300 115 400 115 400 150 Z"/>
+<path d="M 330 150 L 370 150 L 375 175 L 325 175 Z"/>
+<path d="M 255 175 L 445 175 C 470 250 470 330 430 380 L 270 380 C 230 330 230 250 255 175 Z"/>
+<path d="M 255 175 C 230 175 220 205 235 225"/><path d="M 445 175 C 470 175 480 205 465 225"/>
+<path d="M 300 380 L 290 430 L 410 430 L 400 380"/>
+<path d="M 260 430 L 440 430 L 440 450 L 260 450 Z"/>
+<path d="M 280 450 L 270 490 M 420 450 L 430 490"/>
+<path d="M 400 330 L 470 330 L 470 350 L 450 350 L 450 365"/>
+<circle cx="350" cy="270" r="12"/>
+<ellipse cx="380" cy="270" rx="18" ry="11" transform="rotate(0 380 270)"/>
+<ellipse cx="365" cy="296" rx="18" ry="11" transform="rotate(60 365 296)"/>
+<ellipse cx="335" cy="296" rx="18" ry="11" transform="rotate(120 335 296)"/>
+<ellipse cx="320" cy="270" rx="18" ry="11" transform="rotate(180 320 270)"/>
+<ellipse cx="335" cy="244" rx="18" ry="11" transform="rotate(240 335 244)"/>
+<ellipse cx="365" cy="244" rx="18" ry="11" transform="rotate(300 365 244)"/>
+<path d="M 490 520 C 490 470 600 470 600 520 Z"/><path d="M 600 490 C 625 490 625 515 600 515"/>
+<path d="M 470 520 L 620 520"/>
+<circle cx="140" cy="420" r="55"/><circle cx="140" cy="420" r="20"/>
+<circle cx="150" cy="510" r="45"/><circle cx="150" cy="510" r="16"/>
+<circle cx="680" cy="420" r="50"/><circle cx="680" cy="420" r="18"/>
+<path d="M 40 560 L 760 560"/>
+</g>
+</svg>

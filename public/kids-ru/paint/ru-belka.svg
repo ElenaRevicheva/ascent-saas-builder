@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>Белка с орехом / Squirrel with a nut</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 400 480 C 560 520 640 380 600 260 C 570 170 470 150 450 230 C 440 280 500 300 520 270 C 540 240 520 210 500 215"/>
+<ellipse cx="350" cy="400" rx="85" ry="105"/>
+<circle cx="320" cy="250" r="60"/>
+<path d="M 285 205 L 275 150 L 310 195 Z"/><path d="M 330 195 L 345 145 L 358 200 Z"/>
+<circle cx="300" cy="245" r="8"/>
+<ellipse cx="265" cy="265" rx="10" ry="7"/>
+<ellipse cx="290" cy="380" rx="25" ry="40" transform="rotate(25 290 380)"/>
+<ellipse cx="300" cy="330" rx="26" ry="22"/><path d="M 280 320 Q 300 300 320 320"/>
+<ellipse cx="320" cy="500" rx="40" ry="18"/><ellipse cx="400" cy="500" rx="40" ry="18"/>
+<path d="M 120 560 L 125 470 L 150 470 L 155 560"/>
+<path d="M 85 470 C 85 410 190 410 190 470 Z"/>
+<path d="M 40 560 L 760 560"/>
+</g>
+</svg>

@@ -1,0 +1,17 @@
+# Russian classroom music — sources (12 Nov 2026)
+
+All checked on Wikimedia Commons the same day: LicenseShortName "Public domain" (Copyrighted: False) or CC0.
+Excerpts of about one minute, faded in/out, loudness-normalised (EBU R128 -16 LUFS), MP3 96 kb/s.
+The Pere & Titi pieces the Russian pad also plays stay in `public/kids/music` (see its CREDITS.md).
+
+| file | piece | excerpt | performer / author on Commons | licence | source |
+|---|---|---|---|---|---|
+| ru-valts.mp3 | Чайковский — «Щелкунчик»: Вальс цветов / Tchaikovsky — Waltz of the Flowers | 1:58–2:58 | Composition: Pyotr Ilyich Tchaikovsky; Arrangement: Lawrence Odom; Performance: United Sta | Public domain | https://commons.wikimedia.org/wiki/File:Waltz_of_the_Flowers_-_Concert_Band_-_United_States_Air_Force_Band.mp3 |
+| ru-feya.mp3 | Чайковский — «Щелкунчик»: Танец Феи Драже / Dance of the Sugar Plum Fairy | 0:04–0:56 | National Symphony Orchestra of London, Stanford Robinson (Decca 78 rpm) | Public domain | https://commons.wikimedia.org/wiki/File:PDP-CH_-_National_Symphony_Orchestra_of_London_-_Stanford_Robinson,_conductor_-_The_Nutcracker_Suite,_Op._71_-_Dance_of_the_Sugar_Plum_Fairy_-_Russian_Dance_-_Tchaikovsky_-_Decca-k1142-ar9057.flac |
+| ru-trepak.mp3 | Чайковский — «Щелкунчик»: Русский танец (Трепак) / Russian Dance (Trepak) | 1:58–3:01 | National Symphony Orchestra of London, Stanford Robinson (Decca 78 rpm) | Public domain | https://commons.wikimedia.org/wiki/File:PDP-CH_-_National_Symphony_Orchestra_of_London_-_Stanford_Robinson,_conductor_-_The_Nutcracker_Suite,_Op._71_-_Dance_of_the_Sugar_Plum_Fairy_-_Russian_Dance_-_Tchaikovsky_-_Decca-k1142-ar9057.flac |
+| ru-lebedi.mp3 | Чайковский — «Лебединое озеро», 2 акт / Swan Lake, Act 2 | 1:20–2:20 | Ballet Francaise Symphony Orchestra | Public domain | https://commons.wikimedia.org/wiki/File:Peter_Ilyich_Tchaikovsky-_Swan_Lake-_Extract_from_Act_2.ogg |
+| ru-1812.mp3 | Чайковский — Увертюра «1812 год» (финал) / 1812 Overture (finale) | 11:30–12:32 | Pyotr Ilyich Tchaikovsky | Public domain | https://commons.wikimedia.org/wiki/File:1812_Overture_-_United_States_Marine_Band.opus |
+| ru-ruslan.mp3 | Глинка — Увертюра «Руслан и Людмила» / Glinka — Ruslan and Lyudmila Overture | 0:00–1:00 | М.И.Глинка (M.I. Glinka) | Public domain | https://commons.wikimedia.org/wiki/File:%D0%A3%D0%B2%D0%B5%D1%80%D1%82%D1%8E%D1%80%D0%B0_%D0%BA_%D0%BE%D0%BF%D0%B5%D1%80%D0%B5_%22%D0%A0%D1%83%D1%81%D0%BB%D0%B0%D0%BD_%D0%B8_%D0%9B%D1%8E%D0%B4%D0%BC%D0%B8%D0%BB%D0%B0%22.oga |
+| ru-vorota.mp3 | Мусоргский — «Картинки с выставки»: Богатырские ворота / Mussorgsky — The Great Gate | 0:00–1:02 | Modest Petrovich Mussorgsky | Public domain | https://commons.wikimedia.org/wiki/File:Modest_Mussorgsky_-_pictures_at_an_exhibition_-_x._la_grande_porte_de_kiev_-_allegro_alla_breve._maestoso._con_grandezza.ogg |
+| ru-rakhmaninov.mp3 | Рахманинов — Прелюдия до-диез минор, ор. 3 № 2 (играет автор) / Rachmaninoff plays his Prelude in C-sharp minor | 0:00–0:58 | Sergei Rachmaninoff | Public domain | https://commons.wikimedia.org/wiki/File:Sergei_Rachmaninoff_performs_Rachmaninoff%27s_Prelude_in_C_sharp_minor,_Op._3.ogg |
+| ru-shekherazada.mp3 | Римский-Корсаков — «Шехеразада»: Море и корабль Синдбада / Scheherazade: The Sea and Sinbad's Ship | 0:00–1:00 | Nikolai Rimsky-Korsakov | CC0 | https://commons.wikimedia.org/wiki/File:Rimsky-Korsakov._Scheherazade,_Symphonic_Suite,_Op._35_-_01_The_Sea_And_Sinbads_Ship.ogg |

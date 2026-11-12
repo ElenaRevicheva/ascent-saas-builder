@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>Изба / Log house</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 170 560 L 170 300 L 630 300 L 630 560 Z"/>
+<path d="M 140 310 L 400 120 L 660 310 Z"/>
+<path d="M 205 300 L 400 160 L 595 300"/>
+<circle cx="400" cy="235" r="28"/>
+<path d="M 170 340 L 630 340"/>
+<path d="M 170 380 L 630 380"/>
+<path d="M 170 420 L 630 420"/>
+<path d="M 170 460 L 630 460"/>
+<path d="M 170 500 L 630 500"/>
+<path d="M 170 540 L 630 540"/>
+<path d="M 250 370 L 350 370 L 350 470 L 250 470 Z"/>
+<path d="M 300 370 L 300 470 M 250 420 L 350 420"/>
+<path d="M 235 370 L 300 330 L 365 370 Z"/>
+<path d="M 240 470 L 360 470 L 350 490 L 250 490 Z"/>
+<path d="M 450 560 L 450 380 L 550 380 L 550 560"/>
+<circle cx="530" cy="470" r="7"/>
+<path d="M 520 200 L 520 130 L 560 130 L 560 230"/>
+<path d="M 540 110 C 520 90 560 70 540 50"/>
+<path d="M 30 560 L 30 450 L 50 430 L 70 450 L 70 560 M 90 560 L 90 450 L 110 430 L 130 450 L 130 560 M 20 480 L 140 480 M 20 530 L 140 530"/>
+<path d="M 670 560 L 670 450 L 690 430 L 710 450 L 710 560 M 730 560 L 730 450 L 750 430 L 770 450 L 770 560 M 660 480 L 780 480 M 660 530 L 780 530"/>
+</g>
+</svg>

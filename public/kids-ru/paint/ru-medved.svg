@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>Медведь с мёдом / Bear with honey</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<ellipse cx="380" cy="400" rx="140" ry="140"/>
+<ellipse cx="380" cy="420" rx="80" ry="90"/>
+<circle cx="380" cy="200" r="95"/>
+<circle cx="305" cy="120" r="32"/><circle cx="455" cy="120" r="32"/>
+<circle cx="305" cy="120" r="14"/><circle cx="455" cy="120" r="14"/>
+<ellipse cx="380" cy="235" rx="45" ry="34"/>
+<ellipse cx="380" cy="220" rx="16" ry="11"/>
+<path d="M 380 232 L 380 248 M 365 252 Q 380 262 395 252"/>
+<circle cx="345" cy="180" r="9"/><circle cx="415" cy="180" r="9"/>
+<ellipse cx="300" cy="520" rx="60" ry="32"/><ellipse cx="460" cy="520" rx="60" ry="32"/>
+<ellipse cx="260" cy="340" rx="35" ry="55" transform="rotate(30 260 340)"/>
+<path d="M 520 360 C 520 310 640 310 640 360 L 650 500 C 610 530 550 530 510 500 Z"/>
+<path d="M 530 345 L 630 345"/><path d="M 540 400 L 620 400" />
+<ellipse cx="490" cy="360" rx="35" ry="55" transform="rotate(-30 490 360)"/>
+<path d="M 580 330 L 600 250 L 615 254 L 595 334"/>
+<path d="M 40 560 L 760 560"/>
+</g>
+</svg>

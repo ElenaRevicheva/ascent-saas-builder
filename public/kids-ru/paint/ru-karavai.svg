@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<title>Каравай с солью / Karavai bread with salt</title>
+<g fill="none" stroke="#111" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path d="M 120 470 L 680 470 L 720 540 L 80 540 Z"/>
+<path d="M 100 505 L 700 505"/>
+<path d="M 120 505 L 135 485 L 150 505 L 135 525 Z"/>
+<path d="M 175 505 L 190 485 L 205 505 L 190 525 Z"/>
+<path d="M 230 505 L 245 485 L 260 505 L 245 525 Z"/>
+<path d="M 285 505 L 300 485 L 315 505 L 300 525 Z"/>
+<path d="M 340 505 L 355 485 L 370 505 L 355 525 Z"/>
+<path d="M 395 505 L 410 485 L 425 505 L 410 525 Z"/>
+<path d="M 450 505 L 465 485 L 480 505 L 465 525 Z"/>
+<path d="M 505 505 L 520 485 L 535 505 L 520 525 Z"/>
+<path d="M 560 505 L 575 485 L 590 505 L 575 525 Z"/>
+<path d="M 615 505 L 630 485 L 645 505 L 630 525 Z"/>
+<path d="M 180 470 C 160 330 260 250 400 250 C 540 250 640 330 620 470 Z"/>
+<path d="M 200 390 C 280 360 520 360 600 390"/>
+<path d="M 205 410 C 240 395 270 425 305 405 C 340 385 370 420 400 400 C 430 380 465 420 500 400 C 535 385 560 420 595 410"/>
+<ellipse cx="300" cy="320" rx="35" ry="18" transform="rotate(-20 300 320)"/>
+<ellipse cx="500" cy="320" rx="35" ry="18" transform="rotate(20 500 320)"/>
+<path d="M 360 255 C 350 210 450 210 440 255"/>
+<path d="M 370 220 L 430 220 L 425 180 L 375 180 Z"/>
+<ellipse cx="400" cy="180" rx="27" ry="8"/>
+<circle cx="250" cy="445" r="6"/>
+<ellipse cx="265" cy="445" rx="9" ry="6" transform="rotate(0 265 445)"/>
+<ellipse cx="258" cy="458" rx="9" ry="6" transform="rotate(60 258 458)"/>
+<ellipse cx="242" cy="458" rx="9" ry="6" transform="rotate(120 242 458)"/>
+<ellipse cx="235" cy="445" rx="9" ry="6" transform="rotate(180 235 445)"/>
+<ellipse cx="242" cy="432" rx="9" ry="6" transform="rotate(240 242 432)"/>
+<ellipse cx="258" cy="432" rx="9" ry="6" transform="rotate(300 258 432)"/><circle cx="550" cy="445" r="6"/>
+<ellipse cx="565" cy="445" rx="9" ry="6" transform="rotate(0 565 445)"/>
+<ellipse cx="558" cy="458" rx="9" ry="6" transform="rotate(60 558 458)"/>
+<ellipse cx="542" cy="458" rx="9" ry="6" transform="rotate(120 542 458)"/>
+<ellipse cx="535" cy="445" rx="9" ry="6" transform="rotate(180 535 445)"/>
+<ellipse cx="542" cy="432" rx="9" ry="6" transform="rotate(240 542 432)"/>
+<ellipse cx="558" cy="432" rx="9" ry="6" transform="rotate(300 558 432)"/>
+</g>
+</svg>

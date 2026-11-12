@@ -26,37 +26,53 @@ const SWATCHES = [
 // `place` is one true fact the heroes may tell.
 type Page = { id: string; ru: string; en: string; label: string; place?: string };
 const PAINT_SETS: { title: string; pages: Page[] }[] = [
-  { title: "Парк в Панаме / Metropolitan Natural Park (Panama)", pages: [
-    { id: "tucan", ru: "тукан", en: "a toucan", label: "Тукан / Toucan" },
-    { id: "morpho", ru: "синяя бабочка морфо", en: "a blue morpho butterfly", label: "Бабочка / Butterfly" },
-    { id: "neque", ru: "агути", en: "an agouti", label: "Агути / Agouti" },
-    { id: "coati", ru: "носуха", en: "a coati", label: "Носуха / Coati" },
-    { id: "rana", ru: "красноглазая лягушка", en: "a red-eyed tree frog", label: "Лягушка / Frog" },
-    { id: "heliconia", ru: "цветок геликонии", en: "a heliconia flower", label: "Геликония / Heliconia" },
-    { id: "guayacan", ru: "дерево гуаякан", en: "a guayacán tree", label: "Дерево / Tree" },
-    { id: "iguana", ru: "игуана", en: "an iguana", label: "Игуана / Iguana" },
-  ].map((p) => ({ ...p, place: "из Природного парка в городе Панама / from the Metropolitan Natural Park in Panama City" })) },
-  { title: "Чирики: вулкан Бару и Бокете / Chiriquí: Barú Volcano and Boquete", pages: [
-    { id: "baru", ru: "вулкан Бару", en: "Barú Volcano", label: "Вулкан / Volcano" },
-    { id: "quetzal", ru: "птица кетцаль", en: "a quetzal", label: "Кетцаль / Quetzal" },
-    { id: "cafe", ru: "ветка кофе", en: "a coffee branch", label: "Кофе / Coffee" },
-    { id: "colibri", ru: "колибри", en: "a hummingbird", label: "Колибри / Hummingbird" },
-    { id: "cascada", ru: "водопад", en: "a waterfall", label: "Водопад / Waterfall" },
-    { id: "fresa", ru: "клубника", en: "a strawberry", label: "Клубника / Strawberry" },
-    { id: "orquidea", ru: "орхидея", en: "an orchid", label: "Орхидея / Orchid" },
-    { id: "puente", ru: "подвесной мост", en: "a hanging bridge", label: "Мост / Bridge" },
-  ].map((p) => ({ ...p, place: "из Чирики, где вулкан Бару и Бокете / from Chiriquí, Barú Volcano and Boquete" })) },
-  { title: "Море и джунгли / Sea and rainforest", pages: [
-    { id: "arpia", ru: "орёл гарпия", en: "a harpy eagle", label: "Гарпия / Harpy eagle",
-      place: "национальная птица Панамы / Panama's national bird" },
-    { id: "ranadorada", ru: "золотая лягушка", en: "a golden frog", label: "Золотая лягушка / Golden frog",
-      place: "живёт в долине Эль-Валье / lives in El Valle de Antón" },
-    { id: "tortuga", ru: "морская черепаха", en: "a sea turtle", label: "Черепаха / Turtle",
-      place: "с пляжей Панамы / from Panama's beaches" },
-    { id: "ballena", ru: "горбатый кит", en: "a humpback whale", label: "Кит / Whale",
-      place: "приплывает к Жемчужным островам / comes to the Pearl Islands" },
-    { id: "espiritusanto", ru: "цветок Святого Духа", en: "the Holy Ghost orchid", label: "Цветок / National flower",
-      place: "национальный цветок Панамы / Panama's national flower" },
+  // 12 Nov 2026 (Elena: "Panama nature, Chiriquí should be changed to Russian; add matryoshkas, the Russian folk costume and
+  // Russian food"): our own line art in public/kids-ru/paint (ids start with "ru-"). Each `place` is one true fact.
+  { title: "Матрёшки и народный костюм / Matryoshkas and folk costume", pages: [
+    { id: "ru-matryoshka", ru: "матрёшка", en: "a matryoshka doll", label: "🪆 Матрёшка",
+      place: "деревянная кукла, внутри которой прячутся куклы поменьше / a wooden doll with smaller dolls hidden inside" },
+    { id: "ru-matryoshki", ru: "три матрёшки", en: "three matryoshka dolls", label: "🪆 Три матрёшки / Three dolls",
+      place: "большая, средняя и маленькая / big, middle and small" },
+    { id: "ru-sarafan", ru: "девочка в сарафане и кокошнике", en: "a girl in a sarafan and kokoshnik", label: "👗 Сарафан / Sarafan",
+      place: "сарафан и кокошник - старинный русский праздничный наряд / the sarafan and kokoshnik are an old Russian festive costume" },
+    { id: "ru-kosovorotka", ru: "мальчик в косоворотке с балалайкой", en: "a boy in a kosovorotka shirt with a balalaika", label: "🎸 Косоворотка / Shirt",
+      place: "у косоворотки ворот сбоку; у балалайки три струны / the kosovorotka opens at the side; the balalaika has three strings" },
+    { id: "ru-kokoshnik", ru: "кокошник", en: "a kokoshnik headdress", label: "👑 Кокошник",
+      place: "праздничный головной убор, его украшали бусинами / a festive headdress decorated with beads" },
+  ] },
+  { title: "Русская еда / Russian food", pages: [
+    { id: "ru-bliny", ru: "блины с мёдом", en: "bliny pancakes with honey", label: "🥞 Блины / Bliny",
+      place: "блины пекут на Масленицу, они круглые, как солнце / bliny are baked for Maslenitsa, round like the sun" },
+    { id: "ru-samovar", ru: "самовар с баранками", en: "a samovar with bagels", label: "🫖 Самовар / Samovar",
+      place: "в самоваре кипятят воду для чая / a samovar boils water for tea" },
+    { id: "ru-pelmeni", ru: "пельмени", en: "pelmeni dumplings", label: "🥟 Пельмени / Pelmeni",
+      place: "тесто, а внутри начинка / dough with a filling inside" },
+    { id: "ru-karavai", ru: "каравай с солью", en: "a karavai loaf with salt", label: "🍞 Каравай / Loaf",
+      place: "хлебом и солью встречают дорогих гостей / dear guests are welcomed with bread and salt" },
+    { id: "ru-borshch", ru: "борщ со сметаной", en: "borscht with sour cream", label: "🥣 Борщ / Borscht",
+      place: "борщ красный от свёклы / borscht is red because of beetroot" },
+  ] },
+  { title: "Русская природа / Russian nature", pages: [
+    { id: "ru-bereza", ru: "берёзы", en: "birch trees", label: "🌳 Берёзы / Birches",
+      place: "у берёзы белая кора с чёрными полосками / the birch has white bark with black stripes" },
+    { id: "ru-medved", ru: "медведь с мёдом", en: "a bear with honey", label: "🐻 Медведь / Bear",
+      place: "медведь спит всю зиму в берлоге / the bear sleeps all winter in its den" },
+    { id: "ru-ezhik", ru: "ёжик", en: "a hedgehog", label: "🦔 Ёжик / Hedgehog",
+      place: "ёжик сворачивается в колючий клубок / the hedgehog curls into a prickly ball" },
+    { id: "ru-belka", ru: "белка", en: "a squirrel", label: "🐿️ Белка / Squirrel",
+      place: "белка прячет орехи на зиму / the squirrel hides nuts for the winter" },
+    { id: "ru-yolka", ru: "ёлка в снегу", en: "a fir tree in the snow", label: "🎄 Ёлка / Fir tree",
+      place: "ёлка зелёная даже зимой / the fir tree stays green even in winter" },
+    { id: "ru-griby", ru: "боровик и мухомор", en: "a porcini and a fly agaric", label: "🍄 Грибы / Mushrooms",
+      place: "мухомор красный с белыми точками, его нельзя есть / the fly agaric is red with white dots and must never be eaten" },
+  ] },
+  { title: "Россия и сказки / Russia and fairy tales", pages: [
+    { id: "ru-hram", ru: "храм с куполами", en: "a church with onion domes", label: "⛪ Купола / Domes",
+      place: "купола похожи на луковицы / the domes look like onions" },
+    { id: "ru-izba", ru: "изба", en: "a log house", label: "🏡 Изба / Log house",
+      place: "деревянный дом из брёвен с резными окнами / a wooden house of logs with carved windows" },
+    { id: "ru-zhar-ptitsa", ru: "Жар-птица", en: "the Firebird", label: "🔥 Жар-птица / Firebird",
+      place: "птица из русской сказки, её перья светятся / a bird from a Russian fairy tale whose feathers glow" },
   ] },
   { title: "Сказка / Fantasy", pages: [
     { id: "unicornio", ru: "единорог", en: "a unicorn", label: "🦄 Единорог" },
@@ -100,6 +116,7 @@ const PAINT_SETS: { title: string; pages: Page[] }[] = [
       place: "(порядок: кусок хлеба, сыр, второй кусок, режу на треугольники) / (order: a slice of bread, cheese, another slice, I cut it into triangles)" },
   ] },
 ];
+const pageSrc = (id: string) => (id.startsWith("ru-") ? `/kids-ru/paint/${id}.svg` : `/kids/paint/${id}.svg`);
 const BLANK: Page = { id: "blank", ru: "мой собственный рисунок", en: "my own picture", label: "⬜ Свой / Free" };
 
 const hex2 = (n: number) => Math.round(Math.max(0, Math.min(255, n))).toString(16).padStart(2, "0");
@@ -247,7 +264,7 @@ export default function PaintPadRu({ onPainted }: Props) {
       wall.current = m;
       outline.current = img;
     };
-    img.src = `/kids/paint/${page.id}.svg`;
+    img.src = pageSrc(page.id);
     return () => { alive = false; };
   }, [page, blank]);
 
@@ -439,7 +456,7 @@ export default function PaintPadRu({ onPainted }: Props) {
               ${page.id === p.id ? "border-sky-500" : "border-slate-200"}`}>
             {p.id === "blank"
               ? <div className="h-14 grid place-items-center text-3xl">⬜</div>
-              : <img src={`/kids/paint/${p.id}.svg`} alt="" className="h-14 w-full object-contain" />}
+              : <img src={pageSrc(p.id)} alt="" className="h-14 w-full object-contain" />}
             <div className="mt-1">{p.label}</div>
           </button>
         ))}
@@ -459,7 +476,7 @@ export default function PaintPadRu({ onPainted }: Props) {
           style={{ touchAction: "none" }}
         />
         {page.id !== "blank" && (
-          <img src={`/kids/paint/${page.id}.svg`} alt={page.label}
+          <img src={pageSrc(page.id)} alt={page.label}
             className="absolute inset-0 w-full h-full pointer-events-none select-none" draggable={false} />
         )}
       </div>

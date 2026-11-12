@@ -28,7 +28,36 @@ type Piece = {
   fact: string; // the true answer, so Pere and Titi can talk about it correctly
   imagine: { es: string; en: string }[];
 };
-const PIECES: Piece[] = [ // the same public-domain recordings as Pere & Titi's (public/kids/music), names in Russian
+// 12 Nov 2026 (Elena: "добавить русские классические всемирно известные композиции"): nine Russian pieces first, all
+// public domain or CC0 on Wikimedia Commons (public/kids-ru/music/CREDITS.md), then the Pere & Titi pieces.
+const PIECES: Piece[] = [
+  { id: "ru-valts", emoji: "🌸", es: "Вальс цветов («Щелкунчик»)", en: "Waltz of the Flowers (The Nutcracker)", by: "Чайковский / Tchaikovsky",
+    band: "US Air Force Band", fact: "вальс на три счёта - раз-два-три, как будто кружатся цветы / a waltz in three - one-two-three, like flowers spinning",
+    imagine: [{ es: "цветы кружатся", en: "flowers spinning" }, { es: "грузовик", en: "a truck" }, { es: "гроза", en: "a thunderstorm" }] },
+  { id: "ru-feya", emoji: "🧚", es: "Танец Феи Драже («Щелкунчик»)", en: "Dance of the Sugar Plum Fairy", by: "Чайковский / Tchaikovsky",
+    band: "National Symphony Orchestra (London)", fact: "звенит челеста - инструмент, который звучит как маленькие колокольчики / the celesta rings - an instrument that sounds like little bells",
+    imagine: [{ es: "фея на цыпочках", en: "a fairy on tiptoe" }, { es: "слон бежит", en: "a running elephant" }, { es: "поезд", en: "a train" }] },
+  { id: "ru-trepak", emoji: "🪆", es: "Русский танец «Трепак» («Щелкунчик»)", en: "Russian Dance - Trepak (The Nutcracker)", by: "Чайковский / Tchaikovsky",
+    band: "National Symphony Orchestra (London)", fact: "быстрый и очень весёлый русский танец / a fast and very lively Russian dance",
+    imagine: [{ es: "весёлая пляска", en: "a lively dance" }, { es: "сон", en: "sleeping" }, { es: "тихий снег", en: "quiet snow" }] },
+  { id: "ru-lebedi", emoji: "🦢", es: "Лебединое озеро", en: "Swan Lake", by: "Чайковский / Tchaikovsky",
+    band: "Ballet Française Symphony Orchestra", fact: "балет о девушке, которую превратили в лебедя / a ballet about a girl who was turned into a swan",
+    imagine: [{ es: "лебеди на озере", en: "swans on a lake" }, { es: "гонки машин", en: "a car race" }, { es: "цирк", en: "a circus" }] },
+  { id: "ru-1812", emoji: "🔔", es: "Увертюра «1812 год» (финал)", en: "1812 Overture (finale)", by: "Чайковский / Tchaikovsky",
+    band: "US Marine Band", fact: "торжественный финал; Чайковский написал для него колокола и пушки / a grand finale; Tchaikovsky wrote bells and cannons into it",
+    imagine: [{ es: "большой праздник", en: "a big celebration" }, { es: "колыбельная", en: "a lullaby" }, { es: "дождик", en: "a light rain" }] },
+  { id: "ru-ruslan", emoji: "🗡️", es: "Увертюра «Руслан и Людмила»", en: "Ruslan and Lyudmila Overture", by: "Глинка / Glinka",
+    band: "Wikimedia Commons (public domain)", fact: "очень быстрая и радостная, по сказке Пушкина / very fast and joyful, from Pushkin's fairy tale",
+    imagine: [{ es: "богатырь скачет на коне", en: "a hero galloping on a horse" }, { es: "улитка", en: "a snail" }, { es: "тихая ночь", en: "a quiet night" }] },
+  { id: "ru-vorota", emoji: "🏰", es: "Богатырские ворота («Картинки с выставки»)", en: "The Great Gate (Pictures at an Exhibition)", by: "Мусоргский / Mussorgsky",
+    band: "Wikimedia Commons (public domain)", fact: "музыка о картинах на выставке; эта - про огромные ворота / music about paintings at an exhibition; this one is about huge gates",
+    imagine: [{ es: "огромные ворота", en: "huge gates" }, { es: "мышка", en: "a little mouse" }, { es: "бабочка", en: "a butterfly" }] },
+  { id: "ru-rakhmaninov", emoji: "🎹", es: "Прелюдия до-диез минор (играет сам Рахманинов)", en: "Prelude in C-sharp minor (Rachmaninoff himself plays)", by: "Рахманинов / Rachmaninoff",
+    band: "Sergei Rachmaninoff, piano", fact: "играет сам композитор; начало звучит как большие колокола / the composer himself plays; the opening sounds like big bells",
+    imagine: [{ es: "большие колокола", en: "big bells" }, { es: "весёлый клоун", en: "a funny clown" }, { es: "пляж", en: "a beach" }] },
+  { id: "ru-shekherazada", emoji: "⛵", es: "Шехеразада: море и корабль Синдбада", en: "Scheherazade: The Sea and Sinbad's Ship", by: "Римский-Корсаков / Rimsky-Korsakov",
+    band: "Wikimedia Commons (CC0)", fact: "громкая тема - строгий султан, а скрипка - Шехеразада, которая рассказывает сказки / the loud theme is the stern sultan; the violin is Scheherazade telling stories",
+    imagine: [{ es: "корабль в море", en: "a ship at sea" }, { es: "детская площадка", en: "a playground" }, { es: "пустыня", en: "a desert" }] },
   { id: "abejorro", emoji: "🐝", es: "Полёт шмеля", en: "Flight of the Bumblebee", by: "Римский-Корсаков / Rimsky-Korsakov",
     band: "US Air Force Band", fact: "очень быстрая, как летящий шмель / very fast, like a flying bumblebee",
     imagine: [{ es: "пчела", en: "a bee" }, { es: "слон", en: "an elephant" }, { es: "черепаха", en: "a turtle" }] },
@@ -149,7 +178,7 @@ export default function MusicPadRu({ onDone }: { onDone: (text: string) => void 
     player.current?.pause();
     setPiece(p);
     setSpeed(null); setVolume(null); setFeel(null); setImagine(null);
-    const el = new Audio(`/kids/music/${p.id}.mp3`);
+    const el = new Audio(`${p.id.startsWith("ru-") ? "/kids-ru/music" : "/kids/music"}/${p.id}.mp3`);
     el.onended = () => setPlaying(false);
     player.current = el;
     el.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
@@ -263,7 +292,7 @@ export default function MusicPadRu({ onDone }: { onDone: (text: string) => void 
             </div>
           )}
           <div className="text-[10px] text-slate-400 mt-2">
-            Записи в общественном достоянии / Public-domain recordings: US Air Force Band, US Marine Band, Musopen (Wikimedia Commons).
+            Записи в общественном достоянии / Public-domain recordings: US Air Force Band, US Marine Band, Musopen, historical recordings (Wikimedia Commons).
           </div>
         </div>
       )}
