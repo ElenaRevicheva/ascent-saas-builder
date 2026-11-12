@@ -9,6 +9,9 @@ import familyLearningSpanish from '@/assets/family-learning-spanish.jpg';
 import espaluzFace from '@/assets/heroes/hello-poster.jpg';
 import { LearningRoadmap } from './LearningRoadmap';
 import { Link } from 'react-router-dom';
+import { ChevronDown } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { insidePlayApp } from '@/lib/playBilling';
 
 interface DashboardHeaderProps {
   user: any;
@@ -47,9 +50,36 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
               <div className="flex flex-wrap items-center gap-2 sm:gap-4">
                 <LanguageSwitcher variant="select" size="sm" />
                 {getStatusBadge()}
-                <Button asChild variant="hero" size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg">
-                  <Link to="/classroom">🦥🐒 Kids classroom</Link>
-                </Button>
+                {/* 12 Nov 2026 (Elena): on the website the family chooses the classroom - Pere & Titi (Spanish) or
+                    Мишка & Лиса (Russian, beta). Inside the Google Play app there is only the Spanish one, as she decided
+                    on 11 Nov, so the app keeps the single button. */}
+                {insidePlayApp() ? (
+                  <Button asChild variant="hero" size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg">
+                    <Link to="/classroom">🦥🐒 Kids classroom</Link>
+                  </Button>
+                ) : (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="hero" size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg">
+                        🦥🐒 Kids classroom <ChevronDown className="ml-1 h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="w-72">
+                      <DropdownMenuItem asChild className="cursor-pointer py-3">
+                        <Link to="/classroom">
+                          <span className="text-2xl mr-2">🦥🐒</span>
+                          <span><b>Pere &amp; Titi</b><br /><span className="text-xs text-muted-foreground">Spanish</span></span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="cursor-pointer py-3">
+                        <Link to="/classroom-ru">
+                          <span className="text-2xl mr-2">🐻🦊</span>
+                          <span><b>Мишка Медок &amp; Лиса Алиса</b><br /><span className="text-xs text-muted-foreground">Russian · beta</span></span>
+                        </Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
                 <Button
                   variant="hero"
                   size="lg"
