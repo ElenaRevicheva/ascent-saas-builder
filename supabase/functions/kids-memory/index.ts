@@ -147,7 +147,12 @@ serve(async (req) => {
         const { data: prof } = await db.from('learning_sessions').select('content').eq('user_id', userId).eq('session_type', 'analytics')
           .eq('content->>event', 'family_profile').order('created_at', { ascending: false }).limit(1);
         const { event: _e, ...profile } = (prof?.[0]?.content ?? {}) as Record<string, unknown>;
-        return json({ linked: true, family_paying: !!paidRows?.length, facts: visible.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean).slice(0, 15),
+        // 12 Nov 2026 (Elena: a number re-linked to another family answered with the OLD family's names): an anonymous,
+        // stable key of the family this number belongs to. The bots scope their per-number memory to it, so a number that
+        // moves to another family never shows that family the previous one's chats. Hash only - never the account id.
+        const famHash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode('espaluz-family:' + userId))))
+          .map((b) => b.toString(16).padStart(2, '0')).join('').slice(0, 16);
+        return json({ linked: true, family: famHash, family_paying: !!paidRows?.length, facts: visible.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean).slice(0, 15),
           members, speaker, lessons, lesson_turns: les?.length ?? 0, profile });
       }
       const words = (t: string) => new Set(t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/[a-z0-9]+/g) ?? []);
