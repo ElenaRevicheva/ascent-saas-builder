@@ -134,11 +134,13 @@ export const FeatureGate = ({
           )}
           {/* 11 Nov 2026: inside the Play app Google allows ONLY Google Play billing and no mention of other ways to pay
               (Payments policy). This line named PayPal and PágueloFácil in the app - a review risk. The website keeps it. */}
-          <p className="text-xs text-muted-foreground">
-            {insidePlayApp()
-              ? '$11/month through Google Play - cancel any time'
-              : '$11/month by PayPal - cancel any time • or $11 for 30 days with PágueloFácil: type pagar in EspaLuz WhatsApp'}
-          </p>
+          {/* 12 Nov 2026: in the Play app the purchase card above already shows Google's price and "cancel any time" -
+              this line only repeated it, so it shows on the website only. */}
+          {!insidePlayApp() && (
+            <p className="text-xs text-muted-foreground">
+              $11/month by PayPal - cancel any time • or $11 for 30 days with PágueloFácil: type pagar in EspaLuz WhatsApp
+            </p>
+          )}
         </div>
       </CardContent>
     </Card>

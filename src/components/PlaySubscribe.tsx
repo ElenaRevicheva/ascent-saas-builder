@@ -48,7 +48,8 @@ export function PlaySubscribe({ onSuccess }: { onSuccess?: (id: string) => void 
           <p className="text-sm font-semibold">{t("play.done")}</p>
         ) : (
           <>
-            <Button className="w-full" size="lg" disabled={ready !== true || state === 'buying'} onClick={buy}>
+            {/* 12 Nov 2026 (Elena's phone): the bilingual label ran off both edges - it wraps now. */}
+            <Button className="w-full h-auto min-h-11 whitespace-normal py-3 leading-snug" size="lg" disabled={ready !== true || state === 'buying'} onClick={buy}>
               {state === 'buying' ? '…' : t("play.buy")}
             </Button>
             {state === 'failed' && (
