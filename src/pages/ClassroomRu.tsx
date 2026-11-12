@@ -57,17 +57,19 @@ const KID_FONT = '"Nunito", "Baloo 2", ui-rounded, "Segoe UI", system-ui, sans-s
  *  Cyrillic word edges: JS `\b` only knows Latin letters, so `\bпока\b` never matched; `w()` checks Russian letters. */
 // Each pool keeps its own turn (12 Nov test: with one shared counter, alternating bear and fox lines skipped two bear shots).
 const turns = new Map<string[], number>();
-const pick = (pool: string[]) => { const n = turns.get(pool) ?? 0; turns.set(pool, n + 1); return pool[n % pool.length]; };
+// Each pool starts at a random place, so a single short lesson does not always open on the same shot (12 Nov: 4 hellos now).
+const pick = (pool: string[]) => { const n = turns.get(pool) ?? Math.floor(Math.random() * pool.length); turns.set(pool, n + 1); return pool[n % pool.length]; };
 const w = (word: string) => new RegExp(`(?<![а-яё])(${word})(?![а-яё])`);
 // 12 Nov 2026 (Elena: "make more shots ... make sure all of them are actually wired and used in practice"; "the rest in
 // different national costumes"): 11 more Grok Imagine shots - breathing, the jump break, freeze, oops, clap, the chalkboard,
 // looking at a photo, a duo dance, and the winter-costume hello and talking shots. Every shot below has a way in:
 // a word in the hero's line, the kind of turn (a photo), or a rotating pool. scripts: cto-aipa docs/espaluz/russian-classroom-art.
-export const HELLO = ["duo-hello", "duo-hello-winter"];
+// + 4 more (Elena topped up Grok): summer meadow costume (straw hat, berry baskets) and New Year costume (Ded Moroz + Snegurochka by the yolka).
+export const HELLO = ["duo-hello", "duo-hello-winter", "duo-hello-summer", "duo-hello-newyear"];
 export const PRAISE = ["fox-cheer", "duo-highfive", "bear-clap", "fox-dance", "duo-dance"];
 export const DANCE = ["fox-dance", "duo-dance"];
-export const BEAR_TALK = ["bear-talking", "bear-talking-2", "bear-talking-winter", "bear-reading"];
-export const FOX_TALK = ["fox-talking", "fox-talking-2", "fox-talking-winter"];
+export const BEAR_TALK = ["bear-talking", "bear-talking-2", "bear-talking-winter", "bear-reading", "bear-talking-newyear"];
+export const FOX_TALK = ["fox-talking", "fox-talking-2", "fox-talking-winter", "fox-talking-summer"];
 export function clipFor(who: Hero, ru: string, firstOfLesson: boolean, ctx: { photo?: boolean; firstLine?: boolean } = {}): string {
   const t = ru.toLowerCase();
   const has = (re: RegExp) => re.test(t);
