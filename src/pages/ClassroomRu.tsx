@@ -12,12 +12,15 @@ import { ReportReply } from "@/components/ReportReply";
 // SEPARATE from Pere & Titi on purpose: this page shares no code with Classroom.tsx, has its own art
 // (public/classroom-ru), its own clips (public/heroes-ru) and its own server functions (kids-ru lesson, voice-ru voices).
 // Read-only shared things: sign-in, the family list, the subscription gate, the parent-consent note.
-// For a child of 6-8 who UNDERSTANDS Russian but does not speak it: every turn asks her to SAY something.
-// Plan: cto-aipa docs/espaluz/RUSSIAN_CLASSROOM_PLAN_2026-11-11.md. Not linked anywhere yet - Elena opens /classroom-ru.
+// 12 Nov 2026 (Elena: "adapted from Pere and Titi, bilingual exactly like them, Russian + English"): every line is
+// Russian then English (both shown, both voiced), two ways in - a talk or a CLASS (12 units, Russian letters), and a
+// parent report at the goodbye. Reachable from the dashboard map, step 3, on the website only (never in the Play app).
+// Plan: cto-aipa docs/espaluz/RUSSIAN_CLASSROOM_PLAN_2026-11-11.md.
 
 type Hero = "mishka" | "lisa";
 type Turn = { role: "user" | "assistant"; content: string };
-type Line = { who: Hero; ru: string; clip: string };
+type Line = { who: Hero; ru: string; en: string; clip: string };
+type Mode = "talk" | "class";
 
 const CLIPS = "/heroes-ru";
 const START = "(урок начинается)";
@@ -50,16 +53,20 @@ function clipFor(who: Hero, ru: string, firstOfLesson: boolean): string {
   return who === "mishka" ? pick(["bear-talking", "bear-talking-2", "bear-reading"]) : pick(["fox-talking", "fox-talking-2"]);
 }
 
-/** The free fallback voice: the phone's own Russian voice. Bear low and slow, fox high and quick. */
-function browserSay(text: string, who: Hero): Promise<void> {
+/** The free fallback voice: the phone's own voices, Russian then English. Bear low and slow, fox high and quick. */
+async function browserSay(text: string, who: Hero, en = ""): Promise<void> {
+  await sayIn(text, who, "ru");
+  if (en) await sayIn(en, who, "en");
+}
+function sayIn(text: string, who: Hero, lang: "ru" | "en"): Promise<void> {
   const synth = typeof window !== "undefined" ? window.speechSynthesis : undefined;
   if (!synth) return Promise.resolve();
   return new Promise<void>((done) => {
     synth.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    const ru = synth.getVoices().filter((v) => v.lang.toLowerCase().startsWith("ru"));
-    const v = ru.find((x) => /google|neural|natural|enhanced|premium|siri/i.test(x.name)) ?? ru[0];
-    u.lang = v?.lang ?? "ru-RU";
+    const ofLang = synth.getVoices().filter((v) => v.lang.toLowerCase().startsWith(lang));
+    const v = ofLang.find((x) => /google|neural|natural|enhanced|premium|siri/i.test(x.name)) ?? ofLang[0];
+    u.lang = v?.lang ?? (lang === "ru" ? "ru-RU" : "en-US");
     if (v) u.voice = v;
     u.rate = who === "mishka" ? 0.85 : 1.05;
     u.pitch = who === "mishka" ? 0.8 : 1.4;
@@ -89,6 +96,11 @@ const ClassroomRu = () => {
   const [heard, setHeard] = useState("");
   const [stars, setStars] = useState(0);
   const [saidToday, setSaidToday] = useState<string[]>([]); // Russian words she herself said in this lesson
+  const [learned, setLearned] = useState<string[]>([]); // new Russian words the heroes taught in this lesson
+  const [mode, setMode] = useState<Mode>("talk");
+  const [unit, setUnit] = useState<{ n: number; theme: string; trace: string[] } | null>(null);
+  const [mission, setMission] = useState("");
+  const [turnNo, setTurnNo] = useState(0);
   const [childName, setChildName] = useState("");
   const [consent, setConsent] = useState<boolean | null>(null);
   const [consentTicked, setConsentTicked] = useState(false);
@@ -121,12 +133,12 @@ const ClassroomRu = () => {
     if (!user?.id || !consentTicked) return;
     const { error } = await supabase.from("learning_sessions").insert({ user_id: user.id, session_type: "analytics", source: "web",
       content: { event: "parent_consent", version: "2026-11-09", agreed_at: new Date().toISOString() } });
-    if (error) { toast.error("Не получилось сохранить. Попробуйте ещё раз. / No se pudo guardar."); return; }
+    if (error) { toast.error("Не получилось сохранить. Попробуйте ещё раз. / Could not save. Please try again."); return; }
     setConsent(true);
   };
 
   const voiceFor = async (line: Line): Promise<string | null> => {
-    const { data, error } = await supabase.functions.invoke("voice-ru", { body: { text: line.ru, who: line.who } });
+    const { data, error } = await supabase.functions.invoke("voice-ru", { body: { text: line.ru, en: line.en, who: line.who } });
     return error || !data?.audioContent ? null : toAudioUrl(data.audioContent, data.mimeType || "audio/mpeg");
   };
 
@@ -150,29 +162,33 @@ const ClassroomRu = () => {
       setShot(i);
       setLastWho(spoken[i].who);
       if (url) await play(url);
-      else await browserSay(spoken[i].ru, spoken[i].who);
+      else await browserSay(spoken[i].ru, spoken[i].who, spoken[i].en);
       if (hush.current) break;
     }
     setSpeaking(false);
     setShot(-1);
   };
 
-  const talk = async (childSays: string | null) => {
+  const talk = async (childSays: string | null, as: Mode = mode) => {
     setBusy(true);
     const asked: Turn[] = [...history, { role: "user", content: childSays ?? START }];
     try {
-      const { data, error } = await supabase.functions.invoke("kids-ru", { body: { history: asked.slice(-16), childName } });
+      const { data, error } = await supabase.functions.invoke("kids-ru", { body: { history: asked.slice(-16), childName, turn: turnNo, mode: as } });
       if (error || !Array.isArray(data?.lines)) {
         const status = (error as { context?: { status?: number } } | null)?.context?.status;
-        toast.error(status === 402 ? "Класс открыт во время пробного периода или по подписке. / La clase está abierta con la prueba o la suscripción."
-          : "Мишка и Лиса отдыхают. Попробуй ещё раз! / Mishka y Lisa descansan. ¡Inténtalo otra vez!");
+        toast.error(status === 402 ? "Класс открыт во время пробного периода или по подписке. / The class is open during the free trial or with a subscription."
+          : "Мишка и Лиса отдыхают. Попробуй ещё раз! / Mishka and Lisa are resting. Try again!");
         return;
       }
       const first = history.length === 0;
-      const spoken: Line[] = data.lines.map((l: { who: Hero; ru: string }, i: number) =>
-        ({ who: l.who, ru: l.ru, clip: clipFor(l.who, l.ru, first && i === 0) }));
-      setHistory([...asked, { role: "assistant", content: spoken.map((l) => `${HERO[l.who].name}: ${l.ru}`).join("\n") }]);
+      const spoken: Line[] = data.lines.map((l: { who: Hero; ru: string; en?: string }, i: number) =>
+        ({ who: l.who, ru: l.ru, en: l.en ?? "", clip: clipFor(l.who, l.ru, first && i === 0) }));
+      setHistory([...asked, { role: "assistant", content: spoken.map((l) => `${HERO[l.who].name}: ${l.ru} / ${l.en}`).join("\n") }]);
       setLines(spoken);
+      setTurnNo((t) => t + 1);
+      if (as === "class" && data.unit) setUnit({ n: data.unit, theme: data.unitTheme ?? "", trace: Array.isArray(data.trace) ? data.trace : [] });
+      if (typeof data.mission === "string" && data.mission) setMission(data.mission);
+      if (Array.isArray(data.new_words)) setLearned((w) => [...w, ...data.new_words.filter((x: string) => !w.includes(x))].slice(-30));
       const said: string[] = Array.isArray(data.said_ru) ? data.said_ru : [];
       if (childSays && said.length) {
         setStars((s) => s + 1);
@@ -181,7 +197,7 @@ const ClassroomRu = () => {
       await speak(spoken);
     } catch (e) {
       console.error("classroom-ru talk failed", e);
-      toast.error("Мишка и Лиса не смогли ответить. Попробуй ещё раз! / No pudieron contestar.");
+      toast.error("Мишка и Лиса не смогли ответить. Попробуй ещё раз! / They could not answer. Try again!");
     } finally {
       setBusy(false);
     }
@@ -202,11 +218,11 @@ const ClassroomRu = () => {
           fr.readAsDataURL(blob);
         });
         setBusy(true);
-        // Russian hint: the lesson asks her to answer in Russian; a Spanish answer is still transcribed and recast.
-        const { data, error } = await supabase.functions.invoke("voice-to-text", { body: { audio: b64, language: "ru", speaker: "child" } });
+        // 12 Nov 2026: bilingual class - she may answer in Russian or English (or Spanish), so no language is forced.
+        const { data, error } = await supabase.functions.invoke("voice-to-text", { body: { audio: b64, speaker: "child" } });
         const text = (data?.text || "").trim();
-        if (data?.unavailable) { setBusy(false); toast.error(data.message || "Мишка и Лиса отдыхают. / Están descansando.", { duration: 15000 }); return; }
-        if (error || !text) { setBusy(false); toast.error("Я тебя не расслышал. Скажи ещё раз! / No te escuché bien."); return; }
+        if (data?.unavailable) { setBusy(false); toast.error(data.message || "Мишка и Лиса отдыхают. / They are resting.", { duration: 15000 }); return; }
+        if (error || !text) { setBusy(false); toast.error("Я тебя не расслышал. Скажи ещё раз! / I did not hear you. Say it again!"); return; }
         setHeard(text);
         await talk(text);
       };
@@ -217,7 +233,7 @@ const ClassroomRu = () => {
       audio.current?.pause();
       window.speechSynthesis?.cancel();
     } catch {
-      toast.error("Нужен микрофон. / Necesitamos el micrófono.");
+      toast.error("Нужен микрофон. / We need the microphone.");
     }
   };
   const stopRecording = () => { recorder.current?.stop(); setRecording(false); };
@@ -228,8 +244,8 @@ const ClassroomRu = () => {
       <div className="min-h-screen bg-cover bg-center flex items-start justify-center p-4 pt-6 md:pt-10" style={bg}>
         <div className="bg-white/90 rounded-3xl px-8 py-5 max-w-md text-center shadow-xl" style={{ fontFamily: KID_FONT }}>
           <h1 className="text-3xl font-bold mb-2">Мишка Медок и Лиса Алиса</h1>
-          <p className="text-lg mb-6">Русский класс. Сначала входит мама или папа. · Primero entra mamá o papá.</p>
-          <Button asChild size="lg"><Link to="/auth?next=/classroom-ru">Войти / Entrar</Link></Button>
+          <p className="text-lg mb-6">Русский класс. Сначала входит мама или папа. · A parent signs in first.</p>
+          <Button asChild size="lg"><Link to="/auth?next=/classroom-ru">Войти / Sign in</Link></Button>
         </div>
       </div>
     );
@@ -239,19 +255,19 @@ const ClassroomRu = () => {
     return (
       <div className="min-h-screen bg-cover bg-center flex items-start justify-center p-4 pt-6 md:pt-10" style={bg}>
         <div className="bg-white/95 rounded-3xl px-6 py-5 max-w-lg shadow-xl space-y-3 text-slate-800">
-          <h1 className="text-2xl font-bold text-center">Перед первым уроком · Antes de la primera clase</h1>
+          <h1 className="text-2xl font-bold text-center">Перед первым уроком · Before the first lesson</h1>
           <p className="text-sm">Это класс для детей, рядом с которыми есть взрослый. То, что говорит ребёнок, отправляется в сервисы ИИ,
             чтобы Мишка и Лиса могли ответить. Без рекламы, без публичного профиля.</p>
-          <p className="text-sm">Esta clase es para niños con un adulto cerca. Lo que dice el niño se envía a servicios de IA para crear las
-            respuestas. Sin anuncios, sin perfil público.{" "}
+          <p className="text-sm">This class is for children with an adult nearby. What the child says is sent to AI services so Mishka and Lisa
+            can answer. No ads, no public profile.{" "}
             <a className="underline" href="mailto:aipa@aideazz.xyz">aipa@aideazz.xyz</a> ·{" "}
-            <Link className="underline" to="/privacy-policy">Privacidad</Link></p>
+            <Link className="underline" to="/privacy-policy">Privacy</Link></p>
           <label className="flex items-start gap-3 rounded-xl border border-slate-300 bg-white p-3 cursor-pointer">
             <input type="checkbox" className="mt-1 h-5 w-5" checked={consentTicked} onChange={(e) => setConsentTicked(e.target.checked)} />
             <span className="text-sm font-semibold">Я мама, папа или опекун этого ребёнка и согласен(на). ·
-              Soy la madre, el padre o el tutor de este niño y estoy de acuerdo.</span>
+              I am this child's mother, father or guardian and I agree.</span>
           </label>
-          <Button size="lg" className="w-full" disabled={!consentTicked} onClick={giveConsent}>Начать / Empezar</Button>
+          <Button size="lg" className="w-full" disabled={!consentTicked} onClick={giveConsent}>Начать / Start</Button>
         </div>
       </div>
     );
@@ -270,6 +286,13 @@ const ClassroomRu = () => {
         <Star className="w-6 h-6 fill-yellow-400 text-yellow-500" />
         <span className="text-2xl font-extrabold text-slate-900">{stars}</span>
       </div>
+
+      {mode === "class" && unit && (
+        <div className="bg-white/90 rounded-3xl px-5 py-2 shadow text-center">
+          <div className="text-sm font-extrabold text-amber-800">Урок {unit.n} · Class {unit.n}: {unit.theme}</div>
+          {unit.trace.length > 0 && <div className="text-3xl font-extrabold tracking-widest text-slate-900">{unit.trace.slice(0, 3).join("   ")}</div>}
+        </div>
+      )}
 
       <video key={`${clip}-${shot}`} src={`${CLIPS}/${clip}.mp4`} poster="/classroom-ru/cover.jpg"
         autoPlay loop muted playsInline
@@ -296,28 +319,47 @@ const ClassroomRu = () => {
                 ${HERO[l.who].bubble} ${i === shot ? "scale-[1.03] ring-4 ring-yellow-300" : ""}`}>
                 <div className={`text-sm font-extrabold uppercase tracking-wide ${HERO[l.who].label}`}>{HERO[l.who].name}</div>
                 <div className="text-2xl font-bold leading-snug text-slate-900">{l.ru}</div>
+                {l.en && <div className="text-lg leading-snug text-slate-600 mt-1">{l.en}</div>}
               </div>
             </div>
           ))}
           <div className="flex justify-end -mt-1">
-            <ReportReply text={lines.map((l) => `${HERO[l.who].name}: ${l.ru}`).join("\n")} where="classroom" />
+            <ReportReply text={lines.map((l) => `${HERO[l.who].name}: ${l.ru} / ${l.en}`).join("\n")} where="classroom" />
           </div>
         </div>
       )}
 
       {saidToday.length > 0 && (
         <div className="w-full max-w-[680px] bg-white/90 rounded-3xl px-5 py-3 shadow-xl">
-          <div className="text-sm font-extrabold text-emerald-700">Сегодня ты сказал(а) по-русски · Hoy dijiste en ruso</div>
+          <div className="text-sm font-extrabold text-emerald-700">Сегодня ты сказал(а) по-русски · Today you said in Russian</div>
           <div className="flex flex-wrap gap-2 mt-2">
             {saidToday.map((w) => <span key={w} className="rounded-full bg-emerald-100 px-3 py-1 text-lg font-bold text-emerald-900">{w}</span>)}
           </div>
         </div>
       )}
 
+      {mission && (
+        <div className="w-full max-w-[680px] bg-white/95 rounded-3xl px-5 py-4 shadow-xl border-4 border-amber-200">
+          <div className="text-sm font-extrabold uppercase tracking-wide text-amber-700">Для родителей · For parents</div>
+          <div className="mt-1 text-base text-slate-800">
+            {unit ? <>Урок · Class {unit.n}: <b>{unit.theme}</b><br /></> : <>Разговор · Talk<br /></>}
+            Сказала по-русски · Said in Russian: <b>{saidToday.length ? saidToday.join(", ") : "—"}</b><br />
+            Новые слова · New words: <b>{learned.length ? learned.join(", ") : "—"}</b><br />
+            Задание · Mission: <b>{mission}</b>
+          </div>
+        </div>
+      )}
+
       {history.length === 0 ? (
-        <Button size="lg" className="rounded-full text-2xl h-20 px-10 shadow-xl" disabled={busy || loading} onClick={() => talk(null)}>
-          <Play className="w-8 h-8 mr-2" /> Начать! / ¡Empezar!
-        </Button>
+        <div className="flex flex-wrap justify-center gap-4">
+          <Button size="lg" className="rounded-full text-2xl h-20 px-10 shadow-xl" disabled={busy || loading} onClick={() => { setMode("talk"); talk(null, "talk"); }}>
+            <Play className="w-8 h-8 mr-2" /> Поговорим! / Let's talk!
+          </Button>
+          <Button size="lg" variant="secondary" className="rounded-full text-2xl h-20 px-10 shadow-xl bg-amber-100 hover:bg-amber-200 text-amber-900"
+            disabled={busy || loading} onClick={() => { setMode("class"); talk(null, "class"); }}>
+            📖 Урок! / Class!
+          </Button>
+        </div>
       ) : (
         <button
           onClick={recording ? stopRecording : startRecording}
