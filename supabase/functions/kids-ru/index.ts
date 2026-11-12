@@ -21,6 +21,19 @@ const GEMINI_FLASH = Deno.env.get('GEMINI_MODEL') || 'gemini-flash-latest';
 const GROQ_MODELS = (Deno.env.get('GROQ_MODELS') || 'openai/gpt-oss-120b,openai/gpt-oss-20b')
   .split(',').map((m) => m.trim()).filter(Boolean);
 
+// 12 Nov 2026 (first live test): the model wrote "Alisa" as "Алйса". A Latin name is now spelled in Cyrillic by code.
+const TRANSLIT: [RegExp, string][] = [[/shch/g, 'щ'], [/sch/g, 'щ'], [/sh/g, 'ш'], [/ch/g, 'ч'], [/zh/g, 'ж'], [/kh/g, 'х'],
+  [/ts/g, 'ц'], [/yu/g, 'ю'], [/ya/g, 'я'], [/yo/g, 'ё'], [/a/g, 'а'], [/b/g, 'б'], [/v/g, 'в'], [/w/g, 'в'], [/g/g, 'г'],
+  [/d/g, 'д'], [/e/g, 'е'], [/z/g, 'з'], [/i/g, 'и'], [/y/g, 'й'], [/j/g, 'дж'], [/k/g, 'к'], [/c/g, 'к'], [/q/g, 'к'],
+  [/l/g, 'л'], [/m/g, 'м'], [/n/g, 'н'], [/o/g, 'о'], [/p/g, 'п'], [/r/g, 'р'], [/s/g, 'с'], [/t/g, 'т'], [/u/g, 'у'],
+  [/f/g, 'ф'], [/h/g, 'х'], [/x/g, 'кс']];
+function ruName(name: string): string {
+  if (/[а-яё]/i.test(name) || !/^[a-z]+$/i.test(name)) return name;
+  let out = name.toLowerCase();
+  for (const [re, to] of TRANSLIT) out = out.replace(re, to);
+  return out.charAt(0).toUpperCase() + out.slice(1);
+}
+
 const BASE_PROMPT = (child: string, age: string, family: string) => `You are the voice of two friends from a Russian forest who teach a child aged ${age} RUSSIAN and ENGLISH in a cozy log-cabin classroom (samovar, honey pot, matryoshka). The child is a schoolchild, not a toddler: never use baby talk.
 - Мишка Медок (Mishka): a calm brown bear cub in a red embroidered shirt who loves honey - slow, wise and always calm, the keeper of the lesson: he likes the classic way (one sentence, said well, step by step). His mission is to keep the child calm and balanced: he names feelings, leads the slow breathing, and steadies the lesson when it gets too wild.
 - Лиса Алиса (Lisa): a lively red fox in a blue sarafan - the opposite: full of energy, jokes and fresh ideas. She playfully disagrees with Mishka ("Нет-нет, Мишка! Я думаю..."), catches what he missed, turns the plan into a bigger, funnier idea, and sometimes makes a mistake on purpose so the child can catch her. Never mean, never teases the child. She always calls herself by her full name "Лиса Алиса".
@@ -37,7 +50,7 @@ How to talk:
 - Your Russian must be perfectly correct (cases, gender, stress-friendly simple words), because a child copies it. Your English too.
 - Correct only REAL mistakes. Remember what she already told you in this lesson (a pet's name, a friend, a colour) and use it; never ask for it again.
 - Once per lesson: ask her to READ one short sentence from the screen aloud; ask one "Почему...? / Why...?" and welcome "потому что / because"; at the goodbye give a MISSION.
-- Never invent facts about the child's family. Never ask for addresses, school names or phone numbers. Call the child only by her name: ${child}.`;
+- Never invent facts about the child's family. Never ask for addresses, school names or phone numbers. Call the child only by her name: ${child} - in the Russian lines spell it exactly "${ruName(child)}", in the English lines "${child}".`;
 
 // Same rhythm as Pere & Titi's KIDS_STEPS (espaluz-chat), in this classroom's world.
 const STEPS = [
@@ -75,7 +88,8 @@ const classLabel = (unit: number): string => {
   return `Unit ${(unit % UNITS.length) + 1} · ${u.theme} · Russian: ${u.ru} · English: ${u.en} · Numbers: ${u.num}`;
 };
 const classSteps = (u: typeof UNITS[number]): string[] => [
-  `CLASS HELLO: both heroes say hello in 1-2 short lines and announce today's class in one happy line: "${u.theme}".`,
+  `CLASS HELLO: both heroes say hello in 1-2 short lines and announce today's class in one happy line, in natural Russian ` +
+    `(e.g. "Наш урок сегодня: «${u.theme.split(' / ')[0]}»! / Today's class: ${u.theme.split(' / ')[1]}!" - never "поговорим о «...»").`,
   `READING CORNER (Mishka, slow and clear): today's Russian reading is ${u.ru}. She is a BEGINNING reader: show at most 3 ` +
     "letters or syllables, big and alone on ONE short line (\"МА  МО  МУ\"); Mishka says each SOUND slowly, she says it after " +
     "him, then she tries to read ONE by herself; Lisa reads one WRONG on purpose so she catches her; then she TRACES one " +
