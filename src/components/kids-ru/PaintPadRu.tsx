@@ -53,7 +53,11 @@ const PAINT_SETS: { title: string; pages: Page[] }[] = [
       place: "борщ красный от свёклы / borscht is red because of beetroot" },
   ] },
   { title: "Русская природа / Russian nature", pages: [
-    { id: "ru-bereza", ru: "берёзы", en: "birch trees", label: "🌳 Берёзы / Birches",
+    { id: "ru-polyana", ru: "полянка с ягодами, грибами и ёжиками", en: "a glade with berries, mushrooms and hedgehogs", label: "🦔 Полянка / Glade",
+      place: "летом в русском лесу на полянках растут земляника и грибы / in summer, wild strawberries and mushrooms grow in Russian forest glades" },
+    { id: "ru-bor", ru: "сосновый бор с еловыми шишками", en: "a pine forest with spruce cones", label: "🌲 Бор / Pine forest",
+      place: "бор - это сосновый лес; еловые шишки длинные и висят вниз / a bor is a pine forest; spruce cones are long and hang down" },
+    { id: "ru-bereza", ru: "берёзки", en: "birch trees", label: "🌳 Берёзки / Birches",
       place: "у берёзы белая кора с чёрными полосками / the birch has white bark with black stripes" },
     { id: "ru-medved", ru: "медведь с мёдом", en: "a bear with honey", label: "🐻 Медведь / Bear",
       place: "медведь спит всю зиму в берлоге / the bear sleeps all winter in its den" },
