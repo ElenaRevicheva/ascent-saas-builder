@@ -112,10 +112,16 @@ const Navigation = () => {
         </div>
 
         <div className="flex min-w-0 items-center gap-1.5 sm:gap-4">
-          <LanguageSwitcher />
+          {/* 12 Nov 2026: on phones the header row was wider than the screen (button and menu cut off) - the language
+              choice moves into the phone menu there; tablets and computers keep it in the header. */}
+          <div className="hidden sm:block"><LanguageSwitcher /></div>
           {user ? (
             <Link to="/dashboard">
-              <Button variant="hero">{t("nav.myEspaluz")}</Button>
+              {/* 12 Nov 2026 (Elena's phone): the long label pushed the button off the screen - short label on phones. */}
+              <Button variant="hero" className="h-9 px-3 text-sm sm:h-10 sm:px-4 sm:text-base">
+                <span className="sm:hidden">{t("nav.myEspaluz").split(" / ")[0]}</span>
+                <span className="hidden sm:inline">{t("nav.myEspaluz")}</span>
+              </Button>
             </Link>
           ) : (
             <>
@@ -123,7 +129,7 @@ const Navigation = () => {
                 <Button variant="ghost">{t("nav.signIn")}</Button>
               </Link>
               <Link to="/auth?mode=signup">
-                <Button variant="hero">{t("nav.getStarted")}</Button>
+                <Button variant="hero" className="h-9 px-3 text-sm sm:h-10 sm:px-4 sm:text-base">{t("nav.getStarted")}</Button>
               </Link>
             </>
           )}
@@ -137,6 +143,10 @@ const Navigation = () => {
 
       {menu === "phone" && (
         <div id="menu-phone" className="lg:hidden max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-border bg-card px-3 pb-4 pt-1 shadow-xl">
+          <div className="flex items-center justify-between px-3 py-2 sm:hidden">
+            <span className="text-sm text-muted-foreground">Language / Idioma</span>
+            <LanguageSwitcher />
+          </div>
           <MenuTree onPick={pick} />
           <div className="my-2 border-t border-border" role="separator" />
           <Link to={user ? "/dashboard" : "/auth"} onClick={pick} className="block rounded-xl px-3 py-3 font-semibold text-primary hover:bg-primary/5">{user ? t("nav.myEspaluz") : t("nav.signIn")}</Link>

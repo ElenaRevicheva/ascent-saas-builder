@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Lock, Crown, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { insidePlayApp } from '@/lib/playBilling';
+import { PlaySubscribe } from '@/components/PlaySubscribe';
 
 interface FeatureGateProps {
   feature: string;
@@ -119,11 +120,18 @@ export const FeatureGate = ({
         )}
         
         <div className="space-y-2">
-          <Link to="/#pricing">
-            <Button variant="hero" className="w-full">
-              {isTrialActive ? 'Upgrade to Continue' : 'Get EspaLuz Family'}
-            </Button>
-          </Link>
+          {/* 12 Nov 2026 (Elena, Play app as Kira): this button linked to "/#pricing" - inside the app it landed on the TOP
+              of the home page, so "Get EspaLuz Family" looked like it led nowhere. In the Play app the Google Play
+              purchase now opens right here (the same PlaySubscribe as the pricing card); the website keeps the link. */}
+          {insidePlayApp() ? (
+            <PlaySubscribe onSuccess={() => window.location.reload()} />
+          ) : (
+            <Link to="/#pricing">
+              <Button variant="hero" className="w-full">
+                {isTrialActive ? 'Upgrade to Continue' : 'Get EspaLuz Family'}
+              </Button>
+            </Link>
+          )}
           {/* 11 Nov 2026: inside the Play app Google allows ONLY Google Play billing and no mention of other ways to pay
               (Payments policy). This line named PayPal and PágueloFácil in the app - a review risk. The website keeps it. */}
           <p className="text-xs text-muted-foreground">
