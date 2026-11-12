@@ -278,9 +278,11 @@ const ConnectBot = () => {
                 </div>
               )}
 
-              <div className="flex gap-2">
-                <Button 
-                  onClick={() => generateConnectionCode('telegram')} 
+              {/* 12 Nov 2026 (Elena's phone): three buttons in one row pushed "Generate New" off the screen. The row now
+                  wraps; "Generate New" takes its own full line on a phone. */}
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  onClick={() => generateConnectionCode('telegram')}
                   disabled={loading}
                   className="flex-1"
                 >
@@ -306,7 +308,7 @@ const ConnectBot = () => {
                 </Button>
                 
                 {connectionCode && (
-                  <Button variant="outline" onClick={() => setConnectionCode(null)}>
+                  <Button variant="outline" className="basis-full sm:basis-auto" onClick={() => setConnectionCode(null)}>
                     Generate New
                   </Button>
                 )}
