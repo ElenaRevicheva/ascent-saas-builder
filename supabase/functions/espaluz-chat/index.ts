@@ -225,6 +225,7 @@ function belongingBlock(country = 'panama'): string {
 const PROFILE_ASK: [string, string][] = [
   ['country_from', 'which country their story began in'], ['native_language', 'which language their heart speaks'],
   ['moved_when', 'how long they have been here'], ['household', 'who is on this adventure with them'],
+  ['work', 'what they do for work'], // 13 Nov 2026
   ['spanish_feel', 'how Spanish feels for them today'], ['focus', 'what would make the biggest difference this month'],
   ['miss_most', 'what they miss most from home'],
 ];
@@ -260,6 +261,13 @@ function profileRules(p: Record<string, any>): string {
   if (focus.length)
     out.push(`START FROM WHAT MATTERS NOW: ${focus.join('; ')}. When they start without a topic or ask what to practise, open with ONE ` +
       `useful phrase or tip for the first of these, and prefer country facts on these topics when you choose one to weave in.`);
+  // 13 Nov 2026 (Elena: most families here work, many online): their own field, lightly - never glued to every reply.
+  const working = ['I work online, remotely', 'A local job here', 'My own business', 'Studying'].includes(p.work) || !!p.profession;
+  if (working)
+    out.push(`WORK - ${[p.work, p.profession].filter(Boolean).join(', ')}: now and then (not in every reply), when it fits what they are ` +
+      `talking about, bring ONE word or phrase from their own work or field in Spanish, or work small talk here (e.g. "¿A qué te dedicas?"). ` +
+      `Never repeat a work phrase you already gave them, never steer a conversation to work, and say nothing about visas, taxes or ` +
+      `permits for working here unless it is in the country facts.`);
   return out.length ? '\n' + out.join('\n') : '';
 }
 
@@ -272,6 +280,7 @@ function profileLine(profile: Record<string, any> | undefined): string {
     has('native_language') && `their native language is ${p.native_language}`, has('moved_when') && `they moved: ${p.moved_when}`,
     has('household') && `household: ${p.household}`, has('spanish_feel') && `Spanish today: ${p.spanish_feel}`,
     has('focus') && `what matters most now: ${[].concat(p.focus).join(', ')}`, has('miss_most') && `they miss most from home: ${p.miss_most}`,
+    (has('work') || has('profession')) && `work: ${[p.work, p.profession].filter(Boolean).join(', ')}`,
   ].filter(Boolean);
   const missing = PROFILE_ASK.filter(([k]) => !has(k)).map(([, q]) => q);
   return (known.length ? `\nTHIS FAMILY'S NEW LIFE (their own answers): ${known.join('; ')}. Let it shape what you bring up: build bridges between where ` +

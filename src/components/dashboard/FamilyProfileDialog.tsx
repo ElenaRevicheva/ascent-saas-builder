@@ -16,6 +16,8 @@ import { toast } from 'sonner';
 export type FamilyProfile = {
   country_now?: string; country_from?: string; native_language?: string; moved_when?: string; household?: string;
   spanish_feel?: string; focus?: string[]; miss_most?: string;
+  // 13 Nov 2026 (Elena: most families moving here are not retired - many work online): work + their own profession.
+  work?: string; profession?: string;
 };
 
 // The 21 countries with a belonging pack (supabase/functions/_shared/belonging/<key>.json).
@@ -27,7 +29,8 @@ export const PACK_COUNTRIES: [string, string][] = [
   ['puerto_rico', 'Puerto Rico'], ['venezuela', 'Venezuela'], ['equatorial_guinea', 'Equatorial Guinea'],
 ];
 
-type Q = { key: keyof FamilyProfile | 'family'; ask: string; why: string; options?: string[]; multi?: boolean; free?: string };
+// freeKey: the typed box is saved under its own key (work = the chip, profession = what they type), so one never erases the other.
+type Q = { key: keyof FamilyProfile | 'family'; ask: string; why: string; options?: string[]; multi?: boolean; free?: string; freeKey?: keyof FamilyProfile };
 const QUESTIONS: Q[] = [
   { key: 'country_now', ask: 'Where is home now?', why: 'So EspaLuz knows your holidays, your school calendar and your local customs.' },
   { key: 'country_from', ask: 'And where does your story begin?', why: 'So she can build bridges between the customs you grew up with and the new ones.', free: 'Your country of origin' },
@@ -37,6 +40,9 @@ const QUESTIONS: Q[] = [
     options: ['Still planning the move', 'Traveling - still looking for my place', 'Less than 6 months', '6 to 12 months', '1 to 3 years', 'More than 3 years'] },
   { key: 'household', ask: 'Who is on this adventure with you?', why: 'So she talks to your real family, not a generic one.',
     options: ['Two parents with children', 'Single parent with children', 'A couple', 'Grandparents with grandchildren', 'On my own', 'Another family shape'] },
+  { key: 'work', ask: 'What do you do for work?', why: 'So EspaLuz can bring the Spanish of your own field, and grow with you as your work changes.',
+    options: ['I work online, remotely', 'A local job here', 'My own business', 'Studying', 'Caring for the family full time', 'Retired', 'Between things right now'],
+    free: 'Your profession (optional) - e.g. designer, nurse, developer, teacher', freeKey: 'profession' },
   { key: 'family', ask: 'Who are the little ones?', why: "So Pere & Titi know each child by name. Names and ages live in your family list." },
   { key: 'spanish_feel', ask: 'How does Spanish feel today?', why: 'So she pitches every answer at your level.',
     options: ["I'm just starting", 'I get by', "I'm comfortable"] },
@@ -86,6 +92,7 @@ export const FamilyProfileDialog = ({ open, onOpenChange, onSaved, onOpenFamily 
 
   const q = QUESTIONS[i];
   useEffect(() => {
+    if (q?.freeKey) { const f = p[q.freeKey]; setTyped(typeof f === 'string' ? f : ''); return; }
     const v = q && q.key !== 'family' ? p[q.key] : '';
     setTyped(typeof v === 'string' && q?.free && !(q.options ?? []).includes(v) ? v : '');
   }, [i]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -103,7 +110,7 @@ export const FamilyProfileDialog = ({ open, onOpenChange, onSaved, onOpenFamily 
     onOpenChange(false);
   };
 
-  const withTyped = (): FamilyProfile => (q?.free && typed.trim() && q.key !== 'family' ? { ...p, [q.key]: typed.trim().slice(0, 60) } : p);
+  const withTyped = (): FamilyProfile => (q?.free && typed.trim() && q.key !== 'family' ? { ...p, [q.freeKey ?? q.key]: typed.trim().slice(0, 60) } : p);
   const next = () => {
     const cur = withTyped();
     setP(cur);
@@ -115,7 +122,7 @@ export const FamilyProfileDialog = ({ open, onOpenChange, onSaved, onOpenFamily 
     if (q.multi) {
       const list = (p.focus ?? []);
       setP({ ...p, focus: list.includes(v) ? list.filter((x) => x !== v) : [...list, v] });
-    } else { setP({ ...p, [q.key]: v }); setTyped(''); }
+    } else { setP({ ...p, [q.key]: v }); if (!q.freeKey) setTyped(''); }
   };
   const tint = 'hsl(var(--espaluz-purple))';
 
