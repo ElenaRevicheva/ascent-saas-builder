@@ -189,13 +189,15 @@
     "m3Lead": "Hecha para crecer con tu familia.",
     "m3": "En WhatsApp, Telegram y la web, de día y de noche. Los niños tienen su propia clase con Pere y Titi, donde hablan, leen, trazan letras y ganan estrellas.",
     "closing": "EspaLuz nació de la necesidad de una familia de sentirse en casa. Hoy la construyo para que otras familias encuentren esa misma sensación.",
-    "connectTitle": "Conectar y colaborar",
-    "connectBody": "¿Quieres trabajar juntos o solo decir hola? Aquí están mi perspectiva profesional y mi portafolio.",
+    "connectTitle": "Alianzas y prensa",
+    "connectBody": "Para alianzas, prensa o trabajar con AIdeazz AI Lab: aquí están mi portafolio y mi perfil profesional.",
     "scan": "Escanea para abrir mi portafolio",
     "pdf": "Perspectiva profesional (PDF)",
     "portfolio": "Portafolio",
     "buildTitle": "Construyamos juntos.",
-    "buildBody": "El futuro del aprendizaje es cálido, consciente de la cultura y centrado en la familia."
+    "buildBody": "El futuro del aprendizaje es cálido, consciente de la cultura y centrado en la familia.",
+    "tag": "Fundadora",
+    "sub": "AIdeazz AI Lab · Ex directora jurídica, gobierno electrónico"
   },
   "tree": {
     "contactTag": "Contacto",
@@ -242,5 +244,23 @@
     "aboutDesc": "Quién creó EspaLuz y por qué.",
     "feedback": "Opinión",
     "feedbackDesc": "Dinos qué mejorar."
+  },
+  "lp": {
+    "contactCount": "Portafolio · PDF · YouTube · Telegram"
+  },
+  "lab": {
+    "tag": "AIdeazz AI Lab",
+    "title": "Cómo está hecha EspaLuz",
+    "sub": "Memoria · Calidez · Fiabilidad",
+    "intro": "EspaLuz es una compañera personal de IA para familias que construyen su vida en español. AIdeazz AI Lab la diseña, la construye y la opera cada día.",
+    "l1Lead": "Una compañera que conoce a tu familia.",
+    "l1": "Recuerda quién es quién, el nivel de cada persona y en qué están trabajando, en WhatsApp, Telegram y la web, para que cada conversación siga donde quedó la anterior.",
+    "l2Lead": "Cálida, paciente, nunca robótica.",
+    "l2": "Responde en español e inglés al ritmo de cada persona: como Pere y Titi para un niño, como una guía tranquila y práctica para un adulto.",
+    "l3Lead": "Más de una IA detrás de cada respuesta.",
+    "l3": "Varios de los principales modelos de IA están listos. Si uno falla, responde el siguiente, para que tu familia nunca se quede esperando.",
+    "l4Lead": "Solo lo que es verdad hoy.",
+    "l4": "Todo lo que dice esta página es algo que EspaLuz ya hace.",
+    "partners": "Alianzas e inversores:"
   }
 }

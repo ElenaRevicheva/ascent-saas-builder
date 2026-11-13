@@ -911,7 +911,7 @@ const Index = () => {
             <div className="space-y-4">
 {/* 13 Nov 2026 (Elena): one card, not two. Credentials first, the origin with dignity, then what it means for a family.
     Approved text; no hardship framing, only claims that are live today. */}
-<Part className="border-l-4" tag={t("creator.eyebrow")} name={t("creator.name")}>
+<Part className="border-l-4" tag={t("creator.tag")} name={t("creator.name")} count={t("creator.sub")}>
                 <p className="mt-1 text-sm font-semibold leading-snug text-primary">{t("creator.role")}</p>
                 <div className="mt-4 space-y-3 leading-relaxed text-foreground">
                   <p>{t("creator.story1")}</p>
@@ -930,6 +930,49 @@ const Index = () => {
               </Part>
             </div>
 
+
+          </div>
+        </div>
+
+        {/* 5 Nov 2026 (Elena): the AIdeazz blocks that sat under the plans belong with the creator. Moved here unchanged, closed. */}
+        <div className="mx-auto mt-6 max-w-5xl space-y-4">
+          {/* 13 Nov 2026 (Elena): "Our philosophy", "The Birthplace of EspaLuz" and "Join the Revolution" said the same thing in
+              2024 words ("in development", "revolution", "emotional AI"). One lab card, live claims only. The AIPA video stays
+              untouched on her request (backup: creatives/aipa-demo-video-20261113 + OneDrive). */}
+          <Part tag={t("lab.tag")} name={t("lab.title")} count={t("lab.sub")}>
+            <div className="mx-auto max-w-3xl space-y-5 py-2">
+              <p className="text-lg leading-relaxed text-foreground">{t("lab.intro")}</p>
+              <ul className="space-y-4">
+                {([[Heart, "l1"], [Brain, "l2"], [Shield, "l3"], [Star, "l4"]] as const).map(([Icon, k]) => (
+                  <li key={k} className="flex items-start gap-3">
+                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary" aria-hidden><Icon className="h-5 w-5" /></span>
+                    <p className="leading-relaxed text-foreground"><span className="font-semibold">{t(`lab.${k}Lead`)}</span> {t(`lab.${k}`)}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* AIPA Demo Video */}
+            <div className="mb-8">
+              <div className="max-w-4xl mx-auto">
+                <h4 className="text-xl font-semibold text-foreground mb-4">{t("lp.aipaVideo")}</h4>
+                <div className="relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-r from-purple-100 to-orange-100 p-1">
+                  <video 
+                    controls 
+                    className="w-full h-auto rounded-md bg-black"
+                    poster=""
+                  >
+                    <source src="/videos/demo2.mp4" type="video/mp4" />
+                    {t("lp.noVideo")}
+                  </video>
+                </div>
+              </div>
+            </div>
+            
+            <p className="text-center text-sm text-muted-foreground">
+              {t("lab.partners")}{" "}
+              <a href="https://www.aideazz.xyz" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">aideazz.xyz</a>
+            </p>
+          </Part>
 <Part tag={t("tree.contactTag")} name={t("creator.connectTitle")} count={t("lp.contactCount")}>            <aside className="space-y-6">
               <div className="rounded-2xl border border-border bg-card p-6 text-center" style={{ boxShadow: "var(--shadow-card)" }}>
                 <h3 className="text-lg text-foreground">{t("creator.connectTitle")}</h3>
@@ -952,177 +995,25 @@ const Index = () => {
                   className="mt-3 inline-flex w-full items-center justify-center rounded-full border border-primary px-5 py-3 font-semibold text-primary transition hover:bg-primary/5">
                   {t("creator.portfolio")}
                 </a>
-              </div>
-
-              <div className="rounded-2xl p-6" style={{ background: "hsl(var(--accent) / 0.22)", border: "1px solid hsl(var(--accent))" }}>
-                <h3 className="text-lg text-foreground">{t("creator.buildTitle")}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-foreground/80">{t("creator.buildBody")}</p>
-              </div>
-            </aside></Part>
-          </div>
-        </div>
-
-        {/* 5 Nov 2026 (Elena): the AIdeazz blocks that sat under the plans belong with the creator. Moved here unchanged, closed. */}
-        <div className="mx-auto mt-6 max-w-5xl space-y-4">
-          <Part tag={t("lp.philTag")} name={t("lp.philName")}>
-        {/* Philosophy Section */}
-        <div className="container mx-auto px-4 py-16">
-          <div className="text-center mb-12">
-            {/* Elena 4 Nov 2026: "turn vibe coding into AI-augmented engineering". Same four parts, modern wording,
-                palette icons, no "AI consciousness" line. */}
-            <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-primary">{t("lp.philTag")}</p>
-            <h2 className="mb-3 text-3xl text-foreground md:text-4xl">{t("lp.philName")}</h2>
-            <p className="mx-auto max-w-3xl text-lg leading-relaxed text-muted-foreground">
-              {t("lp.philLede")}
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <Card className="text-center border-border shadow-card">
-              <CardHeader>
-                <Heart className="h-12 w-12 text-primary mx-auto mb-4" />
-                <CardTitle>{t("lp.p1")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  {t("lp.p1d")}
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center border-border shadow-card">
-              <CardHeader>
-                <Brain className="h-12 w-12 mx-auto mb-4" style={{ color: "hsl(var(--espaluz-orange))" }} />
-                <CardTitle>{t("lp.p2")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  {t("lp.p2d")}
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center border-border shadow-card">
-              <CardHeader>
-                <Users className="h-12 w-12 mx-auto mb-4" style={{ color: "hsl(var(--espaluz-green))" }} />
-                <CardTitle>{t("lp.p3")}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  {t("lp.p3d")}
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="mx-auto mb-16 max-w-4xl rounded-2xl p-8 text-center" style={{ background: "hsl(var(--accent) / 0.22)", border: "1px solid hsl(var(--accent))" }}>
-            <h3 className="mb-4 text-2xl text-foreground md:text-3xl">
-              {t("lp.philChain")}
-            </h3>
-            <p className="text-lg leading-relaxed text-foreground/80">
-              {t("lp.philBody")}
-            </p>
-          </div>
-        </div>
-
-
-          </Part>
-          <Part tag="AIdeazz" name={t("lp.birthTitle")} count={t("lp.birthSub")}>
-        {/* Platform Overview */}
-        <div className="container mx-auto px-4 py-16">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">{t("lp.birthTitle")}</h2>
-            <h3 className="text-3xl md:text-4xl font-semibold text-primary mb-8">{t("lp.birthSub")}</h3>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto mb-8 leading-relaxed">
-              <Trans i18nKey="lp.birthBody" components={{ a: <a href="https://www.aideazz.xyz" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-semibold" /> }} />
-            </p>
-            
-            {/* AIPA Demo Video */}
-            <div className="mb-8">
-              <div className="max-w-4xl mx-auto">
-                <h4 className="text-xl font-semibold text-foreground mb-4">{t("lp.aipaVideo")}</h4>
-                <div className="relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-r from-purple-100 to-orange-100 p-1">
-                  <video 
-                    controls 
-                    className="w-full h-auto rounded-md bg-black"
-                    poster=""
-                  >
-                    <source src="/videos/demo2.mp4" type="video/mp4" />
-                    {t("lp.noVideo")}
-                  </video>
+                {/* 13 Nov 2026 (Elena): one contact place - these three came from the footer's duplicate "Contact & Info" card. */}
+                <div className="mt-4 grid grid-cols-3 gap-2 text-sm font-semibold">
+                  <a href="https://www.youtube.com/@AIdeazz" target="_blank" rel="noopener noreferrer" className="rounded-full border border-border px-3 py-2 text-foreground transition hover:border-primary">YouTube</a>
+                  <a href="https://t.me/EspaLuz" target="_blank" rel="noopener noreferrer" className="rounded-full border border-border px-3 py-2 text-foreground transition hover:border-primary">Telegram</a>
+                  <a href="https://www.aideazz.xyz" target="_blank" rel="noopener noreferrer" className="rounded-full border border-border px-3 py-2 text-foreground transition hover:border-primary">AIdeazz</a>
                 </div>
               </div>
-            </div>
-            
-            <div className="bg-gradient-to-r from-purple-50 to-orange-50 border border-purple-200 rounded-lg p-4 max-w-2xl mx-auto">
-              <p className="text-purple-800 font-medium">
-                <Trans i18nKey="lp.devNote" components={{ b: <strong /> }} />
-              </p>
-            </div>
-          </div>
 
-          <div className="text-center mb-16">
-            <h3 className="text-4xl md:text-5xl font-bold text-foreground mb-8">
-              {t("lp.notReplace")}
-            </h3>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-              {t("lp.notReplaceBody")}
-            </p>
-          </div>
-        </div>
-
-
-          </Part>
-          <Part tag="AIdeazz" name={t("lp.joinTitle")} count={t("lp.joinCount")}>
-        {/* CTA Section */}
-        <section className="container mx-auto px-4 py-16">
-          <div className="text-center">
-            <h2 className="text-4xl font-bold text-foreground mb-4">{t("lp.joinTitle")}</h2>
-            <div className="grid md:grid-cols-1 gap-6 max-w-2xl mx-auto">
-              <Card className="border-border shadow-card">
-                <CardHeader>
-                  <CardTitle>{t("lp.experience")} <span className="text-3xl font-extrabold bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 bg-clip-text text-transparent">AIevolution</span></CardTitle>
-                  <CardDescription>{t("lp.tryAipa")}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Link to="/auth">
-                    <Button className="w-full" variant="hero">
-                      {t("lp.chatNow")}
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-        <div className="text-center mt-12">
-          <div className="mt-8 flex flex-col items-center gap-4">
-            <h4 className="text-xl font-bold bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 bg-clip-text text-transparent">{t("lp.invest")}</h4>
-            <p className="text-md text-muted-foreground">{t("lp.investBody")}</p>
-            <a
-              href="https://aideazz.xyz/pitch.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full inline-block px-8 py-3 text-lg font-bold rounded bg-gradient-to-r from-pink-500 via-yellow-400 to-orange-400 text-white text-center shadow-lg hover:opacity-90 transition z-[9999]"
-              style={{ pointerEvents: 'auto', position: 'relative', zIndex: 9999 }}
-            >
-              {t("lp.learnMore")}
-            </a>
-          </div>
-        </div>
-
-          </Part>
+</aside></Part>
         </div>
       </section>
 
-      <Footer />
-      <CookieConsent />
       <div id="feedback" className="container mx-auto max-w-lg scroll-mt-20 px-4 pb-12">
         <Part tag={t("tree.feedbackTag")} name={t("tree.feedback")}>
           <FeedbackForm />
         </Part>
       </div>
+      <Footer />
+      <CookieConsent />
       
       {/* Demo Modal */}
       <Dialog open={showDemoModal} onOpenChange={setShowDemoModal}>

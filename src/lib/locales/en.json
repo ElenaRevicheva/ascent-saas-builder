@@ -191,13 +191,15 @@
     "m3Lead": "Built to grow with your family.",
     "m3": "On WhatsApp, Telegram and the web, day and night. Children have their own class with Pere and Titi, where they talk, read, trace letters and earn stars.",
     "closing": "EspaLuz started with one family's need to feel at home. Today I build it so other families can find that feeling too.",
-    "connectTitle": "Connect and collaborate",
-    "connectBody": "Want to work together, or just say hola? My professional outlook and portfolio are here.",
+    "connectTitle": "Partnerships and press",
+    "connectBody": "For partnerships, press or work with AIdeazz AI Lab: my portfolio and professional outlook are here.",
     "scan": "Scan to open my portfolio",
     "pdf": "Professional outlook (PDF)",
     "portfolio": "Portfolio",
     "buildTitle": "Let's build together.",
-    "buildBody": "The future of learning is warm, culturally aware and family-focused."
+    "buildBody": "The future of learning is warm, culturally aware and family-focused.",
+    "tag": "Founder",
+    "sub": "AIdeazz AI Lab · Former Chief Legal Officer, e-government"
   },
   "tree": {
     "contactTag": "Contact",
@@ -395,7 +397,7 @@
     "learnMore": "Learn More",
     "modalTitle": "Try EspaLuz Free Trial",
     "subTitle": "🚀 Subscribe to EspaLuz Family!",
-    "contactCount": "QR · PDF · Portfolio",
+    "contactCount": "Portfolio · PDF · YouTube · Telegram",
     "f9": "Your week: the days you practised and what your child worked on",
     "f10": "She notices how you feel and adapts her tone"
   },
@@ -503,5 +505,20 @@
     "buy": "Suscribirme con Google Play / Subscribe with Google Play",
     "fail": "No se completó. No se cobró nada extra. / It did not complete. Nothing extra was charged.",
     "cancel": "Cancela cuando quieras en Google Play. / Cancel any time in Google Play."
+  },
+  "lab": {
+    "tag": "AIdeazz AI Lab",
+    "title": "How EspaLuz is built",
+    "sub": "Memory · Warmth · Reliability",
+    "intro": "EspaLuz is a personal AI companion for families making a life in Spanish. AIdeazz AI Lab designs, builds and runs it every day.",
+    "l1Lead": "A companion that knows your family.",
+    "l1": "She remembers who is who, each person's level and what you are working on, on WhatsApp, Telegram and the web, so every conversation picks up where the last one ended.",
+    "l2Lead": "Warm, patient, never robotic.",
+    "l2": "She answers in Spanish and English at each person's pace: as Pere and Titi for a child, as a calm, practical guide for an adult.",
+    "l3Lead": "More than one AI behind every answer.",
+    "l3": "Several leading AI models stand ready. If one is down, the next one answers, so your family is never left waiting.",
+    "l4Lead": "Only what is true today.",
+    "l4": "Everything on this page is something EspaLuz already does.",
+    "partners": "Partners and investors:"
   }
 }
