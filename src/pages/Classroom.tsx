@@ -777,7 +777,7 @@ const Classroom = () => {
       {turns.length === 0 ? (
         <div className="flex flex-wrap items-center justify-center gap-4">
         {resumable && (
-          <Button size="lg" className="w-full rounded-full text-2xl h-20 px-10 shadow-xl bg-emerald-500 hover:bg-emerald-600" disabled={busy || loading}
+          <Button size="lg" className="w-full max-w-md rounded-full text-xl h-auto min-h-16 py-3 px-6 whitespace-normal leading-tight shadow-xl bg-emerald-500 hover:bg-emerald-600" disabled={busy || loading}
             onClick={() => resumeLesson(resumable)}>
             ▶ Seguir la clase / Continue the class
           </Button>
@@ -797,9 +797,10 @@ const Classroom = () => {
                 setGreeting(true);
               });
             });
-            talk("¡Hola Pere y Titi! Quiero empezar la clase. / Hello Pere and Titi! I want to start the class.", false);
+            // 13 Nov 2026 (Elena: "the two buttons look duplicated"): free talk now opens as free talk, the class as a class.
+            talk("¡Hola Pere y Titi! Quiero hablar y jugar con ustedes. / Hello Pere and Titi! I want to talk and play with you.", false);
           }}>
-          <Play className="w-8 h-8 mr-2" /> ¡Empezar! / Start!
+          <Play className="w-8 h-8 mr-2 shrink-0" /><span className="flex flex-col leading-tight"><span>¡Empezar! / Start!</span><span className="text-sm font-normal opacity-90">Charla y juegos · Talk and play</span></span>
         </Button>
         <Button size="lg" variant="secondary" className="rounded-full text-2xl h-20 px-10 shadow-xl" disabled={busy || loading}
           onClick={() => {
@@ -808,7 +809,7 @@ const Classroom = () => {
             greetingDone.current = opening ? mentoraSay(opening) : Promise.resolve();
             talk("¡Hola Pere y Titi! Quiero empezar la clase. / Hello Pere and Titi! I want to start the class.", false);
           }}>
-          📚 ¡Clase! / Class!
+          <span className="flex flex-col leading-tight"><span>📚 ¡Clase! / Class!</span><span className="text-sm font-normal opacity-90">Leer, escribir, contar · Read, write, count</span></span>
         </Button>
         </div>
       ) : (
