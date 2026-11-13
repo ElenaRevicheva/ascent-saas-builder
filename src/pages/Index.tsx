@@ -909,41 +909,24 @@ const Index = () => {
 
           <div className="space-y-4">
             <div className="space-y-4">
-<Part tag={t("creator.role")} name={t("creator.name")}>              <div className="rounded-2xl border border-border bg-card p-6" style={{ boxShadow: "var(--shadow-card)" }}>
-                <p className="text-sm font-semibold text-primary">{t("creator.role")}</p>
-                <h3 className="mt-1 text-2xl text-foreground">{t("creator.name")}</h3>
-                <p className="mt-3 leading-relaxed text-muted-foreground">{t("creator.intro")}</p>
-              </div></Part>
-
-<Part className="border-l-4" tag={t("creator.eyebrow")} name={t("creator.journeyTitle")}>
-                
-                <p className="mt-2 text-muted-foreground">{t("creator.journeyIntro")}</p>
-                <ul className="mt-5 space-y-5">
-                  <li className="flex items-start gap-3">
-                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary" aria-hidden><Briefcase className="h-5 w-5" /></span>
-                    <p className="leading-relaxed text-foreground">{t("creator.b1")}</p>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary" aria-hidden><Plane className="h-5 w-5" /></span>
-                    <div className="leading-relaxed text-foreground">
-                      <p>{t("creator.b2")}</p>
-                      <ul className="my-2 ml-5 list-disc space-y-1 text-muted-foreground">
-                        <li>{t("creator.b2a")}</li>
-                        <li>{t("creator.b2b")}</li>
-                        <li>{t("creator.b2c")}</li>
-                      </ul>
-                      <p className="font-medium">{t("creator.b2end")}</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary" aria-hidden><Lightbulb className="h-5 w-5" /></span>
-                    <div className="space-y-2 leading-relaxed text-foreground">
-                      <p><span className="font-semibold">{t("creator.b3lead")}</span> {t("creator.b3")}</p>
-                      <p className="text-muted-foreground">{t("creator.b3b")}</p>
-                      <p className="font-medium">{t("creator.b3c")}</p>
-                    </div>
-                  </li>
+{/* 13 Nov 2026 (Elena): one card, not two. Credentials first, the origin with dignity, then what it means for a family.
+    Approved text; no hardship framing, only claims that are live today. */}
+<Part className="border-l-4" tag={t("creator.eyebrow")} name={t("creator.name")}>
+                <p className="mt-1 text-sm font-semibold leading-snug text-primary">{t("creator.role")}</p>
+                <div className="mt-4 space-y-3 leading-relaxed text-foreground">
+                  <p>{t("creator.story1")}</p>
+                  <p>{t("creator.story2")}</p>
+                </div>
+                <p className="mt-6 font-semibold text-foreground">{t("creator.meansTitle")}</p>
+                <ul className="mt-3 space-y-4">
+                  {([[Lightbulb, "m1"], [Shield, "m2"], [Heart, "m3"]] as const).map(([Icon, k]) => (
+                    <li key={k} className="flex items-start gap-3">
+                      <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary" aria-hidden><Icon className="h-5 w-5" /></span>
+                      <p className="leading-relaxed text-foreground"><span className="font-semibold">{t(`creator.${k}Lead`)}</span> {t(`creator.${k}`)}</p>
+                    </li>
+                  ))}
                 </ul>
+                <p className="mt-6 font-medium leading-relaxed text-foreground">{t("creator.closing")}</p>
               </Part>
             </div>
 
