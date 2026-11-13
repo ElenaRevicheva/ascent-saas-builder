@@ -27,7 +27,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap, Briefcase, Plane, Lightbulb } from "lucide-react";
+import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap, Briefcase, Plane, Lightbulb, MessageCircle, PenLine, Camera, Video, Mic, MapPin, Compass, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { feedbackSchema } from "@/lib/validations";
@@ -710,178 +710,180 @@ const Index = () => {
       {/* EspaLuz Detailed Description Section */}
       <section id="life" className="container mx-auto scroll-mt-20 px-4 py-16 bg-white/30 backdrop-blur-[2px] border border-white/50 rounded-3xl shadow-[0_24px_60px_-30px_rgba(91,63,209,.35)]">
         <div className="text-center mb-8">
+          {/* 13 Nov 2026 (Elena): "overwhelmed with emojis, toyish". Chat emojis -> the brand globe + palette icon chips. */}
           <h2 className="text-4xl font-bold text-foreground mb-6">
+            <img src="/espaluz-icon.svg?v=el4" alt="" aria-hidden className="mr-3 inline-block h-11 w-11 align-[-0.2em]" />
             {t("lp.lifeTitle")}
           </h2>
         </div>
 
         <div className="max-w-4xl mx-auto space-y-4">
           <Part tag={t("tree.lifeTag")} name={t("tree.lifePart")} count={t("tree.topics", { n: 11 })}>
-            <Item group="life" defaultOpen title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l1")}</h3>}>
+            <Item group="life" defaultOpen title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><MessageCircle className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l1")}</h3></span>}>
             
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
-                <span className="text-xl">🎤💬</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l1a")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">👧🧒</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l1b")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">🔊📖</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l1c")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">👩‍👩‍👦</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l1d")}</span>
               </p>
             </div>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l2")}</h3>}>
+            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><PenLine className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l2")}</h3></span>}>
             
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
-                <span className="text-xl">💡</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l2a")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">📚</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l2b")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">🏥➡️</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l2c")}</span>
               </p>
             </div>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l3")}</h3>}>
+            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><Camera className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l3")}</h3></span>}>
             
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
-                <span className="text-xl">🍴</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l3a")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">🔍</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l3b")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">🌟</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l3c")}</span>
               </p>
             </div>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l4")}</h3>}>
+            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><Heart className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l4")}</h3></span>}>
             
             <h4 className="text-xl font-semibold text-pink-600 mb-3">{t("lp.l4h")}</h4>
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
-                <span className="text-xl">😰</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l4a")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">👶</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l4b")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">🏡</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l4c")}</span>
               </p>
             </div>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l5")}</h3>}>
+            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><Users className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l5")}</h3></span>}>
             
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
-                <span className="text-xl">🧑‍💼</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l5a")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">👵👦</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l5b")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">🤝</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l5c")}</span>
               </p>
             </div>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l6")}</h3>}>
+            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><Video className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l6")}</h3></span>}>
             
             <p className="flex items-start gap-2 text-gray-700">
-              <span className="text-xl">🎬</span>
+              <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
               <span>{t("lp.l6a")}</span>
             </p>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l7")}</h3>}>
+            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><Mic className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l7")}</h3></span>}>
             
             <h4 className="text-xl font-semibold text-purple-600 mb-3">{t("lp.l7h")}</h4>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l8")}</h3>}>
+            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><MapPin className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l8")}</h3></span>}>
             
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
-                <span className="text-xl">🇲🇽</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l8a")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">🇨🇴</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l8b")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">🌍</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l8c")}</span>
               </p>
             </div>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l9")}</h3>}>
+            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><Compass className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l9")}</h3></span>}>
             
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
-                <span className="text-xl">📍</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l9a")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">🏫</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l9b")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">👋</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l9c")}</span>
               </p>
             </div>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l10")}</h3>}>
+            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><Zap className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l10")}</h3></span>}>
             
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
-                <span className="text-xl">⚡</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l10a")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">📱</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l10b")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">🌐</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l10c")}</span>
               </p>
             </div>
           </Item>
-            <Item group="life" title={<h3 className="text-lg font-semibold text-foreground">{t("lp.l11")}</h3>}>
+            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><RefreshCw className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l11")}</h3></span>}>
             
             <div className="space-y-3 text-gray-700">
               <p className="flex items-start gap-2">
-                <span className="text-xl">🧠</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l11a")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">📈</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l11b")}</span>
               </p>
               <p className="flex items-start gap-2">
-                <span className="text-xl">🌟</span>
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
                 <span>{t("lp.l11c")}</span>
               </p>
             </div>
