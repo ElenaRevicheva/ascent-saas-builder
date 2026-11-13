@@ -259,6 +259,14 @@ const Classroom = () => {
   const [stars, setStars] = useState(0);
   const [greeting, setGreeting] = useState(false);
   const [reward, setReward] = useState(0); // >0 = Titi's star dance on screen (the star count it celebrates)
+  // 13 Nov 2026 (Elena: "children want fun, not effort - the progress must move and be seen"): the class path she can SEE
+  // (unit of 12, today's corners lighting up, "¡Clase terminada!"), and a photo earns a star once a lesson - after that the
+  // heroes turn photos into today's reading and the star comes for that try.
+  type ClassPath = { unit: number; of: number; theme: string; step: number; steps: number };
+  const [classPath, setClassPath] = useState<ClassPath | null>(null);
+  const [classDone, setClassDone] = useState(false);
+  const classDoneShown = useRef(false);
+  const photoStarGiven = useRef(false);
   const [photo, setPhoto] = useState<string | null>(null); // the photo she is showing, on screen for that turn only
   const photoInput = useRef<HTMLInputElement | null>(null);
   const galleryInput = useRef<HTMLInputElement | null>(null);
@@ -540,6 +548,7 @@ const Classroom = () => {
       if (heard !== childSays) setSaid({ who: speaker, text: heard });
       setTurns((t) => [...t, { role: "user", content: heard, who: speaker }, { role: "assistant", content: text }]);
       if (classMode.current && Array.isArray(data?.trace) && data.trace.length) setTraceTargets(data.trace);
+      if (classMode.current && data?.classPath && typeof data.classPath.unit === "number") setClassPath(data.classPath as ClassPath);
       setReply(stripShotTags(text));
       if (greetingDone.current) { await greetingDone.current; greetingDone.current = null; setGreeting(false); } // let the hello finish
       const spoken = heroLines(text);
@@ -559,6 +568,15 @@ const Classroom = () => {
       if (skipHeroes.current) { skipHeroes.current = false; return; }
       await speak(stripShotTags(text), spoken);
       if (countsAsStar && !parent && (stars + 1) % 5 === 0 && !hush.current) await celebrate(stars + 1);
+      // The last corner (calm and goodbye) reached in a class: one clear "class finished" moment, once a lesson.
+      const cp = data?.classPath as ClassPath | undefined;
+      if (classMode.current && cp && cp.step >= cp.steps - 1 && !classDoneShown.current && !hush.current && !parent) {
+        classDoneShown.current = true;
+        setClassDone(true);
+        setStars((s) => s + 1);
+        await browserSay(`¡Clase terminada! Unidad ${cp.unit}. ¡Muy bien! / Class finished! Unit ${cp.unit}. Well done!`, "titi");
+        setTimeout(() => setClassDone(false), 6000);
+      }
       const childTurns = turns.filter((t) => t.role === "user" && (t.who ?? "child") === "child").length + (parent ? 0 : 1);
       if (!hush.current && !askedQuiet) {
         if (!visits.current.close && childTurns >= 2 && SAYS_BYE.test(text)) {
@@ -636,7 +654,9 @@ const Classroom = () => {
       const { b64, url } = await shrinkPhoto(file);
       setPhoto(url);
       usedFeatures.current.add("photo");
-      await talk("📷 ¡Mira mi foto! / Look at my photo!", true, b64);
+      const firstPhoto = !photoStarGiven.current; // one star for photos per lesson; the next star is for trying today's sounds
+      photoStarGiven.current = true;
+      await talk("📷 ¡Mira mi foto! / Look at my photo!", firstPhoto, b64);
     } catch {
       toast.error("No pude abrir la foto. / I could not open the photo.");
     } finally {
@@ -824,6 +844,23 @@ const Classroom = () => {
             onTraced={(text) => { if (!busy) talk(`✏️ Tracé "${text}" / I traced "${text}"`, true); }}
             onPainted={(text) => { if (!busy) talk(text, true); }}
           />
+        )}
+        {classMode.current && classPath && (
+          <div className="mx-auto mb-3 w-full max-w-md rounded-2xl bg-white/90 px-4 py-2 text-center shadow-lg">
+            <p className="text-sm font-bold text-gray-900">📚 Unidad {classPath.unit} de {classPath.of} · {classPath.theme}</p>
+            <div className="mt-1 flex items-center justify-center gap-2" aria-label={`Corner ${Math.min(classPath.step + 1, classPath.steps)} of ${classPath.steps}`}>
+              {["👋", "📖", "💬", "🔢", "📚", "🌙"].slice(0, classPath.steps).map((icon, k) => (
+                <span key={k} className={`flex h-8 w-8 items-center justify-center rounded-full text-base transition
+                  ${k < classPath.step ? "bg-emerald-400" : k === classPath.step ? "bg-amber-300 ring-2 ring-amber-500 scale-110" : "bg-gray-200 opacity-60"}`}>{icon}</span>
+              ))}
+            </div>
+          </div>
+        )}
+        {classDone && (
+          <div className="fixed inset-x-0 top-1/3 z-40 mx-auto w-fit rounded-3xl bg-emerald-500 px-8 py-6 text-center text-white shadow-2xl">
+            <p className="text-3xl font-bold">🎉 ¡Clase terminada!</p>
+            <p className="text-lg">Class finished! ⭐ +1</p>
+          </div>
         )}
         {paused && (
           <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-black/70 px-6 text-center">

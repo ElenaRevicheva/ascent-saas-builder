@@ -940,13 +940,21 @@ function kidsPractised(hist: any[], classUnit: number): boolean {
   const re = kidsSyllableLine(classUnit);
   return hist.some((m: any) => m?.role === 'assistant' && re.test(String(m?.content ?? '')));
 }
-function kidsTurnContext(kids: any, message: string, avoid: string[] = [], classUnit = -1, resume = 0): string {
+// 13 Nov 2026 (Elena: "children want fun, not effort - progress must be real"): which lesson step this turn is. One place,
+// used by the prompt AND returned to the page (the visible class path). In a CLASS a photo does not move the lesson on
+// either: the heroes turn it into today's reading, and the corner waits for her.
+function kidsTurnAt(kids: any, classUnit = -1): number {
   const hist = Array.isArray(kids?.history) ? kids.history : [];
   const raw = Number.isInteger(kids?.turn) ? kids.turn : Math.floor(hist.length / 2);
   // The page counts every exchange; a turn spent answering her question does not move the lesson on.
   const held = hist.filter((m: any, i: number) => m?.role === "user" && kids?.speakers?.[i]?.speaker !== "parent" &&
-    KID_QUESTION.test(String(m?.content ?? ""))).length;
-  const turn = raw > 0 ? Math.max(1, raw - held) : 0;
+    (KID_QUESTION.test(String(m?.content ?? "")) || (classUnit >= 0 && String(m?.content ?? "").startsWith("📷")))).length;
+  return raw > 0 ? Math.max(1, raw - held) : 0;
+}
+
+function kidsTurnContext(kids: any, message: string, avoid: string[] = [], classUnit = -1, resume = 0): string {
+  const hist = Array.isArray(kids?.history) ? kids.history : [];
+  const turn = kidsTurnAt(kids, classUnit);
   const weekStory = KIDS_STORIES[isoWeek(new Date()) % KIDS_STORIES.length];
   // A story about a topic she said she does not want is dropped (and its step becomes free talk on her topic).
   const storyWords = kidWords(weekStory);
@@ -1935,7 +1943,11 @@ ${asked}` : ''}`;
         ? `\nSHE IS SHOWING YOU A PHOTO: ${photoDescription}\nTalk about what is in it with real curiosity first (name ` +
           "the thing and its colour in Spanish and English), then build this turn's sentence from it. Say only what the " +
           "description says - never add what a cup holds, what a toy can do or who made it; if you want to know, ASK her " +
-          "(\"¿Qué hay en la taza? / What is in the cup?\"). Never comment on a person in it."
+          "(\"¿Qué hay en la taza? / What is in the cup?\"). Never comment on a person in it." +
+          // 13 Nov 2026: in a CLASS the photo is a bridge to today's reading, not a way round it.
+          (classUnit >= 0 ? `\nTHIS IS A CLASS: after ONE line about the photo, turn it into today's reading: ask her to find or say ONE ` +
+            `thing in the photo that has one of today's sounds (${KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length].trace.join(', ')}), ` +
+            `or to say one of them aloud while looking at it. That small try is what earns her star - say so warmly. Do not start a new corner of the class this turn.` : '')
         : "\nShe tried to show you a photo but you could not see it: say so kindly in one line and ask her to tell you what is in it.") : '');
     const claudeRequest = kids
       ? { max_tokens: 500, temperature: 0.7, system: kidsSystem,
@@ -2120,6 +2132,11 @@ ${asked}` : ''}`;
       provider,
       linked: !!userId, // a bot uses this to tell a linked family (memory + server stars) from a guest
       classUnit: classUnit >= 0 ? classUnit + 1 : null, // 1-12 in a class; a guest's bot keeps its own count
+      // 13 Nov 2026: the visible class path on the page - unit of 12, theme, and which corner of today's class she is in.
+      ...(classUnit >= 0 && kids ? { classPath: { unit: classUnit + 1, of: KIDS_CLASS_UNITS.length,
+        theme: KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length].theme,
+        step: Math.min(kidsTurnAt(kids, classUnit) + resume, kidsClassSteps(KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length]).length),
+        steps: kidsClassSteps(KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length]).length } } : {}),
       // 1 Nov 2026: what the web tracing pad shows in a class (the unit's letters / syllables / words, in order).
       trace: classUnit >= 0 ? KIDS_CLASS_UNITS[classUnit].trace : null,
       userMessage: message, // a photo turn comes back as its description, so the page's history knows what was shown

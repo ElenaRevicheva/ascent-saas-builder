@@ -69,13 +69,18 @@ const STARTER = /quiero empezar la clase|i want to start the class/i;
  *  button). Pressing start, reloading or re-entering no longer moves the course, and the number never changes mid-day. */
 export function kidsClassDaysDone(rows: { at: number; said: string }[], nowMs: number): number {
   const today = panamaDay(nowMs);
-  const perDay = new Map<string, number>();
+  // 13 Nov 2026 (Elena: "she likes just sending photos - progress must be earned"): a day counts only with 3+ messages of
+  // which at least 2 are her own words or tracing (not photos) - she reached the reading corner, not just showed pictures.
+  const perDay = new Map<string, { all: number; real: number }>();
   for (const r of rows) {
     const day = panamaDay(r.at);
     if (day === today || !r.said.trim() || STARTER.test(r.said)) continue;
-    perDay.set(day, (perDay.get(day) ?? 0) + 1);
+    const d = perDay.get(day) ?? { all: 0, real: 0 };
+    d.all += 1;
+    if (!r.said.trim().startsWith('📷')) d.real += 1;
+    perDay.set(day, d);
   }
-  return [...perDay.values()].filter((n) => n >= 3).length;
+  return [...perDay.values()].filter((d) => d.all >= 3 && d.real >= 2).length;
 }
 
 export const KIDS_RECENT_MS = 20 * 3600000;
