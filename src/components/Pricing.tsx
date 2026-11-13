@@ -223,8 +223,9 @@ const Pricing = () => {
                        <li key={featureIndex} className="flex items-start gap-3">
                          <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                          {feature.link === "/dashboard#chat" ? (
-                           <Link to="/dashboard" state={{ scrollToChat: true }} className="w-full" style={{ textDecoration: 'none' }}>
-                             <Button variant="hero" size="lg" className="w-full">
+                           <Link to="/dashboard" state={{ scrollToChat: true }} className="w-full min-w-0" style={{ textDecoration: 'none' }}>
+                             {/* 13 Nov 2026 (Elena's phone): the button's default nowrap pushed the label off both edges. */}
+                             <Button variant="hero" size="lg" className="h-auto w-full whitespace-normal py-3 text-center leading-snug">
                                {feature.label}
                              </Button>
                            </Link>
