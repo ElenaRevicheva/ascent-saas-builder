@@ -951,22 +951,8 @@ const Index = () => {
                 ))}
               </ul>
             </div>
-            {/* AIPA Demo Video */}
-            <div className="mb-8">
-              <div className="max-w-4xl mx-auto">
-                <h4 className="text-xl font-semibold text-foreground mb-4">{t("lp.aipaVideo")}</h4>
-                <div className="relative rounded-lg overflow-hidden shadow-lg bg-gradient-to-r from-purple-100 to-orange-100 p-1">
-                  <video 
-                    controls 
-                    className="w-full h-auto rounded-md bg-black"
-                    poster=""
-                  >
-                    <source src="/videos/demo2.mp4" type="video/mp4" />
-                    {t("lp.noVideo")}
-                  </video>
-                </div>
-              </div>
-            </div>
+            {/* 13 Nov 2026 (Elena): the AIPA demo video is off the page (old-fashioned). The file stays in public/videos and is
+                backed up in creatives/aipa-demo-video-20261113 + OneDrive. */}
             
             <p className="text-center text-sm text-muted-foreground">
               {t("lab.partners")}{" "}
@@ -991,15 +977,10 @@ const Index = () => {
                   className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-primary px-5 py-3 font-semibold text-primary-foreground transition hover:opacity-95">
                   {t("creator.pdf")}
                 </a>
-                <a href="https://aideazz.xyz/portfolio" target="_blank" rel="noopener noreferrer"
-                  className="mt-3 inline-flex w-full items-center justify-center rounded-full border border-primary px-5 py-3 font-semibold text-primary transition hover:bg-primary/5">
-                  {t("creator.portfolio")}
-                </a>
-                {/* 13 Nov 2026 (Elena): one contact place - these three came from the footer's duplicate "Contact & Info" card. */}
-                <div className="mt-4 grid grid-cols-3 gap-2 text-sm font-semibold">
+                {/* 13 Nov 2026 (Elena): one contact place - YouTube + AIdeazz (= the AI Ops Wiki, her call) came from the footer's duplicate "Contact & Info" card. */}
+                <div className="mt-4 grid grid-cols-2 gap-2 text-sm font-semibold">
                   <a href="https://www.youtube.com/@AIdeazz" target="_blank" rel="noopener noreferrer" className="rounded-full border border-border px-3 py-2 text-foreground transition hover:border-primary">YouTube</a>
-                  <a href="https://t.me/EspaLuz" target="_blank" rel="noopener noreferrer" className="rounded-full border border-border px-3 py-2 text-foreground transition hover:border-primary">Telegram</a>
-                  <a href="https://www.aideazz.xyz" target="_blank" rel="noopener noreferrer" className="rounded-full border border-border px-3 py-2 text-foreground transition hover:border-primary">AIdeazz</a>
+                  <a href="https://aideazz.xyz/ai-ops-wiki.html" target="_blank" rel="noopener noreferrer" className="rounded-full border border-border px-3 py-2 text-foreground transition hover:border-primary">AIdeazz</a>
                 </div>
               </div>
 
