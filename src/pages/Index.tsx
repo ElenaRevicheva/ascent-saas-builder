@@ -974,10 +974,10 @@ const Index = () => {
                   className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-primary px-5 py-3 font-semibold text-primary-foreground transition hover:opacity-95">
                   {t("creator.pdf")}
                 </a>
-                {/* 13 Nov 2026 (Elena): one contact place - YouTube + AIdeazz (= the AI Ops Wiki, her call) came from the footer's duplicate "Contact & Info" card. */}
+                {/* 13 Nov 2026 (Elena): one contact place - YouTube + AIdeazz (= her SOP AI Ops page with all agents; Spanish page for es) came from the footer's duplicate "Contact & Info" card. */}
                 <div className="mt-4 grid grid-cols-2 gap-2 text-sm font-semibold">
                   <a href="https://www.youtube.com/@AIdeazz" target="_blank" rel="noopener noreferrer" className="rounded-full border border-border px-3 py-2 text-foreground transition hover:border-primary">YouTube</a>
-                  <a href="https://aideazz.xyz/ai-ops-wiki.html" target="_blank" rel="noopener noreferrer" className="rounded-full border border-border px-3 py-2 text-foreground transition hover:border-primary">AIdeazz</a>
+                  <a href={i18n.language?.startsWith("es") ? "https://aideazz.xyz/sop-ai-ops-es.html" : "https://aideazz.xyz/sop-ai-ops.html"} target="_blank" rel="noopener noreferrer" className="rounded-full border border-border px-3 py-2 text-foreground transition hover:border-primary">AIdeazz</a>
                 </div>
               </div>
 
