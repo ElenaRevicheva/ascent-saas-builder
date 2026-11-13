@@ -954,10 +954,7 @@ const Index = () => {
             {/* 13 Nov 2026 (Elena): the AIPA demo video is off the page (old-fashioned). The file stays in public/videos and is
                 backed up in creatives/aipa-demo-video-20261113 + OneDrive. */}
             
-            <p className="text-center text-sm text-muted-foreground">
-              {t("lab.partners")}{" "}
-              <a href="https://www.aideazz.xyz" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">aideazz.xyz</a>
-            </p>
+            {/* 13 Nov 2026 (Elena): no "Partners and investors: aideazz.xyz" line - the main site is not current. */}
           </Part>
 <Part tag={t("tree.contactTag")} name={t("creator.connectTitle")} count={t("lp.contactCount")}>            <aside className="space-y-6">
               <div className="rounded-2xl border border-border bg-card p-6 text-center" style={{ boxShadow: "var(--shadow-card)" }}>
