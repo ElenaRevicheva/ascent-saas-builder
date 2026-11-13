@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { FeatureGate } from "@/components/FeatureGate";
 import { ReportReply } from "@/components/ReportReply";
 import TracePadRu from "@/components/kids-ru/TracePadRu";
+import { keepLine } from "@/lib/roadLessons";
 import { shrinkPhoto } from "@/lib/shrinkPhoto";
 
 // Мишка Медок & Лиса Алиса - the Russian classroom (11 Nov 2026, Elena: "a classroom for Russian, in parallel").
@@ -190,6 +191,7 @@ const ClassroomRu = () => {
   const chunks = useRef<Blob[]>([]);
   const audio = useRef<HTMLAudioElement | null>(null);
   const hush = useRef(false);
+  const roadId = useRef(`ru-${Date.now()}`); // 13 Nov 2026 car mode: this lesson's lines travel to /road (lib/roadLessons)
   const [mentora, setMentora] = useState<string | null>(null); // the EspaLuz clip on screen, with sound
   const mentoraEnded = useRef<(() => void) | null>(null);
   const mentoraVideo = useRef<HTMLVideoElement | null>(null);
@@ -253,6 +255,7 @@ const ClassroomRu = () => {
       next = i + 1 < spoken.length ? voiceFor(spoken[i + 1]) : null;
       setShot(i);
       setLastWho(spoken[i].who);
+      void keepLine(roadId.current, "ru", { text: [spoken[i].ru, spoken[i].en].filter(Boolean).join("\n"), who: spoken[i].who }, url);
       if (url) await play(url);
       else await browserSay(spoken[i].ru, spoken[i].who, spoken[i].en);
       if (hush.current) break;

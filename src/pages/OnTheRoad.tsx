@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import TracePad from '@/components/kids/TracePad';
+import RoadPlayer from '@/components/RoadPlayer';
 import { useOnline } from '@/lib/carMode';
+import { tidyRoad, type RoadLesson } from '@/lib/roadLessons';
 
 /*
  * 13 Nov 2026 - "En el camino · On the road" (car mode step 1). What works with no signal, and nothing it cannot keep:
  * the heroes (clips kept on the tablet by public/sw.js), and paint / trace / music / program / games (TracePad works
- * on the tablet alone). Lessons heard at home come in step 2. Honest about what needs the internet.
+ * on the tablet alone), and the classroom lessons the tablet already played (steps 2-3: lib/roadLessons + RoadPlayer).
  */
 const TARGETS = ['a', 'e', 'i', 'o', 'u'];
 
@@ -14,6 +16,9 @@ export default function OnTheRoad() {
   const online = useOnline();
   const [pad, setPad] = useState(false);
   const [clip, setClip] = useState('/heroes/duo-hello.mp4');
+  const [lessons, setLessons] = useState<RoadLesson[]>([]);
+  const [playing, setPlaying] = useState<RoadLesson | null>(null);
+  useEffect(() => { tidyRoad().then(setLessons); }, []);
   const cheer = () => setClip((c) => (c.endsWith('titi-dance.mp4') ? '/heroes/duo-hello.mp4' : '/heroes/titi-dance.mp4'));
 
   return (
@@ -38,10 +43,27 @@ export default function OnTheRoad() {
           </button>
         )}
 
-        <section className="rounded-2xl border border-border p-4 text-sm text-muted-foreground">
-          <p className="font-semibold text-foreground">🎧 Lecciones para el camino · Lessons for the road</p>
-          <p>Soon: the lessons your family heard at home will wait here, ready with no signal.</p>
-        </section>
+        {playing ? (
+          <RoadPlayer lesson={playing} onDone={() => { setPlaying(null); tidyRoad().then(setLessons); }} />
+        ) : (
+          <section className="space-y-2 rounded-2xl border border-border p-4 text-sm text-muted-foreground">
+            <p className="font-semibold text-foreground">🎧 Lecciones para el camino · Lessons for the road</p>
+            {lessons.length === 0 ? (
+              <p>The lessons your family hears in the classroom at home wait here, ready with no signal. Open a class at home first.</p>
+            ) : (
+              <>
+                <p>Listen, repeat, hear yourself - no reading, no internet. Each lesson stays a week or 3 road plays, then makes room for new ones.</p>
+                {lessons.map((l) => (
+                  <button key={l.id} type="button" onClick={() => setPlaying(l)}
+                    className="flex w-full items-center justify-between gap-3 rounded-xl border border-border bg-background px-4 py-3 text-left">
+                    <span className="truncate text-foreground">{l.lang === 'ru' ? '🐻🦊' : '🦥🐒'} {l.title}</span>
+                    <span className="shrink-0 text-xs">{new Date(l.at).toLocaleDateString()} · {l.lines.length} ▶</span>
+                  </button>
+                ))}
+              </>
+            )}
+          </section>
+        )}
 
         {online && (
           <div className="text-center">

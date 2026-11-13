@@ -9,6 +9,7 @@ import { FeatureGate } from "@/components/FeatureGate";
 import TracePad from "@/components/kids/TracePad";
 import { shrinkPhoto } from "@/lib/shrinkPhoto";
 import { ReportReply } from "@/components/ReportReply";
+import { keepLine } from "@/lib/roadLessons";
 
 // Pere + Titi's classroom (22 Oct 2026): the dashboard chat's voice loop (voice-to-text -> espaluz-chat -> generate-voice)
 // in kids mode, with the heroes' clips as the avatar. 28 Oct 2026 (Elena: the picture must match what the line says, and
@@ -403,6 +404,7 @@ const Classroom = () => {
   // talk - one tap silences them and she speaks.
   const hush = useRef(false);
   const [speaking, setSpeaking] = useState(false);
+  const roadId = useRef(`es-${Date.now()}`); // 13 Nov 2026 car mode: this lesson's lines travel to /road (lib/roadLessons)
   const speak = async (_text: string, spoken: Line[]) => {
     hush.current = false;
     setSpeaking(true);
@@ -412,6 +414,7 @@ const Classroom = () => {
       if (hush.current) break;
       next = i + 1 < spoken.length ? voiceFor(spoken[i + 1].text, spoken[i + 1].who) : null;
       setShot(i);
+      void keepLine(roadId.current, "es", { text: spoken[i].text, who: spoken[i].who }, url);
       if (url) await play(url);
       else await browserSay(spoken[i].text, spoken[i].who);
       if (hush.current) break;
