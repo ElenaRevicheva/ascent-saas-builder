@@ -3,7 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Link, useNavigate } from "react-router-dom";
 import { queryClient } from "@/lib/queryClient";
 import { trackDoorClicks, trackRoute } from "@/lib/track";
 import Index from "./pages/Index";
@@ -20,6 +20,26 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Classroom from "./pages/Classroom";
 import ClassroomRu from "./pages/ClassroomRu";
+import OnTheRoad from "./pages/OnTheRoad";
+import { useOnline } from "@/lib/carMode";
+
+// 13 Nov 2026 - car mode: an app that STARTS with no signal goes to "On the road"; if the signal drops mid-use, a small
+// banner offers it instead of yanking a child out of what she is doing.
+const RoadGate = () => {
+  const online = useOnline();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (typeof navigator !== 'undefined' && !navigator.onLine && pathname !== '/road') navigate('/road', { replace: true });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  if (online || pathname === '/road') return null;
+  return (
+    <div className="fixed inset-x-0 bottom-0 z-50 flex items-center justify-center gap-3 bg-foreground px-4 py-3 text-sm text-background">
+      <span>Sin señal · No signal</span>
+      <Link to="/road" className="rounded-full bg-background px-3 py-1 font-semibold text-foreground">🚗 On the road</Link>
+    </div>
+  );
+};
 
 trackDoorClicks();
 
@@ -53,6 +73,7 @@ const App = () => (
       <Sonner />
       <RouteCounter />
       <ScrollToTop />
+      <RoadGate />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/auth" element={<Auth />} />
@@ -67,6 +88,7 @@ const App = () => (
         <Route path="/admin" element={<Admin />} />
         <Route path="/classroom" element={<Classroom />} />
         <Route path="/classroom-ru" element={<ClassroomRu />} />
+        <Route path="/road" element={<OnTheRoad />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
