@@ -240,6 +240,22 @@ const Classroom = () => {
   const idle = () => { setLines([]); setShot(0); };
   const [busy, setBusy] = useState(false);
   const [recording, setRecording] = useState(false);
+  // 13 Nov 2026 (Elena, testing as Kira in the Play app: "I need to go out - no button to pause, and when I come back I
+  // want to start exactly where I stopped"): ⏸ Pausa, and the lesson is kept on this device after every turn, so
+  // leaving in ANY way (Pausa, back button, closing the app) can be continued for 12 hours.
+  const [paused, setPaused] = useState(false);
+  const pausedNow = useRef(false); // read inside speak(): a reply that arrives during the pause is not spoken over it
+  const missedDuringPause = useRef(false); // ...and is spoken in full on Continue
+  type SavedLesson = { turns: Turn[]; classMode: boolean; trace: string[]; at: number };
+  const [resumable, setResumable] = useState<SavedLesson | null>(null);
+  const lessonKey = user ? `classroom-session-${user.id}` : "";
+  useEffect(() => {
+    if (!lessonKey) return;
+    try {
+      const s = JSON.parse(localStorage.getItem(lessonKey) || "null") as SavedLesson | null;
+      if (s && Array.isArray(s.turns) && s.turns.length && Date.now() - s.at < 12 * 3600e3) setResumable(s);
+    } catch { /* nothing saved */ }
+  }, [lessonKey]);
   const [stars, setStars] = useState(0);
   const [greeting, setGreeting] = useState(false);
   const [reward, setReward] = useState(0); // >0 = Titi's star dance on screen (the star count it celebrates)
@@ -406,6 +422,7 @@ const Classroom = () => {
   const [speaking, setSpeaking] = useState(false);
   const roadId = useRef(`es-${Date.now()}`); // 13 Nov 2026 car mode: this lesson's lines travel to /road (lib/roadLessons)
   const speak = async (_text: string, spoken: Line[]) => {
+    if (pausedNow.current) { missedDuringPause.current = true; return; } // ⏸ Pausa: Continue says it then
     hush.current = false;
     setSpeaking(true);
     let next = spoken.length ? voiceFor(spoken[0].text, spoken[0].who) : null;
@@ -455,6 +472,41 @@ const Classroom = () => {
   const [traceTargets, setTraceTargets] = useState<string[]>([]);
   // 2 Nov 2026 (Elena: "Alisa wants to paint little paintings"): the same pad opens on tracing or on 🎨 painting.
   const [pad, setPad] = useState<null | "trace" | "paint">(null);
+  // Every finished turn is kept on this device (see 'paused' above).
+  useEffect(() => {
+    if (!lessonKey || !turns.length) return;
+    try { localStorage.setItem(lessonKey, JSON.stringify({ turns: turns.slice(-30), classMode: classMode.current, trace: traceTargets, at: Date.now() })); }
+    catch { /* storage full: the lesson still runs */ }
+  }, [turns, traceTargets, lessonKey]);
+  const pauseLesson = () => {
+    pausedNow.current = true;
+    hush.current = true;
+    audio.current?.pause();
+    if (typeof window !== "undefined") window.speechSynthesis?.cancel();
+    document.querySelectorAll("video").forEach((v) => v.pause());
+    setPaused(true);
+  };
+  const continueLesson = async () => {
+    pausedNow.current = false;
+    setPaused(false);
+    document.querySelectorAll("video").forEach((v) => { v.play().catch(() => { /* needs a tap */ }); });
+    if (busy) return; // the answer is still on its way and will be spoken when it comes
+    const last = [...turns].reverse().find((t) => t.role === "assistant")?.content ?? "";
+    const spoken = heroLines(last);
+    const say = missedDuringPause.current ? spoken : spoken.slice(-1); // a whole answer she never heard, or the last question
+    missedDuringPause.current = false;
+    if (say.length) { setLines(say); setShot(0); await speak(stripShotTags(last), say); }
+  };
+  const resumeLesson = async (s: SavedLesson) => {
+    setResumable(null);
+    classMode.current = s.classMode;
+    setTraceTargets(s.trace ?? []);
+    setTurns(s.turns);
+    const last = [...s.turns].reverse().find((t) => t.role === "assistant")?.content ?? "";
+    setReply(stripShotTags(last));
+    const spoken = heroLines(last);
+    if (spoken.length) { setLines(spoken.slice(-1)); await speak(stripShotTags(last), spoken.slice(-1)); } // the last question again
+  };
   useEffect(() => {
     padOpen.current = pad !== null;
     if (pad) usedFeatures.current.add(pad === "paint" ? "paint" : "trace");
@@ -724,6 +776,12 @@ const Classroom = () => {
 
       {turns.length === 0 ? (
         <div className="flex flex-wrap items-center justify-center gap-4">
+        {resumable && (
+          <Button size="lg" className="w-full rounded-full text-2xl h-20 px-10 shadow-xl bg-emerald-500 hover:bg-emerald-600" disabled={busy || loading}
+            onClick={() => resumeLesson(resumable)}>
+            ▶ Seguir la clase / Continue the class
+          </Button>
+        )}
         <Button size="lg" className="rounded-full text-2xl h-20 px-10 shadow-xl" disabled={busy || loading}
           onClick={() => {
             classMode.current = false;
@@ -765,7 +823,30 @@ const Classroom = () => {
             onPainted={(text) => { if (!busy) talk(text, true); }}
           />
         )}
+        {paused && (
+          <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-black/70 px-6 text-center">
+            <p className="text-3xl font-bold text-white">⏸ En pausa · Paused</p>
+            <p className="text-lg text-white/90">Tu clase te espera aquí. / Your class waits right here.</p>
+            <Button size="lg" className="w-full max-w-xs rounded-full text-2xl h-16 bg-emerald-500 hover:bg-emerald-600" onClick={continueLesson}>
+              ▶ Seguir / Continue
+            </Button>
+            <Link to="/dashboard" className="w-full max-w-xs rounded-full bg-white px-6 py-4 text-xl font-semibold text-gray-900">
+              🏠 Salir / Leave
+            </Link>
+            <p className="text-sm text-white/80">Al volver: "Seguir la clase". / When you come back: "Continue the class".</p>
+          </div>
+        )}
         <div className="flex flex-wrap items-center justify-center gap-6">
+        <button
+          onClick={pauseLesson}
+          disabled={recording}
+          className={`w-14 h-14 rounded-full shadow-xl flex flex-col items-center justify-center text-white text-xs font-bold transition
+            ${recording ? "bg-gray-400" : "bg-slate-700 hover:bg-slate-800"}`}
+          aria-label="Pause"
+        >
+          <span className="text-xl leading-none">⏸</span>
+          <span>Pausa</span>
+        </button>
         {/* 2 Nov 2026: painting is open in every lesson, not only in a class. */}
         <button
           onClick={() => setPad((p) => (p === "paint" ? null : "paint"))}
