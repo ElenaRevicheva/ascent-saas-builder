@@ -128,7 +128,10 @@ serve(async (req) => {
       const today = new Date().toISOString().slice(0, 10);
       const live = (rows ?? []).filter((r: any) => !r.content?.retired && r.content?.fact !== '[object Object]' && (!r.content?.until || String(r.content.until) >= today));
       // A private note (a worry, money, health) is read only on the number of the person who said it.
-      const visible = live.filter((r: any) => !r.content?.private || (speaker && r.content?.speaker === speaker));
+      // 13 Nov 2026: members may now name themselves on a shared phone (bots _recognize), so a private note is also tied to
+      // the phone it was said on - saying "Soy Ana" on another phone never opens Ana's private notes. Older notes: speaker only.
+      const visible = live.filter((r: any) => !r.content?.private || (speaker && r.content?.speaker === speaker
+        && (!r.content?.number || r.content.number === platformId)));
       if (mode === 'facts_get') {
         const { data: fam } = await db.from('family_members').select('name, role, age, created_at').eq('user_id', userId)
           .eq('is_active', true).order('created_at', { ascending: false });
@@ -170,7 +173,8 @@ serve(async (req) => {
         } else if (known.some((k) => same(k, fact))) continue;
         const until = /^\d{4}-\d{2}-\d{2}$/.test(String(item.until ?? '')) ? String(item.until) : undefined;
         const { error: addError } = await db.from('learning_sessions').insert({ user_id: userId, session_type: 'analytics', source: platform,
-          content: { event: 'family_fact', fact, speaker: speaker || undefined, private: item.private ? true : undefined, until } });
+          content: { event: 'family_fact', fact, speaker: speaker || undefined, private: item.private ? true : undefined,
+            number: item.private ? platformId : undefined, until } });
         if (addError) throw addError;
         known.push(fact);
         added++;
