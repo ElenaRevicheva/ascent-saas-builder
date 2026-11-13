@@ -6,9 +6,32 @@
 // family's row (found by the purchase-token hash that play-verify wrote). Unknown tokens (bought but never linked to an
 // account yet) are logged and acknowledged; play-verify links them when the family opens the app.
 //
-// Secrets: GOOGLE_PLAY_SA_JSON, PLAY_PACKAGE_NAME, PLAY_RTDN_SECRET. Deploy with verify_jwt off (Pub/Sub sends no JWT).
+// Secrets: GOOGLE_PLAY_SA_JSON, PLAY_PACKAGE_NAME, and PLAY_RTDN_PUSH_EMAIL (authenticated push) and/or PLAY_RTDN_SECRET.
+// Deploy with verify_jwt off (Pub/Sub's token is Google's, not Supabase's; this function checks it itself).
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createRemoteJWKSet, jwtVerify } from 'https://esm.sh/jose@5.9.6';
 import { getSubscription, googleToken, isLive, tokenKey } from '../_shared/play.ts';
+
+// 13 Nov 2026: Pub/Sub "authenticated push" - Google signs each push with an OIDC token for a service account we name.
+// Accepted when the signature is Google's, the audience is this function's URL and the email is PLAY_RTDN_PUSH_EMAIL.
+// No secret travels in the URL. The ?secret= path stays as a second door.
+const googleKeys = createRemoteJWKSet(new URL('https://www.googleapis.com/oauth2/v3/certs'));
+async function signedByGoogle(req: Request): Promise<boolean> {
+  const email = Deno.env.get('PLAY_RTDN_PUSH_EMAIL');
+  const auth = req.headers.get('authorization') ?? '';
+  if (!email || !auth.startsWith('Bearer ')) return false;
+  const u = new URL(req.url);
+  try {
+    const { payload } = await jwtVerify(auth.slice(7), googleKeys, {
+      issuer: ['https://accounts.google.com', 'accounts.google.com'],
+      audience: Deno.env.get('PLAY_RTDN_AUDIENCE') ?? `https://${u.host}/functions/v1/play-rtdn`,
+    });
+    return payload.email === email && payload.email_verified === true;
+  } catch (e) {
+    console.log('[play-rtdn] push token rejected:', (e as Error).message);
+    return false;
+  }
+}
 
 const ok = (note: string) => {
   console.log(`[play-rtdn] ${note}`);
@@ -17,7 +40,8 @@ const ok = (note: string) => {
 
 Deno.serve(async (req) => {
   const secret = Deno.env.get('PLAY_RTDN_SECRET');
-  if (!secret || new URL(req.url).searchParams.get('secret') !== secret) return new Response('forbidden', { status: 403 });
+  const bySecret = !!secret && new URL(req.url).searchParams.get('secret') === secret;
+  if (!bySecret && !(await signedByGoogle(req))) return new Response('forbidden', { status: 403 });
   try {
     const saJson = Deno.env.get('GOOGLE_PLAY_SA_JSON');
     const pkg = Deno.env.get('PLAY_PACKAGE_NAME');
