@@ -27,7 +27,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap, Briefcase, Plane, Lightbulb, MessageCircle, PenLine, Camera, Video, Mic, MapPin, Compass, RefreshCw } from "lucide-react";
+import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap, Briefcase, Plane, Lightbulb, MessageCircle, PenLine, Camera, Video, MapPin, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { feedbackSchema } from "@/lib/validations";
@@ -718,177 +718,30 @@ const Index = () => {
         </div>
 
         <div className="max-w-4xl mx-auto space-y-4">
-          <Part tag={t("tree.lifeTag")} name={t("tree.lifePart")} count={t("tree.topics", { n: 11 })}>
-            <Item group="life" defaultOpen title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><MessageCircle className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l1")}</h3></span>}>
-            
-            <div className="space-y-3 text-gray-700">
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l1a")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l1b")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l1c")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l1d")}</span>
-              </p>
-            </div>
-          </Item>
-            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><PenLine className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l2")}</h3></span>}>
-            
-            <div className="space-y-3 text-gray-700">
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l2a")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l2b")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l2c")}</span>
-              </p>
-            </div>
-          </Item>
-            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><Camera className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l3")}</h3></span>}>
-            
-            <div className="space-y-3 text-gray-700">
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l3a")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l3b")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l3c")}</span>
-              </p>
-            </div>
-          </Item>
-            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><Heart className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l4")}</h3></span>}>
-            
-            <h4 className="text-xl font-semibold text-pink-600 mb-3">{t("lp.l4h")}</h4>
-            <div className="space-y-3 text-gray-700">
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l4a")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l4b")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l4c")}</span>
-              </p>
-            </div>
-          </Item>
-            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><Users className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l5")}</h3></span>}>
-            
-            <div className="space-y-3 text-gray-700">
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l5a")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l5b")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l5c")}</span>
-              </p>
-            </div>
-          </Item>
-            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><Video className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l6")}</h3></span>}>
-            
-            <p className="flex items-start gap-2 text-gray-700">
-              <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-              <span>{t("lp.l6a")}</span>
-            </p>
-          </Item>
-            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><Mic className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l7")}</h3></span>}>
-            
-            <h4 className="text-xl font-semibold text-purple-600 mb-3">{t("lp.l7h")}</h4>
-          </Item>
-            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><MapPin className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l8")}</h3></span>}>
-            
-            <div className="space-y-3 text-gray-700">
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l8a")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l8b")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l8c")}</span>
-              </p>
-            </div>
-          </Item>
-            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><Compass className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l9")}</h3></span>}>
-            
-            <div className="space-y-3 text-gray-700">
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l9a")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l9b")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l9c")}</span>
-              </p>
-            </div>
-          </Item>
-            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><Zap className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l10")}</h3></span>}>
-            
-            <div className="space-y-3 text-gray-700">
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l10a")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l10b")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l10c")}</span>
-              </p>
-            </div>
-          </Item>
-            <Item group="life" title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><RefreshCw className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t("lp.l11")}</h3></span>}>
-            
-            <div className="space-y-3 text-gray-700">
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l11a")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l11b")}</span>
-              </p>
-              <p className="flex items-start gap-2">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                <span>{t("lp.l11c")}</span>
-              </p>
-            </div>
-          </Item>
-          </Part>
+          {/* 13 Nov 2026 (Elena): calmer lines approved; topic 7 (empty, repeated 1 and 8) and 9 (generic questions any
+              search engine answers) removed. One list drives the cards, so the count cannot drift from what is shown. */}
+          {(() => {
+            const topics = [
+              [MessageCircle, "l1", "abcd"], [PenLine, "l2", "abc"], [Camera, "l3", "ab"], [Heart, "l4", "ab"],
+              [Users, "l5", "abc"], [Video, "l6", "a"], [MapPin, "l8", "ab"], [Zap, "l10", "abc"], [RefreshCw, "l11", "abc"],
+            ] as const;
+            return (
+              <Part tag={t("tree.lifeTag")} name={t("tree.lifePart")} count={t("tree.topics", { n: topics.length })}>
+                {topics.map(([Icon, k, lines], i) => (
+                  <Item key={k} group="life" defaultOpen={i === 0} title={<span className="flex items-center gap-3"><span aria-hidden className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"><Icon className="h-5 w-5" /></span><h3 className="text-lg font-semibold text-foreground">{t(`lp.${k}`)}</h3></span>}>
+                    <div className="space-y-3 text-gray-700">
+                      {lines.split("").map((x) => (
+                        <p key={x} className="flex items-start gap-2">
+                          <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
+                          <span>{t(`lp.${k}${x}`)}</span>
+                        </p>
+                      ))}
+                    </div>
+                  </Item>
+                ))}
+              </Part>
+            );
+          })()}
           {/* 10 Nov 2026 (Elena): the two quotes here ("Maria", "Carmen") were not from real people - removed.
               Only real, permitted family words go back in this place. */}
           
