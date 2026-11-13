@@ -797,8 +797,9 @@ const Classroom = () => {
                 setGreeting(true);
               });
             });
-            // 13 Nov 2026 (Elena: "the two buttons look duplicated"): free talk now opens as free talk, the class as a class.
-            talk("¡Hola Pere y Titi! Quiero hablar y jugar con ustedes. / Hello Pere and Titi! I want to talk and play with you.", false);
+            // 13 Nov 2026: keep this exact phrase - it is the lesson-start MARKER read in 7 places (espaluz-chat, kids_tidy,
+            // kids-memory, both bots). The difference between the buttons is the subtitle + mode, not the hello.
+            talk("¡Hola Pere y Titi! Quiero empezar la clase. / Hello Pere and Titi! I want to start the class.", false);
           }}>
           <Play className="w-8 h-8 mr-2 shrink-0" /><span className="flex flex-col leading-tight"><span>¡Empezar! / Start!</span><span className="text-sm font-normal opacity-90">Charla y juegos · Talk and play</span></span>
         </Button>
