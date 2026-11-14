@@ -190,10 +190,11 @@ const Index = () => {
         </div>
         <div className="mx-auto mb-10 grid max-w-5xl gap-4 px-4 text-left md:grid-cols-3">
           {[
-            { icon: Shapes, color: "--espaluz-yellow", title: t("hero4.card1Title"), body: t("hero4.card1"), kids: true },
-            { icon: NotebookPen, color: "--espaluz-purple", title: t("hero4.card2Title"), body: t("hero4.card2"),
+            // 14 Nov 2026 (Elena approved): order You -> Your child -> Your whole family, so the page is not "for kids only".
+            { icon: MessageCircle, color: "--espaluz-purple", title: t("hero4.card1Title"), body: t("hero4.card1"),
               clip: { src: heroRemote, poster: heroRemotePoster, label: "Working remotely by the window while the child learns with Pere and Titi" } },
-            { icon: School, color: "--espaluz-green", title: t("hero4.card3Title"), body: t("hero4.card3"),
+            { icon: Shapes, color: "--espaluz-yellow", title: t("hero4.card2Title"), body: t("hero4.card2"), kids: true },
+            { icon: Users, color: "--espaluz-green", title: t("hero4.card3Title"), body: t("hero4.card3"),
               clip: { src: heroFamily, poster: heroFamilyPoster, label: "The whole family celebrating together at a restaurant in Panama City" } },
           ].map((c) => (
             <div key={c.title} className="rounded-2xl border border-border bg-card p-5" style={{ boxShadow: "var(--shadow-card)" }}>
