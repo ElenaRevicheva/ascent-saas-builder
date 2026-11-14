@@ -27,7 +27,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap, Briefcase, Plane, Lightbulb, MessageCircle, PenLine, Camera, Video, MapPin, RefreshCw } from "lucide-react";
+import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap, Briefcase, Plane, Lightbulb, MessageCircle, PenLine, Camera, Video, MapPin, RefreshCw, Mic, Languages, MessagesSquare, Mail, Volume2, Compass, CalendarDays, Smile, NotebookPen, School, Shapes } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { feedbackSchema } from "@/lib/validations";
@@ -190,10 +190,10 @@ const Index = () => {
         </div>
         <div className="mx-auto mb-10 grid max-w-5xl gap-4 px-4 text-left md:grid-cols-3">
           {[
-            { icon: "🦥", color: "--espaluz-yellow", title: t("hero4.card1Title"), body: t("hero4.card1"), kids: true },
-            { icon: "📒", color: "--espaluz-purple", title: t("hero4.card2Title"), body: t("hero4.card2"),
+            { icon: Shapes, color: "--espaluz-yellow", title: t("hero4.card1Title"), body: t("hero4.card1"), kids: true },
+            { icon: NotebookPen, color: "--espaluz-purple", title: t("hero4.card2Title"), body: t("hero4.card2"),
               clip: { src: heroRemote, poster: heroRemotePoster, label: "Working remotely by the window while the child learns with Pere and Titi" } },
-            { icon: "🏫", color: "--espaluz-green", title: t("hero4.card3Title"), body: t("hero4.card3"),
+            { icon: School, color: "--espaluz-green", title: t("hero4.card3Title"), body: t("hero4.card3"),
               clip: { src: heroFamily, poster: heroFamilyPoster, label: "The whole family celebrating together at a restaurant in Panama City" } },
           ].map((c) => (
             <div key={c.title} className="rounded-2xl border border-border bg-card p-5" style={{ boxShadow: "var(--shadow-card)" }}>
@@ -210,7 +210,10 @@ const Index = () => {
                 </div>
               )}
               <span className="mb-3 flex h-12 w-12 items-center justify-center rounded-full text-2xl"
-                style={{ background: `hsl(var(${c.color}) / 0.15)` }} aria-hidden>{c.icon}</span>
+                style={{ background: `hsl(var(${c.color}) / 0.15)` }} aria-hidden>
+                {/* 14 Nov 2026 (Elena: generic emojis look toyish) - brand line icons, same family as the dashboard map. */}
+                <c.icon className="h-6 w-6" style={{ color: `hsl(var(${c.color}))`, filter: "brightness(0.75) saturate(1.2)" }} />
+              </span>
               <h2 className="mb-2 text-xl text-foreground">{c.title}</h2>
               <p className="leading-relaxed text-muted-foreground">{c.body}</p>
             </div>
@@ -682,20 +685,20 @@ const Index = () => {
             <CardContent className="space-y-4 relative">
               {[
                 // 9 Nov 2026 (Elena): only what the code does today; the first three lines kept from before, polished.
-                { text: t("lp.f1"), icon: "🎤", gradient: "from-green-500 to-emerald-500" },
-                { text: t("lp.f2"), icon: "⚡", gradient: "from-yellow-500 to-orange-500" },
-                { text: t("lp.f3"), icon: "💬", gradient: "from-blue-500 to-cyan-500" },
-                { text: t("lp.f4"), icon: "📸", gradient: "from-rose-500 to-red-500" },
-                { text: t("lp.f5"), icon: "✉️", gradient: "from-teal-500 to-cyan-500" },
-                { text: t("lp.f6"), icon: "🔊", gradient: "from-indigo-500 to-purple-500" },
-                { text: t("lp.f7"), icon: "🎬", gradient: "from-purple-500 to-pink-500" },
-                { text: t("lp.f8"), icon: "🧭", gradient: "from-sky-500 to-blue-500" },
-                { text: t("lp.f9"), icon: "🗓️", gradient: "from-amber-500 to-orange-500" },
-                { text: t("lp.f10"), icon: "🙂", gradient: "from-pink-500 to-rose-500" }
+                { text: t("lp.f1"), icon: Mic, gradient: "from-green-500 to-emerald-500" },
+                { text: t("lp.f2"), icon: Languages, gradient: "from-yellow-500 to-orange-500" },
+                { text: t("lp.f3"), icon: MessagesSquare, gradient: "from-blue-500 to-cyan-500" },
+                { text: t("lp.f4"), icon: Camera, gradient: "from-rose-500 to-red-500" },
+                { text: t("lp.f5"), icon: Mail, gradient: "from-teal-500 to-cyan-500" },
+                { text: t("lp.f6"), icon: Volume2, gradient: "from-indigo-500 to-purple-500" },
+                { text: t("lp.f7"), icon: Video, gradient: "from-purple-500 to-pink-500" },
+                { text: t("lp.f8"), icon: Compass, gradient: "from-sky-500 to-blue-500" },
+                { text: t("lp.f9"), icon: CalendarDays, gradient: "from-amber-500 to-orange-500" },
+                { text: t("lp.f10"), icon: Smile, gradient: "from-pink-500 to-rose-500" }
               ].map((feature, index) => (
                 <div key={index} className="group flex items-start gap-4 p-3 rounded-xl hover:bg-white/50 transition-all duration-300 hover:shadow-md">
                   <div className={`flex items-center justify-center w-10 h-10 bg-gradient-to-r ${feature.gradient} rounded-full shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                    <span className="text-white text-lg">{feature.icon}</span>
+                    <feature.icon className="h-5 w-5 text-white" aria-hidden />
                   </div>
                   <span className="text-gray-700 font-medium leading-relaxed flex-1 group-hover:text-gray-900 transition-colors duration-300">{feature.text}</span>
                 </div>

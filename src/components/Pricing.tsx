@@ -3,6 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Part } from "@/components/landing/Tree";
 import { Check, Star, Heart, Brain, Users } from "lucide-react";
+
+// 14 Nov 2026 (Elena: generic emojis look toyish): the purple check already marks each line, so the leading emoji is
+// dropped when the line is drawn - English and Russian texts stay as they are in the locale files.
+const noEmoji = (s: string) => s.replace(/^(?:[\p{Extended_Pictographic}\p{Regional_Indicator}\u{FE0F}\u{200D}]|\s)+/u, "");
 import { Link } from "react-router-dom";
 import SubscriptionFlow from "./SubscriptionFlow";
 import { insidePlayApp } from "@/lib/playBilling";
@@ -123,7 +127,7 @@ const Pricing = () => {
                     <span className="inline-block bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold">{t("pr.soon")}</span>
                   </div>
                 )}
-                <CardTitle className="text-2xl mb-2">{plan.name === "Premium" ? "🚀 Premium" : plan.name}</CardTitle>
+                <CardTitle className="text-2xl mb-2">{plan.name}</CardTitle>
                 <div className="mb-4">
                   {typeof plan.price === 'number' ? (
                     <>
@@ -133,11 +137,11 @@ const Pricing = () => {
                       </span>
                       {plan.paypal && (
                         <>
-                          <div className="text-sm font-medium text-green-700 mt-2">{t("pr.secure", { by: insidePlayApp() ? "Google Play" : "PayPal" })}</div>
+                          <div className="text-sm font-medium text-green-700 mt-2">{noEmoji(t("pr.secure", { by: insidePlayApp() ? "Google Play" : "PayPal" }))}</div>
                           {!insidePlayApp() && <div className="text-xs text-green-600">{t("pr.merchant")}: {plan.merchantId}</div>}
                           {plan.bonus && (
                             <div className="mt-2 px-3 py-1 bg-gradient-to-r from-green-100 to-blue-100 rounded-full">
-                              <span className="text-sm font-bold text-green-700">{plan.bonus}</span>
+                              <span className="text-sm font-bold text-green-700">{noEmoji(plan.bonus)}</span>
                             </div>
                           )}
                         </>
@@ -150,10 +154,10 @@ const Pricing = () => {
                 <CardDescription>
                   {plan.name === "Standard" ? (
                     <span className="font-bold bg-gradient-to-r from-green-400 via-emerald-500 to-lime-400 bg-clip-text text-transparent text-lg drop-shadow-sm">
-                      {plan.description}
+                      {noEmoji(plan.description)}
                     </span>
                   ) : (
-                    <span className="text-muted-foreground">{plan.description}</span>
+                    <span className="text-muted-foreground">{noEmoji(plan.description)}</span>
                   )}
                 </CardDescription>
               </CardHeader>
@@ -217,7 +221,7 @@ const Pricing = () => {
                     typeof feature === 'string' ? (
                       <li key={featureIndex} className="flex items-start gap-3">
                         <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                        <span className="text-muted-foreground">{feature}</span>
+                        <span className="text-muted-foreground">{typeof feature === "string" ? noEmoji(feature) : feature}</span>
                       </li>
                      ) : (
                        <li key={featureIndex} className="flex items-start gap-3">
