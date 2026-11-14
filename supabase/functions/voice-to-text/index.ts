@@ -63,6 +63,31 @@ async function geminiTranscribeWith(model: string, key: string, audio: Uint8Arra
 // (like a teacher who knows what she just asked); otherwise a neutral language hint.
 // 2 Nov 2026 (Elena: "kid, parent, Pere and Titi all together"): the classroom's speaker switch says who talks this
 // turn. A parent's turn is not a 6-year-old answering, so it gets the neutral adult hint (no child, no last question).
+// 14 Nov 2026 (Alisa's 38-turn Russian class: 2 of 30 spoken turns came back in Russian): the Russian classroom used
+// this same hint - "Spanish and English", Pere and Titi's last question - so Whisper translated her Russian into English
+// or "heard" Icelandic, and the retry below tried only Spanish and English. That class now says so (context
+// 'classroom_ru'): the hint is written IN RUSSIAN with Mishka and Lisa's last question, and the retry tries Russian.
+async function whisperHintRu(authHeader: string | null, speaker?: string): Promise<string> {
+  const base = 'Девочка шести лет говорит по-русски, иногда по-английски. ';
+  if (speaker === 'parent') return 'Взрослый (мама или папа) говорит с Мишкой и Лисой по-русски, иногда по-английски. ';
+  if (!authHeader) return base;
+  try {
+    const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!,
+                                  { global: { headers: { Authorization: authHeader } } });
+    const { data } = await supabase.from('learning_sessions').select('content, created_at')
+      .eq('session_type', 'classroom_ru').order('created_at', { ascending: false }).limit(1);
+    const row = data?.[0];
+    if (!row || Date.now() - new Date(row.created_at).getTime() > 20 * 60 * 1000) return base;
+    // Lines look like "Лиса: Какого цвета платье? / What colour is the dress?" - keep only the Russian half.
+    const lines = String(row.content?.ai_response ?? '').split('\n')
+      .map((l: string) => l.replace(/^[^:]*:\s*/, '').split(' / ')[0].trim()).filter(Boolean);
+    const question = [...lines].reverse().find((l) => l.includes('?')) ?? lines[lines.length - 1] ?? '';
+    return `Девочка шести лет отвечает Мишке и Лисе по-русски, иногда по-английски. Они только что спросили: ${question.slice(0, 200)}`;
+  } catch (_) {
+    return base;
+  }
+}
+
 async function whisperHint(authHeader: string | null, speaker?: string): Promise<string> {
   const base = 'Spanish and English, sometimes Russian. ';
   if (!authHeader) return base;
@@ -169,13 +194,14 @@ serve(async (req) => {
   }
 
   try {
-    const { audio, language, force, speaker } = await req.json();
+    const { audio, language, force, speaker, context } = await req.json();
+    const ru = context === 'classroom_ru';
     
     if (!audio) {
       throw new Error('No audio data provided');
     }
 
-    console.log(`Processing voice message in language: ${language || 'auto-detect'}`);
+    console.log(`Processing voice message in language: ${language || 'auto-detect'}${ru ? ' (russian classroom)' : ''}`);
     console.log(`Audio data length: ${audio.length} characters`);
 
     // Process audio in chunks
@@ -199,7 +225,8 @@ serve(async (req) => {
     }
     const errors: string[] = [];
     let result: any = null;
-    const hint = await whisperHint(req.headers.get('Authorization'), speaker);
+    const hint = ru ? await whisperHintRu(req.headers.get('Authorization'), speaker)
+                    : await whisperHint(req.headers.get('Authorization'), speaker);
     // verbose_json returns the detected language and per-segment confidence (avg_logprob).
     const send = (key: string, url: string, model: string, lang?: string) => {
       const formData = new FormData();
@@ -221,7 +248,7 @@ serve(async (req) => {
       if (!key) continue;
       if (name === 'gemini') {
         try {
-          result = await geminiTranscribe(key, binaryAudio, hint, language);
+          result = await geminiTranscribe(key, binaryAudio, hint, language || (ru ? 'Russian (sometimes English)' : undefined));
           console.log(`transcribed by gemini ${model}`);
           break;
         } catch (e) {
@@ -261,7 +288,7 @@ serve(async (req) => {
         const models = name === 'groq' && model !== 'whisper-large-v3' ? [model, 'whisper-large-v3'] : [model];
         for (const m of models) {
           if (m !== model && !GARBLE.test(String(result.text)) && confidence(result) >= -0.5) break;
-          for (const lang of ['es', 'en']) {
+          for (const lang of (ru ? ['ru', 'en'] : ['es', 'en'])) {
             let again: Response;
             try { again = await send(key, url, m, lang); } catch (_) { continue; }
             if (!again.ok) continue;

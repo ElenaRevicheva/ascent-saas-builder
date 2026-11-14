@@ -64,7 +64,15 @@ const STEPS = [
   "GOODBYE: praise, a star, today's MISSION - one sentence to say in Russian or English to a real person (mom, a friend, grandma on the phone), OR (every other lesson) one real job at home said in Russian while doing it (set the table, water a plant, pack the school bag) - and goodbye from both.",
 ];
 const STEP_FREE = "FREE TALK: the lesson is done; keep talking about the child's topic, short, one question, warm.";
-const PRAISE_RULE = "\nPraise: name exactly what she did (\"ты сказала целое предложение! / you said a whole sentence!\"), never the same praise word twice in a lesson. If she says she already did the mission, accept it warmly and do not give it again.";
+const PRAISE_RULE = "\nPraise: name exactly what she did (\"ты сказала целое предложение! / you said a whole sentence!\") - a sentence only if she really said one IN RUSSIAN - never the same praise word twice in a lesson. If she says she already did the mission, accept it warmly and do not give it again.";
+// 14 Nov 2026 (Alisa's class, 38 turns): Mishka praised "a whole sentence" for English, Spanish, an empty recording and
+// once "a whole sentence in Icelandic", and said_ru filled the parent report with English. When her words hold no
+// Russian letters she did not speak Russian this turn: no Russian praise; Mishka gives the Russian and she says it after him.
+const NOT_RU_RULE = "\nSHE DID NOT SPEAK RUSSIAN THIS TURN (her words above have no Russian letters: English, Spanish, unclear, or Russian sounds " +
+  "written in Latin letters like \"ya chto risovat\" - read those as the Russian they sound like). Do NOT praise a sentence or her Russian. " +
+  "Answer her idea warmly, then Mishka says it in ONE short correct Russian sentence and asks her to say it after him " +
+  "(\"Скажи со мной: ... / Say it with me: ...\"). Put nothing in \"said_ru\".";
+const CYRILLIC = /[а-яё]/i;
 
 // The class path: the same 12 themes, English and numbers as Pere & Titi's first-grade units (Cambridge Primary Stage 1,
 // Pre A1 Starters), with Russian reading in the classic bukvar order (vowels, then М С Х Ш Л Н Р К, П Т И, З Й Г В,
@@ -142,7 +150,10 @@ async function memoryOf(sb: any, userId: string, nowSaid: Set<string>): Promise<
   const { data } = await sb.from('learning_sessions').select('content, created_at').eq('user_id', userId)
     .eq('session_type', 'classroom_ru').order('created_at', { ascending: false }).limit(300);
   const rows = Array.isArray(data) ? data : [];
-  const classStarts = rows.filter((r: any) => r.content?.class_start === 'true').length;
+  // 14 Nov 2026 (Alisa's class: two starts a minute apart, 19:42 and 19:43, moved her from unit 1 to unit 2 after one
+  // hello): a start counts only when the one before it was more than 2 hours earlier - a reload is the same class.
+  const startTimes = rows.filter((r: any) => r.content?.class_start === 'true').map((r: any) => Date.parse(r.created_at)).sort((a: number, b: number) => a - b);
+  const classStarts = startTimes.filter((t: number, i: number) => i === 0 || t - startTimes[i - 1] > 2 * 3600000).length;
   const greeted = rows.some((r: any) => r.content?.turn === 0 && Date.now() - Date.parse(r.created_at) < 20 * 3600000);
   const said: string[] = [];
   let mission = '';
@@ -181,7 +192,16 @@ function turnContext(message: string, turn: number, mode: string, unit: number, 
   if (turn > 0 && BYE.test(message)) return "\n\nTHE FAMILY WANTS TO STOP NOW. THIS TURN OVERRIDES EVERY RULE: two short warm goodbye lines, one from each hero, no question.";
   if (QUIET.test(message)) return "\n\nSHE ASKED YOU TO TALK LESS. THIS TURN OVERRIDES EVERY RULE: exactly ONE short line from Mishka: \"Хорошо, теперь я тебя слушаю. / Okay, now I am listening to you.\"";
   const steps = mode === 'class' ? classSteps(UNITS[unit % UNITS.length]) : STEPS;
-  const step = turn < steps.length ? steps[turn] : STEP_FREE;
+  // 14 Nov 2026 (Alisa's class: 6 steps, then 31 turns of "the lesson is done, free talk" - money, dust, magazines; at
+  // 20:19 her mother asked "please help her to teach her language"): a class that goes on keeps coming back to today's
+  // reading - every 3rd turn after the plan is a practice round, the others use one word of the class.
+  const u = UNITS[unit % UNITS.length];
+  const step = turn < steps.length ? steps[turn]
+    : mode !== 'class' ? STEP_FREE
+    : (turn - steps.length) % 3 === 0
+      ? `PRACTICE ROUND (Mishka, slow and clear): back to today's reading, ${u.ru}. Show ONE syllable or short word big and alone ` +
+        "on its own line, say it slowly, she says it after him; Lisa asks her to trace it on the tablet. Her topic can be the example word."
+      : `CLASS GOES ON: talk about her topic, short and warm, and use ONE word or syllable from today's reading (${u.ru}) in your reply.`;
   const story = STORIES[isoWeek(new Date()) % STORIES.length];
   if (turn > 0 && speaker === 'parent') {
     return `\n\nA PARENT (${speakerName || 'mom or dad'}) JUST SAID (speech-to-text, may be imperfect): "${message.slice(0, 300)}". ` +
@@ -192,7 +212,8 @@ function turnContext(message: string, turn: number, mode: string, unit: number, 
   // 12 Nov 2026 (live test): a painting got "you said a whole sentence!" - a pad turn is something she DID, not said.
   const heard = turn > 0 ? (act
     ? `\n\nTHE CHILD (${child}) JUST DID THIS ON THE TABLET (she did not speak): "${message.slice(0, 300)}". Your FIRST line reacts to it; never praise her for saying a sentence this turn.`
-    : `\n\nTHE CHILD (${child}) JUST SAID (speech-to-text, may be imperfect): "${message.slice(0, 300)}". Your FIRST line answers it.` + PRAISE_RULE) : '';
+    : `\n\nTHE CHILD (${child}) JUST SAID (speech-to-text, may be imperfect): "${message.slice(0, 300)}". Your FIRST line answers it.` +
+      (CYRILLIC.test(message) ? PRAISE_RULE : NOT_RU_RULE)) : '';
   const out = [heard];
   if (act) {
     out.push(`THIS TURN: ${act[1]} No new lesson step this turn. (Next turn: ${step})`);
@@ -383,6 +404,13 @@ Deno.serve(async (req) => {
     for (const [name, run] of steps) {
       try {
         const out = parseLesson(await run());
+        // 14 Nov 2026: said_ru feeds the parent report, and the model filled it with English ("Yo te amo", "Go to
+        // Lvovich") and even Mishka's own line. Only Russian words that are really in her message count; a pad turn
+        // (traced, painted, photo) is something she did, not said.
+        const heardRu = message.toLowerCase().replace(/ё/g, 'е');
+        const padTurn = ACTIVITY.some(([re]) => re.test(message.trim()));
+        out.said_ru = padTurn ? [] : out.said_ru.filter((w: string) => CYRILLIC.test(w) && w.toLowerCase().replace(/ё/g, 'е')
+          .split(/\s+/).map((t) => t.replace(/[^а-я-]/g, '')).filter(Boolean).every((t) => heardRu.includes(t)));
         console.log(`[kids-ru] model=${name} mode=${mode} turn=${turn} unit=${unit + 1} lines=${out.lines.length} said_ru=${out.said_ru.length}`);
         // Saved like a Pere & Titi turn, under its own type: the memory and the parent report read it back.
         const reply = out.lines.map((l: any) => `${l.who === 'mishka' ? 'Мишка' : 'Лиса'}: ${l.ru} / ${l.en}`).join('\n');

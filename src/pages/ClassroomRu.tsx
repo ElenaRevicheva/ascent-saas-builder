@@ -374,7 +374,7 @@ const ClassroomRu = () => {
         });
         setBusy(true);
         // 12 Nov 2026: bilingual class - she may answer in Russian or English (or Spanish), so no language is forced.
-        const { data, error } = await supabase.functions.invoke("voice-to-text", { body: { audio: b64, speaker: speaker === "child" ? "child" : "parent" } });
+        const { data, error } = await supabase.functions.invoke("voice-to-text", { body: { audio: b64, speaker: speaker === "child" ? "child" : "parent", context: "classroom_ru" } });
         const text = (data?.text || "").trim();
         if (data?.unavailable) { setBusy(false); toast.error(data.message || "Мишка и Лиса отдыхают. / They are resting.", { duration: 15000 }); return; }
         if (error || !text) { setBusy(false); toast.error("Я тебя не расслышал. Скажи ещё раз! / I did not hear you. Say it again!"); return; }
