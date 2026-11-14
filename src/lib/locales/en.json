@@ -265,7 +265,7 @@
     "tgButton": "Join Telegram Family",
     "demoBadge": "20 Free Messages",
     "demoTitle": "Try EspaLuz Risk-Free!",
-    "demoIntro": "Experience our emotionally intelligent bilingual AI coach with <b>no signup required</b>. Chat up to 20 messages to see how EspaLuz helps your family learn naturally.",
+    "demoIntro": "Talk to her as you would to a friend: write, send a voice note or show her a photo. She answers in Spanish and English, in text and voice: a small preview of having EspaLuz with your family on WhatsApp, Telegram and the web.",
     "demoH": "Demo Experience",
     "demo1": "No signup required - start instantly",
     "demo2": "Experience bilingual conversations in Spanish/English",
@@ -285,8 +285,8 @@
     "exp2": "Emotionally intelligent responses",
     "exp3": "Family-friendly coaching style",
     "exp4": "Spanish/English cultural adaptation",
-    "demoStart": "Try 20 messages free - right here",
-    "demoNote": "No sign-up, no email. Like it? Create your family in one minute.",
+    "demoStart": "Start the demo",
+    "demoNote": "Like it? Create your family in one minute.",
     "todayTitle": "Try EspaLuz Today",
     "todaySub": "Experience how she understands your family's unique situation",
     "liveReady": "Live & Ready",
@@ -390,7 +390,11 @@
     "contactCount": "Profile · YouTube · AIdeazz",
     "f9": "Your week: the days you practised and what your child worked on",
     "f10": "She notices how you feel and adapts her tone",
-    "waUser": "WhatsApp username:"
+    "waUser": "WhatsApp username:",
+    "demoLead": "Not another translator - a companion for life in a new country.",
+    "demoL1": "Write or talk to her",
+    "demoL2": "Show a photo - let her see what you mean",
+    "demoL3": "Learn through conversation, in Spanish and English"
   },
   "footer": {
     "contact": "Contact & Info",

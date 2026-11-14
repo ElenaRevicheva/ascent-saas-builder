@@ -319,111 +319,24 @@ const Index = () => {
       </div>
             </Item>
             <Item group="start" title={<h3 className="text-lg font-semibold text-foreground">{t("tree.demo")}</h3>}>
-              
-        <div className="text-center mb-8">
-          <Badge className="mb-3 bg-gradient-primary text-white">{t("lp.demoBadge")}</Badge>
-          <h2 className="text-3xl font-bold mb-3 text-primary">
-            {t("lp.demoTitle")}
-          </h2>
-          <p className="text-base text-foreground max-w-3xl mx-auto mb-6">
-            <Trans i18nKey="lp.demoIntro" components={{ b: <strong /> }} />
-          </p>
-        </div>
-        
-        <div className="grid md:grid-cols-2 gap-8 items-center max-w-6xl mx-auto">
-          <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-purple-700 mb-6">{t("lp.demoH")}</h3>
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                  <Check className="mt-1 h-4 w-4 shrink-0 text-primary" aria-hidden />
-                </div>
-                <span className="text-lg">{t("lp.demo1")}</span>
+              {/* 14 Nov 2026 (Elena approved, merged with ChatGPT's notes): one honest preview - no "AI coach", no
+                  "learn naturally", no "saved forever"; "20 messages, no signup" lives only in the title above. */}
+              <div className="mx-auto max-w-2xl space-y-5 rounded-2xl border border-border bg-card p-6 text-center" style={{ boxShadow: "var(--shadow-card)" }}>
+                <p className="text-xl font-semibold text-foreground">{t("lp.demoLead")}</p>
+                <p className="leading-relaxed text-muted-foreground">{t("lp.demoIntro")}</p>
+                <ul className="mx-auto max-w-md space-y-3 text-left">
+                  {[{ icon: Mic, text: t("lp.demoL1") }, { icon: Camera, text: t("lp.demoL2") }, { icon: Languages, text: t("lp.demoL3") }].map((l) => (
+                    <li key={l.text} className="flex items-center gap-3">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary" aria-hidden><l.icon className="h-4 w-4" /></span>
+                      <span className="text-foreground">{l.text}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Button onClick={handleStartDemo} size="lg" className="h-auto w-full whitespace-normal rounded-full py-3 font-semibold">
+                  {t("lp.demoStart")}
+                </Button>
+                <p className="text-sm text-muted-foreground">{t("lp.demoNote")}</p>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                  <Check className="mt-1 h-4 w-4 shrink-0 text-primary" aria-hidden />
-                </div>
-                <span className="text-lg">{t("lp.demo2")}</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                  <Check className="mt-1 h-4 w-4 shrink-0 text-primary" aria-hidden />
-                </div>
-                <span className="text-lg">{t("lp.demo3")}</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                  <Check className="mt-1 h-4 w-4 shrink-0 text-primary" aria-hidden />
-                </div>
-                <span className="text-lg">{t("lp.demo4")}</span>
-              </div>
-            </div>
-            
-            <div className="mt-8 p-4 bg-orange-50 rounded-xl border-2 border-orange-200">
-              <div className="flex items-center gap-3 mb-3">
-                <Crown className="h-6 w-6 text-orange-600" />
-                <span className="text-lg font-bold text-orange-700">
-                  {t("lp.keepTitle")}
-                </span>
-              </div>
-              <ul className="text-sm space-y-2 text-gray-700">
-                <li><strong>{t("lp.keep1")}</strong></li>
-                <li>{t("lp.keep2")}</li>
-                <li>{t("lp.keep3")}</li>
-                <li>{t("lp.keep4")}</li>
-                <li>{t("lp.keep5")}</li>
-                <li>{t("lp.keep6")}</li>
-              </ul>
-            </div>
-          </div>
-          
-          <Card className="bg-white border-2 border-purple-200 shadow-2xl">
-            <CardHeader className="text-center pb-2">
-              <Badge className="mb-3 bg-purple-500 text-white">
-                <Star className="h-3 w-3 mr-1" />
-                {t("lp.livePreview")}
-              </Badge>
-              <CardTitle className="text-2xl text-purple-700">{t("lp.expTitle")}</CardTitle>
-              <CardDescription className="text-gray-600">
-                {t("lp.expSub")}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
-                  <MessageSquare className="h-5 w-5 text-purple-600" />
-                  <span className="text-sm">{t("lp.exp1")}</span>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
-                  <Heart className="h-5 w-5 text-blue-600" />
-                  <span className="text-sm">{t("lp.exp2")}</span>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
-                  <Users className="h-5 w-5 text-green-600" />
-                  <span className="text-sm">{t("lp.exp3")}</span>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
-                  <Globe className="h-5 w-5 text-orange-600" />
-                  <span className="text-sm">{t("lp.exp4")}</span>
-                </div>
-              </div>
-              
-              <Button 
-                onClick={handleStartDemo}
-                className="w-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-semibold py-3"
-              >
-                <Zap className="mr-2 h-4 w-4" />
-                {t("lp.demoStart")}
-              </Button>
-              
-              <p className="text-xs text-center text-gray-500 mt-2">
-                {t("lp.demoNote")}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      
             </Item>
           </Part>
         </div>
