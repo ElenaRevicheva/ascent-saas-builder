@@ -515,5 +515,19 @@
     "l4Lead": "Only what is true today.",
     "l4": "Everything on this page is something EspaLuz already does.",
     "partners": "Partners and investors:"
+  },
+  "vm": {
+    "title": "Video moments with EspaLuz",
+    "hello": "This is EspaLuz saying hello. Below it, you can also keep a short video of your family, shown here on your dashboard.",
+    "saved": "Your family's video is saved and shown here on your dashboard.",
+    "add": "Add your family's video",
+    "replace": "Replace your family's video",
+    "uploadHint": "Keep a short video of your family here (MP4, up to 30 seconds).",
+    "momentsTitle": "Coming to EspaLuz Family",
+    "soon": "Coming soon",
+    "celebTitle": "Celebrations",
+    "celebBody": "A birthday, a first school day, a holiday: EspaLuz records a personal wish for your family, face to face.",
+    "prepTitle": "Face-to-face prep",
+    "prepBody": "Before a job interview, a school meeting or a doctor's visit, practise with EspaLuz in short talking videos, then get her tips."
   }
 }

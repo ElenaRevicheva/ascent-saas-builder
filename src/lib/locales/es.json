@@ -305,5 +305,19 @@
     "l4Lead": "Solo lo que es verdad hoy.",
     "l4": "Todo lo que dice esta página es algo que EspaLuz ya hace.",
     "partners": "Alianzas e inversores:"
+  },
+  "vm": {
+    "title": "Momentos en video con EspaLuz",
+    "hello": "Esta es EspaLuz saludándote. Abajo puedes guardar también un video corto de tu familia, que se muestra aquí en tu panel.",
+    "saved": "El video de tu familia está guardado y se muestra aquí en tu panel.",
+    "add": "Agregar el video de tu familia",
+    "replace": "Cambiar el video de tu familia",
+    "uploadHint": "Guarda aquí un video corto de tu familia (MP4, hasta 30 segundos).",
+    "momentsTitle": "Muy pronto en EspaLuz Family",
+    "soon": "Pronto",
+    "celebTitle": "Celebraciones",
+    "celebBody": "Un cumpleaños, el primer día de escuela, una fiesta: EspaLuz graba un saludo personal para tu familia, cara a cara.",
+    "prepTitle": "Preparación cara a cara",
+    "prepBody": "Antes de una entrevista de trabajo, una reunión en la escuela o una visita al médico, practica con EspaLuz en videos cortos y recibe sus consejos."
   }
 }

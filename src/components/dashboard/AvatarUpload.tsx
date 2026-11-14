@@ -1,13 +1,21 @@
 import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Upload, Video, Trash2, Play, Pause } from 'lucide-react';
+import { Upload, Video, Trash2, Play, Pause, PartyPopper, MessagesSquare } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+// 14 Nov 2026 (Elena): the old cartoon avatar is replaced by the photoreal EspaLuz hello; the section becomes "Video
+// moments with EspaLuz" (celebrations + face-to-face prep, part of EspaLuz Family, coming soon). The family's own upload stays.
+import helloPoster from '@/assets/heroes/hello-poster.jpg';
+import helloEn from '@/assets/heroes/hello-landing-en.mp4';
+import helloEs from '@/assets/heroes/hello-landing-es.mp4';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 export const AvatarUpload = () => {
   const { user } = useAuth();
+  const { t, i18n } = useTranslation();
+  const hello = i18n.language?.startsWith('es') ? helloEs : helloEn;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -112,12 +120,12 @@ export const AvatarUpload = () => {
       supabase.storage.from('avatars').list(user.id, { sortBy: { column: 'updated_at', order: 'desc' } })
         .then(({ data: files }) => {
           const own = (files ?? []).find((f) => /^avatar\./.test(f.name));
-          if (!own) { setAvatarUrl('/videos/espaluz-avatar.mp4'); return; }
+          if (!own) { setAvatarUrl(hello); return; }
           const name = `${user.id}/${own.name}`;
           const { data } = supabase.storage.from('avatars').getPublicUrl(name);
           setOwnName(name);
           setAvatarUrl(`${data.publicUrl}?v=${encodeURIComponent(own.updated_at ?? own.created_at ?? '')}`);
-        }, () => setAvatarUrl('/videos/espaluz-avatar.mp4'));
+        }, () => setAvatarUrl(hello));
     }
   }, [user]);
 
@@ -126,7 +134,7 @@ export const AvatarUpload = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Video className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
-          Avatar Video
+          {t('vm.title')}
         </CardTitle>
       </CardHeader>
       
@@ -134,7 +142,7 @@ export const AvatarUpload = () => {
         {!avatarUrl ? (
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Upload your 30-second avatar MP4 video to use in video generation.
+              {t('vm.uploadHint')}
             </p>
             
             <Button
@@ -147,7 +155,7 @@ export const AvatarUpload = () => {
               ) : (
                 <Upload className="h-4 w-4 mr-2" />
               )}
-              {uploading ? 'Processing...' : 'Upload Video'}
+              {uploading ? '...' : t('vm.add')}
             </Button>
             
             <input
@@ -171,9 +179,9 @@ export const AvatarUpload = () => {
                 ref={videoRef}
                 key={avatarUrl}
                 src={avatarUrl}
-                className="w-full h-48 object-cover"
-                loop
-                muted
+                poster={ownName ? undefined : helloPoster}
+                className="w-full h-56 object-cover object-[50%_30%]"
+                playsInline
                 onPlay={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}
                 onEnded={() => setIsPlaying(false)}
@@ -203,7 +211,7 @@ export const AvatarUpload = () => {
                 className="flex-1"
               >
                 <Upload className="h-4 w-4 mr-2" />
-                Replace Video
+                {ownName ? t('vm.replace') : t('vm.add')}
               </Button>
               
               {ownName && (
@@ -219,10 +227,21 @@ export const AvatarUpload = () => {
             
             {/* Only what is true: EspaLuz's talking videos use her own face; nothing reads a family's upload yet. */}
             <p className="text-sm text-muted-foreground">
-              {ownName
-                ? '✓ Your video is saved. EspaLuz’s talking videos still use her own face.'
-                : 'This is EspaLuz. You can upload your own short video here.'}
+              {ownName ? t('vm.saved') : t('vm.hello')}
             </p>
+            <div className="space-y-3 border-t border-border/60 pt-4">
+              <p className="text-sm font-semibold text-foreground">{t('vm.momentsTitle')}</p>
+              {[{ icon: PartyPopper, title: t('vm.celebTitle'), body: t('vm.celebBody') },
+                { icon: MessagesSquare, title: t('vm.prepTitle'), body: t('vm.prepBody') }].map((m) => (
+                <div key={m.title} className="flex items-start gap-3 rounded-xl border border-border/60 bg-background/60 p-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary" aria-hidden><m.icon className="h-4 w-4" /></span>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-foreground">{m.title} <span className="ml-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">{t('vm.soon')}</span></p>
+                    <p className="text-sm text-muted-foreground">{m.body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </CardContent>
