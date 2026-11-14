@@ -234,19 +234,13 @@ const Index = () => {
             <Item group="start" defaultOpen title={<h3 className="text-lg font-semibold text-foreground">{t("tree.wa")}</h3>}>
             <div className="bg-gradient-to-br from-green-50/80 via-white/80 to-emerald-50/80 backdrop-blur-sm rounded-2xl p-5 border border-green-200">
           <div className="text-center space-y-6">
-            <div className="space-y-2">
-              <h3 className="text-2xl md:text-3xl font-bold text-green-600">{t("lp.waTitle")}</h3>
-              <p className="text-lg text-green-700 font-medium">{t("lp.waSub")}</p>
-            </div>
-            
+            {/* 14 Nov 2026 (Elena approved): the "Now LIVE!" title, the twice-"instantly" lines and the repeated scan
+                sentence are gone - one sentence under the QR, one button, the number for typing it in. */}
             <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
               <div className="flex flex-col items-center space-y-4 order-2 lg:order-1">
                 <div className="hero-seat w-40 md:w-48" style={{ aspectRatio: "540 / 804" }}>
                   <HeroClip src={heroWhatsapp} poster={heroWhatsappPoster} label="EspaLuz on WhatsApp" className="block h-full w-full object-cover" />
                 </div>
-                <p className="text-base text-gray-700 font-medium max-w-sm text-center">
-                  {t("lp.waScanText")}
-                </p>
                 <a 
                   href="https://bit.ly/EspaLuz" 
                   target="_blank" 
@@ -257,6 +251,7 @@ const Index = () => {
                     {t("lp.waButton")}
                   </Button>
                 </a>
+                <a href="https://wa.me/50766623757" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-green-700 hover:underline">+507 6662 3757</a>
               </div>
               
               <div className="flex flex-col items-center space-y-3 order-1 lg:order-2">
@@ -276,7 +271,7 @@ const Index = () => {
                     </span>
                   </span>
                 </div>
-                <p className="text-sm text-green-600 font-semibold bg-green-50 px-4 py-2 rounded-full border border-green-200">{t("lp.waScan")}</p>
+                <p className="max-w-xs text-sm text-green-700 font-semibold bg-green-50 px-4 py-2 rounded-2xl border border-green-200 text-center">{t("lp.waScan")}</p>
               </div>
             </div>
 
@@ -287,10 +282,6 @@ const Index = () => {
               <div className="text-center">
         <div className="bg-gradient-to-br from-blue-50/80 via-white/80 to-purple-50/80 backdrop-blur-sm rounded-2xl p-5 border border-blue-200">
           <div className="flex flex-col items-center space-y-6">
-            <div className="space-y-2">
-              <h3 className="text-2xl md:text-3xl font-bold text-blue-600">{t("lp.tgTitle")}</h3>
-            </div>
-            
             <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
             <div className="hero-seat w-40 md:w-48" style={{ aspectRatio: "540 / 804" }}>
               <HeroClip src={heroTelegram} poster={heroTelegramPoster} label="EspaLuz on Telegram" className="block h-full w-full object-cover" />
@@ -315,7 +306,7 @@ const Index = () => {
             </div>
             
             <div className="space-y-4">
-              <p className="text-sm text-blue-600 font-semibold bg-blue-50 px-4 py-2 rounded-full border border-blue-200">{t("lp.tgScan")}</p>
+              <p className="mx-auto max-w-xs text-sm text-blue-700 font-semibold bg-blue-50 px-4 py-2 rounded-2xl border border-blue-200 text-center">{t("lp.tgScan")}</p>
               <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer">
                 <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
                   <MessageSquare className="mr-3 h-5 w-5" />
@@ -556,42 +547,6 @@ const Index = () => {
             </CardContent>
           </Card>
           
-            </Item>
-            <Item group="start" title={<h3 className="text-lg font-semibold text-foreground">{t("tree.ctaPart")}</h3>}>
-              <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-8 shadow-md border-2 border-purple-200 text-center">
-            <h3 className="text-2xl font-bold text-purple-700 mb-4">
-              {t("lp.holaTitle")}
-            </h3>
-            <div className="space-y-4">
-              <p className="text-xl font-semibold text-gray-700">
-                {t("lp.holaReady")}
-              </p>
-              <p className="text-lg text-gray-700">
-                {t("lp.holaText1")} <span className="font-bold text-green-600">WhatsApp +507-6662-3757</span> {t("lp.holaText2")} 
-                <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-bold ml-1 [overflow-wrap:anywhere]">
-                  https://t.me/EspaLuzFamily_bot
-                </a>
-              </p>
-              <p className="text-xl font-bold text-orange-600">
-                {t("lp.holaSay")}
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
-                <a href="https://api.whatsapp.com/send/?phone=50766623757" target="_blank" rel="noopener noreferrer">
-                  <Button size="lg" className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full">
-                    <MessageSquare className="mr-2 h-4 w-4" />
-                    {t("lp.waButton")}
-                  </Button>
-                </a>
-                <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer">
-                  <Button size="lg" variant="outline" className="border-blue-500 text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-full">
-                    <MessageSquare className="mr-2 h-4 w-4" />
-                    {t("lp.joinTg")}
-                  </Button>
-                </a>
-              </div>
-            </div>
-          </div>
             </Item>
           </Part>
         </div>

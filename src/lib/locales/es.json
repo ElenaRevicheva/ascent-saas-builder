@@ -202,7 +202,7 @@
   "tree": {
     "contactTag": "Contacto",
     "ctaPart": "Di ¡Hola! en WhatsApp o Telegram",
-    "count5": "5 formas",
+    "count5": "4 formas",
     "startEyebrow": "Empieza con un toque",
     "startTitle": "Formas de empezar",
     "startLede": "Elige el canal que tu familia ya usa.",
@@ -279,7 +279,9 @@
     "l11": "Crece con tu familia",
     "l11a": "Recuerda el nivel de cada persona y en qué están trabajando",
     "l11b": "Retoma donde terminó la última conversación",
-    "l11c": "Avanza a medida que mejora tu español"
+    "l11c": "Avanza a medida que mejora tu español",
+    "waScan": "Escanea con la cámara de tu teléfono o toca el botón: di ¡Hola! y te responde en español e inglés.",
+    "tgScan": "Escanea o toca: toda la familia puede unirse a la misma EspaLuz."
   },
   "lab": {
     "tag": "AIdeazz AI Lab",
