@@ -1581,6 +1581,65 @@ const sameFact = (a: string, b: string) => { const A = factWords(a), B = factWor
 const FORGOT_ON_WEB = 'parent_web';
 const STORY_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+// 15 Nov 2026 (Elena: "do that now"): FACE-TO-FACE PRACTICE, Practica-like (cto-aipa docs/espaluz/VIDEO_MOMENTS_PLAN).
+// The family names a real moment ahead (a job interview, a teacher meeting, the doctor's front desk); EspaLuz plays the
+// other person in Spanish, one short line per turn, with an English line under it and a gentle fix when an answer had a
+// mistake. After PRACTICE_TURNS questions (or "finish") she gives three tips. The live part uses this function's usual
+// model chain and her usual voice on the page - no paid clip. The tips are SAVED here (event practice_session) so the
+// optional tips video (generate-video mode 'practice_tips') speaks exactly them and never text sent from a browser.
+const PRACTICE_TURNS = 6;
+const PRACTICE_ROLE = "You are EspaLuz, a warm bilingual companion, helping a newcomer rehearse a real moment in their new " +
+  "Spanish-speaking country. In this rehearsal you play THE OTHER PERSON of the SCENE (the interviewer, the teacher, the " +
+  "receptionist, the landlord...). Speak natural, clear Spanish a learner can follow: ONE short line per turn (max 25 words), " +
+  "ONE question at a time, react to what they just said like a real person would. Stay polite and realistic for the local " +
+  "culture; no stereotypes. Never invent facts about the family beyond the SCENE and the FAMILY line. Output ONLY JSON: " +
+  "{\"say\": \"<your Spanish line>\", \"en\": \"<the same in English>\", \"fix\": \"<if their LAST answer had a clear Spanish " +
+  "mistake: one gentle English sentence with the better Spanish in it; otherwise empty>\"}";
+const PRACTICE_TIPS = "You are EspaLuz, a warm bilingual companion. The newcomer just rehearsed the SCENE with you (TRANSCRIPT). " +
+  "Give honest, kind, practical feedback based ONLY on what they actually said. Output ONLY JSON: {\"well\": \"<one thing they " +
+  "did well, English, quote their Spanish>\", \"fix\": \"<the one most useful correction, English, with the better Spanish>\", " +
+  "\"phrase\": \"<one Spanish phrase to keep for the real day> - <English>\", \"spoken\": \"<what you say aloud to them: the " +
+  "three tips warmly, Spanish first then the same in English, under 70 words, no emojis, no quotes, no labels>\"}";
+function practiceJson(text: string): Record<string, string> {
+  const m = String(text ?? '').match(/\{[\s\S]*\}/);
+  if (!m) return {};
+  try {
+    const o = JSON.parse(m[0]);
+    return Object.fromEntries(Object.entries(o).map(([k, v]) => [k, String(v ?? '').replace(/\*/g, '').trim()]));
+  } catch { return {}; }
+}
+async function practiceTurn(userId: string, p: any): Promise<Record<string, unknown>> {
+  const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+  const scene = String(p?.scene ?? '').replace(/[<>{}\[\]]/g, ' ').trim().slice(0, 160);
+  if (!scene) return { error: 'no_scene' };
+  const history = (Array.isArray(p?.history) ? p.history : []).slice(-2 * PRACTICE_TURNS)
+    .map((h: any) => ({ who: h?.who === 'me' ? 'me' : 'espaluz', text: String(h?.text ?? '').slice(0, 400) })).filter((h: any) => h.text);
+  const asked = history.filter((h: any) => h.who === 'espaluz').length;
+  const { data: fam } = await db.from('family_members').select('name').eq('user_id', userId).eq('is_active', true)
+    .eq('role', 'parent').order('created_at', { ascending: false }).limit(1);
+  const transcript = history.map((h: any) => `${h.who === 'me' ? 'THEM' : 'YOU'}: ${h.text}`).join('\n');
+  const ask = async (system: string, user: string) => {
+    const { result } = await callChain({ model: CLAUDE_MODELS[0], max_tokens: 600, temperature: 0.5, system, messages: [{ role: 'user', content: user }] });
+    return practiceJson(String(result?.content?.[0]?.text ?? ''));
+  };
+  if (!p?.finish && asked < PRACTICE_TURNS) {
+    const last = asked === PRACTICE_TURNS - 1 ? '\nThis is your LAST line: close the scene naturally and kindly (you may still ask nothing).' : '';
+    const first = asked === 0 ? '\nThis is the START: greet them as the other person would and ask your first question.' : '';
+    const o = await ask(PRACTICE_ROLE + first + last, `SCENE: ${scene}\nFAMILY: ${fam?.[0]?.name ? `the person practising is ${fam[0].name}` : 'not given'}\nTRANSCRIPT SO FAR:\n${transcript || '(none yet)'}`);
+    if (!o.say) return { error: 'no_answer' };
+    console.log(`[practice] turn ${asked + 1}/${PRACTICE_TURNS}`);
+    return { say: o.say, en: o.en ?? '', fix: asked === 0 ? '' : (o.fix ?? ''), turn: asked + 1, turns: PRACTICE_TURNS, last: asked + 1 >= PRACTICE_TURNS };
+  }
+  if (!history.some((h: any) => h.who === 'me')) return { error: 'nothing_said' };
+  const t = await ask(PRACTICE_TIPS, `SCENE: ${scene}\nTRANSCRIPT:\n${transcript}`);
+  if (!t.spoken) return { error: 'no_answer' };
+  const { data: row } = await db.from('learning_sessions').insert({ user_id: userId, session_type: 'analytics', source: 'web',
+    content: { event: 'practice_session', scene, turns: asked, well: t.well, fix: t.fix, phrase: t.phrase, tips: t.spoken.slice(0, 600) } })
+    .select('id').single();
+  console.log(`[practice] tips saved turns=${asked}`);
+  return { done: true, well: t.well ?? '', fix: t.fix ?? '', phrase: t.phrase ?? '', spoken: t.spoken, sessionId: row?.id ?? null };
+}
+
 async function familyStory(userId: string, body: any): Promise<Record<string, unknown>> {
   const db = notebook();
   if (body.memory === 'forget' || body.memory === 'restore') {
@@ -1818,6 +1877,12 @@ serve(async (req) => {
       } else {
         userId = user.id;
       }
+    }
+
+    // 15 Nov 2026: face-to-face practice (dashboard, signed-in only). Nothing goes into the family notebook.
+    if (body.practice) {
+      if (fromBot || !userId) throw new Error('Unauthorized');
+      return new Response(JSON.stringify(await practiceTurn(userId, body.practice)), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     // 8 Nov 2026: card 7 on the family map reads and corrects the family notebook here (signed-in parent only).

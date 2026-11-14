@@ -21,6 +21,9 @@ const TALKING_MAX_CHARS = 450; // about 30 seconds of speech
 // them, EspaLuz writes a personal wish from the pictures + the occasion they typed + their family list, and the same
 // Runway pipeline as the talking videos makes one lip-synced clip. Paid families only, its own monthly allowance.
 const CELEBRATION_MONTHLY_CAP = Number(Deno.env.get('CELEBRATION_MONTHLY_CAP') || 1);
+// 15 Nov 2026: face-to-face practice ends with EspaLuz's tips as a lip-synced clip. The tips are read from the family's
+// saved practice_session row (written by espaluz-chat), never from the browser.
+const PRACTICE_MONTHLY_CAP = Number(Deno.env.get('PRACTICE_MONTHLY_CAP') || 2);
 
 // 6 Nov 2026 (Elena: "they should bring something special... lips moving and repeating the same message is not precious").
 // A clip never repeats the reply. TWIN of espaluz_talking.py on the bots. Free models only; no true note, no clip.
@@ -163,9 +166,9 @@ async function realEspaLuz(req: Request, body: any): Promise<Response> {
       // for a task this family started.
       const db = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
       const { count: mine } = await db.from('learning_sessions').select('id', { count: 'exact', head: true }).eq('user_id', user.id)
-        .eq('session_type', 'analytics').eq('content->>event', 'celebration_video').eq('content->>task', body.taskId);
+        .eq('session_type', 'analytics').in('content->>event', ['celebration_video', 'practice_video']).eq('content->>task', body.taskId);
       if (!mine) return no('bad_task');
-      const path = `${user.id}/celebration-${body.taskId}.mp4`;
+      const path = `${user.id}/${body.keep === 'practice' ? 'practice' : 'celebration'}-${body.taskId}.mp4`;
       const clip = await fetch(String(task.output?.[0]), { signal: AbortSignal.timeout(60000) });
       if (clip.ok) {
         const { error } = await db.storage.from('avatars').upload(path, await clip.arrayBuffer(), { upsert: true, contentType: 'video/mp4', cacheControl: '3600' });
@@ -179,9 +182,10 @@ async function realEspaLuz(req: Request, body: any): Promise<Response> {
   }
 
   const celebrate = body.mode === 'celebrate';
-  if (celebrate && !user) return no('not_signed_in');
-  const event = celebrate ? 'celebration_video' : 'talking_video';
-  const cap = celebrate ? CELEBRATION_MONTHLY_CAP : TALKING_MONTHLY_CAP;
+  const practice = body.mode === 'practice_tips';
+  if ((celebrate || practice) && !user) return no('not_signed_in');
+  const event = celebrate ? 'celebration_video' : practice ? 'practice_video' : 'talking_video';
+  const cap = celebrate ? CELEBRATION_MONTHLY_CAP : practice ? PRACTICE_MONTHLY_CAP : TALKING_MONTHLY_CAP;
   const db = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
   const nowIso = new Date().toISOString();
   let count: number | null = 0;
@@ -206,6 +210,11 @@ async function realEspaLuz(req: Request, body: any): Promise<Response> {
       const end = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! '));
       text = end > 80 ? cut.slice(0, end + 1) : cut;
     }
+    if (!text) return no('no_text');
+  } else if (practice) {
+    const { data: rows } = await db.from('learning_sessions').select('content').eq('id', String(body.sessionId ?? ''))
+      .eq('user_id', user.id).eq('session_type', 'analytics').eq('content->>event', 'practice_session').limit(1);
+    text = cleanTextForTTS(String(rows?.[0]?.content?.tips ?? '')).trim().slice(0, TALKING_MAX_CHARS);
     if (!text) return no('no_text');
   } else {
   const raw = String(body.videoScript ?? '');
@@ -259,7 +268,9 @@ async function realEspaLuz(req: Request, body: any): Promise<Response> {
     avatar: { type: 'custom', avatarId: ESPALUZ_AVATAR_ID }, speech: { type: 'audio', audio: up.runwayUri } }) })).json();
   if (!task.id) { console.error('[talking] create', JSON.stringify(task).slice(0, 300)); return no('create'); }
   if (user) await db.from('learning_sessions').insert({ user_id: user.id, session_type: 'analytics', source: 'web',
-    content: celebrate
+    content: practice
+      ? { event: 'practice_video', session: String(body.sessionId), chars: text.length, task: task.id, voice: v.spokenBy }
+      : celebrate
       ? { event: 'celebration_video', occasion: wish.occasion, seen: wish.seen.slice(0, 400), wish: text, chars: text.length, task: task.id, voice: v.spokenBy }
       : { event: 'talking_video', reason: String(body.reason ?? '').slice(0, 20), chars: text.length, task: task.id, voice: v.spokenBy } });
   console.log(`[talking] clip started event=${event} channel=${fromBot ? String(body.platform) : 'web'} reason=${body.reason} chars=${fromBot ? Number(body.chars) || 0 : text.length} voice=${v.spokenBy} wallet=${org.creditBalance} used=${(count ?? 0) + 1}/${cap}`);
@@ -275,7 +286,7 @@ serve(async (req) => {
     const body = await req.json();
     // 5 Nov 2026: the real talking EspaLuz (Runway Characters) for paying families only. Old callers send no `mode`
     // and get the old answer below, so a page not yet published keeps working.
-    if (body.mode === 'real' || body.mode === 'real_status' || body.mode === 'celebrate') return await realEspaLuz(req, body);
+    if (['real', 'real_status', 'celebrate', 'practice_tips'].includes(body.mode)) return await realEspaLuz(req, body);
     const { videoScript, voice = "es", userId } = body;
     
     // 5 Nov 2026: userId was only checked, never used (fixed avatar, free Google voice) - and the anonymous web free
