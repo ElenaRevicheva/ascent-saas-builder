@@ -63,7 +63,7 @@ export const TelegramProgress = () => {
           console.log('📡 Real-time: New learning session detected:', payload);
           if (payload.new.source === 'telegram' || payload.new.source === 'telegram_chat') {
             loadTelegramProgress(false);
-            toast.success('New Telegram conversation recorded! 🎉');
+            toast.success('New Telegram conversation recorded!');
           }
         }
       )
@@ -362,7 +362,7 @@ export const TelegramProgress = () => {
           {debugInfo && import.meta.env.DEV && (
             <div className="mt-3 p-4 bg-red-500/10 rounded-lg text-xs border border-red-500/30">
               <details>
-                <summary className="cursor-pointer font-medium text-red-600">🐛 ENHANCED Debug Info - Why No Recent Sessions? (click to expand)</summary>
+                <summary className="cursor-pointer font-medium text-red-600">ENHANCED Debug Info - Why No Recent Sessions? (click to expand)</summary>
                 <div className="mt-3 space-y-3">
                   <div className="grid gap-2">
                     <div><strong>User ID:</strong> {debugInfo.user_id}</div>
@@ -417,7 +417,7 @@ export const TelegramProgress = () => {
               </div>
               <div className="text-sm text-muted-foreground">Chat Sessions</div>
               {stats.insights.streak > 0 && (
-                <div className="text-xs text-blue-600 mt-1">🔥 {stats.insights.streak} session streak</div>
+                <div className="text-xs text-blue-600 mt-1">{stats.insights.streak} session streak</div>
               )}
             </div>
             

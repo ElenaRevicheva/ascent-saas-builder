@@ -27,7 +27,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap, Briefcase, Plane, Lightbulb, MessageCircle, PenLine, Camera, Video, MapPin, RefreshCw, Mic, Languages, MessagesSquare, Mail, Volume2, Compass, CalendarDays, Smile, NotebookPen, School, Shapes } from "lucide-react";
+import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap, Briefcase, Plane, Lightbulb, MessageCircle, PenLine, Camera, Video, MapPin, RefreshCw, Mic, Languages, MessagesSquare, Mail, Volume2, Compass, CalendarDays, Smile, NotebookPen, School, Shapes, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { feedbackSchema } from "@/lib/validations";
@@ -344,25 +344,25 @@ const Index = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                  <span className="text-green-600 font-bold">✓</span>
+                  <Check className="mt-1 h-4 w-4 shrink-0 text-primary" aria-hidden />
                 </div>
                 <span className="text-lg">{t("lp.demo1")}</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                  <span className="text-green-600 font-bold">✓</span>
+                  <Check className="mt-1 h-4 w-4 shrink-0 text-primary" aria-hidden />
                 </div>
                 <span className="text-lg">{t("lp.demo2")}</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                  <span className="text-green-600 font-bold">✓</span>
+                  <Check className="mt-1 h-4 w-4 shrink-0 text-primary" aria-hidden />
                 </div>
                 <span className="text-lg">{t("lp.demo3")}</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                  <span className="text-green-600 font-bold">✓</span>
+                  <Check className="mt-1 h-4 w-4 shrink-0 text-primary" aria-hidden />
                 </div>
                 <span className="text-lg">{t("lp.demo4")}</span>
               </div>
@@ -376,7 +376,7 @@ const Index = () => {
                 </span>
               </div>
               <ul className="text-sm space-y-2 text-gray-700">
-                <li>🔄 <strong>{t("lp.keep1")}</strong></li>
+                <li><strong>{t("lp.keep1")}</strong></li>
                 <li>{t("lp.keep2")}</li>
                 <li>{t("lp.keep3")}</li>
                 <li>{t("lp.keep4")}</li>
@@ -697,8 +697,9 @@ const Index = () => {
                 { text: t("lp.f10"), icon: Smile, gradient: "from-pink-500 to-rose-500" }
               ].map((feature, index) => (
                 <div key={index} className="group flex items-start gap-4 p-3 rounded-xl hover:bg-white/50 transition-all duration-300 hover:shadow-md">
-                  <div className={`flex items-center justify-center w-10 h-10 bg-gradient-to-r ${feature.gradient} rounded-full shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                    <feature.icon className="h-5 w-5 text-white" aria-hidden />
+                  {/* 14 Nov 2026 (Elena): the rainbow gradient balls were last year's toy style - one brand chip, like the map. */}
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <feature.icon className="h-5 w-5" aria-hidden />
                   </div>
                   <span className="text-gray-700 font-medium leading-relaxed flex-1 group-hover:text-gray-900 transition-colors duration-300">{feature.text}</span>
                 </div>
@@ -843,7 +844,8 @@ const Index = () => {
         </div>
       </section>
 
-      <div id="feedback" className="container mx-auto max-w-lg scroll-mt-20 px-4 pb-12">
+      {/* 14 Nov 2026 (Elena: unequal gap before this card) - same width and spacing as the cards above it. */}
+      <div id="feedback" className="container mx-auto -mt-12 scroll-mt-20 px-4 pb-12">
         <Part tag={t("tree.feedbackTag")} name={t("tree.feedback")}>
           <FeedbackForm />
         </Part>

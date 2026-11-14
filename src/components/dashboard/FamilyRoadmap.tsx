@@ -253,7 +253,7 @@ export const FamilyRoadmap = () => {
                   <Link to="/classroom-ru"
                     className="inline-flex items-center gap-1 rounded-full border-2 px-4 py-1.5 text-sm font-semibold"
                     style={{ borderColor: tint, color: 'hsl(var(--foreground))' }}>
-                    🐻🦊 Мишка &amp; Лиса · Russian <span className="text-xs font-normal text-muted-foreground">beta</span>
+                     Мишка &amp; Лиса · Russian <span className="text-xs font-normal text-muted-foreground">beta</span>
                   </Link>
                 )}
               </div>

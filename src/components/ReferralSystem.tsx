@@ -111,7 +111,7 @@ export const ReferralSystem = () => {
 
   const shareReferralLink = (code: string) => {
     const referralLink = `${window.location.origin}/auth?ref=${code}`;
-    const text = `🌟 Join me on EspaLuz - the AI Spanish tutor that's helping families learn Spanish naturally! Use my referral link to get started: ${referralLink}`;
+    const text = `Join me on EspaLuz - the AI Spanish tutor that's helping families learn Spanish naturally! Use my referral link to get started: ${referralLink}`;
     
     if (navigator.share) {
       navigator.share({

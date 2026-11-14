@@ -90,7 +90,7 @@ const SubscriptionRecovery = () => {
         
         setRecoveryStatus('success');
         toast({
-          title: "Subscription Found! 🎉",
+          title: "Subscription Found!",
           description: "Your subscription is already active. Refreshing page...",
         });
         
@@ -124,7 +124,7 @@ const SubscriptionRecovery = () => {
 
       setRecoveryStatus('success');
       toast({
-        title: "Subscription Activated! 🎉",
+        title: "Subscription Activated!",
         description: "Your subscription has been successfully activated. Refreshing page...",
       });
 
@@ -194,7 +194,7 @@ const SubscriptionRecovery = () => {
       <CardHeader>
         <div className="flex items-center gap-2">
           <RefreshCw className="h-5 w-5 text-blue-600" />
-          <CardTitle className="text-blue-800">Finalizing Your Subscription 🔄</CardTitle>
+          <CardTitle className="text-blue-800">Finalizing Your Subscription</CardTitle>
         </div>
         <CardDescription className="text-blue-700">
           Great news! Your PayPal payment was successful. We're just finishing up your subscription setup.

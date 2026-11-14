@@ -169,7 +169,7 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
       switch (analysis.conversationTopic) {
         case 'pet_care':
           practicalExercises.push({
-            title: '🐦 Pet Care Vocabulary Practice',
+            title: 'Pet Care Vocabulary Practice',
             content: 'Practice: "Mi loro come semillas" (My parrot eats seeds). Try describing your pet\'s daily routine in Spanish.',
             action: 'Create 3 sentences about pet care using: alimentar, cuidar, mascota'
           });
@@ -177,7 +177,7 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
           break;
         case 'food_nutrition':
           practicalExercises.push({
-            title: '🥬 Nutrition Vocabulary Builder',
+            title: 'Nutrition Vocabulary Builder',
             content: 'Practice food groups: "Las verduras son nutritivas" (Vegetables are nutritious)',
             action: 'Name 5 foods in Spanish and describe their benefits: "El brócoli tiene vitaminas"'
           });
@@ -185,7 +185,7 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
           break;
         default:
           practicalExercises.push({
-            title: '💬 Conversation Skills',
+            title: 'Conversation Skills',
             content: 'Practice asking follow-up questions in Spanish',
             action: 'Learn question words: ¿Qué?, ¿Cómo?, ¿Por qué?, ¿Cuándo?'
           });
@@ -198,7 +198,7 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
     if (analysis.vocabularyWords.size > 0) {
       const words = Array.from(analysis.vocabularyWords);
       practicalExercises.push({
-        title: '📚 Today\'s Vocabulary Challenge',
+        title: 'Today\'s Vocabulary Challenge',
         content: `Use these words in new sentences: ${words.slice(0, 3).join(', ')}`,
         action: `Try: "Hoy aprendí sobre ${words[0]}" (Today I learned about ${words[0]})`
       });
@@ -208,15 +208,15 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
 
     // Language mixing insights
     if (analysis.userLanguage === 'russian') {
-      insights.push('🌍 You\'re thinking in Russian - try to form thoughts directly in Spanish for faster fluency');
+      insights.push('You\'re thinking in Russian - try to form thoughts directly in Spanish for faster fluency');
       recommendations.push('Challenge: Ask your next question directly in Spanish instead of Russian');
     }
 
     // Grammar contextual advice
     if (analysis.spanishContent) {
-      insights.push(`💡 Spanish phrases you encountered: ${analysis.spanishContent.substring(0, 100)}...`);
+      insights.push(`Spanish phrases you encountered: ${analysis.spanishContent.substring(0, 100)}...`);
       practicalExercises.push({
-        title: '🎯 Grammar in Context',
+        title: 'Grammar in Context',
         content: 'Practice the verb patterns you just learned',
         action: 'Create your own sentence using the same verb structure'
       });
@@ -234,23 +234,23 @@ export const TelegramLearningAnalysis = ({ session }: LearningAnalysisProps) => 
 
     // Learning level insights with next steps
     if (analysis.learningLevel === 'intermediate') {
-      insights.push('📈 Intermediate level! Ready for complex topics like culture and opinions');
+      insights.push('Intermediate level! Ready for complex topics like culture and opinions');
       contextualLearning.push('Try discussing: "¿Cuál es tu opinión sobre...?" (What\'s your opinion about...?)');
     } else {
-      insights.push('🌱 Building foundation! Focus on daily situations and basic needs');
+      insights.push('Building foundation! Focus on daily situations and basic needs');
       contextualLearning.push('Practice everyday scenarios: ordering food, asking directions');
     }
 
     // Session quality insights
     if (analysis.totalWords >= 50) {
-      insights.push('🔥 Rich vocabulary session! You\'re absorbing lots of Spanish naturally');
+      insights.push('Rich vocabulary session! You\'re absorbing lots of Spanish naturally');
       recommendations.push('Review and use these words in your next conversation');
     }
 
     if (analysis.grammarPoints >= 3) {
       strengths.push(`Strong grammar focus - ${analysis.grammarPoints} structures practiced`);
       practicalExercises.push({
-        title: '📝 Grammar Reinforcement',
+        title: 'Grammar Reinforcement',
         content: 'Practice the grammar patterns you just used',
         action: 'Write 2 sentences using the same grammar structure'
       });

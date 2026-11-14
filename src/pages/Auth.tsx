@@ -95,7 +95,7 @@ const Auth = () => {
           localStorage.removeItem('pending-subscription');
           console.log('Subscription activated successfully for user:', user.id, 'PayPal ID:', subscriptionData.subscriptionId);
           toast({
-            title: "Subscription Activated! 🎉",
+            title: "Subscription Activated!",
             description: "Welcome to EspaLuz Premium! Your subscription is now active.",
           });
           return;
@@ -118,7 +118,7 @@ const Auth = () => {
       
       // Don't clear localStorage so user can retry or support can recover
       toast({
-        title: "Almost There! 🔄",
+        title: "Almost There!",
         description: "Your payment was successful! We're just finishing up your subscription setup. You can retry below or it will complete automatically.",
         duration: 8000 // Show longer but less scary
       });
@@ -142,7 +142,7 @@ const Auth = () => {
       });
       
       toast({
-        title: "Setting Up Your Subscription 🔄",
+        title: "Setting Up Your Subscription",
         description: "Your payment was successful! We're working on activating your subscription. Please check the options below.",
         duration: 8000
       });
@@ -189,7 +189,7 @@ const Auth = () => {
         localStorage.removeItem('subscription-processing-error');
         
         toast({
-          title: "Subscription Verified! ✅",
+          title: "Subscription Verified!",
           description: "Your subscription is active and ready to use.",
         });
       } else {

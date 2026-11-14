@@ -180,7 +180,7 @@ const Dashboard = () => {
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="text-center">
-              🚀 Upgrade to Unlimited EspaLuz!
+               Upgrade to Unlimited EspaLuz!
             </DialogTitle>
           </DialogHeader>
           <SubscriptionFlow

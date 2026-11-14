@@ -156,7 +156,7 @@ export default function LearningModulePage() {
       case 0: // Vocabulary
         return (
           <div className="space-y-6">
-            <h3 className="text-xl font-semibold mb-4">📚 Vocabulary Learning</h3>
+            <h3 className="text-xl font-semibold mb-4">Vocabulary Learning</h3>
             <div className="grid gap-4">
               {lesson.vocabulary.map((word, index) => (
                 <div key={index} className="bg-background/50 rounded-lg p-4 border">
@@ -186,7 +186,7 @@ export default function LearningModulePage() {
       case 1: // Phrases
         return (
           <div className="space-y-6">
-            <h3 className="text-xl font-semibold mb-4">💬 Key Phrases</h3>
+            <h3 className="text-xl font-semibold mb-4">Key Phrases</h3>
             <div className="grid gap-4">
               {lesson.phrases.map((phrase, index) => (
                 <div key={index} className="bg-background/50 rounded-lg p-4 border">
@@ -229,7 +229,7 @@ export default function LearningModulePage() {
         return (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-xl font-semibold">🎯 Exercise {currentExercise + 1} of {lesson.exercises.length}</h3>
+              <h3 className="text-xl font-semibold">Exercise {currentExercise + 1} of {lesson.exercises.length}</h3>
               <Badge variant="outline">
                 {exercise.type.replace('_', ' ')}
               </Badge>

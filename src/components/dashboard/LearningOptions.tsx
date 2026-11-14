@@ -148,7 +148,7 @@ export const LearningOptions = ({ open: controlledOpen, onOpenChange }: Learning
       <DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center mb-2">
-            Choose Your Learning Experience 🚀
+            Choose Your Learning Experience 
           </DialogTitle>
           <p className="text-muted-foreground text-center">
             Select how you'd like to practice Spanish with EspaLuz. Both options offer personalized learning!
@@ -169,7 +169,7 @@ export const LearningOptions = ({ open: controlledOpen, onOpenChange }: Learning
                 {option.popular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                     <Badge className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 text-xs font-semibold">
-                      ⭐ {option.badgeText}
+                       {option.badgeText}
                     </Badge>
                   </div>
                 )}
@@ -271,7 +271,7 @@ export const LearningOptions = ({ open: controlledOpen, onOpenChange }: Learning
         </div>
         
         <div className="text-center text-xs text-muted-foreground mt-4">
-          💡 You can switch between methods anytime - your learning progress is always saved!
+           You can switch between methods anytime - your learning progress is always saved!
         </div>
       </DialogContent>
     </Dialog>

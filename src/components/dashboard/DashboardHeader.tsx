@@ -41,14 +41,14 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
                 <img src={espaluzFace} alt="EspaLuz" className="h-16 w-16 shrink-0 rounded-full border-2 border-white object-cover object-[50%_35%] shadow-lg ring-2 ring-purple-300" />
                 <div>
                   <h1 className="text-2xl font-bold text-foreground"><span className="brand-wordmark">Espa<b>Luz</b></span></h1>
-                  <p className="text-sm text-rose-600">{t('dashboard.greeting')}{firstName ? `, ${firstName}` : ''}! ✨</p>
+                  <p className="text-sm text-rose-600">{t('dashboard.greeting')}{firstName ? `, ${firstName}` : ''}!</p>
                 </div>
               </div>
               <div className="flex flex-wrap items-center gap-2 sm:gap-4">
                 <LanguageSwitcher variant="select" size="sm" />
                 {getStatusBadge()}
                 <Button asChild variant="hero" size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg">
-                  <Link to="/classroom">🦥🐒 Kids classroom</Link>
+                  <Link to="/classroom">Kids classroom</Link>
                 </Button>
                 <Button
                   variant="hero"
@@ -61,7 +61,7 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
                     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }}
                 >
-                  👨‍👩‍👧 Add your family
+                   Add your family
                 </Button>
                 <Button variant="ghost" size="sm" onClick={signOut}>
                   {t('dashboard.signOut')}

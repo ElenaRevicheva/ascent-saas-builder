@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Part } from "@/components/landing/Tree";
-import { Check, Star, Heart, Brain, Users } from "lucide-react";
+import { Check, Star, Heart, Brain, Users, Gift, MessagesSquare, Languages, Globe, Volume2, Mic, Shapes, NotebookPen, Smartphone, Infinity as InfinityIcon, Camera, Wallet, FileText, Baby, HeartHandshake, Clapperboard, MapPin, type LucideIcon } from "lucide-react";
 
 // 14 Nov 2026 (Elena: generic emojis look toyish): the purple check already marks each line, so the leading emoji is
 // dropped when the line is drawn - English and Russian texts stay as they are in the locale files.
@@ -17,7 +17,8 @@ interface PricingPlan {
   price: number | string;
   duration?: string;
   description: string;
-  features: (string | { label: string; link: string; labelClass?: string; linkClass?: string; linkText?: string })[];
+  // 14 Nov 2026 (Elena: our own professional icons, not generic emojis): every line carries a brand line icon.
+  features: (string | { icon: LucideIcon; text: string } | { label: string; link: string; labelClass?: string; linkClass?: string; linkText?: string })[];
   popular: boolean;
   paypal: boolean;
   comingSoon?: boolean;
@@ -37,13 +38,13 @@ const Pricing = () => {
       duration: t("pr.days14"),
       description: t("pr.freeDesc"),
       features: [
-        t("pr.ff1"),
+        { icon: Gift, text: t("pr.ff1") },
         { label: t("pr.ffChat"), link: "/dashboard#chat" },
-        t("pr.ff2"),
-        t("pr.ff3"),
-        t("pr.ff4"),
-        t("pr.ff5"),
-        t("pr.ff6")
+        { icon: MessagesSquare, text: t("pr.ff2") },
+        { icon: Languages, text: t("pr.ff3") },
+        { icon: Globe, text: t("pr.ff4") },
+        { icon: Volume2, text: t("pr.ff5") },
+        { icon: Mic, text: t("pr.ff6") }
       ],
       popular: false,
       paypal: false
@@ -54,14 +55,14 @@ const Pricing = () => {
       duration: t("pr.month"),
       description: t("pr.famDesc"),
       features: [
-        t("pr.fam1"),
-        t("pr.fam2"),
-        t("pr.fam3"),
-        t("pr.fam4"),
-        t("pr.fam5"),
-        t("pr.fam6"),
+        { icon: Shapes, text: t("pr.fam1") },
+        { icon: NotebookPen, text: t("pr.fam2") },
+        { icon: Smartphone, text: t("pr.fam3") },
+        { icon: InfinityIcon, text: t("pr.fam4") },
+        { icon: Camera, text: t("pr.fam5") },
+        { icon: Users, text: t("pr.fam6") },
         // 11 Nov 2026: no other way to pay is named inside the Play app (Google Payments policy).
-        ...(insidePlayApp() ? [] : [t("pr.fam7")])
+        ...(insidePlayApp() ? [] : [{ icon: Wallet, text: t("pr.fam7") }])
       ],
       popular: true,
       paypal: true,
@@ -78,13 +79,13 @@ const Pricing = () => {
       price: t("pr.soon"),
       description: t("pr.premDesc"),
       features: [
-        t("pr.p1"),
-        t("pr.p2"),
-        t("pr.p3"),
-        t("pr.p4"),
-        t("pr.p5"),
-        t("pr.p6"),
-        t("pr.p7")
+        { icon: MessagesSquare, text: t("pr.p1") },
+        { icon: Brain, text: t("pr.p2") },
+        { icon: FileText, text: t("pr.p3") },
+        { icon: Baby, text: t("pr.p4") },
+        { icon: HeartHandshake, text: t("pr.p5") },
+        { icon: MapPin, text: t("pr.p6") },
+        { icon: Clapperboard, text: t("pr.p7") }
       ],
       popular: false,
       paypal: false,
@@ -219,7 +220,14 @@ const Pricing = () => {
                   <div className="px-4 pb-4">
                 <ul className="space-y-3">
                   {plan.features.map((feature, featureIndex) => (
-                    typeof feature === 'string' ? (
+                    typeof feature === 'object' && 'text' in feature ? (
+                      <li key={featureIndex} className="flex items-start gap-3">
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary" aria-hidden>
+                          <feature.icon className="h-4 w-4" />
+                        </span>
+                        <span className="pt-1 text-muted-foreground">{noEmoji(feature.text)}</span>
+                      </li>
+                    ) : typeof feature === 'string' ? (
                       <li key={featureIndex} className="flex items-start gap-3">
                         <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                         <span className="text-muted-foreground">{typeof feature === "string" ? noEmoji(feature) : feature}</span>

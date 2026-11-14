@@ -120,7 +120,7 @@ const SubscriptionComplete = () => {
           }));
           
           toast({
-            title: "Account Created! 🎉",
+            title: "Account Created!",
             description: "Your account is ready! We're finalizing your subscription - you'll have access in just a moment.",
           });
         } else {
@@ -129,7 +129,7 @@ const SubscriptionComplete = () => {
           localStorage.removeItem('pending-subscription');
           
           toast({
-            title: "Account Created Successfully! 🎉",
+            title: "Account Created Successfully!",
             description: "Welcome to EspaLuz! Your subscription is now active.",
           });
         }
@@ -198,7 +198,7 @@ const SubscriptionComplete = () => {
             </div>
             <CardTitle className="text-green-700 flex items-center justify-center gap-2">
               <Crown className="h-5 w-5" />
-              Payment Successful! 🎉
+              Payment Successful! 
             </CardTitle>
             <CardDescription>
               Your PayPal subscription has been activated

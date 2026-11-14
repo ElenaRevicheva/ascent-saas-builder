@@ -29,7 +29,7 @@
   },
   "dashboard": {
     "title": "EspaLuz",
-    "welcome": "¡Bienvenido a Tu Viaje en Español! 🌟",
+    "welcome": "¡Bienvenido a Tu Viaje en Español!",
     "subtitle": "Conéctate con EspaLuz y comienza a practicar español con tu familia de manera divertida y mágica",
     "greeting": "¡Hola",
     "signOut": "Cerrar Sesión"
@@ -42,38 +42,38 @@
     "active": "¡Activo!",
     "trial": "¡Prueba!",
     "free": "Gratis",
-    "upgradeNow": "¡Mejorar Ahora! ⭐"
+    "upgradeNow": "¡Mejorar Ahora!"
   },
   "actions": {
     "title": "Comenzar a Aprender",
     "subtitle": "Conéctate con EspaLuz y practica con tu familia",
     "connectTelegram": "Conectar Telegram / WhatsApp",
-    "whatsappPremium": "WhatsApp (Premium) 💫",
-    "whatsappChat": "Chat de WhatsApp 💬"
+    "whatsappPremium": "WhatsApp (Premium)",
+    "whatsappChat": "Chat de WhatsApp"
   },
   "progress": {
     "title": "Progreso Familiar",
-    "unlock": "Desbloquea analíticas de aprendizaje familiar ✨",
+    "unlock": "Desbloquea analíticas de aprendizaje familiar",
     "conversations": "Conversaciones",
     "thisWeek": "esta semana",
     "learningStreak": "Racha de Aprendizaje",
-    "days": "días 🔥"
+    "days": "días"
   },
   "features": {
-    "title": "Características de EspaLuz - Tu Kit de Herramientas de Español 🎯",
+    "title": "Características de EspaLuz - Tu Kit de Herramientas de Español",
     "subtitle": "Descubre qué características mágicas están disponibles para el viaje de español de tu familia",
     "basic": "Características Básicas",
     "advanced": "Características Avanzadas",
     "premium": "Características Premium",
     "support": "Soporte Familiar",
-    "telegramIntegration": "Integración con Telegram 📱",
-    "basicConversations": "Conversaciones Básicas 💬",
+    "telegramIntegration": "Integración con Telegram",
+    "basicConversations": "Conversaciones Básicas",
     "unlimitedConversations": "Conversaciones Ilimitadas ∞",
-    "avatarVideos": "Videos de Avatar 🎬",
-    "voiceMessages": "Mensajes de Voz 🎤",
-    "progressAnalytics": "Analíticas de Progreso 📊",
-    "prioritySupport": "Soporte Prioritario ⭐",
-    "communitySupport": "Soporte Comunitario 👥"
+    "avatarVideos": "Videos de Avatar",
+    "voiceMessages": "Mensajes de Voz",
+    "progressAnalytics": "Analíticas de Progreso",
+    "prioritySupport": "Soporte Prioritario",
+    "communitySupport": "Soporte Comunitario"
   },
   "connectBot": {
     "title": "Conecta Tu Bot",
@@ -209,9 +209,9 @@
     "startTag": "Empezar",
     "startPart": "WhatsApp, Telegram o la web",
     "count3": "3 formas",
-    "wa": "📱 WhatsApp — escanea o toca",
-    "tg": "✈️ Telegram — invita a tu familia",
-    "demo": "💬 Demo web gratis — 20 mensajes, sin registro",
+    "wa": "WhatsApp — escanea o toca",
+    "tg": "Telegram — invita a tu familia",
+    "demo": "Demo web gratis — 20 mensajes, sin registro",
     "featTag": "Por dentro",
     "strengths": "Lo que solo EspaLuz hace",
     "count4": "4 tarjetas",

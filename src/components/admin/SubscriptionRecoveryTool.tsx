@@ -64,7 +64,7 @@ const SubscriptionRecoveryTool = () => {
 
       if (recoveryResult.success) {
         toast({
-          title: "Subscription Recovered! 🎉",
+          title: "Subscription Recovered!",
           description: "The subscription has been successfully activated for the user.",
         });
         
