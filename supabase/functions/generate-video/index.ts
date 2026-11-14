@@ -16,6 +16,11 @@ const ESPALUZ_AVATAR_ID = Deno.env.get('RUNWAY_ESPALUZ_AVATAR_ID') || 'd1495436-
 const TALKING_MONTHLY_CAP = Number(Deno.env.get('TALKING_MONTHLY_CAP') || 30);
 const RUNWAY_WALLET_FLOOR = Number(Deno.env.get('RUNWAY_WALLET_FLOOR') || 279);
 const TALKING_MAX_CHARS = 450; // about 30 seconds of speech
+// 14 Nov 2026 (Elena: "let us do celebrations"): "Send EspaLuz your family's moment". The family picks a clip or photo;
+// the BROWSER takes 3 still pictures from it (the clip itself never leaves the device), a free reader says what is in
+// them, EspaLuz writes a personal wish from the pictures + the occasion they typed + their family list, and the same
+// Runway pipeline as the talking videos makes one lip-synced clip. Paid families only, its own monthly allowance.
+const CELEBRATION_MONTHLY_CAP = Number(Deno.env.get('CELEBRATION_MONTHLY_CAP') || 1);
 
 // 6 Nov 2026 (Elena: "they should bring something special... lips moving and repeating the same message is not precious").
 // A clip never repeats the reply. TWIN of espaluz_talking.py on the bots. Free models only; no true note, no clip.
@@ -36,13 +41,13 @@ function repeatsReply(line: string, reply: string): boolean {
   let n = 0; for (const w of L) if (R.has(w)) n++;
   return n / L.size > 0.7;
 }
-async function freeLine(system: string, user: string): Promise<string> {
+async function freeLine(system: string, user: string, maxTokens = 200): Promise<string> {
   const groq = Deno.env.get('GROQ_API_KEY');
   const gem = Deno.env.get('GEMINI_TTS_API_KEY');
   if (gem) try {
     const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${Deno.env.get('GEMINI_MODEL') || 'gemini-2.5-flash'}:generateContent`, {
       method: 'POST', signal: AbortSignal.timeout(20000), headers: { 'x-goog-api-key': gem, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ systemInstruction: { parts: [{ text: system }] }, contents: [{ role: 'user', parts: [{ text: user }] }], generationConfig: { maxOutputTokens: 200, temperature: 0.6 } }) });
+      body: JSON.stringify({ systemInstruction: { parts: [{ text: system }] }, contents: [{ role: 'user', parts: [{ text: user }] }], generationConfig: { maxOutputTokens: maxTokens, temperature: 0.6 } }) });
     if (r.ok) { const t = (await r.json()).candidates?.[0]?.content?.parts?.map((p: any) => p.text).join('') ?? ''; if (t.trim()) return t.trim(); }
   } catch { /* next */ }
   if (groq) try {
@@ -77,6 +82,56 @@ async function emmaVoice(text: string): Promise<string> {
   } catch { return ''; }
 }
 
+// Celebrations: what is in the family's pictures. The SAME free-first readers as the classrooms' photo reader
+// (espaluz-chat describePhoto: free Gemini -> free Groq vision); no paid reader here - if both are out, the wish is
+// written from the occasion alone, which is still true.
+const FRAMES_PROMPT = "These are still pictures from one short family video sent to EspaLuz for a celebration. In two short English " +
+  "sentences, say what is happening and what can be clearly seen (a cake, candles, balloons, a school uniform, a beach, a dance, " +
+  "colours). Only what is plainly visible, never guess. Never name a person or describe a face or body: say only 'a child', " +
+  "'a grown-up' or 'the family'. No guesses about where it was taken.";
+async function seeFrames(frames: string[]): Promise<string> {
+  if (!frames.length) return '';
+  const gem = Deno.env.get('GEMINI_TTS_API_KEY');
+  if (gem) for (const model of [Deno.env.get('GEMINI_LITE_MODEL') || 'gemini-flash-lite-latest', Deno.env.get('GEMINI_MODEL') || 'gemini-flash-latest']) {
+    try {
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+        method: 'POST', signal: AbortSignal.timeout(25000), headers: { 'x-goog-api-key': gem, 'content-type': 'application/json' },
+        body: JSON.stringify({ contents: [{ role: 'user', parts: [...frames.map((data) => ({ inline_data: { mime_type: 'image/jpeg', data } })), { text: FRAMES_PROMPT }] }],
+          generationConfig: { maxOutputTokens: 1024, temperature: 0.2 } }) });
+      if (!r.ok) throw new Error(`${r.status} ${(await r.text()).slice(0, 160)}`);
+      const t = (await r.json()).candidates?.[0]?.content?.parts?.map((p: any) => p.text ?? '').join('').trim();
+      if (t) { console.log(`[celebrate] frames read by gemini (${model})`); return t; }
+    } catch (e) { console.error(`[celebrate] frames gemini ${model}:`, (e as Error).message); }
+  }
+  const groq = Deno.env.get('GROQ_API_KEY');
+  if (groq) try {
+    const r = await fetch('https://api.groq.com/openai/v1/chat/completions', { method: 'POST', signal: AbortSignal.timeout(25000),
+      headers: { 'Authorization': `Bearer ${groq}`, 'content-type': 'application/json' },
+      body: JSON.stringify({ model: Deno.env.get('GROQ_VISION_MODEL') || 'qwen/qwen3.8-27b', max_tokens: 600, temperature: 0.2,
+        messages: [{ role: 'user', content: [{ type: 'text', text: FRAMES_PROMPT },
+          ...frames.map((d) => ({ type: 'image_url', image_url: { url: `data:image/jpeg;base64,${d}` } }))] }] }) });
+    if (!r.ok) throw new Error(`${r.status} ${(await r.text()).slice(0, 160)}`);
+    const t = String((await r.json()).choices?.[0]?.message?.content ?? '').replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+    if (t) { console.log('[celebrate] frames read by groq'); return t; }
+  } catch (e) { console.error('[celebrate] frames groq:', (e as Error).message); }
+  return '';
+}
+const WISH_RULES = "You are EspaLuz, a warm bilingual friend of this family. Write what you say aloud in a short personal video for their " +
+  "celebration. First in Spanish, then the same wish in English. Under 70 words in all, plain speech, no emojis, no labels, no quotes, " +
+  "no stage directions. Use ONLY: the OCCASION they typed, the FAMILY list and WHAT IS IN THE PICTURES. Never invent a name, an age, a " +
+  "date, a place or a detail that is not there. Mention one or two things from the pictures naturally. If the occasion names a person, " +
+  "speak to them by that name. Warm and joyful, golden-middle tone, never over the top. Never mention money, health or hardship.";
+async function celebrationWish(db: any, userId: string, body: any): Promise<{ text: string; seen: string; occasion: string }> {
+  const occasion = String(body.occasion ?? '').replace(/[<>\[\]{}]/g, ' ').trim().slice(0, 140);
+  const frames = (Array.isArray(body.frames) ? body.frames : []).filter((f: unknown) => typeof f === 'string' && f.length < 400_000)
+    .slice(0, 4).map((f: string) => f.replace(/^data:image\/\w+;base64,/, ''));
+  const seen = await seeFrames(frames);
+  const { data: fam } = await db.from('family_members').select('name, role, age').eq('user_id', userId).eq('is_active', true).limit(8);
+  const family = (fam ?? []).filter((m: any) => m?.name).map((m: any) => `- ${m.name}${m.role ? ` (${m.role}${m.age ? `, ${m.age}` : ''})` : ''}`).join('\n');
+  const text = await freeLine(WISH_RULES, `OCCASION: ${occasion || 'a family moment'}\nFAMILY:\n${family || 'not given'}\nWHAT IS IN THE PICTURES:\n${seen || 'not available'}`, 1024);
+  return { text, seen, occasion };
+}
+
 async function realEspaLuz(req: Request, body: any): Promise<Response> {
   const json = (o: unknown) => new Response(JSON.stringify(o), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   const no = (reason: string) => { console.log(`[talking] no clip: ${reason}`); return json({ real: false, reason }); };
@@ -103,11 +158,30 @@ async function realEspaLuz(req: Request, body: any): Promise<Response> {
   if (body.mode === 'real_status') {
     if (!/^[0-9a-f-]{36}$/i.test(String(body.taskId))) return no('bad_task');
     const task = await (await rw('/tasks/' + body.taskId)).json();
+    if (task.status === 'SUCCEEDED' && body.keep && user) {
+      // A celebration is kept: Runway's link expires, so the clip is copied into the family's own folder once, and only
+      // for a task this family started.
+      const db = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
+      const { count: mine } = await db.from('learning_sessions').select('id', { count: 'exact', head: true }).eq('user_id', user.id)
+        .eq('session_type', 'analytics').eq('content->>event', 'celebration_video').eq('content->>task', body.taskId);
+      if (!mine) return no('bad_task');
+      const path = `${user.id}/celebration-${body.taskId}.mp4`;
+      const clip = await fetch(String(task.output?.[0]), { signal: AbortSignal.timeout(60000) });
+      if (clip.ok) {
+        const { error } = await db.storage.from('avatars').upload(path, await clip.arrayBuffer(), { upsert: true, contentType: 'video/mp4', cacheControl: '3600' });
+        if (!error) { console.log(`[celebrate] kept ${path}`); return json({ real: true, status: 'done', url: db.storage.from('avatars').getPublicUrl(path).data.publicUrl }); }
+        console.error('[celebrate] keep failed', error.message);
+      }
+    }
     if (task.status === 'SUCCEEDED') return json({ real: true, status: 'done', url: task.output?.[0] });
     if (task.status === 'FAILED' || task.status === 'CANCELLED') { console.error('[talking] task failed', task.failure); return no('failed'); }
     return json({ real: true, status: 'working' });
   }
 
+  const celebrate = body.mode === 'celebrate';
+  if (celebrate && !user) return no('not_signed_in');
+  const event = celebrate ? 'celebration_video' : 'talking_video';
+  const cap = celebrate ? CELEBRATION_MONTHLY_CAP : TALKING_MONTHLY_CAP;
   const db = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
   const nowIso = new Date().toISOString();
   let count: number | null = 0;
@@ -116,15 +190,27 @@ async function realEspaLuz(req: Request, body: any): Promise<Response> {
     if (!subs?.length) return no('not_paid');
     const monthStart = nowIso.slice(0, 7) + '-01T00:00:00Z';
     ({ count } = await db.from('learning_sessions').select('id', { count: 'exact', head: true })
-      .eq('user_id', user.id).eq('session_type', 'analytics').eq('content->>event', 'talking_video').gte('created_at', monthStart));
-    if ((count ?? 0) >= TALKING_MONTHLY_CAP) return no('monthly_cap');
+      .eq('user_id', user.id).eq('session_type', 'analytics').eq('content->>event', event).gte('created_at', monthStart));
+    if ((count ?? 0) >= cap) return no('monthly_cap');
   }
   const org = await (await rw('/organization')).json();
   if (typeof org.creditBalance !== 'number' || org.creditBalance <= RUNWAY_WALLET_FLOOR) return no('wallet_floor');
 
+  let text = '';
+  let wish = { text: '', seen: '', occasion: '' };
+  if (celebrate) {
+    wish = await celebrationWish(db, user.id, body);
+    text = cleanTextForTTS(wish.text).trim();
+    if (text.length > TALKING_MAX_CHARS) {
+      const cut = text.slice(0, TALKING_MAX_CHARS);
+      const end = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! '));
+      text = end > 80 ? cut.slice(0, end + 1) : cut;
+    }
+    if (!text) return no('no_text');
+  } else {
   const raw = String(body.videoScript ?? '');
   const marked = raw.match(/\[VIDEO SCRIPT START\]([\s\S]*?)\[VIDEO SCRIPT END\]/);
-  let text = cleanTextForTTS(marked ? marked[1] : raw.replace(/\[VIDEO SCRIPT (START|END)\]/g, ' ')).trim();
+  text = cleanTextForTTS(marked ? marked[1] : raw.replace(/\[VIDEO SCRIPT (START|END)\]/g, ' ')).trim();
   if (text.length > TALKING_MAX_CHARS) {
     const cut = text.slice(0, TALKING_MAX_CHARS);
     const end = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('? '), cut.lastIndexOf('! '));
@@ -145,6 +231,7 @@ async function realEspaLuz(req: Request, body: any): Promise<Response> {
     body.reason = reason;
     text = cleanTextForTTS(await specialLine(db, user.id, reason, reply)).trim().slice(0, TALKING_MAX_CHARS);
     if (!text) return no('nothing_special');
+  }
   }
   const botAudio = fromBot && typeof body.audioBase64 === 'string' && body.audioBase64.length < 8_000_000 ? body.audioBase64 : '';
   if (fromBot && !botAudio) return no('no_voice');
@@ -172,9 +259,11 @@ async function realEspaLuz(req: Request, body: any): Promise<Response> {
     avatar: { type: 'custom', avatarId: ESPALUZ_AVATAR_ID }, speech: { type: 'audio', audio: up.runwayUri } }) })).json();
   if (!task.id) { console.error('[talking] create', JSON.stringify(task).slice(0, 300)); return no('create'); }
   if (user) await db.from('learning_sessions').insert({ user_id: user.id, session_type: 'analytics', source: 'web',
-    content: { event: 'talking_video', reason: String(body.reason ?? '').slice(0, 20), chars: text.length, task: task.id, voice: v.spokenBy } });
-  console.log(`[talking] clip started channel=${fromBot ? String(body.platform) : 'web'} reason=${body.reason} chars=${fromBot ? Number(body.chars) || 0 : text.length} voice=${v.spokenBy} wallet=${org.creditBalance} used=${(count ?? 0) + 1}/${TALKING_MONTHLY_CAP}`);
-  return json({ real: true, status: 'working', taskId: task.id });
+    content: celebrate
+      ? { event: 'celebration_video', occasion: wish.occasion, seen: wish.seen.slice(0, 400), wish: text, chars: text.length, task: task.id, voice: v.spokenBy }
+      : { event: 'talking_video', reason: String(body.reason ?? '').slice(0, 20), chars: text.length, task: task.id, voice: v.spokenBy } });
+  console.log(`[talking] clip started event=${event} channel=${fromBot ? String(body.platform) : 'web'} reason=${body.reason} chars=${fromBot ? Number(body.chars) || 0 : text.length} voice=${v.spokenBy} wallet=${org.creditBalance} used=${(count ?? 0) + 1}/${cap}`);
+  return json({ real: true, status: 'working', taskId: task.id, ...(celebrate ? { wish: text } : {}) });
 }
 
 serve(async (req) => {
@@ -186,7 +275,7 @@ serve(async (req) => {
     const body = await req.json();
     // 5 Nov 2026: the real talking EspaLuz (Runway Characters) for paying families only. Old callers send no `mode`
     // and get the old answer below, so a page not yet published keeps working.
-    if (body.mode === 'real' || body.mode === 'real_status') return await realEspaLuz(req, body);
+    if (body.mode === 'real' || body.mode === 'real_status' || body.mode === 'celebrate') return await realEspaLuz(req, body);
     const { videoScript, voice = "es", userId } = body;
     
     // 5 Nov 2026: userId was only checked, never used (fixed avatar, free Google voice) - and the anonymous web free

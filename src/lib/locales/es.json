@@ -313,11 +313,25 @@
     "add": "Agregar el video de tu familia",
     "replace": "Cambiar el video de tu familia",
     "uploadHint": "Guarda aquí un video corto de tu familia (MP4, hasta 30 segundos).",
-    "momentsTitle": "Muy pronto en EspaLuz Family",
+    "momentsTitle": "Incluido en EspaLuz Family",
     "soon": "Pronto",
     "celebTitle": "Celebraciones",
     "celebBody": "Un cumpleaños, el primer día de escuela, una fiesta: EspaLuz graba un saludo personal para tu familia, cara a cara.",
     "prepTitle": "Preparación cara a cara",
-    "prepBody": "Antes de una entrevista de trabajo, una reunión en la escuela o una visita al médico, practica con EspaLuz en videos cortos y recibe sus consejos."
+    "prepBody": "Antes de una entrevista de trabajo, una reunión en la escuela o una visita al médico, practica con EspaLuz en videos cortos y recibe sus consejos.",
+    "celebOccasion": "¿Qué celebramos?",
+    "celebOccasionPh": "p. ej. el cumpleaños 7 de Sofía",
+    "celebPick": "Elegir un video o una foto",
+    "celebRepick": "Elegir otro",
+    "celebMake": "Grabar el saludo de EspaLuz",
+    "celebPrivacy": "Tu video se queda en tu dispositivo: EspaLuz mira solo 3 imágenes fijas de él. Un saludo al mes está incluido en EspaLuz Family.",
+    "celebWorking": "EspaLuz está grabando tu saludo. Tarda 1-2 minutos; deja esta página abierta.",
+    "celebDone": "Tu saludo de EspaLuz",
+    "celebDownload": "Descargar",
+    "celebNotPaid": "Las celebraciones son parte de EspaLuz Family. Se abren cuando tu plan está activo.",
+    "celebCap": "El saludo de este mes ya está hecho. El próximo estará listo el {{date}}.",
+    "celebResting": "EspaLuz está descansando ahora. Inténtalo de nuevo mañana, por favor.",
+    "celebFailed": "Algo salió mal al grabar. Inténtalo de nuevo.",
+    "celebBadFile": "No se pudo leer este archivo. Prueba con una foto o un MP4 corto."
   }
 }

@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Upload, Video, Trash2, Play, Pause, PartyPopper, MessagesSquare } from 'lucide-react';
+import { Upload, Video, Trash2, Play, Pause, MessagesSquare } from 'lucide-react';
+import { CelebrationMoment } from './CelebrationMoment';
 import { useTranslation } from 'react-i18next';
 // 14 Nov 2026 (Elena): the old cartoon avatar is replaced by the photoreal EspaLuz hello; the section becomes "Video
 // moments with EspaLuz" (celebrations + face-to-face prep, part of EspaLuz Family, coming soon). The family's own upload stays.
@@ -231,8 +232,8 @@ export const AvatarUpload = () => {
             </p>
             <div className="space-y-3 border-t border-border/60 pt-4">
               <p className="text-sm font-semibold text-foreground">{t('vm.momentsTitle')}</p>
-              {[{ icon: PartyPopper, title: t('vm.celebTitle'), body: t('vm.celebBody') },
-                { icon: MessagesSquare, title: t('vm.prepTitle'), body: t('vm.prepBody') }].map((m) => (
+              <CelebrationMoment />
+              {[{ icon: MessagesSquare, title: t('vm.prepTitle'), body: t('vm.prepBody') }].map((m) => (
                 <div key={m.title} className="flex items-start gap-3 rounded-xl border border-border/60 bg-background/60 p-3">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary" aria-hidden><m.icon className="h-4 w-4" /></span>
                   <div className="min-w-0">

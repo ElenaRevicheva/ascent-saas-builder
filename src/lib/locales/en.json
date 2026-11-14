@@ -523,11 +523,25 @@
     "add": "Add your family's video",
     "replace": "Replace your family's video",
     "uploadHint": "Keep a short video of your family here (MP4, up to 30 seconds).",
-    "momentsTitle": "Coming to EspaLuz Family",
+    "momentsTitle": "Part of EspaLuz Family",
     "soon": "Coming soon",
     "celebTitle": "Celebrations",
     "celebBody": "A birthday, a first school day, a holiday: EspaLuz records a personal wish for your family, face to face.",
     "prepTitle": "Face-to-face prep",
-    "prepBody": "Before a job interview, a school meeting or a doctor's visit, practise with EspaLuz in short talking videos, then get her tips."
+    "prepBody": "Before a job interview, a school meeting or a doctor's visit, practise with EspaLuz in short talking videos, then get her tips.",
+    "celebOccasion": "What are we celebrating?",
+    "celebOccasionPh": "e.g. Sofía's 7th birthday",
+    "celebPick": "Choose a clip or photo",
+    "celebRepick": "Choose another",
+    "celebMake": "Make EspaLuz's wish",
+    "celebPrivacy": "Your clip stays on your device: EspaLuz looks only at 3 still pictures from it. One celebration a month is included in EspaLuz Family.",
+    "celebWorking": "EspaLuz is recording your wish. It takes 1-2 minutes; keep this page open.",
+    "celebDone": "Your celebration from EspaLuz",
+    "celebDownload": "Download",
+    "celebNotPaid": "Celebrations are part of EspaLuz Family. They open when your plan is active.",
+    "celebCap": "This month's celebration is already made. The next one is ready on {{date}}.",
+    "celebResting": "EspaLuz is resting right now. Please try again tomorrow.",
+    "celebFailed": "Something went wrong while recording. Please try again.",
+    "celebBadFile": "This file could not be read. Try a photo or a short MP4."
   }
 }
