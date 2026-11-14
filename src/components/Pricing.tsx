@@ -6,6 +6,7 @@ import { Check, Star, Heart, Brain, Users } from "lucide-react";
 
 // 14 Nov 2026 (Elena: generic emojis look toyish): the purple check already marks each line, so the leading emoji is
 // dropped when the line is drawn - English and Russian texts stay as they are in the locale files.
+// (Same rule as the home page cards and helpers: brand line icons, never generic emojis.)
 const noEmoji = (s: string) => s.replace(/^(?:[\p{Extended_Pictographic}\p{Regional_Indicator}\u{FE0F}\u{200D}]|\s)+/u, "");
 import { Link } from "react-router-dom";
 import SubscriptionFlow from "./SubscriptionFlow";
