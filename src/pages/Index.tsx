@@ -251,7 +251,7 @@ const Index = () => {
                     {t("lp.waButton")}
                   </Button>
                 </a>
-                <a href="https://wa.me/50766623757" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-green-700 hover:underline">+507 6662 3757</a>
+                <a href="https://wa.me/50766623757" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-green-700 hover:underline">{t("lp.waUser")} <span className="font-bold">@espaluz</span></a>
               </div>
               
               <div className="flex flex-col items-center space-y-3 order-1 lg:order-2">

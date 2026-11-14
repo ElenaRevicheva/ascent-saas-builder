@@ -285,8 +285,8 @@
     "exp2": "Emotionally intelligent responses",
     "exp3": "Family-friendly coaching style",
     "exp4": "Spanish/English cultural adaptation",
-    "demoStart": "Start Demo Now - It's FREE!",
-    "demoNote": "No email required • Instant access • 20 messages to explore",
+    "demoStart": "Try 20 messages free - right here",
+    "demoNote": "No sign-up, no email. Like it? Create your family in one minute.",
     "todayTitle": "Try EspaLuz Today",
     "todaySub": "Experience how she understands your family's unique situation",
     "liveReady": "Live & Ready",
@@ -389,7 +389,8 @@
     "subTitle": "Subscribe to EspaLuz Family!",
     "contactCount": "Profile · YouTube · AIdeazz",
     "f9": "Your week: the days you practised and what your child worked on",
-    "f10": "She notices how you feel and adapts her tone"
+    "f10": "She notices how you feel and adapts her tone",
+    "waUser": "WhatsApp username:"
   },
   "footer": {
     "contact": "Contact & Info",

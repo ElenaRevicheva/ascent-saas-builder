@@ -281,7 +281,10 @@
     "l11b": "Retoma donde terminó la última conversación",
     "l11c": "Avanza a medida que mejora tu español",
     "waScan": "Escanea con la cámara de tu teléfono o toca el botón: di ¡Hola! y te responde en español e inglés.",
-    "tgScan": "Escanea o toca: toda la familia puede unirse a la misma EspaLuz."
+    "tgScan": "Escanea o toca: toda la familia puede unirse a la misma EspaLuz.",
+    "demoStart": "Prueba 20 mensajes gratis, aquí mismo",
+    "demoNote": "Sin registro ni correo. ¿Te gusta? Crea tu familia en un minuto.",
+    "waUser": "Usuario de WhatsApp:"
   },
   "lab": {
     "tag": "AIdeazz AI Lab",
