@@ -567,7 +567,7 @@ const Index = () => {
               </p>
               <p className="text-lg text-gray-700">
                 {t("lp.holaText1")} <span className="font-bold text-green-600">WhatsApp +507-6662-3757</span> {t("lp.holaText2")} 
-                <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-bold ml-1">
+                <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-bold ml-1 [overflow-wrap:anywhere]">
                   https://t.me/EspaLuzFamily_bot
                 </a>
               </p>

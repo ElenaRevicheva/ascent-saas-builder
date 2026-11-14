@@ -286,3 +286,7 @@ All colors MUST be HSL.
   -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 6px hsl(var(--espaluz-yellow) / .45));
 }
+
+/* 14 Nov 2026 (Elena: buttons 'eaten' on phones): one long written-out link (t.me/...) could not wrap and made the whole page
+   ~480px wide inside a 360-412px phone, pushing the header buttons off the screen. Long words and links may break anywhere. */
+main a, section a, p, li { overflow-wrap: break-word; }
