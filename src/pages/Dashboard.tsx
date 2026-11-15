@@ -10,11 +10,10 @@ import { AccountStatusCard } from '@/components/dashboard/AccountStatusCard';
 import { ChatWithEspaluz } from '@/components/dashboard/ChatWithEspaluz';
 import { FamilyMembersManager } from '@/components/dashboard/FamilyMembersManager';
 import { AvatarUpload } from '@/components/dashboard/AvatarUpload';
-import { LearningModules } from '@/components/dashboard/LearningModules';
 import { LearningAnalytics } from '@/components/dashboard/LearningAnalytics';
 import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
 import { ReferralSystem } from '@/components/ReferralSystem';
-import { TelegramProgress } from '@/components/dashboard/TelegramProgress';
+import { FamilyNextSteps } from '@/components/dashboard/FamilyNextSteps';
 import { LearningOptions } from '@/components/dashboard/LearningOptions';
 import { FamilyRoadmap } from '@/components/dashboard/FamilyRoadmap';
 import SubscriptionFlow from '@/components/SubscriptionFlow';
@@ -152,19 +151,19 @@ const Dashboard = () => {
           />
         </div>
 
-        {/* Telegram Progress - High Priority */}
+        {/* 15 Nov 2026 (Elena: "keep only valuable stuff that truly shows fresh data"): TelegramProgress (score, streak,
+            minutes and "words mastered" were formulas, phrases always 0, Telegram only) and LearningModules (a fixed 2025
+            list whose Start buttons went to a missing page) are off the dashboard; their files stay. In their place: the
+            phrases the family really practised and one true next step (audit: cto-aipa docs/espaluz/
+            DASHBOARD_PROGRESS_AUDIT_2026-11-15.md). */}
         <div className="mb-8">
-          <TelegramProgress />
+          <FamilyNextSteps />
         </div>
 
-        {/* Learning Modules and Management */}
         <div className="grid gap-6 lg:grid-cols-2 mb-8">
-          <LearningModules />
-          <div className="space-y-6">
-            <AvatarUpload />
-            <div data-family-members>
-              <FamilyMembersManager />
-            </div>
+          <AvatarUpload />
+          <div data-family-members>
+            <FamilyMembersManager />
           </div>
         </div>
 

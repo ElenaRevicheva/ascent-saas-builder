@@ -39,7 +39,20 @@ export const PracticeMoment = () => {
   const rec = useRef<MediaRecorder | null>(null);
   const chunks = useRef<Blob[]>([]);
   const alive = useRef(true);
+  const box = useRef<HTMLDivElement>(null);
   const started = lines.length > 0;
+
+  // "Your next step" on the dashboard (FamilyNextSteps) opens practice here, with the coming moment filled in.
+  useEffect(() => {
+    const open = (e: Event) => {
+      const scene = String((e as CustomEvent).detail?.scene ?? '').slice(0, 160);
+      if (scene && !lines.length) setScene(scene);
+      box.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => (document.getElementById('practice-scene') as HTMLInputElement | null)?.focus(), 600);
+    };
+    window.addEventListener('espaluz:practice', open);
+    return () => window.removeEventListener('espaluz:practice', open);
+  }, [lines.length]);
 
   useEffect(() => {
     alive.current = true;
@@ -169,7 +182,7 @@ export const PracticeMoment = () => {
 
   const canAnswer = started && !tips && !busy && !speaking;
   return (
-    <div className="space-y-3 rounded-xl border border-border/60 bg-background/60 p-3">
+    <div ref={box} className="space-y-3 rounded-xl border border-border/60 bg-background/60 p-3">
       <div className="flex items-start gap-3">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary" aria-hidden><MessagesSquare className="h-4 w-4" /></span>
         <div className="min-w-0">

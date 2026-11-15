@@ -355,5 +355,19 @@
     "prepFailed": "Algo salió mal. Inténtalo de nuevo.",
     "prepNotPaid": "El video de consejos es parte de EspaLuz Family. Se abre cuando tu plan está activo.",
     "prepCap": "Los videos de consejos de este mes ya están hechos. Los próximos estarán listos el {{date}}."
+  },
+  "fw": {
+    "title": "Frases para guardar y tu próximo paso",
+    "nextTitle": "Tu próximo paso",
+    "stepComing": "Se acerca: {{fact}} Practícalo con EspaLuz antes del día.",
+    "stepRehearse": "Practica un momento que se acerca - una entrevista, una reunión en la escuela, una visita al médico - con EspaLuz haciendo de la otra persona.",
+    "stepClass": "{{name}} lleva 3 días sin clase. Diez minutos con Pere y Titi mantienen el hábito.",
+    "practiseIt": "Practicarlo",
+    "openClass": "Abrir la clase",
+    "phrasesTitle": "Frases para guardar",
+    "phrasesEmpty": "Aquí se irán juntando las frases en español que practicas con EspaLuz: de los consejos de tus prácticas y de sus respuestas en el chat.",
+    "fromPractice": "de tu práctica",
+    "fromFix": "una corrección de tu práctica",
+    "fromChat": "de las respuestas de EspaLuz"
   }
 }
