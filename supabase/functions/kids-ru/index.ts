@@ -38,6 +38,9 @@ const BASE_PROMPT = (child: string, age: string, family: string) => `You are the
 - Мишка Медок (Mishka): a calm brown bear cub in a red embroidered shirt who loves honey - slow, wise and always calm, the keeper of the lesson: he likes the classic way (one sentence, said well, step by step). His mission is to keep the child calm and balanced: he names feelings, leads the slow breathing, and steadies the lesson when it gets too wild.
 - Лиса Алиса (Lisa): a lively red fox in a blue sarafan - the opposite: full of energy, jokes and fresh ideas. She playfully disagrees with Mishka ("Нет-нет, Мишка! Я думаю..."), catches what he missed, turns the plan into a bigger, funnier idea, and sometimes makes a mistake on purpose so the child can catch her. Never mean, never teases the child. She always calls herself by her full name "Лиса Алиса".
 - How they talk: Mishka proposes the calm, classic way; Lisa answers with a twist; and the CHILD decides - at most ONCE a lesson ask "Кто прав, Мишка или Лиса? / Who is right, Mishka or Lisa?". Both are a little right; the child is the judge. When the child is upset or tired, Lisa goes quiet and gentle and Mishka leads.
+- NAMES (15 Nov 2026, Alisa played the fox): the bear is Мишка, the fox is Лиса (Лиса Алиса); the child is ${child}. If she says "Я Лиса!",
+  "I am Lisa" or "Я Мишка" she is PLAYING that hero - play along warmly ("Ты сегодня Лиса? Тогда я буду..."), never tell her she said
+  someone else's name, and never mix up which hero is which.
 The child: ${child}. ${family}
 
 How to talk:
@@ -64,7 +67,13 @@ const STEPS = [
   "GOODBYE: praise, a star, today's MISSION - one sentence to say in Russian or English to a real person (mom, a friend, grandma on the phone), OR (every other lesson) one real job at home said in Russian while doing it (set the table, water a plant, pack the school bag) - and goodbye from both.",
 ];
 const STEP_FREE = "FREE TALK: the lesson is done; keep talking about the child's topic, short, one question, warm.";
-const PRAISE_RULE = "\nPraise: name exactly what she did (\"ты сказала целое предложение! / you said a whole sentence!\") - a sentence only if she really said one IN RUSSIAN - never the same praise word twice in a lesson. If she says she already did the mission, accept it warmly and do not give it again.";
+// 15 Nov 2026 (Alisa's class, 17 turns): "Ты сказала целое предложение" came back on 5 turns, once for the one-word
+// "Дайский." - this rule itself gave the model that exact sentence as its example, so it copied it. Now: praise quotes
+// HER OWN Russian words, in fresh words each time; "a whole sentence" only for a real one (code checks it too, below).
+const PRAISE_RULE = "\nPraise: name exactly what she said, quoting one to three of HER OWN Russian words back to her (\"«я хорошо чувствую себя» - как красиво! / " +
+  "how nicely said!\"), in fresh words every time - never the same praise twice in a lesson. Call it a whole sentence only if she really said " +
+  "one: at least three Russian words with a verb; one or two words are praised as words (\"какое слово!\"), not as a sentence. " +
+  "If she says she already did the mission, accept it warmly and do not give it again.";
 // 14 Nov 2026 (Alisa's class, 38 turns): Mishka praised "a whole sentence" for English, Spanish, an empty recording and
 // once "a whole sentence in Icelandic", and said_ru filled the parent report with English. When her words hold no
 // Russian letters she did not speak Russian this turn: no Russian praise; Mishka gives the Russian and she says it after him.
@@ -411,6 +420,20 @@ Deno.serve(async (req) => {
         const padTurn = ACTIVITY.some(([re]) => re.test(message.trim()));
         out.said_ru = padTurn ? [] : out.said_ru.filter((w: string) => CYRILLIC.test(w) && w.toLowerCase().replace(/ё/g, 'е')
           .split(/\s+/).map((t) => t.replace(/[^а-я-]/g, '')).filter(Boolean).every((t) => heardRu.includes(t)));
+        // 15 Nov 2026: "a whole sentence" only for a real one - three or more Russian words in HER message - and once a
+        // lesson. Otherwise that sentence is cut from the line by code (the model copied the praise on 5 of 17 turns).
+        const ruWords = padTurn ? 0 : (message.match(/[а-яё]+/gi) ?? []).length;
+        const wholeUsed = history.some((m: any) => m.role === 'assistant' && /целое предложение/i.test(String(m.content)));
+        if (ruWords < 3 || wholeUsed) {
+          const cut = (t: string, re: RegExp) => String(t ?? '').replace(re, '').replace(/\s{2,}/g, ' ').trim();
+          let trimmed = 0;
+          out.lines = out.lines.map((l: any) => {
+            if (!/целое предложение|whole sentence/i.test(`${l.ru} ${l.en}`)) return l;
+            trimmed++;
+            return { ...l, ru: cut(l.ru, /[^.!?]*целое предложение[^.!?]*[.!?]?/gi), en: cut(l.en, /[^.!?]*whole sentence[^.!?]*[.!?]?/gi) };
+          }).filter((l: any) => l.ru);
+          if (trimmed) console.log(`[kids-ru] cut a template 'whole sentence' praise (ru words=${ruWords}, used before=${wholeUsed})`);
+        }
         console.log(`[kids-ru] model=${name} mode=${mode} turn=${turn} unit=${unit + 1} lines=${out.lines.length} said_ru=${out.said_ru.length}`);
         // Saved like a Pere & Titi turn, under its own type: the memory and the parent report read it back.
         const reply = out.lines.map((l: any) => `${l.who === 'mishka' ? 'Мишка' : 'Лиса'}: ${l.ru} / ${l.en}`).join('\n');
