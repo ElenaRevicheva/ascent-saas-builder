@@ -63,6 +63,17 @@ export const CelebrationMoment = () => {
   const [clip, setClip] = useState<string | null>(null);
   const [wish, setWish] = useState('');
   const alive = useRef(true);
+  const box = useRef<HTMLDivElement>(null);
+  // 15 Nov 2026: "Make a celebration video" on a first-year moment (BelongingPath) fills the occasion here.
+  useEffect(() => {
+    const go = (e: Event) => {
+      const o = String((e as CustomEvent).detail?.occasion ?? '').slice(0, 140);
+      if (o) setOccasion(o);
+      box.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+    window.addEventListener('espaluz:celebrate', go);
+    return () => window.removeEventListener('espaluz:celebrate', go);
+  }, []);
 
   // The family's last celebration, if they have one.
   useEffect(() => {
@@ -131,7 +142,7 @@ export const CelebrationMoment = () => {
   };
 
   return (
-    <div className="space-y-3 rounded-xl border border-border/60 bg-background/60 p-3">
+    <div ref={box} className="space-y-3 rounded-xl border border-border/60 bg-background/60 p-3">
       <div className="flex items-start gap-3">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary" aria-hidden><PartyPopper className="h-4 w-4" /></span>
         <div className="min-w-0">

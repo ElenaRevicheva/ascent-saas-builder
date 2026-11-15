@@ -70,6 +70,17 @@ export const ChatWithEspaluz = ({ onUpgradeClick }: ChatWithEspaluzProps) => {
   } = useFreeMessages();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
+  // 15 Nov 2026: "Ask EspaLuz" on a first-year moment (BelongingPath) puts the question here, ready to send.
+  useEffect(() => {
+    const ask = (e: Event) => {
+      const text = String((e as CustomEvent).detail?.text ?? '').slice(0, 300);
+      if (!text) return;
+      setInput(text);
+      document.getElementById('chat')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    window.addEventListener('espaluz:ask', ask);
+    return () => window.removeEventListener('espaluz:ask', ask);
+  }, []);
   const cameraInput = useRef<HTMLInputElement | null>(null);
   const galleryInput = useRef<HTMLInputElement | null>(null);
   const [loading, setLoading] = useState(false);

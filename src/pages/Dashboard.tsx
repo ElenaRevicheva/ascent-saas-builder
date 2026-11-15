@@ -13,6 +13,7 @@ import { AvatarUpload } from '@/components/dashboard/AvatarUpload';
 import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
 import { ReferralSystem } from '@/components/ReferralSystem';
 import { FamilyNextSteps } from '@/components/dashboard/FamilyNextSteps';
+import { BelongingPath } from '@/components/dashboard/BelongingPath';
 import { TelegramProgress } from '@/components/dashboard/TelegramProgress';
 import { LearningModules } from '@/components/dashboard/LearningModules';
 import { LearningOptions } from '@/components/dashboard/LearningOptions';
@@ -138,6 +139,11 @@ const Dashboard = () => {
         {/* 15 Nov 2026 (Elena: one memory across all channels, no duplicates): the family's week - last heard per channel,
             the timeline from WhatsApp / Telegram / the app / the classroom, next steps with Done / Not now, phrases to keep.
             It replaces LearningAnalytics here (its week dots and talk counts now live inside it; the file stays). */}
+        {/* 15 Nov 2026 (Elena): "Your first year in <country>" - the heart of the dashboard (BelongingPath). */}
+        <div className="mb-8">
+          <BelongingPath />
+        </div>
+
         <div className="mb-8" data-learning-analytics>
           <FamilyNextSteps />
         </div>

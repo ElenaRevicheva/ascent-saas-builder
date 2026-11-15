@@ -1,6 +1,8 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { phrasesIn } from '../_shared/phrases.ts'
+import { momentsIn } from '../_shared/moments.ts'
+import { BELONGING } from '../_shared/belonging_packs.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -37,8 +39,13 @@ serve(async (req) => {
       const userId = link?.[0]?.user_id
       if (!userId) return new Response(JSON.stringify({ linked: false }), { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
       const phrases = phrasesIn(String(requestData.reply).slice(0, 6000))
+      // 15 Nov 2026: which of the family's country belonging moments this reply talked about ("Your first Fiestas
+      // Patrias"...) - ids only, for the dashboard's "Your first year in <country>" path (_shared/moments.ts).
+      const { data: prof } = await supabase.from('learning_sessions').select('content').eq('user_id', userId).eq('session_type', 'analytics')
+        .eq('content->>event', 'family_profile').order('created_at', { ascending: false }).limit(1)
+      const moments = momentsIn(String(requestData.reply).slice(0, 6000), BELONGING[String(prof?.[0]?.content?.country_now ?? '')]?.belonging_moments)
       const { error } = await supabase.from('learning_sessions').insert({ user_id: userId, session_type: 'conversation', source: platform,
-        content: { channel: platform, phrases, member: String(requestData.member ?? '').slice(0, 60) || null, chars: String(requestData.reply).length },
+        content: { channel: platform, phrases, moments, member: String(requestData.member ?? '').slice(0, 60) || null, chars: String(requestData.reply).length },
         progress_data: {}, completed_at: new Date().toISOString() })
       if (error) { console.error('[brain] save failed', error.message); return new Response(JSON.stringify({ error: 'save' }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }) }
       console.log(`[brain] ${platform} turn saved phrases=${phrases.length}`)

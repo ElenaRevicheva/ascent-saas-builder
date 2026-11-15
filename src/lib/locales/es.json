@@ -431,5 +431,30 @@
     "talkPhrases_other": "{{count}} frases",
     "classNote": "Una clase con Pere y Titi - su informe está en la clase.",
     "noPhrases": "Sin frases nuevas en esta."
+  },
+  "fy": {
+    "title": "Tu primer año en {{country}}",
+    "titleNoCountry": "Tu primer año en tu nuevo país",
+    "noCountry": "Cuéntale a EspaLuz dónde es tu hogar ahora (el mapa de la familia arriba, \"Sobre tu nueva vida\") y aquí aparecerá tu primer año: los momentos que las familias viven en ese país, datos comprobados y tus propias fechas.",
+    "sub": "Los momentos que hacen que {{country}} se sienta como hogar - de la guía comprobada de tu país, en todos tus chats con EspaLuz.",
+    "lived": "{{n}} de {{of}} vividos",
+    "arrived": "llegaron {{when}}",
+    "youLived": "Lo vivieron",
+    "coming_one": "{{date}} - mañana",
+    "coming_other": "{{date}} - en {{count}} días",
+    "on": "Próxima vez: {{date}}",
+    "whenItComes": "Cuando llegue",
+    "talked": "hablado en {{channel}}, {{date}}",
+    "chApp": "la app",
+    "askForMore": "Pregúntale a EspaLuz - ella sabe cómo lo viven las familias aquí.",
+    "checked": "Datos comprobados de la guía de {{country}} que EspaLuz usa en todos los canales.",
+    "ask": "Preguntar a EspaLuz",
+    "rehearse": "Practicarlo",
+    "celebrate": "Hacer un video de celebración",
+    "weLived": "Lo vivimos",
+    "askText": "Cuéntame sobre {{moment}} en {{country}}: ¿cómo lo viven las familias y qué deberíamos decir o hacer?",
+    "first30": "Tus primeros 30 días en {{country}}",
+    "doneOf": "{{n}} de {{of}} hechos",
+    "markDone": "Marcar como hecho"
   }
 }
