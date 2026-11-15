@@ -29,27 +29,31 @@ export const PACK_COUNTRIES: [string, string][] = [
   ['puerto_rico', 'Puerto Rico'], ['venezuela', 'Venezuela'], ['equatorial_guinea', 'Equatorial Guinea'],
 ];
 
+// 15 Nov 2026 (Elena: "every question needs Other, so they can always type their own answer - and it must reach the
+// memory"): every question now has a typed box. What they type is saved as the answer itself (for "what matters most" it is
+// added to the chosen ones), and the web chat (profileLine) and both bots (profile_line) put every answer into EspaLuz's
+// instructions word for word - so a typed answer is used exactly like a tapped one, on the web, WhatsApp and Telegram.
 // freeKey: the typed box is saved under its own key (work = the chip, profession = what they type), so one never erases the other.
 type Q = { key: keyof FamilyProfile | 'family'; ask: string; why: string; options?: string[]; multi?: boolean; free?: string; freeKey?: keyof FamilyProfile };
 const QUESTIONS: Q[] = [
-  { key: 'country_now', ask: 'Where is home now?', why: 'So EspaLuz knows your holidays, your school calendar and your local customs.' },
+  { key: 'country_now', ask: 'Where is home now?', why: 'So EspaLuz knows your holidays, your school calendar and your local customs.', free: 'Somewhere else? Type the place' },
   { key: 'country_from', ask: 'And where does your story begin?', why: 'So she can build bridges between the customs you grew up with and the new ones.', free: 'Your country of origin' },
   { key: 'native_language', ask: 'Which language does your heart speak?', why: 'So when Spanish gets too hard, she can explain a word in your language.',
     options: ['English', 'Russian', 'Ukrainian', 'Portuguese', 'French', 'German', 'Italian', 'Chinese', 'Arabic', 'Hindi'], free: 'Another language' },
   { key: 'moved_when', ask: 'How long have you been here?', why: 'The first months are about getting by; later it is about belonging. She meets you where you are.',
-    options: ['Still planning the move', 'Traveling - still looking for my place', 'Less than 6 months', '6 to 12 months', '1 to 3 years', 'More than 3 years'] },
+    options: ['Still planning the move', 'Traveling - still looking for my place', 'Less than 6 months', '6 to 12 months', '1 to 3 years', 'More than 3 years'], free: 'Or tell it in your own words' },
   { key: 'household', ask: 'Who is on this adventure with you?', why: 'So she talks to your real family, not a generic one.',
-    options: ['Two parents with children', 'Single parent with children', 'A couple', 'Grandparents with grandchildren', 'On my own', 'Another family shape'] },
+    options: ['Two parents with children', 'Single parent with children', 'A couple', 'Grandparents with grandchildren', 'On my own'], free: 'Another family shape? Describe it in your own words' },
   { key: 'work', ask: 'What do you do for work?', why: 'So EspaLuz can bring the Spanish of your own field, and grow with you as your work changes.',
     options: ['I work online, remotely', 'A local job here', 'My own business', 'Studying', 'Caring for the family full time', 'Retired', 'Between things right now'],
     free: 'Your profession (optional) - e.g. designer, nurse, developer, teacher', freeKey: 'profession' },
   { key: 'family', ask: 'Who are the little ones?', why: "So Pere & Titi know each child by name. Names and ages live in your family list." },
   { key: 'spanish_feel', ask: 'How does Spanish feel today?', why: 'So she pitches every answer at your level.',
-    options: ["I'm just starting", 'I get by', "I'm comfortable"] },
+    options: ["I'm just starting", 'I get by', "I'm comfortable"], free: 'Or say it in your own words' },
   { key: 'focus', ask: 'What would make the biggest difference this month?', why: 'So she starts where it matters to you now. Choose any; change it when life changes.', multi: true,
-    options: ["The children's school", 'Doctors and health', 'Work', 'Papers and offices', 'Friends and neighbours', 'Feeling at home', 'Speaking with confidence'] },
+    options: ["The children's school", 'Doctors and health', 'Work', 'Papers and offices', 'Friends and neighbours', 'Feeling at home', 'Speaking with confidence'], free: 'Something else? Type it' },
   { key: 'miss_most', ask: 'What do you miss most from home?', why: 'So she can help you find a piece of home here, and build new traditions.',
-    options: ['People', 'Food', 'My language', 'Traditions', 'The rhythm of life', 'Nothing much'] },
+    options: ['People', 'Food', 'My language', 'Traditions', 'The rhythm of life', 'Nothing much'], free: 'Something else? Type it' },
 ];
 
 export async function readFamilyProfile(userId: string): Promise<FamilyProfile | null> {
@@ -93,8 +97,10 @@ export const FamilyProfileDialog = ({ open, onOpenChange, onSaved, onOpenFamily 
   const q = QUESTIONS[i];
   useEffect(() => {
     if (q?.freeKey) { const f = p[q.freeKey]; setTyped(typeof f === 'string' ? f : ''); return; }
+    if (q?.multi) { setTyped((p.focus ?? []).find((f) => !(q.options ?? []).includes(f)) ?? ''); return; }
     const v = q && q.key !== 'family' ? p[q.key] : '';
-    setTyped(typeof v === 'string' && q?.free && !(q.options ?? []).includes(v) ? v : '');
+    const choices = q?.key === 'country_now' ? PACK_COUNTRIES.map(([k]) => k) : (q?.options ?? []);
+    setTyped(typeof v === 'string' && q?.free && !choices.includes(v) ? v : '');
   }, [i]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const save = async (final: FamilyProfile) => {
@@ -110,7 +116,12 @@ export const FamilyProfileDialog = ({ open, onOpenChange, onSaved, onOpenFamily 
     onOpenChange(false);
   };
 
-  const withTyped = (): FamilyProfile => (q?.free && typed.trim() && q.key !== 'family' ? { ...p, [q.freeKey ?? q.key]: typed.trim().slice(0, 60) } : p);
+  const withTyped = (): FamilyProfile => {
+    if (!q?.free || q.key === 'family') return p;
+    const own = typed.trim().slice(0, 80);
+    if (q.multi) return { ...p, focus: [...(p.focus ?? []).filter((f) => (q.options ?? []).includes(f)), ...(own ? [own] : [])] };
+    return own ? { ...p, [q.freeKey ?? q.key]: own } : p;
+  };
   const next = () => {
     const cur = withTyped();
     setP(cur);
@@ -145,7 +156,7 @@ export const FamilyProfileDialog = ({ open, onOpenChange, onSaved, onOpenFamily 
             {q.key === 'country_now' && (
               <div className="flex flex-wrap gap-2">
                 {PACK_COUNTRIES.map(([k, n]) => (
-                  <button key={k} type="button" onClick={() => setP({ ...p, country_now: k })} className={chip(p.country_now === k)}
+                  <button key={k} type="button" onClick={() => { setP({ ...p, country_now: k }); setTyped(''); }} className={chip(p.country_now === k)}
                     style={p.country_now === k ? { background: tint } : undefined}>{n}</button>
                 ))}
               </div>
