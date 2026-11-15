@@ -368,6 +368,7 @@
     "phrasesEmpty": "Aquí se irán juntando las frases en español que practicas con EspaLuz: de los consejos de tus prácticas y de sus respuestas en el chat.",
     "fromPractice": "de tu práctica",
     "fromFix": "una corrección de tu práctica",
-    "fromChat": "de las respuestas de EspaLuz"
+    "fromChannel": "de EspaLuz en {{channel}}",
+    "chWeb": "la app"
   }
 }

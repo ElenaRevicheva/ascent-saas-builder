@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { phrasesIn } from '../../../supabase/functions/_shared/phrases';
 
 /*
  * 15 Nov 2026 (Elena: "keep only valuable stuff that truly shows fresh data and moves the user towards learning more").
@@ -13,41 +14,19 @@ import { supabase } from '@/integrations/supabase/client';
  * and LearningModules (a fixed 2025 list, Start buttons went to a missing page). Audit: cto-aipa
  * docs/espaluz/DASHBOARD_PROGRESS_AUDIT_2026-11-15.md. Both files stay in the repo.
  * Only what is really in the family's records: the phrase to keep and the fix from every PRACTICE, and the Spanish phrases
- * EspaLuz really gave them in the web chat and on Telegram ("¿Puedes repetir, por favor?" (Can you repeat, please?)).
+ * EspaLuz really gave them on WhatsApp, Telegram and the web chat ("¿Puedes repetir, por favor?" (Can you repeat, please?)),
+ * each tagged with where it came from - the web/app is the family's ONE brain (Elena, 15 Nov).
  * "Your next step" names one true thing to do: an upcoming moment from the notebook -> practise it; no practice yet ->
  * rehearse; a child with no class for 3 days -> Pere & Titi. The weekly days/units live in LearningAnalytics and the
  * notebook in the family map (card 7) - not repeated here.
  */
 
-type Phrase = { es: string; en: string; from: 'practice' | 'fix' | 'chat' };
+type Phrase = { es: string; en: string; from: 'practice' | 'fix' | 'web' | 'whatsapp' | 'telegram' };
 type Step = { key: string; text: string; action: string; go: () => void; icon: typeof ArrowRight };
 
-// Phrases EspaLuz wrote with their English, in the shapes her replies really use (tested on 10 real replies, 15 Nov):
-// “X” (English) · "X" [pronunciation] - English · X [pronunciation] - English · - X – English. Pronunciation in
-// brackets is never shown as the English.
+// The SAME finder the brain's server runs on every WhatsApp/Telegram reply (supabase/functions/_shared/phrases.ts).
 const SPANISH = /[¿¡áéíóúñ]|\b(el|la|los|las|por|para|que|puedes|dónde|cómo|quiero|tengo|necesito|gracias|favor|es|está|una?|mi|mis|se|vamos|no)\b/i;
-const ENGLISH = /\b(the|is|are|you|your|my|i|it|to|of|we|can|what|where|how|this|please|do|need|he|she|go|let's|time|name|in|at|with|a)\b/i;
-const PRON = /[A-Z]{2,}-|‑|\b[A-Z]{3,}\b.*-|[ɲ]/;
-const clean = (s: string) => s.replace(/\*+/g, '').replace(/^[\s"“”'-]+|[\s"“”']+$/g, '').replace(/\s+/g, ' ').trim();
-function phrasesIn(text: string): Phrase[] {
-  const out: Phrase[] = [];
-  const add = (es: string, en?: string) => {
-    es = clean(es.includes(': ') ? es.slice(es.lastIndexOf(': ') + 2) : es);
-    en = clean(en ?? '').replace(/^[(\s]+|[)\s]+$/g, '').replace(/([?!]).*$/, '$1');
-    if (es.length < 4 || es.length > 90 || !SPANISH.test(es) || es.includes('…')) return;
-    if (en && (PRON.test(en) || !ENGLISH.test(en) || SPANISH.test(en.replace(/\b(a|no|is)\b/g, '')) && !ENGLISH.test(en))) en = '';
-    out.push({ es, en, from: 'chat' });
-  };
-  const body = text.replace(/\[VIDEO SCRIPT START\][\s\S]*?(\[VIDEO SCRIPT END\]|$)/g, '');
-  // "X" (English) / **“X”** (English) / "X" [pron] - English / "X" (pron) – note
-  for (const m of body.matchAll(/\*{0,2}[“"]([^”"\n]{4,90})[”"]\*{0,2}\s*(?:\[[^\]\n]{2,90}\]\s*[-–]\s*([^.\n(–]{3,90})|\(([^)\n]{3,90})\))/g)) add(m[1], m[2] ?? m[3]);
-  // X [pron] - English  (line start or after ": ")
-  for (const m of body.matchAll(/(?:^|\n|:\s)\s*(¿?¡?[A-Za-zÁÉÍÓÚÑáéíóúñ][^\[\n“"]{2,80}?)\s*\[[^\]\n]{3,90}\]\s*[-–]\s*([^.\n(]{3,90})/g)) add(m[1], m[2]);
-  // - Spanish – English (bullets)
-  for (const m of body.matchAll(/(?:^|\n)\s*-\s+(¿?¡?[^\n“"–]{3,80}?)\s+[–-]\s+([A-Z][^\n(.]{3,90})/g)) add(m[1], m[2]);
-  const seen = new Set<string>();
-  return out.filter((p) => { const k = p.es.toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; });
-}
+const clean = (s: string) => s.replace(/\*+/g, '').replace(/\s+/g, ' ').trim();
 
 export const FamilyNextSteps = () => {
   const { user } = useAuth();
@@ -83,8 +62,13 @@ export const FamilyNextSteps = () => {
           const [es, en] = String(c.phrase ?? '').split(/\s+[-–]\s+/);
           if (es && SPANISH.test(es)) found.push({ es: clean(es), en: clean(en ?? ''), from: 'practice' });
           if (c.fix) found.push({ es: clean(String(c.fix)), en: '', from: 'fix' });
+        } else if (Array.isArray(c.phrases)) {
+          // WhatsApp/Telegram turns saved by the brain since 15 Nov: phrases only, never the message text.
+          const ch = c.channel === 'whatsapp' ? 'whatsapp' : 'telegram';
+          for (const p of c.phrases) if (p?.es) found.push({ es: String(p.es), en: String(p.en ?? ''), from: ch });
         } else {
-          found.push(...phrasesIn(String(c.ai_response ?? c.bot_response ?? '')));
+          const ch = r.session_type === 'dashboard_chat' ? 'web' : 'telegram';
+          found.push(...phrasesIn(String(c.ai_response ?? c.bot_response ?? '')).map((p) => ({ ...p, from: ch as Phrase['from'] })));
         }
       }
       const seen = new Set<string>();
@@ -141,7 +125,7 @@ export const FamilyNextSteps = () => {
                 <li key={p.es} className="rounded-lg bg-primary/5 p-2 text-sm">
                   <p className="font-medium text-foreground">{p.es}</p>
                   {p.en && <p className="text-xs text-muted-foreground">{p.en}</p>}
-                  <p className="text-[11px] text-muted-foreground/80">{t(p.from === 'practice' ? 'fw.fromPractice' : p.from === 'fix' ? 'fw.fromFix' : 'fw.fromChat')}</p>
+                  <p className="text-[11px] text-muted-foreground/80">{t(p.from === 'practice' ? 'fw.fromPractice' : p.from === 'fix' ? 'fw.fromFix' : 'fw.fromChannel', { channel: p.from === 'web' ? t('fw.chWeb') : p.from === 'whatsapp' ? 'WhatsApp' : 'Telegram' })}</p>
                 </li>
               ))}
             </ul>

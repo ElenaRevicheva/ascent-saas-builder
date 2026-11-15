@@ -578,6 +578,7 @@
     "phrasesEmpty": "The Spanish phrases you practise with EspaLuz will gather here - from your practice tips and from her replies in the chat.",
     "fromPractice": "from your practice",
     "fromFix": "a fix from your practice",
-    "fromChat": "from EspaLuz's replies"
+    "fromChannel": "from EspaLuz on {{channel}}",
+    "chWeb": "the app"
   }
 }
