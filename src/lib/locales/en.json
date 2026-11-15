@@ -518,8 +518,8 @@
   },
   "vm": {
     "title": "Video moments with EspaLuz",
-    "hello": "This is EspaLuz saying hello. Below it, you can also keep a short video of your family, shown here on your dashboard.",
-    "saved": "Your family's video is saved and shown here on your dashboard.",
+    "hello": "This is EspaLuz saying hello.",
+    "saved": "This is the video your family kept here.",
     "add": "Add your family's video",
     "replace": "Replace your family's video",
     "uploadHint": "Keep a short video of your family here (MP4, up to 30 seconds).",
@@ -564,10 +564,11 @@
     "prepNoMic": "The microphone is not available. Allow it in your browser, or type your answer.",
     "prepFailed": "Something went wrong. Please try again.",
     "prepNotPaid": "The tips video is part of EspaLuz Family. It opens when your plan is active.",
-    "prepCap": "This month's tips videos are used. The next ones are ready on {{date}}."
+    "prepCap": "This month's tips videos are used. The next ones are ready on {{date}}.",
+    "remove": "Remove this video"
   },
   "fw": {
-    "title": "Phrases to keep, and your next step",
+    "title": "Your family's week with EspaLuz",
     "nextTitle": "Your next step",
     "stepComing": "Coming up: {{fact}} Rehearse it with EspaLuz before the day.",
     "stepRehearse": "Rehearse a moment that is coming - an interview, a school meeting, a visit to the doctor - with EspaLuz playing the other person.",
@@ -579,6 +580,36 @@
     "fromPractice": "from your practice",
     "fromFix": "a fix from your practice",
     "fromChannel": "from EspaLuz on {{channel}}",
-    "chWeb": "the app"
+    "chWeb": "the app",
+    "sub": "WhatsApp, Telegram, the app and the classroom share one memory - here is what it holds this week.",
+    "heardTitle": "Last heard:",
+    "notYet": "not yet",
+    "today": "today",
+    "chWebCap": "The app",
+    "chClass": "Classroom",
+    "weekTitle": "This week",
+    "daysLabel": "Days with EspaLuz this week: {{count}}",
+    "tlChat_one": "Talked with EspaLuz on {{channel}}",
+    "tlChat_other": "Talked with EspaLuz on {{channel}} ({{count}} times)",
+    "tlPhrases_one": "{{count}} phrase to keep",
+    "tlPhrases_other": "{{count}} phrases to keep",
+    "tlClass": "{{name}} in the classroom",
+    "tlClassRu": "{{name}} in the Russian class with Mishka & Lisa",
+    "tlPractice": "Practised: {{scene}}",
+    "tlCeleb": "Celebration video: {{occasion}}",
+    "tlNotes_one": "EspaLuz noted something new about your family",
+    "tlNotes_other": "EspaLuz noted {{count}} new things about your family",
+    "tlDone": "Done: {{what}}",
+    "tlEmpty": "Nothing yet this week. Say ¡Hola! to EspaLuz on WhatsApp, Telegram or here - it all lands in one place.",
+    "unit": "Unit",
+    "yourChild": "Your child",
+    "done": "Done",
+    "later": "Not now",
+    "doneWhat": {
+      "coming": "rehearsed what is coming",
+      "rehearse": "a rehearsal",
+      "class": "a class with Pere & Titi",
+      "step": "a next step"
+    }
   }
 }

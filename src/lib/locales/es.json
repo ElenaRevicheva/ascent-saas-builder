@@ -308,8 +308,8 @@
   },
   "vm": {
     "title": "Momentos en video con EspaLuz",
-    "hello": "Esta es EspaLuz saludándote. Abajo puedes guardar también un video corto de tu familia, que se muestra aquí en tu panel.",
-    "saved": "El video de tu familia está guardado y se muestra aquí en tu panel.",
+    "hello": "Esta es EspaLuz saludándote.",
+    "saved": "Este es el video que tu familia guardó aquí.",
     "add": "Agregar el video de tu familia",
     "replace": "Cambiar el video de tu familia",
     "uploadHint": "Guarda aquí un video corto de tu familia (MP4, hasta 30 segundos).",
@@ -354,10 +354,11 @@
     "prepNoMic": "El micrófono no está disponible. Permítelo en tu navegador, o escribe tu respuesta.",
     "prepFailed": "Algo salió mal. Inténtalo de nuevo.",
     "prepNotPaid": "El video de consejos es parte de EspaLuz Family. Se abre cuando tu plan está activo.",
-    "prepCap": "Los videos de consejos de este mes ya están hechos. Los próximos estarán listos el {{date}}."
+    "prepCap": "Los videos de consejos de este mes ya están hechos. Los próximos estarán listos el {{date}}.",
+    "remove": "Quitar este video"
   },
   "fw": {
-    "title": "Frases para guardar y tu próximo paso",
+    "title": "La semana de tu familia con EspaLuz",
     "nextTitle": "Tu próximo paso",
     "stepComing": "Se acerca: {{fact}} Practícalo con EspaLuz antes del día.",
     "stepRehearse": "Practica un momento que se acerca - una entrevista, una reunión en la escuela, una visita al médico - con EspaLuz haciendo de la otra persona.",
@@ -369,6 +370,36 @@
     "fromPractice": "de tu práctica",
     "fromFix": "una corrección de tu práctica",
     "fromChannel": "de EspaLuz en {{channel}}",
-    "chWeb": "la app"
+    "chWeb": "la app",
+    "sub": "WhatsApp, Telegram, la app y la clase comparten una sola memoria: esto es lo que guarda esta semana.",
+    "heardTitle": "Última vez:",
+    "notYet": "todavía no",
+    "today": "hoy",
+    "chWebCap": "La app",
+    "chClass": "Clase",
+    "weekTitle": "Esta semana",
+    "daysLabel": "Días con EspaLuz esta semana: {{count}}",
+    "tlChat_one": "Hablaste con EspaLuz en {{channel}}",
+    "tlChat_other": "Hablaste con EspaLuz en {{channel}} ({{count}} veces)",
+    "tlPhrases_one": "{{count}} frase para guardar",
+    "tlPhrases_other": "{{count}} frases para guardar",
+    "tlClass": "{{name}} en la clase",
+    "tlClassRu": "{{name}} en la clase de ruso con Mishka y Lisa",
+    "tlPractice": "Practicaste: {{scene}}",
+    "tlCeleb": "Video de celebración: {{occasion}}",
+    "tlNotes_one": "EspaLuz anotó algo nuevo sobre tu familia",
+    "tlNotes_other": "EspaLuz anotó {{count}} cosas nuevas sobre tu familia",
+    "tlDone": "Hecho: {{what}}",
+    "tlEmpty": "Todavía nada esta semana. Dile ¡Hola! a EspaLuz en WhatsApp, Telegram o aquí: todo llega al mismo lugar.",
+    "unit": "Unidad",
+    "yourChild": "Tu hijo",
+    "done": "Hecho",
+    "later": "Ahora no",
+    "doneWhat": {
+      "coming": "practicaste lo que se acerca",
+      "rehearse": "una práctica",
+      "class": "una clase con Pere y Titi",
+      "step": "un próximo paso"
+    }
   }
 }

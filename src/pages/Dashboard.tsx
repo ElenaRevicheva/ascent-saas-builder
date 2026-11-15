@@ -10,7 +10,6 @@ import { AccountStatusCard } from '@/components/dashboard/AccountStatusCard';
 import { ChatWithEspaluz } from '@/components/dashboard/ChatWithEspaluz';
 import { FamilyMembersManager } from '@/components/dashboard/FamilyMembersManager';
 import { AvatarUpload } from '@/components/dashboard/AvatarUpload';
-import { LearningAnalytics } from '@/components/dashboard/LearningAnalytics';
 import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
 import { ReferralSystem } from '@/components/ReferralSystem';
 import { FamilyNextSteps } from '@/components/dashboard/FamilyNextSteps';
@@ -134,9 +133,11 @@ const Dashboard = () => {
           />
         </div>
 
-        {/* Learning Analytics */}
+        {/* 15 Nov 2026 (Elena: one memory across all channels, no duplicates): the family's week - last heard per channel,
+            the timeline from WhatsApp / Telegram / the app / the classroom, next steps with Done / Not now, phrases to keep.
+            It replaces LearningAnalytics here (its week dots and talk counts now live inside it; the file stays). */}
         <div className="mb-8" data-learning-analytics>
-          <LearningAnalytics />
+          <FamilyNextSteps />
         </div>
 
         {/* 8 Nov 2026 (Elena: "remove all stale and fake data"): one honest plan card. QuickActionsCard (a "Connect" button
@@ -156,10 +157,6 @@ const Dashboard = () => {
             list whose Start buttons went to a missing page) are off the dashboard; their files stay. In their place: the
             phrases the family really practised and one true next step (audit: cto-aipa docs/espaluz/
             DASHBOARD_PROGRESS_AUDIT_2026-11-15.md). */}
-        <div className="mb-8">
-          <FamilyNextSteps />
-        </div>
-
         <div className="grid gap-6 lg:grid-cols-2 mb-8">
           <AvatarUpload />
           <div data-family-members>
