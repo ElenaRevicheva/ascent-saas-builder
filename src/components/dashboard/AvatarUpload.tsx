@@ -141,6 +141,16 @@ export const AvatarUpload = () => {
       </CardHeader>
       
       <CardContent className="space-y-4">
+        {/* 15 Nov 2026 (Elena: the yellow "Add your family's video" did nothing): the hidden file picker lived only in the
+            "no video at all" branch, but EspaLuz's hello always fills the card now, so the button had nothing to open.
+            One picker for both branches. */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="video/*"
+          onChange={handleFileChange}
+          className="hidden"
+        />
         {!avatarUrl ? (
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground">
@@ -159,15 +169,7 @@ export const AvatarUpload = () => {
               )}
               {uploading ? '...' : t('vm.add')}
             </Button>
-            
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="video/*"
-              onChange={handleFileChange}
-              className="hidden"
-            />
-            
+
             <div className="text-xs text-muted-foreground space-y-1">
               <p>• Supported formats: MP4, WebM, MOV</p>
               <p>• Maximum file size: 50MB</p>
