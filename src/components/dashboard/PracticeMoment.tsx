@@ -27,6 +27,7 @@ export const PracticeMoment = () => {
   const [scene, setScene] = useState('');
   const [lines, setLines] = useState<Line[]>([]);
   const [turn, setTurn] = useState({ n: 0, of: 6, last: false });
+  const [role, setRole] = useState('');
   const [busy, setBusy] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [recording, setRecording] = useState(false);
@@ -102,6 +103,7 @@ export const PracticeMoment = () => {
       const next = [...history, { who: 'espaluz' as const, text: String(data.say), en: data.en, fix: data.fix }];
       setLines(next);
       setTurn({ n: data.turn, of: data.turns, last: !!data.last });
+      if (data.role && !role) setRole(String(data.role));
       setBusy(false);
       await say(String(data.say));
     } catch {
@@ -177,7 +179,7 @@ export const PracticeMoment = () => {
 
   const restart = () => {
     audio.current?.pause();
-    setLines([]); setTips(null); setClip(null); setNote(''); setTurn({ n: 0, of: 6, last: false });
+    setLines([]); setTips(null); setClip(null); setNote(''); setTurn({ n: 0, of: 6, last: false }); setRole('');
   };
 
   const canAnswer = started && !tips && !busy && !speaking;
@@ -203,13 +205,17 @@ export const PracticeMoment = () => {
         </div>
       ) : (
         <div className="space-y-3">
-          <div className="relative overflow-hidden rounded-lg bg-muted">
+          {/* 15 Nov 2026 (her mother on a tablet: only the eyes showed): the box keeps the picture's own shape (720x466), centred and capped, so the whole face shows on any screen. */}
+          <div className="relative mx-auto w-full max-w-md overflow-hidden rounded-lg bg-muted">
             {speaking
-              ? <video src={helloChatEs} poster={helloPoster} autoPlay loop muted playsInline className="h-48 w-full object-cover object-[50%_30%]" />
-              : <img src={helloPoster} alt="" className="h-48 w-full object-cover object-[50%_30%]" />}
+              ? <video src={helloChatEs} poster={helloPoster} autoPlay loop muted playsInline className="aspect-[720/466] w-full object-cover" />
+              : <img src={helloPoster} alt="" className="aspect-[720/466] w-full object-cover" />}
             <span className="absolute left-2 top-2 rounded-full bg-black/55 px-2 py-0.5 text-xs text-white">
               {tips ? t('vm.prepTipsTitle') : t('vm.prepTurn', { n: turn.n, of: turn.of })}
             </span>
+            {role && !tips && (
+              <span className="absolute bottom-2 left-2 right-2 truncate rounded-full bg-black/55 px-2 py-0.5 text-xs text-white">{t('vm.prepRole', { role })}</span>
+            )}
           </div>
 
           <div className="max-h-72 space-y-2 overflow-y-auto">

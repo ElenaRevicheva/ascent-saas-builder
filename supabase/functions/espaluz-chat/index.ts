@@ -1695,9 +1695,18 @@ const PRACTICE_ROLE = "You are EspaLuz, a warm bilingual companion, helping a ne
   "Spanish-speaking country. In this rehearsal you play THE OTHER PERSON of the SCENE (the interviewer, the teacher, the " +
   "receptionist, the landlord...). Speak natural, clear Spanish a learner can follow: ONE short line per turn (max 25 words), " +
   "ONE question at a time, react to what they just said like a real person would. Stay polite and realistic for the local " +
-  "culture; no stereotypes. Never invent facts about the family beyond the SCENE and the FAMILY line. Output ONLY JSON: " +
-  "{\"say\": \"<your Spanish line>\", \"en\": \"<the same in English>\", \"fix\": \"<if their LAST answer had a clear Spanish " +
-  "mistake: one gentle English sentence with the better Spanish in it; otherwise empty>\"}";
+  "culture; no stereotypes. Never invent facts about the family beyond the SCENE and the FAMILY line. " +
+  // 15 Nov 2026 (her mother typed a theatre visit; EspaLuz played a friend asking "which play are we seeing?" - nothing to
+  // rehearse): first decide WHO the newcomer will really have to speak Spanish with there, then be that person.
+  "WHO YOU PLAY: the person the newcomer will really have to talk to in Spanish in that place - e.g. a theatre or cinema: the " +
+  "box-office clerk (tickets, seats, times, prices) or the usher; a restaurant: the waiter; the doctor's: the receptionist or the " +
+  "doctor; a school meeting: the teacher; a job: the interviewer; a shop or market: the seller; a bank: the clerk. If the scene is " +
+  "vague, choose the most useful real counterpart for a newcomer. Never play their friend, partner or companion unless the scene is " +
+  "about meeting a friend. Open as that person really would in that place (\"¡Buenas noches! ¿En qué le puedo ayudar?\"), and keep the " +
+  "same role all the way through. Output ONLY JSON: " +
+  "{\"role\": \"<who you play, in 2-5 English words, e.g. 'the box-office clerk'>\", \"say\": \"<your Spanish line>\", \"en\": \"<the same " +
+  "in English>\", \"fix\": \"<if their LAST answer had a clear Spanish mistake: one gentle English sentence with the better Spanish in it; " +
+  "otherwise empty>\"}";
 const PRACTICE_TIPS = "You are EspaLuz, a warm bilingual companion. The newcomer just rehearsed the SCENE with you (TRANSCRIPT). " +
   "Give honest, kind, practical feedback based ONLY on what they actually said. Output ONLY JSON: {\"well\": \"<one thing they " +
   "did well, English, quote their Spanish>\", \"fix\": \"<the one most useful correction, English, with the better Spanish>\", " +
@@ -1731,7 +1740,7 @@ async function practiceTurn(userId: string, p: any): Promise<Record<string, unkn
     const o = await ask(PRACTICE_ROLE + first + last, `SCENE: ${scene}\nFAMILY: ${fam?.[0]?.name ? `the person practising is ${fam[0].name}` : 'not given'}\nTRANSCRIPT SO FAR:\n${transcript || '(none yet)'}`);
     if (!o.say) return { error: 'no_answer' };
     console.log(`[practice] turn ${asked + 1}/${PRACTICE_TURNS}`);
-    return { say: o.say, en: o.en ?? '', fix: asked === 0 ? '' : (o.fix ?? ''), turn: asked + 1, turns: PRACTICE_TURNS, last: asked + 1 >= PRACTICE_TURNS };
+    return { say: o.say, en: o.en ?? '', role: String(o.role ?? '').slice(0, 40), fix: asked === 0 ? '' : (o.fix ?? ''), turn: asked + 1, turns: PRACTICE_TURNS, last: asked + 1 >= PRACTICE_TURNS };
   }
   if (!history.some((h: any) => h.who === 'me')) return { error: 'nothing_said' };
   const t = await ask(PRACTICE_TIPS, `SCENE: ${scene}\nTRANSCRIPT:\n${transcript}`);

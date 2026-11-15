@@ -564,7 +564,8 @@
     "prepNoMic": "The microphone is not available. Allow it in your browser, or type your answer.",
     "prepFailed": "Something went wrong. Please try again.",
     "prepNotPaid": "The tips video is part of EspaLuz Family. It opens when your plan is active.",
-    "prepCap": "This month's tips videos are used. The next ones are ready on {{date}}."
+    "prepCap": "This month's tips videos are used. The next ones are ready on {{date}}.",
+    "prepRole": "EspaLuz plays: {{role}}"
   },
   "fw": {
     "title": "Your family's week with EspaLuz",

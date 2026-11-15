@@ -354,7 +354,8 @@
     "prepNoMic": "El micrófono no está disponible. Permítelo en tu navegador, o escribe tu respuesta.",
     "prepFailed": "Algo salió mal. Inténtalo de nuevo.",
     "prepNotPaid": "El video de consejos es parte de EspaLuz Family. Se abre cuando tu plan está activo.",
-    "prepCap": "Los videos de consejos de este mes ya están hechos. Los próximos estarán listos el {{date}}."
+    "prepCap": "Los videos de consejos de este mes ya están hechos. Los próximos estarán listos el {{date}}.",
+    "prepRole": "EspaLuz hace de: {{role}}"
   },
   "fw": {
     "title": "La semana de tu familia con EspaLuz",
