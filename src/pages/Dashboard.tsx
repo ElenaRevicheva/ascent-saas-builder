@@ -168,7 +168,9 @@ const Dashboard = () => {
           <TelegramProgress />
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2 mb-8">
+        {/* grid-cols-1 = minmax(0,1fr): on a phone the one column fits the screen instead of growing to its widest row
+            (iPhone WebKit test 15 Nov: the cards were 8 px wider than a 390 px screen). */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 mb-8">
           <LearningModules />
           <div className="space-y-6">
             <AvatarUpload />

@@ -109,7 +109,7 @@ export const LearningModules = () => {
         )}
         
         {/* Difficulty Filter */}
-        <div className="flex gap-2 mt-4">
+        <div className="flex flex-wrap gap-2 mt-4">
           {(['beginner', 'intermediate', 'advanced'] as const).map((difficulty) => (
             <Button
               key={difficulty}

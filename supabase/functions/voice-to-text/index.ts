@@ -17,6 +17,17 @@ const GEMINI_HEAR_MODEL = GEMINI_HEAR_MODELS.join(' > ');
 // 4 Nov 2026 13:04 UTC (Alisa waited 26 s, then was told "I didn't hear you"): two Gemini models hung 12 s each before
 // failing. A child cannot wait that long, so each model gets 4 s and the whole Gemini step 7 s.
 const GEMINI_STEP_MS = 7000;
+// 15 Nov 2026 (iPhone check before inviting testers): Safari on iPhone/iPad records audio as MP4 (AAC), Chrome/Android as
+// WebM, and every recording was labelled 'audio/webm' - a reader may refuse MP4 bytes that call themselves WebM. The real
+// format is read from the file's first bytes; nothing changes for WebM.
+function audioKind(a: Uint8Array): { mime: string; ext: string } {
+  const at = (i: number, s: string) => [...s].every((c, k) => a[i + k] === c.charCodeAt(0));
+  if (a.length > 12 && at(4, 'ftyp')) return { mime: 'audio/mp4', ext: 'mp4' };
+  if (a.length > 4 && at(0, 'OggS')) return { mime: 'audio/ogg', ext: 'ogg' };
+  if (a.length > 12 && at(0, 'RIFF') && at(8, 'WAVE')) return { mime: 'audio/wav', ext: 'wav' };
+  if (a.length > 3 && (at(0, 'ID3') || (a[0] === 0xff && (a[1] & 0xe0) === 0xe0))) return { mime: 'audio/mpeg', ext: 'mp3' };
+  return { mime: 'audio/webm', ext: 'webm' };
+}
 async function geminiTranscribe(key: string, audio: Uint8Array, hint: string, language?: string): Promise<any> {
   const errs: string[] = [];
   const started = Date.now();
@@ -40,7 +51,7 @@ async function geminiTranscribeWith(model: string, key: string, audio: Uint8Arra
     headers: { 'x-goog-api-key': key, 'content-type': 'application/json' },
     body: JSON.stringify({
       contents: [{ role: 'user', parts: [
-        { inline_data: { mime_type: 'audio/webm', data: btoa(b64) } },
+        { inline_data: { mime_type: audioKind(audio).mime, data: btoa(b64) } },
         { text: 'Transcribe exactly what the speaker says, word for word, in the language spoken (Spanish, English or ' +
                 'Russian; often a young child). Do not translate, correct or add anything. If there is no clear speech, ' +
                 'return an empty text. ' + (language ? `The language is ${language}. ` : '') +
@@ -230,7 +241,8 @@ serve(async (req) => {
     // verbose_json returns the detected language and per-segment confidence (avg_logprob).
     const send = (key: string, url: string, model: string, lang?: string) => {
       const formData = new FormData();
-      formData.append('file', new Blob([binaryAudio], { type: 'audio/webm' }), 'audio.webm');
+      const kind = audioKind(binaryAudio);
+      formData.append('file', new Blob([binaryAudio], { type: kind.mime }), `audio.${kind.ext}`);
       formData.append('model', model);
       formData.append('response_format', 'verbose_json');
       formData.append('prompt', hint);
