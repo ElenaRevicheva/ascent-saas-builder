@@ -13,6 +13,8 @@ import { AvatarUpload } from '@/components/dashboard/AvatarUpload';
 import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
 import { ReferralSystem } from '@/components/ReferralSystem';
 import { FamilyNextSteps } from '@/components/dashboard/FamilyNextSteps';
+import { TelegramProgress } from '@/components/dashboard/TelegramProgress';
+import { LearningModules } from '@/components/dashboard/LearningModules';
 import { LearningOptions } from '@/components/dashboard/LearningOptions';
 import { FamilyRoadmap } from '@/components/dashboard/FamilyRoadmap';
 import SubscriptionFlow from '@/components/SubscriptionFlow';
@@ -152,15 +154,21 @@ const Dashboard = () => {
           />
         </div>
 
-        {/* 15 Nov 2026 (Elena: "keep only valuable stuff that truly shows fresh data"): TelegramProgress (score, streak,
-            minutes and "words mastered" were formulas, phrases always 0, Telegram only) and LearningModules (a fixed 2025
-            list whose Start buttons went to a missing page) are off the dashboard; their files stay. In their place: the
-            phrases the family really practised and one true next step (audit: cto-aipa docs/espaluz/
-            DASHBOARD_PROGRESS_AUDIT_2026-11-15.md). */}
+        {/* 15 Nov 2026 (Elena: "these features should be present, but serve the goals, not generic simulations"):
+            the journey block and the lessons are back where they were, now fed by real data - every channel, measured
+            conversations and time, phrases EspaLuz taught; lessons from the family's checked country guide first, the
+            original five below, Start fixed. Audit: cto-aipa docs/espaluz/DASHBOARD_PROGRESS_AUDIT_2026-11-15.md. */}
+        <div className="mb-8">
+          <TelegramProgress />
+        </div>
+
         <div className="grid gap-6 lg:grid-cols-2 mb-8">
-          <AvatarUpload />
-          <div data-family-members>
-            <FamilyMembersManager />
+          <LearningModules />
+          <div className="space-y-6">
+            <AvatarUpload />
+            <div data-family-members>
+              <FamilyMembersManager />
+            </div>
           </div>
         </div>
 

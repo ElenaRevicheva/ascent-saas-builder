@@ -400,5 +400,36 @@
       "class": "una clase con Pere y Titi",
       "step": "un próximo paso"
     }
+  },
+  "jr": {
+    "title": "Tu camino en español",
+    "sub": "Cada conversación con EspaLuz - WhatsApp, Telegram, la app y la clase - medida, no estimada.",
+    "daysMonth": "días con EspaLuz este mes",
+    "refresh": "Actualizar",
+    "checkBot": "Revisar bots",
+    "updated": "Actualizado {{time}} · {{count}} conversaciones en los últimos 90 días",
+    "connected": "conectado",
+    "notConnected": "todavía no conectado",
+    "checkFailed": "No se pudieron revisar las conexiones",
+    "loadFailed": "No se pudo cargar tu camino",
+    "chApp": "la app",
+    "chClass": "clase",
+    "talks": "Conversaciones",
+    "streak_one": "{{count}} día seguido",
+    "streak_other": "{{count}} días seguidos",
+    "phrases": "Frases en español",
+    "phrasesNote": "que EspaLuz te enseñó",
+    "words": "Palabras en español",
+    "wordsNote": "en tus frases y clases",
+    "time": "Tiempo con EspaLuz",
+    "timeNote": "medido · promedio {{avg}} min por conversación",
+    "listTitle": "Tus conversaciones ({{count}})",
+    "listSub": "Abre una para ver las frases que aprendiste en ella.",
+    "talkLine_one": "{{minutes}} min · {{count}} mensaje",
+    "talkLine_other": "{{minutes}} min · {{count}} mensajes",
+    "talkPhrases_one": "{{count}} frase",
+    "talkPhrases_other": "{{count}} frases",
+    "classNote": "Una clase con Pere y Titi - su informe está en la clase.",
+    "noPhrases": "Sin frases nuevas en esta."
   }
 }

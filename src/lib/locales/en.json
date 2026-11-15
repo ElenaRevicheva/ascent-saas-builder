@@ -610,5 +610,36 @@
       "class": "a class with Pere & Titi",
       "step": "a next step"
     }
+  },
+  "jr": {
+    "title": "Your Spanish journey",
+    "sub": "Every conversation with EspaLuz - WhatsApp, Telegram, the app and the classroom - measured, not estimated.",
+    "daysMonth": "days with EspaLuz this month",
+    "refresh": "Refresh",
+    "checkBot": "Check bots",
+    "updated": "Updated {{time}} · {{count}} conversations in the last 90 days",
+    "connected": "connected",
+    "notConnected": "not connected yet",
+    "checkFailed": "Could not check the connections",
+    "loadFailed": "Could not load your journey",
+    "chApp": "the app",
+    "chClass": "classroom",
+    "talks": "Conversations",
+    "streak_one": "{{count}} day in a row",
+    "streak_other": "{{count}} days in a row",
+    "phrases": "Spanish phrases",
+    "phrasesNote": "taught to you by EspaLuz",
+    "words": "Spanish words met",
+    "wordsNote": "in your phrases and classes",
+    "time": "Time with EspaLuz",
+    "timeNote": "measured · avg {{avg}}m per conversation",
+    "listTitle": "Your conversations ({{count}})",
+    "listSub": "Open one to see the phrases you learned in it.",
+    "talkLine_one": "{{minutes}} min · {{count}} message",
+    "talkLine_other": "{{minutes}} min · {{count}} messages",
+    "talkPhrases_one": "{{count}} phrase",
+    "talkPhrases_other": "{{count}} phrases",
+    "classNote": "A class with Pere & Titi - its report is in the classroom.",
+    "noPhrases": "No new phrase in this one."
   }
 }

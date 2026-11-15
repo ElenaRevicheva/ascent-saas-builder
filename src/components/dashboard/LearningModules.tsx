@@ -19,6 +19,8 @@ import { spanishLessons, Lesson } from '@/data/spanishLessons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { loadCountryLessons } from '@/data/countryLessons';
+import { readFamilyProfile, PACK_COUNTRIES } from './FamilyProfileDialog';
 
 export const LearningModules = () => {
   const navigate = useNavigate();
@@ -26,6 +28,19 @@ export const LearningModules = () => {
   const [selectedDifficulty, setSelectedDifficulty] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner');
   const [userProgress, setUserProgress] = useState<Record<string, { progress: number; isCompleted: boolean }>>({});
   const [loading, setLoading] = useState(true);
+  // 15 Nov 2026 (Elena: "these features should be present but serve the goals"): the family's own country lessons
+  // from the checked guide come first in every level; the five original lessons stay below them.
+  const [countryLessons, setCountryLessons] = useState<Lesson[]>([]);
+  const [countryName, setCountryName] = useState('');
+  useEffect(() => {
+    if (!user) return;
+    readFamilyProfile(user.id).then(async (p) => {
+      const c = String(p?.country_now ?? '');
+      if (!PACK_COUNTRIES.some(([k]) => k === c)) return;
+      setCountryName(PACK_COUNTRIES.find(([k]) => k === c)?.[1] ?? '');
+      setCountryLessons(await loadCountryLessons(c));
+    }).catch(() => undefined);
+  }, [user]);
 
   useEffect(() => {
     if (!user) return;
@@ -75,11 +90,11 @@ export const LearningModules = () => {
     }
   };
 
-  const filteredLessons = spanishLessons.filter(lesson => lesson.difficulty === selectedDifficulty);
+  const filteredLessons = [...countryLessons, ...spanishLessons].filter(lesson => lesson.difficulty === selectedDifficulty);
 
   const startLesson = (lesson: Lesson) => {
-    // For now, create a simple module ID from lesson ID
-    navigate(`/learning-module/${lesson.id}`);
+    // 15 Nov 2026: the page lives at /learning/:moduleId - "/learning-module/" opened "page not found" for every lesson.
+    navigate(`/learning/${lesson.id}`);
   };
 
   return (
@@ -89,6 +104,9 @@ export const LearningModules = () => {
           <Trophy className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
           Spanish Learning Modules
         </CardTitle>
+        {countryName && (
+          <p className="text-sm text-muted-foreground">Living in {countryName}: lessons from your checked country guide come first, then Spanish basics.</p>
+        )}
         
         {/* Difficulty Filter */}
         <div className="flex gap-2 mt-4">
@@ -161,9 +179,10 @@ export const LearningModules = () => {
                     <div className="flex-1 h-2 bg-muted rounded-full animate-pulse"></div>
                   ) : (
                     <>
+                      {/* bg-muted: the shared bar's track is the brand magenta, so an empty bar looked full */}
                       <Progress 
                         value={userProgress[lesson.id]?.progress || 0} 
-                        className="flex-1 h-2" 
+                        className="flex-1 h-2 bg-muted" 
                       />
                       <span className="text-xs text-muted-foreground">
                         {userProgress[lesson.id]?.isCompleted 
@@ -195,13 +214,15 @@ export const LearningModules = () => {
         ))}
         
         <div className="text-center pt-4">
-          <p className="text-sm text-muted-foreground mb-2">
-            Master the basics to unlock intermediate lessons
-          </p>
-          <Button variant="outline" size="sm" disabled>
-            <Trophy className="h-4 w-4 mr-2" />
-            More lessons coming soon
-          </Button>
+          {filteredLessons.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              {countryName ? 'No lessons at this level yet.' : 'Tell EspaLuz where home is now (the family map, "About your new life") and your country lessons appear here.'}
+            </p>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              {countryName ? `Every ${countryName} card is a checked fact from your country guide - the same one EspaLuz uses on WhatsApp and Telegram.` : 'Tell EspaLuz where home is now and your country lessons appear here.'}
+            </p>
+          )}
         </div>
       </CardContent>
     </Card>

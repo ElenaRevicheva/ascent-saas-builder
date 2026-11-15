@@ -21,6 +21,7 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { useLearningProgress } from '@/hooks/useLearningProgress';
 import { getLessonById, Lesson, Exercise } from '@/data/spanishLessons';
+import { loadCountryLesson } from '@/data/countryLessons';
 import { toast } from 'sonner';
 
 export default function LearningModulePage() {
@@ -42,6 +43,11 @@ export default function LearningModulePage() {
       const foundLesson = getLessonById(moduleId);
       if (foundLesson) {
         setLesson(foundLesson);
+      } else if (moduleId.startsWith('country-')) {
+        // 15 Nov 2026: "Living in <country>" lessons, built from the checked country guide (src/data/countryLessons.ts).
+        loadCountryLesson(moduleId).then((l) => {
+          if (l) setLesson(l); else { toast.error('Lesson not found'); navigate('/dashboard'); }
+        });
       } else {
         toast.error('Lesson not found');
         navigate('/dashboard');
@@ -157,6 +163,9 @@ export default function LearningModulePage() {
         return (
           <div className="space-y-6">
             <h3 className="text-xl font-semibold mb-4">Vocabulary Learning</h3>
+            {lesson.vocabulary.length === 0 && (
+              <p className="text-muted-foreground">This lesson is about how life works here - continue to the cards.</p>
+            )}
             <div className="grid gap-4">
               {lesson.vocabulary.map((word, index) => (
                 <div key={index} className="bg-background/50 rounded-lg p-4 border">
@@ -192,21 +201,27 @@ export default function LearningModulePage() {
                 <div key={index} className="bg-background/50 rounded-lg p-4 border">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-lg font-semibold text-[hsl(var(--espaluz-primary))]">
-                        {phrase.spanish}
-                      </span>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => speakText(phrase.spanish)}
-                      >
-                        <Volume2 className="h-4 w-4" />
-                      </Button>
+                      {phrase.spanish && (
+                        <span className="text-lg font-semibold text-[hsl(var(--espaluz-primary))]">
+                          {phrase.spanish}
+                        </span>
+                      )}
+                      {phrase.spanish && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => speakText(phrase.spanish)}
+                        >
+                          <Volume2 className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
-                    <p className="text-muted-foreground">{phrase.english}</p>
-                    <p className="text-sm text-muted-foreground italic">
-                      Pronunciation: {phrase.pronunciation}
-                    </p>
+                    <p className={phrase.spanish ? 'text-muted-foreground' : 'text-foreground'}>{phrase.english}</p>
+                    {phrase.pronunciation && (
+                      <p className="text-sm text-muted-foreground italic">
+                        Pronunciation: {phrase.pronunciation}
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}

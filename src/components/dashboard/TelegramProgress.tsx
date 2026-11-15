@@ -1,302 +1,110 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { MessageSquare, BookOpen, Clock, Trophy, TrendingUp, Star, Brain, Zap, RefreshCw, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { MessageSquare, BookOpen, Clock, Trophy, RefreshCw, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { TelegramLearningAnalysis } from './TelegramLearningAnalysis';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { phrasesIn } from '../../../supabase/functions/_shared/phrases';
 
-interface TelegramSession {
-  id: string;
-  created_at: string;
-  duration_minutes: number;
-  content: any;
-  progress_data: any;
-  source: string;
-}
+/*
+ * "Your Spanish journey" - the same block, layout and buttons as the old "Telegram Bot Learning Journey" (Elena, 15 Nov
+ * 2026: "these features should be present, but serve the goals, not generic simulations"). What changed is what feeds it:
+ * before, a score that stuck at 100, a "streak" that counted messages, "words mastered" picked at random, 0 phrases and an
+ * invented "30 min" per message - and Telegram only. Now every number is measured from the family's own records, on every
+ * channel (WhatsApp, Telegram, the app, the classroom; the bots send their turns to the brain since 15 Nov):
+ *   conversations = messages less than 30 minutes apart on the same channel; time = first to last message of each;
+ *   phrases = what EspaLuz really taught (the same finder as the brain's server); words = the Spanish words in those
+ *   phrases plus the classroom's new words; the big number = days with EspaLuz this month, out of the days so far.
+ * The old per-message analysis (TelegramLearningAnalysis) stays in the repo; an opened conversation now shows its phrases.
+ */
+
+type Row = { id: string; created_at: string; session_type: string; source: string | null; phrases: { es?: string; en?: string }[] | null;
+  ai: string | null; bot: string | null; words: string[] | null };
+type Channel = 'whatsapp' | 'telegram' | 'app' | 'classroom';
+type Talk = { id: string; channel: Channel; start: string; end: string; turns: number; phrases: { es: string; en: string }[]; minutes: number };
+
+const COLUMNS: string = 'id, created_at, session_type, source, phrases:content->phrases, ai:content->>ai_response, bot:content->>bot_response, words:content->new_words';
+const GAP_MS = 30 * 60000;
+const dayKey = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const channelOf = (r: Row): Channel => (r.session_type === 'classroom' || r.session_type === 'classroom_ru' ? 'classroom'
+  : r.session_type === 'dashboard_chat' ? 'app' : r.source === 'whatsapp' ? 'whatsapp' : 'telegram');
 
 export const TelegramProgress = () => {
   const { user } = useAuth();
-  const [sessions, setSessions] = useState<TelegramSession[]>([]);
+  const { t, i18n } = useTranslation();
+  const [talks, setTalks] = useState<Talk[]>([]);
+  const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
-  const [debugInfo, setDebugInfo] = useState<any>(null);
-  const [expandedSessions, setExpandedSessions] = useState<Set<string>>(new Set());
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const [links, setLinks] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (user) {
-      loadTelegramProgress();
-    }
-  }, [user]);
-
-  // Auto-refresh every 5 seconds for immediate updates
-  useEffect(() => {
-    if (user) {
-      const interval = setInterval(() => {
-        loadTelegramProgress(false); // Silent refresh
-      }, 5000); // Reduced to 5 seconds for faster updates
-      return () => clearInterval(interval);
-    }
-  }, [user]);
-
-  // Real-time subscription for new sessions
-  useEffect(() => {
+  const load = useCallback(async (showLoading = true) => {
     if (!user) return;
-
-    console.log('🔔 Setting up real-time subscription for user:', user.id);
-    
-    const channel = supabase
-      .channel('telegram-sessions-updates')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'learning_sessions',
-          filter: `user_id=eq.${user.id}`
-        },
-        (payload) => {
-          console.log('📡 Real-time: New learning session detected:', payload);
-          if (payload.new.source === 'telegram' || payload.new.source === 'telegram_chat') {
-            loadTelegramProgress(false);
-            toast.success('New Telegram conversation recorded!');
-          }
-        }
-      )
-      .subscribe((status) => {
-        console.log('📡 Real-time subscription status:', status);
-      });
-
-    return () => {
-      console.log('Cleaning up real-time subscription');
-      supabase.removeChannel(channel);
-    };
-  }, [user]);
-
-  const loadTelegramProgress = async (showLoading = true) => {
     if (showLoading) setLoading(true);
-    
     try {
-      console.log('🔄 Loading Telegram progress for user:', user?.id);
-      console.log('🕐 Current time:', new Date().toISOString());
-      console.log('🕐 30 minutes ago:', new Date(Date.now() - 30 * 60 * 1000).toISOString());
-      
-      // First, let's check ALL learning sessions for this user to see what's there
-      const { data: allSessions, error: allError } = await supabase
-        .from('learning_sessions')
-        .select('*')
-        .eq('user_id', user?.id)
-        .order('created_at', { ascending: false })
-        .limit(100);
-
-      console.log('📊 ALL sessions for user:', allSessions?.length || 0);
-      console.log('📊 ALL sessions data:', allSessions?.slice(0, 5)); // First 5 sessions
-
-      // Filter sessions from last 30 minutes
-      const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000);
-      const recentSessions = allSessions?.filter(session => 
-        new Date(session.created_at) >= thirtyMinutesAgo
-      ) || [];
-      
-      console.log('🕐 Recent sessions (last 30 min):', recentSessions.length);
-      console.log('🕐 Recent sessions data:', recentSessions);
-
-      // Now get telegram-specific sessions
-      const { data: telegramSessions, error } = await supabase
-        .from('learning_sessions')
-        .select('*')
-        .eq('user_id', user?.id)
-        .in('source', ['telegram', 'telegram_chat'])
-        .order('created_at', { ascending: false })
-        .limit(50);
-
-      if (error) {
-        console.error('❌ Error loading Telegram sessions:', error);
-        throw error;
+      const since = new Date(Date.now() - 90 * 86400000).toISOString();
+      const { data, error } = await supabase.from('learning_sessions').select(COLUMNS).eq('user_id', user.id)
+        .in('session_type', ['conversation', 'dashboard_chat', 'classroom', 'classroom_ru']).gte('created_at', since)
+        .order('created_at', { ascending: true }).limit(2000);
+      if (error) throw error;
+      const list = (data ?? []) as unknown as Row[];
+      // Conversations: messages on the same channel less than 30 minutes apart.
+      const open = new Map<Channel, Talk>();
+      const out: Talk[] = [];
+      for (const r of list) {
+        const ch = channelOf(r);
+        const found = Array.isArray(r.phrases) ? r.phrases.filter((p) => p?.es).map((p) => ({ es: String(p.es), en: String(p.en ?? '') }))
+          : ch === 'classroom' ? [] : phrasesIn(String(r.ai ?? r.bot ?? ''));
+        const cur = open.get(ch);
+        if (cur && new Date(r.created_at).getTime() - new Date(cur.end).getTime() < GAP_MS) {
+          cur.end = r.created_at; cur.turns++;
+          for (const p of found) if (!cur.phrases.some((x) => x.es.toLowerCase() === p.es.toLowerCase())) cur.phrases.push(p);
+        } else {
+          const t2: Talk = { id: r.id, channel: ch, start: r.created_at, end: r.created_at, turns: 1, phrases: found, minutes: 0 };
+          open.set(ch, t2); out.push(t2);
+        }
       }
-
-      console.log('📊 Telegram sessions found:', telegramSessions?.length || 0);
-      console.log('📊 Telegram sessions sources:', [...new Set(telegramSessions?.map(s => s.source) || [])]);
-      
-      // Check for recent telegram sessions
-      const recentTelegramSessions = telegramSessions?.filter(session => 
-        new Date(session.created_at) >= thirtyMinutesAgo
-      ) || [];
-      
-      console.log('🕐 Recent Telegram sessions (last 30 min):', recentTelegramSessions.length);
-      
-      if (recentTelegramSessions.length > 0) {
-        console.log('✅ Found recent Telegram sessions!');
-        recentTelegramSessions.forEach((session, index) => {
-          console.log(`📋 Recent Session ${index + 1}:`, {
-            id: session.id.substring(0, 8),
-            created: session.created_at,
-            source: session.source,
-            minutes_ago: Math.round((Date.now() - new Date(session.created_at).getTime()) / (1000 * 60))
-          });
-        });
-      } else {
-        console.log('❌ No recent Telegram sessions found');
-      }
-
-      // Enhanced session analysis
-      telegramSessions?.forEach((session, index) => {
-        console.log(`📋 Session ${index + 1}:`, {
-          id: session.id.substring(0, 8),
-          created: session.created_at,
-          source: session.source,
-          session_type: session.session_type,
-          content_keys: Object.keys(session.content || {}),
-          progress_data_keys: Object.keys(session.progress_data || {}),
-          has_user_message: !!(session.content && typeof session.content === 'object' && 'user_message' in session.content),
-          has_bot_response: !!(session.content && typeof session.content === 'object' && 'bot_response' in session.content),
-          minutes_ago: Math.round((Date.now() - new Date(session.created_at).getTime()) / (1000 * 60))
-        });
-      });
-
-      setSessions(telegramSessions || []);
+      for (const x of out) x.minutes = Math.max(1, Math.round((new Date(x.end).getTime() - new Date(x.start).getTime()) / 60000) + 1);
+      setRows(list);
+      setTalks(out.reverse());
       setLastRefresh(new Date());
-      
-      // Enhanced debug info
-      setDebugInfo({
-        user_id: user?.id,
-        current_time: new Date().toISOString(),
-        thirty_minutes_ago: thirtyMinutesAgo.toISOString(),
-        all_sessions_count: allSessions?.length || 0,
-        telegram_sessions_count: telegramSessions?.length || 0,
-        recent_sessions_count: recentSessions.length,
-        recent_telegram_sessions_count: recentTelegramSessions.length,
-        telegram_sources: [...new Set(telegramSessions?.map(s => s.source) || [])],
-        last_session: telegramSessions?.[0]?.created_at || 'None',
-        all_sources_found: [...new Set(allSessions?.map(s => s.source) || [])],
-        recent_telegram_sessions: recentTelegramSessions.map(s => ({
-          id: s.id.substring(0, 8),
-          created: s.created_at,
-          source: s.source,
-          minutes_ago: Math.round((Date.now() - new Date(s.created_at).getTime()) / (1000 * 60))
-        }))
-      });
-      
-    } catch (error) {
-      console.error('❌ Error loading Telegram progress:', error);
-      toast.error('Failed to load Telegram progress');
+    } catch (e) {
+      console.error('[journey]', e);
+      if (showLoading) toast.error(t('jr.loadFailed'));
     } finally {
       if (showLoading) setLoading(false);
     }
-  };
+  }, [user, t]);
 
-  const handleManualRefresh = () => {
-    console.log('🔄 Manual refresh triggered');
-    loadTelegramProgress(true);
-    toast.info('Refreshing your Telegram progress...');
-  };
+  useEffect(() => { load(); }, [load]);
+
+  // A new turn on any channel shows up without a reload.
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase.channel('journey-updates')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'learning_sessions', filter: `user_id=eq.${user.id}` },
+        (payload) => { if (['conversation', 'dashboard_chat', 'classroom', 'classroom_ru'].includes(String(payload.new.session_type))) load(false); })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user, load]);
 
   const checkBotConnection = async () => {
     if (!user) return;
-    
-    try {
-      console.log('🔍 Checking bot connection for user:', user.id);
-      
-      const { data: connectedBots, error } = await supabase
-        .from('connected_bots')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('platform', 'telegram')
-        .eq('is_active', true);
-
-      if (error) {
-        console.error('❌ Error checking bot connection:', error);
-        toast.error('Error checking bot connection');
-        return;
-      }
-
-      console.log('🤖 Connected bots:', connectedBots);
-      
-      if (!connectedBots || connectedBots.length === 0) {
-        toast.error('No Telegram bot connected. Please connect your bot first.');
-      } else {
-        toast.success(`Found ${connectedBots.length} connected Telegram bot(s)`);
-        setDebugInfo(prev => ({
-          ...prev,
-          connected_bots: connectedBots.length,
-          bot_details: connectedBots.map(b => ({
-            platform_user_id: b.platform_user_id,
-            last_activity: b.last_activity,
-            platform_username: b.platform_username
-          }))
-        }));
-      }
-    } catch (error) {
-      console.error('❌ Error in bot connection check:', error);
-      toast.error('Failed to check bot connection');
-    }
+    const { data, error } = await supabase.from('connected_bots').select('platform, is_active, last_activity').eq('user_id', user.id);
+    if (error) { toast.error(t('jr.checkFailed')); return; }
+    const has = (p: string) => (data ?? []).find((b: { platform: string; is_active: boolean | null }) => b.platform === p && b.is_active !== false);
+    const line = ['whatsapp', 'telegram'].map((p) => `${p === 'whatsapp' ? 'WhatsApp' : 'Telegram'}: ${has(p) ? t('jr.connected') : t('jr.notConnected')}`).join(' · ');
+    setLinks(line);
+    toast.success(line);
   };
 
-  const getEnhancedStats = () => {
-    const totalSessions = sessions.length;
-    const totalMinutes = sessions.reduce((sum, s) => sum + (s.duration_minutes || 0), 0);
-    
-    // Extract vocabulary from progress_data (new structure)
-    const allVocabulary: string[] = [];
-    const allPhrases: string[] = [];
-    const allTopics: string[] = [];
-    
-    sessions.forEach(session => {
-      // Handle new progress_data structure
-      if (session.progress_data?.vocabulary_learned) {
-        allVocabulary.push(...session.progress_data.vocabulary_learned);
-      }
-      if (session.progress_data?.phrases_practiced) {
-        allPhrases.push(...session.progress_data.phrases_practiced);
-      }
-      if (session.progress_data?.topics_discussed) {
-        allTopics.push(...session.progress_data.topics_discussed);
-      }
-      
-      // Legacy support for old structure
-      if (session.content && typeof session.content === 'object' && 'bot_response' in session.content) {
-        const botResponse = session.content.bot_response;
-        if (typeof botResponse === 'string') {
-          const vocabMatches = botResponse.match(/\*\*([^*]+)\*\*/g);
-          if (vocabMatches) {
-            vocabMatches.forEach((match: string) => {
-              const word = match.replace(/\*\*/g, '').trim();
-              if (word.length > 1) allVocabulary.push(word);
-            });
-          }
-        }
-      }
-    });
-    
-    const uniqueVocabulary = [...new Set(allVocabulary)];
-    const uniquePhrases = [...new Set(allPhrases)];
-    const uniqueTopics = [...new Set(allTopics)];
-    
-    // Calculate learning insights
-    const avgSessionLength = totalSessions > 0 ? Math.round(totalMinutes / totalSessions) : 0;
-    const vocabularyDiversity = uniqueVocabulary.length + uniquePhrases.length;
-    const learningScore = Math.min(100, Math.round((vocabularyDiversity * 8) + (totalSessions * 10)));
-    
-    return {
-      totalSessions,
-      totalMinutes,
-      vocabularyCount: uniqueVocabulary.length,
-      uniqueVocabulary: uniqueVocabulary.slice(0, 20),
-      phrases: uniquePhrases.slice(0, 15),
-      topics: uniqueTopics.slice(0, 8),
-      insights: {
-        avgSessionLength,
-        vocabularyDiversity,
-        learningScore,
-        mostActiveDay: sessions.length > 0 ? new Date(sessions[0].created_at).toLocaleDateString() : null,
-        streak: Math.min(7, totalSessions)
-      }
-    };
-  };
+  const label = (ch: Channel) => (ch === 'whatsapp' ? 'WhatsApp' : ch === 'telegram' ? 'Telegram' : ch === 'app' ? t('jr.chApp') : t('jr.chClass'));
 
   if (loading) {
     return (
@@ -308,274 +116,150 @@ export const TelegramProgress = () => {
     );
   }
 
-  const stats = getEnhancedStats();
+  // Measured numbers only.
+  const phraseSet = new Map<string, { es: string; en: string }>();
+  for (const x of talks) for (const p of x.phrases) phraseSet.set(p.es.toLowerCase(), p);
+  const words = new Set<string>();
+  for (const p of phraseSet.values()) for (const w of p.es.toLowerCase().match(/[a-záéíóúñü]{3,}/g) ?? []) words.add(w);
+  for (const r of rows) if (Array.isArray(r.words)) for (const w of r.words) if (/^[a-záéíóúñü]{3,}$/i.test(String(w))) words.add(String(w).toLowerCase());
+  const totalMinutes = talks.reduce((s, x) => s + x.minutes, 0);
+  const avg = talks.length ? Math.round(totalMinutes / talks.length) : 0;
+  const days = new Set(rows.map((r) => dayKey(new Date(r.created_at))));
+  let streak = 0;
+  const cursor = new Date(); cursor.setHours(0, 0, 0, 0);
+  if (!days.has(dayKey(cursor))) cursor.setDate(cursor.getDate() - 1);
+  while (days.has(dayKey(cursor)) && streak < 60) { streak++; cursor.setDate(cursor.getDate() - 1); }
+  const today = new Date();
+  const monthDays = [...days].filter((d) => d.startsWith(dayKey(today).slice(0, 7))).length;
+  const monthPct = Math.round((monthDays / today.getDate()) * 100);
 
   return (
     <div className="space-y-6">
-      {/* Header Card with Learning Score and Enhanced Debug Info */}
       <Card className="border-border/50 shadow-magical bg-gradient-to-br from-[hsl(var(--espaluz-primary))]/5 to-purple-500/5">
         <CardHeader className="pb-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <CardTitle className="flex items-center gap-3">
               <div className="p-2 bg-[hsl(var(--espaluz-primary))]/20 rounded-lg">
                 <MessageSquare className="h-6 w-6 text-[hsl(var(--espaluz-primary))]" />
               </div>
               <div>
-                <h2 className="text-xl font-bold">Telegram Bot Learning Journey</h2>
-                <p className="text-sm text-muted-foreground font-normal">Your Spanish learning progress from bot conversations</p>
+                <h2 className="text-xl font-bold">{t('jr.title')}</h2>
+                <p className="text-sm text-muted-foreground font-normal">{t('jr.sub')}</p>
               </div>
             </CardTitle>
             <div className="flex items-center gap-3">
               <div className="text-right">
-                <div className="text-3xl font-bold text-[hsl(var(--espaluz-primary))]">{stats.insights.learningScore}</div>
-                <div className="text-xs text-muted-foreground">Learning Score</div>
-                <Progress value={stats.insights.learningScore} className="w-16 h-2 mt-1" />
+                <div className="text-3xl font-bold text-[hsl(var(--espaluz-primary))]">{monthDays}<span className="text-base font-medium text-muted-foreground">/{today.getDate()}</span></div>
+                <div className="text-xs text-muted-foreground">{t('jr.daysMonth')}</div>
+                <Progress value={monthPct} className="w-16 h-2 mt-1" />
               </div>
               <div className="flex flex-col gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleManualRefresh}
-                  className="flex items-center gap-2"
-                >
-                  <RefreshCw className="h-4 w-4" />
-                  Refresh
+                <Button variant="outline" size="sm" onClick={() => { load(true); }} className="flex items-center gap-2">
+                  <RefreshCw className="h-4 w-4" />{t('jr.refresh')}
                 </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={checkBotConnection}
-                  className="flex items-center gap-2"
-                >
-                  <AlertCircle className="h-4 w-4" />
-                  Check Bot
+                <Button variant="outline" size="sm" onClick={checkBotConnection} className="flex items-center gap-2">
+                  <AlertCircle className="h-4 w-4" />{t('jr.checkBot')}
                 </Button>
               </div>
             </div>
           </div>
           <div className="text-xs text-muted-foreground mt-2">
-            Last updated: {lastRefresh.toLocaleTimeString()} | Found {sessions.length} conversations
+            {t('jr.updated', { time: lastRefresh.toLocaleTimeString(i18n.language || undefined), count: talks.length })}
+            {links && <span> · {links}</span>}
           </div>
-          
-          {/* ENHANCED Debug Information. 8 Nov 2026 (Elena): a developer tool, never shown to families on the live site -
-              it printed the account id and raw records. Still there when a developer runs the app locally. */}
-          {debugInfo && import.meta.env.DEV && (
-            <div className="mt-3 p-4 bg-red-500/10 rounded-lg text-xs border border-red-500/30">
-              <details>
-                <summary className="cursor-pointer font-medium text-red-600">ENHANCED Debug Info - Why No Recent Sessions? (click to expand)</summary>
-                <div className="mt-3 space-y-3">
-                  <div className="grid gap-2">
-                    <div><strong>User ID:</strong> {debugInfo.user_id}</div>
-                    <div><strong>Current Time:</strong> {debugInfo.current_time}</div>
-                    <div><strong>30 Min Ago:</strong> {debugInfo.thirty_minutes_ago}</div>
-                  </div>
-                  
-                  <div className="border-t border-red-500/20 pt-2">
-                    <div><strong>ALL Learning Sessions:</strong> {debugInfo.all_sessions_count}</div>
-                    <div><strong>Recent Sessions (30min):</strong> {debugInfo.recent_sessions_count}</div>
-                    <div><strong>All Sources Found:</strong> {debugInfo.all_sources_found.join(', ') || 'None'}</div>
-                  </div>
-                  
-                  <div className="border-t border-red-500/20 pt-2">
-                    <div><strong>Telegram Sessions Total:</strong> {debugInfo.telegram_sessions_count}</div>
-                    <div><strong>Recent Telegram Sessions:</strong> {debugInfo.recent_telegram_sessions_count}</div>
-                    <div><strong>Telegram Sources:</strong> {debugInfo.telegram_sources.join(', ') || 'None'}</div>
-                    <div><strong>Last Telegram Session:</strong> {debugInfo.last_session}</div>
-                  </div>
-                  
-                  {debugInfo.recent_telegram_sessions && debugInfo.recent_telegram_sessions.length > 0 && (
-                    <div className="border-t border-red-500/20 pt-2">
-                      <div><strong>Recent Telegram Sessions Details:</strong></div>
-                      <pre className="mt-1 text-xs overflow-auto bg-background/50 p-2 rounded max-h-32">
-                        {JSON.stringify(debugInfo.recent_telegram_sessions, null, 2)}
-                      </pre>
-                    </div>
-                  )}
-                  
-                  {debugInfo.connected_bots !== undefined && (
-                    <div className="border-t border-red-500/20 pt-2">
-                      <div><strong>Connected Bots:</strong> {debugInfo.connected_bots}</div>
-                      {debugInfo.bot_details && (
-                        <pre className="mt-1 text-xs overflow-auto bg-background/50 p-2 rounded">
-                          {JSON.stringify(debugInfo.bot_details, null, 2)}
-                        </pre>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </details>
-            </div>
-          )}
         </CardHeader>
-        
+
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-4">
+          <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
             <div className="text-center p-4 bg-gradient-to-br from-blue-500/10 to-blue-600/5 rounded-xl border border-blue-500/20">
               <div className="flex items-center justify-center mb-2">
                 <MessageSquare className="h-5 w-5 text-blue-500 mr-2" />
-                <div className="text-2xl font-bold text-blue-600">{stats.totalSessions}</div>
+                <div className="text-2xl font-bold text-blue-600">{talks.length}</div>
               </div>
-              <div className="text-sm text-muted-foreground">Chat Sessions</div>
-              {stats.insights.streak > 0 && (
-                <div className="text-xs text-blue-600 mt-1">{stats.insights.streak} session streak</div>
-              )}
+              <div className="text-sm text-muted-foreground">{t('jr.talks')}</div>
+              {streak > 0 && <div className="text-xs text-blue-600 mt-1">{t('jr.streak', { count: streak })}</div>}
             </div>
-            
+
             <div className="text-center p-4 bg-gradient-to-br from-[hsl(var(--espaluz-primary))]/10 to-[hsl(var(--espaluz-primary))]/5 rounded-xl border border-[hsl(var(--espaluz-primary))]/20">
               <div className="flex items-center justify-center mb-2">
                 <BookOpen className="h-5 w-5 text-[hsl(var(--espaluz-primary))] mr-2" />
-                <div className="text-2xl font-bold text-[hsl(var(--espaluz-primary))]">{stats.phrases.length}</div>
+                <div className="text-2xl font-bold text-[hsl(var(--espaluz-primary))]">{phraseSet.size}</div>
               </div>
-              <div className="text-sm text-muted-foreground">Spanish Phrases</div>
-              <div className="text-xs text-[hsl(var(--espaluz-primary))] mt-1">Core expressions</div>
+              <div className="text-sm text-muted-foreground">{t('jr.phrases')}</div>
+              <div className="text-xs text-[hsl(var(--espaluz-primary))] mt-1">{t('jr.phrasesNote')}</div>
             </div>
-            
+
             <div className="text-center p-4 bg-gradient-to-br from-yellow-500/10 to-yellow-600/5 rounded-xl border border-yellow-500/20">
               <div className="flex items-center justify-center mb-2">
                 <Trophy className="h-5 w-5 text-yellow-600 mr-2" />
-                <div className="text-2xl font-bold text-yellow-600">{stats.vocabularyCount}</div>
+                <div className="text-2xl font-bold text-yellow-600">{words.size}</div>
               </div>
-              <div className="text-sm text-muted-foreground">Words Mastered</div>
-              <div className="text-xs text-yellow-600 mt-1">Building vocabulary</div>
+              <div className="text-sm text-muted-foreground">{t('jr.words')}</div>
+              <div className="text-xs text-yellow-600 mt-1">{t('jr.wordsNote')}</div>
             </div>
-            
+
             <div className="text-center p-4 bg-gradient-to-br from-green-500/10 to-green-600/5 rounded-xl border border-green-500/20">
               <div className="flex items-center justify-center mb-2">
                 <Clock className="h-5 w-5 text-green-600 mr-2" />
-                <div className="text-2xl font-bold text-green-600">{stats.totalMinutes}m</div>
+                <div className="text-2xl font-bold text-green-600">{totalMinutes}m</div>
               </div>
-              <div className="text-sm text-muted-foreground">Time Invested</div>
-              <div className="text-xs text-green-600 mt-1">Avg: {stats.insights.avgSessionLength}m/session</div>
+              <div className="text-sm text-muted-foreground">{t('jr.time')}</div>
+              <div className="text-xs text-green-600 mt-1">{t('jr.timeNote', { avg })}</div>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {stats.topics.length > 0 && (
-        <Card className="border-border/50 shadow-magical">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Brain className="h-5 w-5 text-purple-500" />
-              Your Learning Topics & Insights
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <h5 className="font-medium mb-3 text-sm">Topics You're Exploring</h5>
-                <div className="space-y-2">
-                  {stats.topics.map((topic, index) => (
-                    <div key={index} className="flex items-center gap-2 p-2 bg-purple-500/10 rounded-lg">
-                      <Star className="h-4 w-4 text-purple-500" />
-                      <span className="text-sm font-medium">{topic}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <h5 className="font-medium mb-3 text-sm">Learning Insights</h5>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4 text-green-500" />
-                    <span>Vocabulary diversity: <strong>{stats.insights.vocabularyDiversity} unique items</strong></span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Zap className="h-4 w-4 text-yellow-500" />
-                    <span>Most active: <strong>{stats.insights.mostActiveDay || 'Today'}</strong></span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-blue-500" />
-                    <span>Learning consistency: <strong>{stats.insights.avgSessionLength}min average</strong></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Telegram Sessions */}
-      {sessions.length > 0 && (
+      {talks.length > 0 && (
         <Card className="border-border/50 shadow-magical">
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2">
               <MessageSquare className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
-              Telegram Sessions ({sessions.length})
+              {t('jr.listTitle', { count: talks.length })}
             </CardTitle>
-            <p className="text-sm text-muted-foreground">Click on any session to see your learning insights</p>
+            <p className="text-sm text-muted-foreground">{t('jr.listSub')}</p>
           </CardHeader>
           <CardContent className="space-y-3">
-            {sessions.slice(0, 5).map((session) => {
-              const isExpanded = expandedSessions.has(session.id);
-              const toggleExpansion = () => {
-                const newExpanded = new Set(expandedSessions);
-                if (isExpanded) {
-                  newExpanded.delete(session.id);
-                } else {
-                  newExpanded.add(session.id);
-                }
-                setExpandedSessions(newExpanded);
-              };
-
+            {talks.slice(0, 8).map((x) => {
+              const open = expanded.has(x.id);
+              const toggle = () => { const n = new Set(expanded); if (open) n.delete(x.id); else n.add(x.id); setExpanded(n); };
               return (
-                <Collapsible key={session.id} open={isExpanded} onOpenChange={toggleExpansion}>
+                <Collapsible key={x.id} open={open} onOpenChange={toggle}>
                   <Card className="border border-border/30 hover:border-[hsl(var(--espaluz-primary))]/40 transition-colors">
                     <CollapsibleTrigger asChild>
                       <CardContent className="p-4 cursor-pointer">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                            <div>
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-2 h-2 shrink-0 bg-green-500 rounded-full"></div>
+                            <div className="min-w-0">
                               <div className="text-sm font-medium">
-                                {new Date(session.created_at).toLocaleDateString('en-US', { 
-                                  month: 'short', 
-                                  day: 'numeric',
-                                  hour: '2-digit',
-                                  minute: '2-digit'
-                                })}
+                                {new Date(x.start).toLocaleDateString(i18n.language || undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                               </div>
                               <div className="text-xs text-muted-foreground">
-                                {session.duration_minutes || 6}min chat
+                                {t('jr.talkLine', { minutes: x.minutes, count: x.turns })}{x.phrases.length ? ` · ${t('jr.talkPhrases', { count: x.phrases.length })}` : ''}
                               </div>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Badge variant="outline" className="text-xs">
-                              {session.source}
-                            </Badge>
-                            {isExpanded ? (
-                              <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                            ) : (
-                              <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                            )}
+                          <div className="flex items-center gap-2 shrink-0">
+                            <Badge variant="outline" className="text-xs">{label(x.channel)}</Badge>
+                            {open ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
                           </div>
                         </div>
-                        
-                        {session.content?.user_message && !isExpanded && (
+                        {!open && x.phrases[0] && (
                           <div className="mt-2 text-xs text-muted-foreground p-2 bg-muted/30 rounded border-l-2 border-[hsl(var(--espaluz-primary))]/30">
-                            "You: {typeof session.content.user_message === 'string' ? session.content.user_message.substring(0, 80) : 'Message'}{typeof session.content.user_message === 'string' && session.content.user_message.length > 80 ? '...' : ''}"
+                            {x.phrases[0].es}{x.phrases[0].en ? ` - ${x.phrases[0].en}` : ''}
                           </div>
                         )}
                       </CardContent>
                     </CollapsibleTrigger>
-                    
                     <CollapsibleContent>
-                      <div className="px-4 pb-4 border-t border-border/30">
-                        <TelegramLearningAnalysis session={session} />
-                        
-                        {/* Debug section for developers */}
-                        <details className="mt-4">
-                          <summary className="text-xs text-muted-foreground cursor-pointer">Debug Session Data</summary>
-                          <pre className="text-xs mt-1 p-2 bg-muted/20 rounded overflow-auto max-h-32">
-                            {JSON.stringify({
-                              id: session.id.substring(0, 8),
-                              content_keys: Object.keys(session.content || {}),
-                              progress_data_keys: Object.keys(session.progress_data || {}),
-                              vocabulary_count: session.progress_data?.vocabulary_learned?.length || 0,
-                              has_bot_response: !!(session.content?.bot_response)
-                            }, null, 2)}
-                          </pre>
-                        </details>
+                      <div className="px-4 pb-4 border-t border-border/30 space-y-2 pt-3">
+                        {x.phrases.length ? x.phrases.map((p) => (
+                          <div key={p.es} className="rounded-lg bg-primary/5 p-2 text-sm">
+                            <p className="font-medium text-foreground">{p.es}</p>
+                            {p.en && <p className="text-xs text-muted-foreground">{p.en}</p>}
+                          </div>
+                        )) : <p className="text-sm text-muted-foreground">{x.channel === 'classroom' ? t('jr.classNote') : t('jr.noPhrases')}</p>}
                       </div>
                     </CollapsibleContent>
                   </Card>
