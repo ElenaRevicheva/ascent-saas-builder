@@ -14,7 +14,10 @@ const clean = (s: string) => s.replace(/\*+/g, '').replace(/^[\s"“”'-]+|[\s"
 export function phrasesIn(text: string, max = 6): FoundPhrase[] {
   const out: FoundPhrase[] = [];
   const add = (es: string, en?: string) => {
-    es = clean(es.includes(': ') ? es.slice(es.lastIndexOf(': ') + 2) : es);
+    es = clean(es.includes(': ') ? es.slice(es.lastIndexOf(': ') + 2) : es)
+      // 15 Nov 2026 (first real Telegram turn): "Disfrutar el momento [dis-fru-tar el mo-men-to]" - a pronunciation in
+      // brackets stuck to the phrase. The phrase is what comes before it.
+      .replace(/\s*\[[^\]]*\]?\s*$/, '').trim();
     en = clean(en ?? '').replace(/^[(\s]+|[)\s]+$/g, '').replace(/([?!]).*$/, '$1');
     if (es.length < 4 || es.length > 90 || !SPANISH.test(es) || es.includes('…')) return;
     if (en && (PRON.test(en) || !ENGLISH.test(en))) en = '';
