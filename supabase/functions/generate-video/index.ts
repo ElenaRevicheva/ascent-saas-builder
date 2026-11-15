@@ -44,21 +44,38 @@ function repeatsReply(line: string, reply: string): boolean {
   let n = 0; for (const w of L) if (R.has(w)) n++;
   return n / L.size > 0.7;
 }
+// 15 Nov 2026 (Elena's first celebration: photo read by gemini-flash-lite, then "no_text" 1.3 s later, no trace why):
+// the writer tried ONE Gemini model and a Groq call capped at 400 tokens, and swallowed every error. Now it tries the
+// same models the photo reader proved working, gives a reasoning model room to finish, and logs each failure.
 async function freeLine(system: string, user: string, maxTokens = 200): Promise<string> {
-  const groq = Deno.env.get('GROQ_API_KEY');
   const gem = Deno.env.get('GEMINI_TTS_API_KEY');
-  if (gem) try {
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${Deno.env.get('GEMINI_MODEL') || 'gemini-2.5-flash'}:generateContent`, {
-      method: 'POST', signal: AbortSignal.timeout(20000), headers: { 'x-goog-api-key': gem, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ systemInstruction: { parts: [{ text: system }] }, contents: [{ role: 'user', parts: [{ text: user }] }], generationConfig: { maxOutputTokens: maxTokens, temperature: 0.6 } }) });
-    if (r.ok) { const t = (await r.json()).candidates?.[0]?.content?.parts?.map((p: any) => p.text).join('') ?? ''; if (t.trim()) return t.trim(); }
-  } catch { /* next */ }
-  if (groq) try {
-    const r = await fetch('https://api.groq.com/openai/v1/chat/completions', { method: 'POST', signal: AbortSignal.timeout(20000),
-      headers: { 'Authorization': `Bearer ${groq}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: (Deno.env.get('GROQ_MODELS') || 'openai/gpt-oss-120b').split(',')[0], max_tokens: 400, temperature: 0.6, messages: [{ role: 'system', content: system }, { role: 'user', content: user }] }) });
-    if (r.ok) return String((await r.json()).choices?.[0]?.message?.content ?? '').trim();
-  } catch { /* nothing */ }
+  const models = [...new Set([Deno.env.get('GEMINI_LITE_MODEL') || 'gemini-flash-lite-latest', Deno.env.get('GEMINI_MODEL') || 'gemini-flash-latest', 'gemini-2.5-flash'])];
+  if (gem) for (const model of models) {
+    try {
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+        method: 'POST', signal: AbortSignal.timeout(20000), headers: { 'x-goog-api-key': gem, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ systemInstruction: { parts: [{ text: system }] }, contents: [{ role: 'user', parts: [{ text: user }] }],
+          generationConfig: { maxOutputTokens: Math.max(1024, maxTokens), temperature: 0.6 } }) });
+      if (!r.ok) throw new Error(`${r.status} ${(await r.text()).slice(0, 160)}`);
+      const t = (await r.json()).candidates?.[0]?.content?.parts?.map((p: any) => p.text ?? '').join('').trim() ?? '';
+      if (!t) throw new Error('empty answer');
+      console.log(`[line] written by gemini (${model})`);
+      return t;
+    } catch (e) { console.error(`[line] gemini ${model} failed:`, (e as Error).message); }
+  }
+  const groq = Deno.env.get('GROQ_API_KEY');
+  if (groq) for (const model of (Deno.env.get('GROQ_MODELS') || 'openai/gpt-oss-120b').split(',').map((m) => m.trim()).filter(Boolean).slice(0, 2)) {
+    try {
+      const r = await fetch('https://api.groq.com/openai/v1/chat/completions', { method: 'POST', signal: AbortSignal.timeout(20000),
+        headers: { 'Authorization': `Bearer ${groq}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model, max_tokens: 1500, temperature: 0.6, messages: [{ role: 'system', content: system }, { role: 'user', content: user }] }) });
+      if (!r.ok) throw new Error(`${r.status} ${(await r.text()).slice(0, 160)}`);
+      const t = String((await r.json()).choices?.[0]?.message?.content ?? '').replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+      if (!t) throw new Error('empty answer');
+      console.log(`[line] written by groq (${model})`);
+      return t;
+    } catch (e) { console.error(`[line] groq ${model} failed:`, (e as Error).message); }
+  }
   return '';
 }
 async function specialLine(db: any, userId: string, reason: string, reply: string): Promise<string> {
