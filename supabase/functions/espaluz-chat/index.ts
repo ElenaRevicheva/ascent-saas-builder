@@ -228,6 +228,9 @@ const PROFILE_ASK: [string, string][] = [
   ['work', 'what they do for work'], // 13 Nov 2026
   ['spanish_feel', 'how Spanish feels for them today'], ['focus', 'what would make the biggest difference this month'],
   ['miss_most', 'what they miss most from home'],
+  // 15 Nov 2026 (Elena: the questions that change what EspaLuz does - docs/espaluz/QUESTIONNAIRE_GAPS_2026-11-15.md)
+  ['why_here', 'what brought them to this country'], ['stay_plan', 'how long they plan to stay'],
+  ['spanish_at_home', 'whether anyone in the family already speaks Spanish'], ['arrived', 'when they arrived (month and year)'],
 ];
 // 11 Nov 2026 (Elena: "no simulated questions"): four answers were only a sentence the model could ignore
 // (docs/espaluz/QUESTIONNAIRE_AUDIT_2026-11-11.md in cto-aipa). Each now carries an explicit rule. The reply form stays
@@ -268,6 +271,33 @@ function profileRules(p: Record<string, any>): string {
       `talking about, bring ONE word or phrase from their own work or field in Spanish, or work small talk here (e.g. "¿A qué te dedicas?"). ` +
       `Never repeat a work phrase you already gave them, never steer a conversation to work, and say nothing about visas, taxes or ` +
       `permits for working here unless it is in the country facts.`);
+  // 15 Nov 2026: the five new answers, each with what EspaLuz DOES with it (typed answers are used word for word).
+  const why = ([] as string[]).concat(p.why_here ?? []).filter(Boolean);
+  if (why.length)
+    out.push(`WHY THEY CAME - ${why.join(', ')}: this is the reason that keeps them going when Spanish is hard. Now and then, when ` +
+      `it fits, connect what they practise to it (e.g. a calmer life -> how families here slow down; the children -> school and play). ` +
+      `Never lecture about it and never assume anything beyond their own words.`);
+  const stay = String(p.stay_plan ?? '');
+  if (/few months|year or two/i.test(stay))
+    out.push(`SHORT STAY (${stay}): favour what helps right away and travels well - greetings, errands, getting around, making ` +
+      `friends - over long-term settling (school enrolment, long contracts) unless they ask.`);
+  else if (/home now/i.test(stay))
+    out.push(`STAYING FOR GOOD: they are building a home here - lean into belonging: traditions, neighbours, the rhythm of the year, ` +
+      `the children's school life, and their "firsts" (first holidays and seasons here).`);
+  else if (stay) out.push(`STAY PLAN - in their words: "${stay}". Let it shape what is useful now.`);
+  const home = ([] as string[]).concat(p.spanish_at_home ?? []).filter(Boolean);
+  if (home.some((h) => /partner|from here|pareja/i.test(h)))
+    out.push(`A SPANISH SPEAKER AT HOME: when a phrase or custom is uncertain, suggest they try it with their partner tonight - that ` +
+      `partner is their best bridge. Never put them down for needing help.`);
+  if (home.some((h) => /children|school|niños/i.test(h)))
+    out.push(`THE CHILDREN SPEAK SPANISH AT SCHOOL: now and then invite the parent to ask the child how to say something - children ` +
+      `love teaching their parents, and it builds Spanish at home.`);
+  if (p.school)
+    out.push(`THE CHILDREN'S SCHOOL - ${p.school}: when school comes up, speak to that kind of school (a local public or private ` +
+      `school follows the country's calendar from the country facts; a bilingual or international school may follow its own - ask, never guess).`);
+  if (p.arrived)
+    out.push(`ARRIVED: ${p.arrived}. A holiday, season or custom they have not lived here yet is their FIRST one - you may say so ` +
+      `warmly ("your first rainy season here!") only when the date makes it true.`);
   return out.length ? '\n' + out.join('\n') : '';
 }
 
@@ -281,6 +311,9 @@ function profileLine(profile: Record<string, any> | undefined): string {
     has('household') && `household: ${p.household}`, has('spanish_feel') && `Spanish today: ${p.spanish_feel}`,
     has('focus') && `what matters most now: ${[].concat(p.focus).join(', ')}`, has('miss_most') && `they miss most from home: ${p.miss_most}`,
     (has('work') || has('profession')) && `work: ${[p.work, p.profession].filter(Boolean).join(', ')}`,
+    has('why_here') && `what brought them here: ${[].concat(p.why_here).join(', ')}`, has('stay_plan') && `plan to stay: ${p.stay_plan}`,
+    has('arrived') && `arrived: ${p.arrived}`, has('spanish_at_home') && `Spanish at home: ${[].concat(p.spanish_at_home).join(', ')}`,
+    has('school') && `the children's school: ${p.school}`,
   ].filter(Boolean);
   const missing = PROFILE_ASK.filter(([k]) => !has(k)).map(([, q]) => q);
   return (known.length ? `\nTHIS FAMILY'S NEW LIFE (their own answers): ${known.join('; ')}. Let it shape what you bring up: build bridges between where ` +
