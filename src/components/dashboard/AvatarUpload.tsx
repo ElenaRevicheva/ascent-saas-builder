@@ -21,7 +21,7 @@ export const AvatarUpload = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [uploading, setUploading] = useState(false);
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(hello);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   // 8 Nov 2026 (Elena: "it says uploaded, but the old avatar sits there"): the upload worked, but the file keeps the same
   // address and was cached for an hour, so the browser kept playing its old copy. Every address now carries the file's
@@ -141,7 +141,42 @@ export const AvatarUpload = () => {
       </CardHeader>
       
       <CardContent className="space-y-4">
-        {!avatarUrl ? null : (
+        {/* 15 Nov 2026 (Elena: the yellow "Add your family's video" did nothing): the hidden file picker lived only in the
+            "no video at all" branch, but EspaLuz's hello always fills the card now, so the button had nothing to open.
+            One picker for both branches. */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="video/*"
+          onChange={handleFileChange}
+          className="hidden"
+        />
+        {!avatarUrl ? (
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              {t('vm.uploadHint')}
+            </p>
+            
+            <Button
+              onClick={handleFileSelect}
+              disabled={uploading}
+              className="w-full bg-[hsl(var(--espaluz-primary))] hover:bg-[hsl(var(--espaluz-primary))]/90"
+            >
+              {uploading ? (
+                <div className="w-4 h-4 border border-current border-t-transparent rounded-full animate-spin mr-2" />
+              ) : (
+                <Upload className="h-4 w-4 mr-2" />
+              )}
+              {uploading ? '...' : t('vm.add')}
+            </Button>
+
+            <div className="text-xs text-muted-foreground space-y-1">
+              <p>• Supported formats: MP4, WebM, MOV</p>
+              <p>• Maximum file size: 50MB</p>
+              <p>• Recommended duration: 30 seconds</p>
+            </div>
+          </div>
+        ) : (
           <div className="space-y-4">
             <div className="relative rounded-lg overflow-hidden bg-muted">
               <video
@@ -172,15 +207,27 @@ export const AvatarUpload = () => {
               </div>
             </div>
             
-            {/* 15 Nov 2026 (Elena: "one upload button that works, no duplicates"): the family's video now comes in
-                through Celebrations below, which does something with it. A video a family kept here before stays
-                visible and can be removed; there is no second "add" button any more. */}
-            {ownName && (
-              <Button variant="outline" size="sm" onClick={handleDelete} className="text-destructive hover:text-destructive">
-                <Trash2 className="h-4 w-4 mr-2" />
-                {t('vm.remove')}
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={handleFileSelect}
+                disabled={uploading}
+                className="flex-1"
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                {ownName ? t('vm.replace') : t('vm.add')}
               </Button>
-            )}
+              
+              {ownName && (
+                <Button
+                  variant="outline"
+                  onClick={handleDelete}
+                  className="text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
             
             {/* Only what is true: EspaLuz's talking videos use her own face; nothing reads a family's upload yet. */}
             <p className="text-sm text-muted-foreground">

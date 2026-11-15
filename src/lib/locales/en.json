@@ -518,8 +518,8 @@
   },
   "vm": {
     "title": "Video moments with EspaLuz",
-    "hello": "This is EspaLuz saying hello.",
-    "saved": "This is the video your family kept here.",
+    "hello": "This is EspaLuz saying hello. Below it, you can also keep a short video of your family, shown here on your dashboard.",
+    "saved": "Your family's video is saved and shown here on your dashboard.",
     "add": "Add your family's video",
     "replace": "Replace your family's video",
     "uploadHint": "Keep a short video of your family here (MP4, up to 30 seconds).",
@@ -564,8 +564,7 @@
     "prepNoMic": "The microphone is not available. Allow it in your browser, or type your answer.",
     "prepFailed": "Something went wrong. Please try again.",
     "prepNotPaid": "The tips video is part of EspaLuz Family. It opens when your plan is active.",
-    "prepCap": "This month's tips videos are used. The next ones are ready on {{date}}.",
-    "remove": "Remove this video"
+    "prepCap": "This month's tips videos are used. The next ones are ready on {{date}}."
   },
   "fw": {
     "title": "Your family's week with EspaLuz",

@@ -308,8 +308,8 @@
   },
   "vm": {
     "title": "Momentos en video con EspaLuz",
-    "hello": "Esta es EspaLuz saludándote.",
-    "saved": "Este es el video que tu familia guardó aquí.",
+    "hello": "Esta es EspaLuz saludándote. Abajo puedes guardar también un video corto de tu familia, que se muestra aquí en tu panel.",
+    "saved": "El video de tu familia está guardado y se muestra aquí en tu panel.",
     "add": "Agregar el video de tu familia",
     "replace": "Cambiar el video de tu familia",
     "uploadHint": "Guarda aquí un video corto de tu familia (MP4, hasta 30 segundos).",
@@ -354,8 +354,7 @@
     "prepNoMic": "El micrófono no está disponible. Permítelo en tu navegador, o escribe tu respuesta.",
     "prepFailed": "Algo salió mal. Inténtalo de nuevo.",
     "prepNotPaid": "El video de consejos es parte de EspaLuz Family. Se abre cuando tu plan está activo.",
-    "prepCap": "Los videos de consejos de este mes ya están hechos. Los próximos estarán listos el {{date}}.",
-    "remove": "Quitar este video"
+    "prepCap": "Los videos de consejos de este mes ya están hechos. Los próximos estarán listos el {{date}}."
   },
   "fw": {
     "title": "La semana de tu familia con EspaLuz",
