@@ -262,7 +262,7 @@ const Classroom = () => {
   // 13 Nov 2026 (Elena: "children want fun, not effort - the progress must move and be seen"): the class path she can SEE
   // (unit of 12, today's corners lighting up, "¡Clase terminada!"), and a photo earns a star once a lesson - after that the
   // heroes turn photos into today's reading and the star comes for that try.
-  type ClassPath = { unit: number; of: number; theme: string; step: number; steps: number };
+  type ClassPath = { unit: number; of: number; theme: string; step: number; steps: number; level?: 'kinder' | 'first' | 'second' };
   const [classPath, setClassPath] = useState<ClassPath | null>(null);
   const [classDone, setClassDone] = useState(false);
   const classDoneShown = useRef(false);
@@ -278,6 +278,14 @@ const Classroom = () => {
   // account (else "Peque"), and the last thing someone said, shown as a bubble with that person's face.
   const [who, setWho] = useState<Who>("child");
   const [childName, setChildName] = useState("Peque");
+  // 15 Nov 2026 (Elena: "all levels, kinder to 2nd grade, so the child grows with EspaLuz"): the brain picks the level from
+  // the child's age (5 kinder, 6 1st grade, 7-8 2nd grade); a parent can move it up or down here - remembered in this
+  // browser for this child, sent with every class turn ('' = by age).
+  const levelKey = `espaluz-class-level-${String(childName || 'child').toLowerCase()}`;
+  const [chosenLevel, setChosenLevel] = useState<string>('');
+  // The child's name arrives from the family list after the first render: read that child's choice then.
+  useEffect(() => { try { setChosenLevel(localStorage.getItem(levelKey) || ''); } catch { setChosenLevel(''); } }, [levelKey]);
+  const chooseLevel = (lv: string) => { setChosenLevel(lv); try { localStorage.setItem(levelKey, lv); } catch { /* private mode */ } };
   const [said, setSaid] = useState<{ who: Who; text: string } | null>(null);
   useEffect(() => {
     if (!user?.id) return;
@@ -539,6 +547,7 @@ const Classroom = () => {
             ? { speaker: (t.who ?? "child") === "child" ? "child" : "parent", name: nameOf(t.who ?? "child") } : null)),
           mission: turns.length === 0 && mission.current && mission.current.day !== today() ? mission.current.text : undefined,
           ...(classMode.current ? { mode: "class" } : {}),
+          ...(classMode.current && chosenLevel ? { level: chosenLevel } : {}),
         } },
       });
       const text: string = data?.response || "";
@@ -847,7 +856,13 @@ const Classroom = () => {
         )}
         {classMode.current && classPath && (
           <div className="mx-auto mb-3 w-full max-w-md rounded-2xl bg-white/90 px-4 py-2 text-center shadow-lg">
-            <p className="text-sm font-bold text-gray-900">📚 Unidad {classPath.unit} de {classPath.of} · {classPath.theme}</p>
+            <p className="text-sm font-bold text-gray-900">📚 {({ kinder: 'Kínder', first: '1.º grado', second: '2.º grado' } as Record<string, string>)[classPath.level ?? 'first']} · Unidad {classPath.unit} de {classPath.of} · {classPath.theme}</p>
+            <div className="mt-1 flex items-center justify-center gap-1 text-xs" aria-label="Level">
+              {([['kinder', 'Kínder'], ['first', '1.º'], ['second', '2.º']] as const).map(([lv, name]) => (
+                <button key={lv} type="button" onClick={() => chooseLevel(lv === (classPath.level ?? 'first') && !chosenLevel ? '' : lv)}
+                  className={`rounded-full px-2 py-0.5 ${(chosenLevel || classPath.level || 'first') === lv ? 'bg-violet-600 text-white' : 'bg-gray-100 text-gray-700'}`}>{name}</button>
+              ))}
+            </div>
             <div className="mt-1 flex items-center justify-center gap-2" aria-label={`Corner ${Math.min(classPath.step + 1, classPath.steps)} of ${classPath.steps}`}>
               {["👋", "📖", "💬", "🔢", "📚", "🌙"].slice(0, classPath.steps).map((icon, k) => (
                 <span key={k} className={`flex h-8 w-8 items-center justify-center rounded-full text-base transition

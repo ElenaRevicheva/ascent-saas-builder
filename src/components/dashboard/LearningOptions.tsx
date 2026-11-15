@@ -63,7 +63,7 @@ export const LearningOptions = ({ open: controlledOpen, onOpenChange }: Learning
     {
       id: 'kids-classroom',
       title: "Pere and Titi's Classroom",
-      description: 'For children 6-7: a calm sloth and a playful tamarin teach real Spanish and English sentences by voice, with games and praise.',
+      description: 'For children 5-8 (kinder to 2nd grade), each at their own level: a calm sloth and a playful tamarin teach real Spanish and English sentences by voice, with games and praise.',
       icon: Smile,
       features: [
         'Voice only - the child holds the mic and talks',
@@ -75,7 +75,7 @@ export const LearningOptions = ({ open: controlledOpen, onOpenChange }: Learning
         'A star for every answer - every 5 stars Titi dances'
       ],
       pros: [
-        'Made for ages 6-7 (first grade)',
+        'Ages 5-8: kinder, 1st and 2nd grade, chosen by age',
         'Reads along: every sentence is on screen',
         'Five to ten minutes a day',
         'Same heroes as the Telegram bot'

@@ -447,16 +447,85 @@ const KIDS_CLASS_UNITS = [
   { theme: "Fiestas y cuentos / Holidays and stories", trace: ["al", "en", "is", "or", "un"], es: "reading a mini-story of 2-3 lines and reverse syllables (sílabas inversas: al, en, is, or, un - el, es-tre-lla, ár-bol)", en: "reading a mini-story of 2 lines", num: "counting in tens: 10, 20, 30...", talk: "she changes the end of a story" },
   { theme: "Mis amigos / My friends", trace: ["ki", "wi", "xi", "güe", "güi"], es: "her own sentence, read aloud, and the last rare ones: k (ki-lo), w (wi-fi), x (ta-xi) and güe güi with the two dots (pin-güi-no, ci-güe-ña)", en: "her own sentence in English", num: "a review game with everything so far", talk: "she tells a short story of her own" },
 ];
+// ===== 15 Nov 2026 (Elena: "the classroom should contain all levels, kinder to 2nd grade, so the child grows with
+// EspaLuz") - THREE LEVELS on the SAME 12 themes, like schools that spiral one theme a year higher. Today's units above are
+// 1st grade and stay exactly as they were. Goals drafted from Cambridge Early Years / Phonics Step 2 (kinder), MEDUCA 1999
+// 2nd-grade standards and Cambridge Primary Stage 2-3 / Starters-Movers (2nd grade); sources and the items still
+// unverified: cto-aipa docs/espaluz/CLASSROOM_LEVELS_CONTENT_2026-11-15.md. A class unit number is now 0-35:
+// 0-11 kinder, 12-23 1st grade, 24-35 2nd grade; it is saved as the unit within its level (1-12) + class_level.
+const KIDS_CLASS_UNITS_KINDER = [
+  { theme: "Yo y mi familia / Me and my family", trace: ["|", "-", "o", "a", "e"], es: "the vowels a and e by their sound (a de abuela, e de elefante); clap ma-má and pa-pá", en: "the words mum, dad, baby, me; the sounds n, i, t; the colours red and blue", num: "count 1 to 5 on her fingers", talk: "she names who is in her family: 'mi mamá', 'mi hermano'" },
+  { theme: "Mi escuela / My school", trace: ["/", "c", "i", "o", "u"], es: "the vowels i, o, u by their sound (i de iguana, o de oso, u de uva); find the vowel at the start of a word", en: "the words book, bag, pencil, teacher; the sounds a, d, s; the colours yellow and green", num: "count up to 5 things in the classroom; circle and square", talk: "she names one thing in her bag and its colour" },
+  { theme: "Mi cuerpo y mis sentimientos / My body and feelings", trace: ["a", "e", "i", "o", "u"], es: "all five vowels; clap body words: ma-no (2), ca-be-za (3); rhymes: ojo-rojo, boca-loca", en: "head, hands, eyes, happy, sad; the song 'Head, shoulders, knees and toes'; the sounds l, m, r", num: "count to 6; one more and one less with fingers", talk: "she shows a face and says 'Estoy feliz / I am happy'" },
+  { theme: "Los animales / Animals", trace: ["m", "p", "s", "mo", "pa"], es: "first sounds of animals: m de mono, p de perro, s de sapo; animal sounds and rhymes (gato-pato)", en: "cat, dog, fish, bird; animal sounds; the sounds e, h", num: "count to 7 animals; which group has more?", talk: "she makes an animal sound and says its name: 'Es un mono'" },
+  { theme: "La comida / Food", trace: ["l", "t", "la", "te", "lo"], es: "first sounds l de leche, t de tomate; clap ba-na-na (3) and pan (1); food rhymes", en: "apple, banana, milk, water; 'yummy'; the sounds c, k, o", num: "count to 8; share fruit: one for you, one for me", talk: "she says one food she likes: 'Me gusta el mango / I like mangoes'" },
+  { theme: "Mi casa / My home", trace: ["n", "d", "mi", "sí", "no"], es: "first sounds n de nido, d de dedo; first sight words: mi, sí, no", en: "bed, door, table, house; the sounds p, f; the colours pink and orange", num: "shapes at home: circle, square, triangle, rectangle", talk: "she says one thing in her room: 'Tengo una cama'" },
+  { theme: "Los colores y la ropa / Colours and clothes", trace: ["ma", "me", "mi", "mo", "mu"], es: "colour words; clap a-ma-ri-llo (4) and a-zul (2); the syllables ma me mi mo mu said and traced", en: "all the colours; hat, shoes, shirt; the sounds z, v, w", num: "count to 9; sort clothes by colour", talk: "she says one thing she wears and its colour: 'Mi camisa es azul'" },
+  { theme: "La hora y mi día / Time and my day", trace: ["pa", "pe", "pi", "po", "pu"], es: "day and night words; 'primero' and 'después'; the syllables pa pe pi po pu", en: "morning, night, wake up, sleep; a good-morning song; the sounds th, b", num: "first, second, last; count to 10", talk: "she says two things she does in the morning, in order" },
+  { theme: "En la tienda / At the shop", trace: ["sa", "se", "si", "so", "su"], es: "the syllables sa se si so su; sight words yo, mi, sí, no read from the screen", en: "numbers one to ten; 'please', 'thank you'; the sounds y, u, g", num: "recognise the written numbers 0 to 10; pay with counters one by one", talk: "pretend shop: 'Quiero una manzana, por favor'" },
+  { theme: "Mi ciudad / My town", trace: ["mamá", "papá", "sol", "mesa", "oso"], es: "read and trace the sight words mamá, papá; spot rhymes in town words (sol-col)", en: "bus, car, park, tree; the sounds ng, ch, sh", num: "compare two groups up to 10: more, less, the same", talk: "she says what she sees outside: 'Veo un bus / I see a bus'" },
+  { theme: "Fiestas y cuentos / Holidays and stories", trace: ["yo", "mi", "la", "el", "un"], es: "listen to a very short story and name who is in it; sight words yo, mi, la, el, un", en: "'Happy birthday' song; party, cake, present; the sounds j, x, q", num: "count back from 10 to 0 like a rocket", talk: "she tells what happens in the story with the picture: 'El gato salta'" },
+  { theme: "Mis amigos / My friends", trace: ["Yo", "mi", "amigo", "amiga", "sí"], es: "review: vowels, first sounds and sight words; she says the first sound of her own name", en: "hello, friend, play; review the letter sounds and colours", num: "review game: count, numbers 0 to 10, shapes, more or less", talk: "she says her friend's name and one game they play" },
+];
+const KIDS_CLASS_UNITS_2ND = [
+  { theme: "Yo y mi familia / Me and my family", trace: ["Mi mamá", "Mi papá", "Yo soy", "Tengo", "familia"], es: "capital letter at the start and for names, full stop at the end; she writes 2 sentences about her family", en: "'This is my...', 'He is / She is'; read 3 short sentences and answer 'Who is she?'", num: "numbers to 100: read and write them, tens and ones", talk: "she tells about one person in her family and why she loves them, with 'porque / because'" },
+  { theme: "Mi escuela / My school", trace: ["¿Qué?", "¿Quién?", "¿Dónde?", "¿Cuándo?", "¿Cómo?"], es: "question words with their tilde and both marks ¿ ?; she writes one question of her own", en: "questions with what, who, where; present simple: 'I go to school', 'We read books'", num: "add two-digit numbers without carrying (23 + 14)", talk: "she asks Pere and Titi three real questions about their school" },
+  { theme: "Mi cuerpo y mis sentimientos / My body and feelings", trace: ["corazón", "canción", "está", "también", "feliz"], es: "the tilde on the last syllable (co-ra-zón, tam-bién); feelings words; read a short text about feelings aloud", en: "'I feel... because...'; happy, angry, worried, proud; read and answer 'How does he feel?'", num: "take away two-digit numbers without borrowing (48 - 23)", talk: "she tells a time she felt proud or sad and explains why" },
+  { theme: "Los animales / Animals", trace: ["El perezoso", "trepa", "despacio", "El tucán", "vuela"], es: "read a short animal text aloud and answer what, where, why; one and many (el tucán / los tucanes)", en: "read a 3-sentence animal fact and answer 'Can it fly? What does it eat?'", num: "count in 2s, 5s and 10s to 100", talk: "she describes an animal in 2-3 sentences so Titi can guess it" },
+  { theme: "La comida / Food", trace: ["Me gusta", "No me gusta", "plátano", "arroz", "queso"], es: "she writes 3 sentences of her own: what she likes and does not like; commas in a list", en: "'I like / I don't like', 'Do you like...? Yes, I do. No, I don't.'", num: "word problems: 'I have 12 mangos and eat 3. How many are left?'", talk: "she plans a lunch and explains each choice" },
+  { theme: "Mi casa / My home", trace: ["cocina", "ventana", "dormitorio", "puerta", "jardín"], es: "longer words read by syllables (dor-mi-to-rio); describing words that agree (casa blanca, cuartos blancos)", en: "'There is / There are'; in, on, under, next to", num: "shapes: sides and corners; halves and quarters", talk: "she describes her home in 3 sentences, room by room" },
+  { theme: "Los colores y la ropa / Colours and clothes", trace: ["camisa", "zapatos", "chaqueta", "llueve", "hace calor"], es: "blends and digraphs in clothes words (blusa, chaqueta, llueve); noun and colour agree (zapatos rojos)", en: "present continuous: 'I am wearing a blue shirt'; read and answer 'What is she wearing?'", num: "measure length: longer, shorter, in centimetres", talk: "she chooses clothes for the weather and says why" },
+  { theme: "La hora y mi día / Time and my day", trace: ["Primero", "Después", "Luego", "Al final", "por la mañana"], es: "order words; she writes 3 sentences about her day in order, each with a capital and a full stop", en: "routines in present simple: 'I get up at seven'; days of the week", num: "telling time: o'clock, half past, quarter past and quarter to", talk: "she tells her day from first to last" },
+  { theme: "En la tienda / At the shop", trace: ["¿Cuánto cuesta?", "dinero", "monedas", "compro", "gracias"], es: "polite phrases and questions with ¿ ?; read a short shop list and a price tag", en: "'How much is it?', 'It is...'; numbers to 100 in English", num: "money: add two prices, give change, simple word problems", talk: "shop role-play: she buys two things and counts the change" },
+  { theme: "Mi ciudad / My town", trace: ["Fui al", "parque", "Vi un", "autobús", "el Canal"], es: "past-tense sentences (fui, vi, comí) with their accents; she writes 2-3 sentences about a trip", en: "simple past: went, saw, played; 'Where did you go?'", num: "numbers to 1000: hundreds, tens and ones; compare with more than / less than", talk: "she tells where she went last weekend and what she saw" },
+  { theme: "Fiestas y cuentos / Holidays and stories", trace: ["Había una vez", "un día", "pero", "entonces", "Fin"], es: "read a short story aloud with expression; name its beginning, middle, end, characters and place", en: "read a short story and answer 'What happened? Who was there?'", num: "equal groups: 2s, 5s and 10s as the first step to multiplying", talk: "she retells the story and changes the ending" },
+  { theme: "Mis amigos / My friends", trace: ["Mi amiga", "se llama", "Jugamos", "juntos", "porque"], es: "she writes her own 3-sentence story or note to a friend, then checks capitals, full stops and accents", en: "she writes 2 English sentences about a friend: 'She likes...', 'He can...'", num: "review game: word problems with add and take away, time and money", talk: "she tells a short story of her own and asks Pere a 'why' question" },
+];
+const KIDS_LEVELS = ['kinder', 'first', 'second'] as const;
+type KidsLevel = typeof KIDS_LEVELS[number];
+const KIDS_UNITS_ALL = [...KIDS_CLASS_UNITS_KINDER, ...KIDS_CLASS_UNITS, ...KIDS_CLASS_UNITS_2ND];
+const KIDS_PER_LEVEL = KIDS_CLASS_UNITS.length;
+const kidsLevelOf = (classUnit: number): KidsLevel => KIDS_LEVELS[Math.min(2, Math.max(0, Math.floor(classUnit / KIDS_PER_LEVEL)))];
+const kidsUnit = (classUnit: number) => KIDS_UNITS_ALL[((classUnit % KIDS_UNITS_ALL.length) + KIDS_UNITS_ALL.length) % KIDS_UNITS_ALL.length];
+// The level from the child's age (a parent may choose another in the classroom: kids.level). 5 or younger = kinder
+// (Panama Jardin), 6 = 1st grade, 7 and older = 2nd grade.
+const kidsLevelForAge = (age: number | null | undefined): KidsLevel =>
+  typeof age === 'number' && age > 0 ? (age <= 5 ? 'kinder' : age === 6 ? 'first' : 'second') : 'first';
+const KIDS_LEVEL_TALK: Record<KidsLevel, string> = {
+  kinder: 'LEVEL - KINDER (age 5): this replaces the sentence-length rule above. About 3-6 words per sentence, ONE idea per line, never ' +
+    'joined; 2 short lines per reply. Mostly Spanish: the line in Spanish, then only the key English word or a very short echo after " / " ' +
+    '("¡Un perro! / A dog!"). Name SOUNDS, not letter names ("mmm, como mono"). Songs, rhymes, clapping and movement often - a reply ' +
+    'may ask her to clap, point, jump or trace. Ask questions she answers with one word, a sound or a movement; never ask her to read a ' +
+    'sentence, only a sight word from the screen. Warm and playful, never baby talk.',
+  first: '',
+  second: 'LEVEL - 2ND GRADE (ages 7-8): this replaces the sentence-length rule above. About 8-15 words per sentence; two or three ideas ' +
+    'may be joined with "y / and", "porque / because", "pero / but", "entonces / so". 2-3 lines per reply. Ask "¿Por qué...? / Why...?" ' +
+    'and "¿Qué pasaría si...? / What if...?" and wait for a full answer. Once per lesson she retells something in her own words, reads ' +
+    '2-3 sentences aloud with expression, and writes or says one sentence of her own; praise one thing and fix only ONE (a capital, a ' +
+    'full stop or an accent). Use the past tense naturally ("¿Qué hiciste ayer? / What did you do yesterday?").',
+};
 // 3 Nov 2026 (Elena: "make the learning visible"): one readable line per class turn, saved with it, so the parent report
 // can show WHAT was practised ("Unit 2 · Mi escuela · Spanish: ... · English: ... · Numbers: ...") instead of "she chatted".
+const KIDS_LEVEL_NAME: Record<KidsLevel, string> = { kinder: 'Kinder', first: '1st grade', second: '2nd grade' };
 const kidsClassLabel = (unit: number): string => {
-  const u = KIDS_CLASS_UNITS[unit % KIDS_CLASS_UNITS.length];
-  return `Unit ${(unit % KIDS_CLASS_UNITS.length) + 1} · ${u.theme} · Spanish: ${u.es} · English: ${u.en} · Numbers: ${u.num}`;
+  const u = kidsUnit(unit);
+  return `${KIDS_LEVEL_NAME[kidsLevelOf(unit)]} · Unit ${(unit % KIDS_PER_LEVEL) + 1} · ${u.theme} · Spanish: ${u.es} · English: ${u.en} · Numbers: ${u.num}`;
 };
-function kidsClassSteps(u: typeof KIDS_CLASS_UNITS[number]): string[] {
+function kidsClassSteps(u: typeof KIDS_CLASS_UNITS[number], level: KidsLevel = 'first'): string[] {
+  const reading = level === 'kinder'
+    ? `READING CORNER (Pere, slow and clear): today's Spanish is ${u.es}. She is in KINDER (age 5) and does not read yet: work with ` +
+      'SOUNDS and her body - Pere says ONE sound or claps ONE word, big and alone on ONE short line ("a  e" or "ma-má"); she copies the ' +
+      'sound, claps the syllables or points; Titi gets one wrong on purpose so she catches him; then she TRACES one stroke or letter (on ' +
+      `the tablet pad - when she says "✏️ Tracé ...", praise that ONE thing). English today: ONE word or sound from ${u.en}, with a gesture or a song.`
+    : level === 'second'
+    ? `READING CORNER (Pere, slow and clear): today's Spanish is ${u.es}. She is in 2ND GRADE (ages 7-8) and reads: Pere shows 2-3 ` +
+      'short sentences, one per line, with today\'s words; she reads them aloud with expression; Titi asks ONE "why" or "what" question ' +
+      'about them; then she writes (on the pad) or says ONE sentence of her own - praise one thing, fix only ONE (a capital, a full stop ' +
+      `or an accent). English today: ${u.en} - one short read-and-answer question.`
+    : null;
   return [
     `CLASS HELLO: both heroes say hello in 1-2 short lines and announce today's class in one happy line: "${u.theme}".`,
-    `READING CORNER (Pere, slow and clear): today's Spanish reading is ${u.es}. She is a BEGINNING reader (Elena, 1 Nov: ` +
+    reading ?? `READING CORNER (Pere, slow and clear): today's Spanish reading is ${u.es}. She is a BEGINNING reader (Elena, 1 Nov: ` +
       "she does not read yet in Spanish or English): show at most 3 letters or syllables, big and alone on ONE short line " +
       "(\"ma  me  mi\"); Pere says each SOUND slowly, she says it after him, then she tries to read ONE by herself; Titi " +
       `reads one WRONG on purpose so she catches him; then she TRACES one letter with her finger in the air or on paper (she ` +
@@ -967,7 +1036,7 @@ async function kidsResumeFrom(supabase: any, userId: string, stepsLength: number
 
 /** Two of the unit's syllables next to each other ("da  de", "ra, re, ro") = the syllables were shown, not just used. */
 function kidsSyllableLine(classUnit: number): RegExp {
-  const t = KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length].trace.map((x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  const t = kidsUnit(classUnit).trace.map((x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
   return new RegExp(`(^|[\\s«"(])(${t.join('|')})[\\s,·.-]+(${t.join('|')})(?=[\\s,·.»")!?]|$)`, 'i');
 }
 function kidsPractised(hist: any[], classUnit: number): boolean {
@@ -995,7 +1064,7 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
   // In a class the unit's own story-and-talk replaces the week's story.
   const storyOff = classUnit >= 0 || avoid.some((a) => storyWords.includes(a) || storyWords.includes(STORY_WORD[a] ?? ''));
   const story = storyOff ? "(no story this week - she does not want it; follow HER topic)" : weekStory;
-  const steps = classUnit >= 0 ? kidsClassSteps(KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length]) : KIDS_STEPS;
+  const steps = classUnit >= 0 ? kidsClassSteps(kidsUnit(classUnit), kidsLevelOf(classUnit)) : KIDS_STEPS;
   const at = turn + resume;
   const next = at < steps.length ? steps[at] : KIDS_STEP_FREE;
   const planned = turn === 0 && resume > 0
@@ -1148,7 +1217,7 @@ function kidsTurnContext(kids: any, message: string, avoid: string[] = [], class
   // but after 6 turns the plan ran out into free talk and the reading corner never happened. Now, in a class, until
   // the unit's syllables have been shown, every 4th turn (offset from the break) bridges FROM her topic to them.
   if (classUnit >= 0 && turn >= 2 && turn % 4 === 2 && !herTurn && !kidsPractised(hist, classUnit)) {
-    const u = KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length];
+    const u = kidsUnit(classUnit);
     out.push(`SOUNDS BRIDGE NOW (today's reading: ${u.es}): stay on HER topic and use it - find a word she just said or ` +
       `showed that has one of these syllables (${u.trace.join(', ')}), or a word about it that does; Pere shows 2-3 of ` +
       `them big and alone on ONE short line ("${u.trace.slice(0, 3).join('  ')}"), says each slowly, she says them after him; ` +
@@ -2024,9 +2093,17 @@ ${asked}` : ''}`;
           .order('created_at', { ascending: false }).limit(2000);
         starts = kidsClassDaysDone((classRows ?? []).map((r: any) => ({ at: Date.parse(r.created_at), said: String(r.said ?? '') })), Date.now());
       }
-      classUnit = Math.floor(Math.max(0, starts) / 2) % KIDS_CLASS_UNITS.length;
+      let level: KidsLevel = KIDS_LEVELS.includes(kids.level) ? kids.level : 'first';
+      if (!KIDS_LEVELS.includes(kids.level) && userId) {
+        const { data: kidsRows } = await supabase.from('family_members').select('name, age').eq('user_id', userId).eq('role', 'child').eq('is_active', true);
+        const want = String(kids.child_name ?? '').trim().toLowerCase();
+        const child = (kidsRows ?? []).find((k: any) => want && String(k.name).toLowerCase() === want) ?? (kidsRows?.length === 1 ? kidsRows[0] : null);
+        level = kidsLevelForAge(child?.age ?? null);
+      }
+      classUnit = KIDS_LEVELS.indexOf(level) * KIDS_PER_LEVEL + (Math.floor(Math.max(0, starts) / 2) % KIDS_PER_LEVEL);
+      console.log(`[classroom] level ${level} unit ${(classUnit % KIDS_PER_LEVEL) + 1}`);
     }
-    const resumeSteps = classUnit >= 0 ? kidsClassSteps(KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length]).length : KIDS_STEPS.length;
+    const resumeSteps = classUnit >= 0 ? kidsClassSteps(kidsUnit(classUnit), kidsLevelOf(classUnit)).length : KIDS_STEPS.length;
     const resume = kids && userId && !kidsIsParent(kids) ? await kidsResumeFrom(supabase, userId, resumeSteps, Boolean(isHello)).catch(() => 0) : 0;
     if (resume && isHello) console.log(`[classroom] resumes at step ${resume + 1} of ${resumeSteps}`);
     // The turn instruction (with the child's own words) goes LAST: the model weighs the end of the prompt most - and at
@@ -2039,6 +2116,8 @@ ${asked}` : ''}`;
     const kidsSystem = KIDS_CLASSROOM_PROMPT + memory.card + (kidsPlaces ? '\n' + KIDS_PLACES_FACTS : '') + (known.length
       ? `\n\nSentences the child already said in earlier lessons: ${known.map((s) => `"${s}"`).join(' · ')}. At the hello, invite the child to say one of them again and praise, then teach new ones (the same words come back and grow).`
       : '') + (kids ? kidsTurnContext(kids, message, memory.avoid, classUnit, resume) : '') +
+      // 15 Nov 2026: kinder and 2nd grade talk at their own level; 1st grade keeps the rule above (KIDS_LEVEL_TALK).
+      (kids && classUnit >= 0 && KIDS_LEVEL_TALK[kidsLevelOf(classUnit)] ? `\n${KIDS_LEVEL_TALK[kidsLevelOf(classUnit)]}\n` : '') +
       (isHello && !resume ? memory.hello : (memory.hello.startsWith('\nSHE TOLD YOU') ? memory.hello.split('\n\nTHIS HELLO')[0] : '')) +
       (kids && message.startsWith('📷') ? (photoDescription
         ? `\nSHE IS SHOWING YOU A PHOTO: ${photoDescription}\nTalk about what is in it with real curiosity first (name ` +
@@ -2047,7 +2126,7 @@ ${asked}` : ''}`;
           "(\"¿Qué hay en la taza? / What is in the cup?\"). Never comment on a person in it." +
           // 13 Nov 2026: in a CLASS the photo is a bridge to today's reading, not a way round it.
           (classUnit >= 0 ? `\nTHIS IS A CLASS: after ONE line about the photo, turn it into today's reading: ask her to find or say ONE ` +
-            `thing in the photo that has one of today's sounds (${KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length].trace.join(', ')}), ` +
+            `thing in the photo that has one of today's sounds (${kidsUnit(classUnit).trace.join(', ')}), ` +
             `or to say one of them aloud while looking at it. That small try is what earns her star - say so warmly. Do not start a new corner of the class this turn.` : '')
         : "\nShe tried to show you a photo but you could not see it: say so kindly in one line and ask her to tell you what is in it.") : '');
     const claudeRequest = kids
@@ -2122,7 +2201,7 @@ ${asked}` : ''}`;
           .filter(Boolean).join('\n');
       } else if (asked.includes('SOUNDS BRIDGE NOW') && classUnit >= 0 && !kidsSyllableLine(classUnit).test(fullResponse)) {
         // The free model skipped the reading bridge: the code says it, the same way the break and the judge are enforced.
-        const tri = KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length].trace.slice(0, 3);
+        const tri = kidsUnit(classUnit).trace.slice(0, 3);
         const keep = fullResponse.split('\n').map((l: string) => l.trim()).filter((l: string) => l && !l.includes('?')).slice(0, 2);
         fullResponse = [...keep,
           `Pere [thinking]: Mira estas sílabas: «${tri.join('  ')}». Dilas conmigo, despacito: ${tri.join('... ')}. / Look at these syllables: «${tri.join('  ')}». Say them with me, slowly: ${tri.join('... ')}.`,
@@ -2198,7 +2277,7 @@ ${asked}` : ''}`;
             family_member_id: familyMember.id,
             detected_emotion: emotion,
             vocabulary_taught: extractedVocabulary,
-            ...(classUnit >= 0 ? { class_unit: classUnit + 1, class_label: kidsClassLabel(classUnit), ...(isHello ? { class_start: 'true' } : {}) } : {}),
+            ...(classUnit >= 0 ? { class_unit: (classUnit % KIDS_PER_LEVEL) + 1, class_level: kidsLevelOf(classUnit), class_label: kidsClassLabel(classUnit), ...(isHello ? { class_start: 'true' } : {}) } : {}),
             ...(isHello && resume ? { resumed_from: String(resume) } : {})
           },
           progress_data: {
@@ -2234,12 +2313,12 @@ ${asked}` : ''}`;
       linked: !!userId, // a bot uses this to tell a linked family (memory + server stars) from a guest
       classUnit: classUnit >= 0 ? classUnit + 1 : null, // 1-12 in a class; a guest's bot keeps its own count
       // 13 Nov 2026: the visible class path on the page - unit of 12, theme, and which corner of today's class she is in.
-      ...(classUnit >= 0 && kids ? { classPath: { unit: classUnit + 1, of: KIDS_CLASS_UNITS.length,
-        theme: KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length].theme,
-        step: Math.min(kidsTurnAt(kids, classUnit) + resume, kidsClassSteps(KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length]).length),
-        steps: kidsClassSteps(KIDS_CLASS_UNITS[classUnit % KIDS_CLASS_UNITS.length]).length } } : {}),
+      ...(classUnit >= 0 && kids ? { classPath: { unit: (classUnit % KIDS_PER_LEVEL) + 1, of: KIDS_PER_LEVEL, level: kidsLevelOf(classUnit),
+        theme: kidsUnit(classUnit).theme,
+        step: Math.min(kidsTurnAt(kids, classUnit) + resume, kidsClassSteps(kidsUnit(classUnit), kidsLevelOf(classUnit)).length),
+        steps: kidsClassSteps(kidsUnit(classUnit), kidsLevelOf(classUnit)).length } } : {}),
       // 1 Nov 2026: what the web tracing pad shows in a class (the unit's letters / syllables / words, in order).
-      trace: classUnit >= 0 ? KIDS_CLASS_UNITS[classUnit].trace : null,
+      trace: classUnit >= 0 ? kidsUnit(classUnit).trace : null,
       userMessage: message, // a photo turn comes back as its description, so the page's history knows what was shown
       videoScript,
       familyMember: familyMember.name,

@@ -128,7 +128,7 @@ export const FamilyRoadmap = () => {
       action: facts?.profile.done ? 'See or change' : 'Start here', onClick: () => setProfileOpen(true) },
     { key: 'family', title: 'Your family', who: 'Everyone', color: '--espaluz-pink', icon: Users,
       action: 'Family members', onClick: () => scrollToSelector('[data-family-members]', !facts?.family.done) },
-    { key: 'classroom', title: "Pere & Titi's classroom", who: 'Kids 6-7', color: '--espaluz-yellow', icon: Smile,
+    { key: 'classroom', title: "Pere & Titi's classroom", who: 'Kids 5-8', color: '--espaluz-yellow', icon: Smile,
       action: 'Open the classroom', to: '/classroom' },
     { key: 'webChat', title: 'Your Spanish, here on the web', who: 'Parents', color: '--espaluz-purple', icon: MessageCircle,
       action: 'Open the chat', onClick: () => scrollToSelector('#chat') },
