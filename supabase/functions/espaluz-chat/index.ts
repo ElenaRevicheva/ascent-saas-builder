@@ -25,6 +25,7 @@ import puertoRicoPack from '../_shared/belonging/puerto_rico.json' with { type: 
 import spainPack from '../_shared/belonging/spain.json' with { type: 'json' };
 import uruguayPack from '../_shared/belonging/uruguay.json' with { type: 'json' };
 import venezuelaPack from '../_shared/belonging/venezuela.json' with { type: 'json' };
+import { memoryCallback } from '../_shared/memory_callback.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -350,7 +351,7 @@ THIS FAMILY: ${familyNotes.members.map((m: any) => `${m.name} (${m.role}${m.age 
 Recent classroom lessons with the child: ${familyNotes.lessons.join(' | ')}. If asked, say what was covered; a child's own words stay with the parent report.` : ''}
 ` : ''}
 ${ESPALUZ_COMPANION_RULES}
-${belongingBlock(familyNotes?.profile?.country_now || 'panama')}${familyNotes ? profileLine(familyNotes.profile) : ''}
+${belongingBlock(familyNotes?.profile?.country_now || 'panama')}${familyNotes ? profileLine(familyNotes.profile) : ''}${familyNotes?.callback ?? ''}
 RESPONSE FORMAT - two parts:
 1️⃣ Your reply, following HOW YOU TALK above (their length; a short message gets a short answer). Never use asterisks.
 2️⃣ A short spoken line for the video, 1-2 sentences in Spanish and English, no emojis:
@@ -1572,7 +1573,7 @@ function namesGrounded(fact: string, text: string, allowed: string[]): boolean {
   return true;
 }
 
-type FamilyNotes = { rows: any[]; facts: string[]; members: { name: string; role: string; age: number | null }[]; speaker: string; lessons: string[]; profile: Record<string, any> };
+type FamilyNotes = { rows: any[]; facts: string[]; members: { name: string; role: string; age: number | null }[]; speaker: string; lessons: string[]; profile: Record<string, any>; callback?: string };
 const notebook = () => createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
 
 // The web account is the parent's window: it reads shared notes and the parent's private ones.
@@ -1995,6 +1996,8 @@ ${asked}` : ''}`;
 
     // A grown-up's notebook, on any channel. The classroom and the anonymous trial never read or write it.
     const familyNotes = !kids && !fromBot && userId ? await readFamilyNotes(userId) : null;
+    // 15 Nov 2026: "How did Alisa's first day back go?" - the same follow-up rule as the bots (_shared/memory_callback.ts).
+    if (familyNotes && userId) familyNotes.callback = await memoryCallback(notebook(), userId, 'web');
     const familyFacts = familyNotes?.facts ?? [];
     if (!kids && !fromBot) {
       const bc = familyNotes?.profile?.country_now && BELONGING_PACKS[familyNotes.profile.country_now] ? familyNotes.profile.country_now : 'panama';

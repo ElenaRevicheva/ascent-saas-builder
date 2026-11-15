@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
+import { memoryCallback } from '../_shared/memory_callback.ts';
 
 // 31 Oct 2026 (Elena, step 3 finished: "a lesson on one is remembered on the other"). The web classroom already reads
 // Alisa's Telegram kids turns (espaluz-chat kidsMemoryCard); the Telegram bot could not read her web lessons. This
@@ -155,8 +156,11 @@ serve(async (req) => {
         // moves to another family never shows that family the previous one's chats. Hash only - never the account id.
         const famHash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode('espaluz-family:' + userId))))
           .map((b) => b.toString(16).padStart(2, '0')).join('').slice(0, 16);
+        // 15 Nov 2026: "How did Alisa's first day back go?" - only when the bot asks while writing a reply (with_callback),
+        // never on the link or payment checks, which also call facts_get and would use the moment up (_shared/memory_callback.ts).
+        const callback = body.with_callback ? await memoryCallback(db, userId, platform) : '';
         return json({ linked: true, family: famHash, family_paying: !!paidRows?.length, facts: visible.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean).slice(0, 15),
-          members, speaker, lessons, lesson_turns: les?.length ?? 0, profile });
+          members, speaker, lessons, lesson_turns: les?.length ?? 0, profile, callback });
       }
       const words = (t: string) => new Set(t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/[a-z0-9]+/g) ?? []);
       const same = (a: string, b: string) => { const A = words(a), B = words(b); if (!A.size || !B.size) return false;
