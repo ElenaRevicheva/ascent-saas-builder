@@ -96,7 +96,7 @@ serve(async (req) => {
       // 8 Nov 2026: what a bot learned at its first-day questions (Telegram onboarding, WhatsApp country answer) joins
       // the family profile - only fields still empty, so the family's own answers on the web are never overwritten.
       if (mode === 'profile_fill') {
-        const KEYS = ['country_now', 'country_from', 'native_language', 'moved_when', 'household', 'spanish_feel', 'miss_most', 'work', 'profession']; // 13 Nov: + work
+        const KEYS = ['country_now', 'country_from', 'native_language', 'moved_when', 'household', 'spanish_feel', 'miss_most', 'work', 'profession', 'learn']; // 13 Nov: + work; 16 Nov: + learn (English coach switch)
         const given = Object.fromEntries(Object.entries(body.profile ?? {}).filter(([k, v]) => KEYS.includes(k) && typeof v === 'string' && v.trim())
           .map(([k, v]) => [k, String(v).trim().slice(0, 60)]));
         const { data: cur } = await db.from('learning_sessions').select('content').eq('user_id', userId).eq('session_type', 'analytics')

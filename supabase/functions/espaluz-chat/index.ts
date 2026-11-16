@@ -232,6 +232,7 @@ const PROFILE_ASK: [string, string][] = [
   // 15 Nov 2026 (Elena: the questions that change what EspaLuz does - docs/espaluz/QUESTIONNAIRE_GAPS_2026-11-15.md)
   ['why_here', 'what brought them to this country'], ['stay_plan', 'how long they plan to stay'],
   ['spanish_at_home', 'whether anyone in the family already speaks Spanish'], ['arrived', 'when they arrived (month and year)'],
+  ['learn', 'whether they want to learn Spanish, English, or both'], // 16 Nov 2026
 ];
 // 11 Nov 2026 (Elena: "no simulated questions"): four answers were only a sentence the model could ignore
 // (docs/espaluz/QUESTIONNAIRE_AUDIT_2026-11-11.md in cto-aipa). Each now carries an explicit rule. The reply form stays
@@ -251,6 +252,55 @@ const FOCUS_RULES: Record<string, string> = {
   'Feeling at home': 'feeling at home (the rhythm of the year, holidays, food and folk culture from the country facts)',
   'Speaking with confidence': 'speaking with confidence (local expressions, short phrases to say out loud, gentle corrections)',
 };
+// 16 Nov 2026 (Michael, an English teacher, and Elena: "high quality, fluent English - professional and everyday").
+// The bots always had an "English for Spanish speakers" mode that nothing switched on (0 of 28 families). The family's
+// answer to "What do you want to learn?" (learn) now switches it on everywhere. TWIN of english_rules() in both bots'
+// espaluz_enhancements.py - change one, change all three.
+// Said in a chat, in Spanish, English or Russian: "quiero aprender / mejorar / practicar inglés", "I want to learn English".
+export const WANTS_ENGLISH_SAID = /\b(quiero|quisiera|me gustar[ií]a|necesito|deseo)\s+(aprender|mejorar|practicar|hablar)(\s+(mi|el))?\s+ingl[eé]s|\b(want|need|would like)\s+to\s+(learn|improve|practi[cs]e)\s+(my\s+)?english|хочу\s+(выучить|учить|подтянуть|улучшить)\s+английский/i;
+const wantsEnglish = (p: Record<string, any>) => /english|ingl[eé]s|англ/i.test(String(p.learn ?? ''));
+const englishOnly = (p: Record<string, any>) => wantsEnglish(p) && !/spanish|espa[nñ]ol|испан|both|ambos|оба/i.test(String(p.learn ?? ''));
+const ENGLISH_LEVEL: Record<string, string> = {
+  "I'm just starting": 'short, clear English sentences in the present tense; at most 2 new phrases per reply, each with its meaning in Spanish and a simple way to say it.',
+  'I get by': 'natural everyday English; 2-3 new phrases per reply; explain phrasal verbs and the difference between similar words when they come up.',
+  "I'm comfortable": 'speak like a fluent colleague: natural speed, idioms, collocations and nuance; point out what sounds translated from Spanish and give the native way.',
+  'Fluent, I want to polish it': 'polish: precise word choice, register (formal vs friendly-professional), rhythm and stress, idioms and the small words natives use; correct only what a native would notice.',
+};
+const ENGLISH_GOALS: [RegExp, string][] = [
+  [/work|career|trabajo|работ/i, 'WORK ENGLISH - emails (clear openings, polite requests "Could you...", "I\'d appreciate it if...", natural closings - never stiff word-for-word Spanish formulas), meetings (agreeing, disagreeing politely, interrupting, summing up), job interviews ("Tell me about yourself", answers with a short example and a result), calls and video calls, small talk with international clients and colleagues'],
+  [/conversation|conversaci|разговор|fluent|fluid/i, 'FLUENT CONVERSATION - natural chunks instead of word-by-word translation, linking words ("actually", "by the way", "on the other hand"), follow-up questions that keep a conversation going, thinking in English instead of translating'],
+  [/travel|viaj|путеш/i, 'TRAVEL - airports, hotels, directions, problems and complaints said politely'],
+  [/exam|ielts|toefl|cambridge|examen|экзам/i, 'AN EXAM - practise the task types of the exam they name; never promise a score or a level'],
+  [/child|niñ|hij|дет/i, 'ENGLISH WITH THE CHILDREN - short, warm phrases a parent can use at home for homework, play and bedtime'],
+];
+function englishRules(p: Record<string, any>): string[] {
+  if (!wantsEnglish(p)) return [];
+  const out: string[] = [];
+  out.push(`ENGLISH COACH - this person wants to learn ENGLISH${englishOnly(p) ? '' : ' (and Spanish)'}. This overrides any line above that ` +
+    `says the user is an English speaker. Teach the English that fluent, educated people really use today - never textbook English, never ` +
+    `translated Spanish. ${englishOnly(p) ? 'Every phrase to learn is ENGLISH, with its meaning in Spanish.' : 'Alternate: some phrases in English (meaning in Spanish), some in Spanish (meaning in English).'} ` +
+    `The reply keeps both languages, as always.`);
+  out.push(`ENGLISH CORRECTIONS - when they write or speak English, first give the correct natural sentence ("Better: ..."), then ONE short ` +
+    `reason in Spanish. At most 2 corrections per reply: the ones that matter most for being understood and sounding natural. Praise ` +
+    `what was right in their own words, never generically.`);
+  out.push(`SPANISH-SPEAKER TRAPS - fix them when they appear, never as a lecture: "I have 30 years" -> "I'm 30"; a missing subject ("Is ` +
+    `raining" -> "It's raining"); "people is" -> "people are"; false friends (actually/actualmente, assist/asistir, realize/realizar, ` +
+    `embarrassed/embarazada, career/carrera, library/librería, sensible/sensato); make/do, say/tell; for/since with the present perfect; ` +
+    `adjectives never take a plural ("red cars"). Pronunciation, in simple Spanish-friendly spelling: "th" (tongue between the teeth), ` +
+    `b/v, ship/sheep, no "e" before s- ("student", not "estudent"), the -ed ending (worked = "workt", wanted = "wan-ted"), final consonants.`);
+  const lvl = ENGLISH_LEVEL[p.english_feel];
+  out.push(`ENGLISH LEVEL - ${lvl ?? `in their words: "${p.english_feel ?? 'not told yet'}"; start clear and natural, then follow how they write.`}`);
+  const goals = ([] as string[]).concat(p.english_goal ?? []).map(String);
+  const picked = ENGLISH_GOALS.filter(([re]) => goals.some((g) => re.test(g))).map(([, r]) => r);
+  const own = goals.filter((g) => !ENGLISH_GOALS.some(([re]) => re.test(g)));
+  if (picked.length || own.length)
+    out.push(`WHAT THEIR ENGLISH IS FOR: ${[...picked, ...own.map((g) => `in their words: "${g}"`)].join('; ')}. When they start without a ` +
+      `topic or ask what to practise, open with ONE useful phrase for the first of these.`);
+  out.push(`ENGLISH PRACTICE - now and then (not every reply) offer a 2-minute role-play in English for their goal (a job interview, a ` +
+    `meeting, a call, a conversation): you play the other person, they answer, you correct gently. Voice notes are welcome. Never claim a ` +
+    `certificate, a CEFR level or "fluent in X weeks".`);
+  return out;
+}
 function profileRules(p: Record<string, any>): string {
   const out: string[] = [];
   const lang = String(p.native_language ?? '').trim();
@@ -260,7 +310,8 @@ function profileRules(p: Record<string, any>): string {
   if (p.country_from)
     out.push(`BRIDGES - their story began in ${p.country_from}: when it fits, compare ONE custom here (from the country facts) with home. ` +
       `Say something about ${p.country_from} only if you are sure; otherwise ASK them how it is done there - that is the bridge.`);
-  if (LEVEL_RULES[p.spanish_feel]) out.push(LEVEL_RULES[p.spanish_feel]);
+  if (LEVEL_RULES[p.spanish_feel] && !englishOnly(p)) out.push(LEVEL_RULES[p.spanish_feel]);
+  out.push(...englishRules(p));
   const focus = ([] as string[]).concat(p.focus ?? []).map((f) => FOCUS_RULES[f]).filter(Boolean);
   if (focus.length)
     out.push(`START FROM WHAT MATTERS NOW: ${focus.join('; ')}. When they start without a topic or ask what to practise, open with ONE ` +
@@ -315,6 +366,8 @@ function profileLine(profile: Record<string, any> | undefined): string {
     has('why_here') && `what brought them here: ${[].concat(p.why_here).join(', ')}`, has('stay_plan') && `plan to stay: ${p.stay_plan}`,
     has('arrived') && `arrived: ${p.arrived}`, has('spanish_at_home') && `Spanish at home: ${[].concat(p.spanish_at_home).join(', ')}`,
     has('school') && `the children's school: ${p.school}`,
+    has('learn') && `they want to learn: ${p.learn}`, has('english_feel') && `English today: ${p.english_feel}`,
+    has('english_goal') && `English for: ${[].concat(p.english_goal).join(', ')}`,
   ].filter(Boolean);
   const missing = PROFILE_ASK.filter(([k]) => !has(k)).map(([, q]) => q);
   return (known.length ? `\nTHIS FAMILY'S NEW LIFE (their own answers): ${known.join('; ')}. Let it shape what you bring up: build bridges between where ` +
@@ -2076,6 +2129,14 @@ ${asked}` : ''}`;
     const familyNotes = !kids && !fromBot && userId ? await readFamilyNotes(userId) : null;
     // 15 Nov 2026: "How did Alisa's first day back go?" - the same follow-up rule as the bots (_shared/memory_callback.ts).
     if (familyNotes && userId) familyNotes.callback = await memoryCallback(notebook(), userId, 'web');
+    // 16 Nov 2026: "Quiero aprender inglés" / "I want to improve my English" said in the chat switches the English coach
+    // on (same note as the questionnaire), once - an answer already given on the web is never overwritten here.
+    if (familyNotes && userId && !familyNotes.profile.learn && WANTS_ENGLISH_SAID.test(String(message ?? ''))) {
+      familyNotes.profile = { ...familyNotes.profile, learn: 'English' };
+      await notebook().from('learning_sessions').insert({ user_id: userId, session_type: 'analytics', source: 'web',
+        content: { event: 'family_profile', ...familyNotes.profile } });
+      console.log('[english] learn=English from the web chat');
+    }
     const familyFacts = familyNotes?.facts ?? [];
     if (!kids && !fromBot) {
       const bc = familyNotes?.profile?.country_now && BELONGING_PACKS[familyNotes.profile.country_now] ? familyNotes.profile.country_now : 'panama';

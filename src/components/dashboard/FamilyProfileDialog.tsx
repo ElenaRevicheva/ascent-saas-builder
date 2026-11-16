@@ -25,6 +25,8 @@ export type FamilyProfile = {
   work?: string; profession?: string;
   // 15 Nov 2026
   why_here?: string[]; stay_plan?: string; arrived?: string; spanish_at_home?: string[]; school?: string;
+  // 16 Nov 2026 (Michael, English teacher): EspaLuz teaches English too - the switch for its English coach.
+  learn?: string; english_feel?: string; english_goal?: string[];
 };
 
 // The 21 countries with a belonging pack (supabase/functions/_shared/belonging/<key>.json).
@@ -50,7 +52,10 @@ type Lang = 'en' | 'ru' | 'es';
 type Txt = Record<Lang, string>;
 type Key = Exclude<keyof FamilyProfile, 'profession'> | 'family';
 // options: [saved value (English), Russian label, Spanish label]. free: the typed box; freeKey: saved under its own key.
-type Q = { key: Key; ask: Txt; why: Txt; options?: [string, string, string][]; multi?: boolean; free?: Txt; freeKey?: keyof FamilyProfile; kidsOnly?: boolean };
+type Q = { key: Key; ask: Txt; why: Txt; options?: [string, string, string][]; multi?: boolean; free?: Txt; freeKey?: keyof FamilyProfile; kidsOnly?: boolean;
+  onlyIf?: (p: FamilyProfile) => boolean };
+const learnsEnglish = (p: FamilyProfile) => /english|ingl|англ/i.test(String(p.learn ?? ''));
+const onlyEnglish = (p: FamilyProfile) => learnsEnglish(p) && !/spanish|espa|испан|both|ambos|оба/i.test(String(p.learn ?? ''));
 
 const QUESTIONS: Q[] = [
   { key: 'country_now',
@@ -117,7 +122,22 @@ const QUESTIONS: Q[] = [
     options: [['Local public school', 'Местная государственная школа', 'Escuela pública local'], ['Local private school', 'Местная частная школа', 'Escuela privada local'],
       ['Bilingual or international school', 'Двуязычная или международная школа', 'Escuela bilingüe o internacional'], ['Homeschool', 'Домашнее обучение', 'Educación en casa'], ['Not in school yet', 'Пока не ходят в школу', 'Todavía no va a la escuela']],
     free: { en: 'Something else? Type it', ru: 'Что-то другое? Напишите', es: '¿Otra cosa? Escríbela' } },
-  { key: 'spanish_feel',
+  { key: 'learn',
+    ask: { en: 'What do you want to learn with EspaLuz?', ru: 'Что вы хотите учить с EspaLuz?', es: '¿Qué quieres aprender con EspaLuz?' },
+    why: { en: 'Spanish for your new life, English for work and the world - or both.', ru: 'Испанский для новой жизни, английский для работы и мира - или оба.', es: 'Español para tu nueva vida, inglés para el trabajo y el mundo, o los dos.' },
+    options: [['Spanish', 'Испанский', 'Español'], ['English', 'Английский', 'Inglés'], ['Both Spanish and English', 'И испанский, и английский', 'Español e inglés']],
+    free: { en: 'Or say it in your own words', ru: 'Или скажите своими словами', es: 'O dilo con tus palabras' } },
+  { key: 'english_feel', onlyIf: learnsEnglish,
+    ask: { en: 'How does English feel today?', ru: 'Как вам английский сегодня?', es: '¿Cómo te sientes hoy con el inglés?' },
+    why: { en: 'So every English answer is at your level.', ru: 'Чтобы каждый ответ по-английски был на вашем уровне.', es: 'Para que cada respuesta en inglés esté a tu nivel.' },
+    options: [["I'm just starting", 'Только начинаю', 'Estoy empezando'], ['I get by', 'Объясняюсь', 'Me defiendo'], ["I'm comfortable", 'Мне комфортно', 'Me siento cómodo / cómoda'], ['Fluent, I want to polish it', 'Свободно, хочу отточить', 'Con fluidez, quiero pulirlo']],
+    free: { en: 'Or say it in your own words', ru: 'Или скажите своими словами', es: 'O dilo con tus palabras' } },
+  { key: 'english_goal', multi: true, onlyIf: learnsEnglish,
+    ask: { en: 'What is your English for?', ru: 'Для чего вам английский?', es: '¿Para qué quieres el inglés?' },
+    why: { en: 'She practises what you will really use.', ru: 'Она тренирует то, что вам правда пригодится.', es: 'Practica contigo lo que de verdad vas a usar.' },
+    options: [['Work and career: emails, meetings, interviews', 'Работа и карьера: письма, встречи, собеседования', 'Trabajo y carrera: correos, reuniones, entrevistas'], ['Fluent everyday conversation', 'Свободный разговор каждый день', 'Conversación fluida del día a día'], ['Travel', 'Путешествия', 'Viajes'], ['An exam (IELTS, TOEFL, Cambridge)', 'Экзамен (IELTS, TOEFL, Cambridge)', 'Un examen (IELTS, TOEFL, Cambridge)'], ['Helping my children with English', 'Помогать детям с английским', 'Ayudar a mis hijos con el inglés']],
+    free: { en: 'Something else? Type it', ru: 'Что-то другое? Напишите', es: '¿Otra cosa? Escríbela' } },
+  { key: 'spanish_feel', onlyIf: (p) => !onlyEnglish(p),
     ask: { en: 'How does Spanish feel today?', ru: 'Как вам испанский сегодня?', es: '¿Cómo te sientes hoy con el español?' },
     why: { en: 'So she pitches every answer at your level.', ru: 'Чтобы каждый её ответ был на вашем уровне.', es: 'Para que cada respuesta esté a tu nivel.' },
     options: [["I'm just starting", 'Только начинаю', 'Estoy empezando'], ['I get by', 'Объясняюсь', 'Me defiendo'], ["I'm comfortable", 'Мне комфортно', 'Me siento cómodo / cómoda']],
@@ -173,7 +193,7 @@ export const FamilyProfileDialog = ({ open, onOpenChange, onSaved, onOpenFamily 
   const [i, setI] = useState(0);
   const [typed, setTyped] = useState('');
   const [saving, setSaving] = useState(false);
-  const shown = QUESTIONS.filter((q) => !q.kidsOnly || kids.length > 0);
+  const shown = QUESTIONS.filter((q) => (!q.kidsOnly || kids.length > 0) && (!q.onlyIf || q.onlyIf(p)));
 
   // 9 Nov 2026 (Elena's run-through): half-way answers wait in this browser tab (sessionStorage, never the server) and
   // reopening continues at the same question.
@@ -222,7 +242,7 @@ export const FamilyProfileDialog = ({ open, onOpenChange, onSaved, onOpenFamily 
     if (!q?.free || q.key === 'family') return p;
     const own = typed.trim().slice(0, 80);
     if (q.multi) {
-      const k = q.key as 'focus' | 'why_here' | 'spanish_at_home';
+      const k = q.key as 'focus' | 'why_here' | 'spanish_at_home' | 'english_goal';
       return { ...p, [k]: [...asList(p[k]).filter((v) => values(q).includes(v)), ...(own ? [own] : [])] };
     }
     return own ? { ...p, [q.freeKey ?? q.key]: own } : p;
