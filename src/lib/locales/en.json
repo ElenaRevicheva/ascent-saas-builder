@@ -414,7 +414,9 @@
     "body": "We use cookies to enhance your experience and analyze usage. By continuing, you agree to our use of cookies.",
     "accept": "Accept",
     "decline": "Decline",
-    "more": "Learn more about our privacy practices"
+    "more": "Learn more about our privacy practices",
+    "short": "We use cookies to see how the site is used - only if you accept.",
+    "privacy": "Privacy"
   },
   "pr": {
     "freeName": "Free Trial",

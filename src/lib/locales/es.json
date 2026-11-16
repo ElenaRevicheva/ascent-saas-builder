@@ -1242,7 +1242,9 @@
     "body": "Usamos cookies para mejorar tu experiencia y entender cómo se usa el sitio. Si continúas, aceptas nuestro uso de cookies.",
     "accept": "Aceptar",
     "decline": "Rechazar",
-    "more": "Conoce más sobre cómo cuidamos tu privacidad"
+    "more": "Conoce más sobre cómo cuidamos tu privacidad",
+    "short": "Usamos cookies para ver cómo se usa el sitio, solo si aceptas.",
+    "privacy": "Privacidad"
   },
   "pr": {
     "freeName": "Prueba gratis",

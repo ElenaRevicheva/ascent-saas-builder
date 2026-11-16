@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { X, Cookie } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { replayRoute } from '@/lib/posthogReplay';
 
@@ -32,50 +30,24 @@ export const CookieConsent = () => {
 
   if (!showBanner) return null;
 
+  // 16 Nov 2026 (Elena, from the live audit: the cookie box covered the bottom 29% of a phone's first screen, on top of
+  // the headline): one thin strip on the bottom edge. Honest short text - nothing is counted before "Accept"
+  // (PostHog waits for it; the old line said "by continuing, you agree", which was not true).
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-50 md:left-auto md:max-w-md">
-      <Card className="p-4 shadow-lg border-border bg-card">
-        <div className="flex items-start gap-3">
-          <Cookie className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-          <div className="flex-1">
-            <h3 className="font-semibold text-foreground mb-2">{t("cookie.title")}</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              {t("cookie.body")}
-            </p>
-            <div className="flex gap-2 mb-2">
-              <Button 
-                onClick={acceptCookies} 
-                size="sm" 
-                className="flex-1"
-              >
-                {t("cookie.accept")}
-              </Button>
-              <Button 
-                onClick={declineCookies} 
-                variant="outline" 
-                size="sm"
-                className="flex-1"
-              >
-                {t("cookie.decline")}
-              </Button>
-            </div>
-            <Link 
-              to="/privacy-policy" 
-              className="text-xs text-primary hover:underline"
-            >
-              {t("cookie.more")}
-            </Link>
-          </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setShowBanner(false)}
-            className="h-8 w-8 text-muted-foreground hover:text-foreground"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-      </Card>
+    <div role="region" aria-label={t("cookie.title")}
+      className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card px-3 py-2 shadow-[0_-2px_10px_rgba(0,0,0,0.06)]">
+      <div className="mx-auto flex max-w-3xl items-center gap-2">
+        <p className="min-w-0 flex-1 text-xs leading-snug text-muted-foreground">
+          {t("cookie.short")}{' '}
+          <Link to="/privacy-policy" className="text-primary underline-offset-2 hover:underline">{t("cookie.privacy")}</Link>
+        </p>
+        <Button onClick={declineCookies} variant="ghost" size="sm" className="h-8 shrink-0 px-2 text-xs">
+          {t("cookie.decline")}
+        </Button>
+        <Button onClick={acceptCookies} size="sm" className="h-8 shrink-0 px-3 text-xs">
+          {t("cookie.accept")}
+        </Button>
+      </div>
     </div>
   );
 };
