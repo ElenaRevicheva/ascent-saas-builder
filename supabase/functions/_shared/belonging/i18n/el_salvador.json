@@ -1,0 +1,121 @@
+{
+  "name": {"es": "El Salvador", "ru": "Сальвадор"},
+  "items": {
+    "rhythm_of_the_year.agostinas": {
+      "es": "Del 1 al 6 de agosto: las 'fiestas agostinas', las fiestas patronales de San Salvador en honor al Divino Salvador del Mundo, con el Desfile del Correo, una feria y la 'Bajada' el 5 de agosto; el 6 de agosto es el día principal.",
+      "ru": "1–6 августа — «fiestas agostinas», праздник покровителя Сан-Сальвадора, Divino Salvador del Mundo: шествие Desfile del Correo, ярмарка и «Bajada» 5 августа; главный день — 6 августа."
+    },
+    "rhythm_of_the_year.agostinas_days_off": {
+      "es": "El 6 de agosto es día libre a nivel nacional; otros dos días libres de agosto aplican solo a quienes trabajan en el distrito de San Salvador.",
+      "ru": "6 августа — выходной по всей стране; ещё два августовских выходных положены только работающим в округе Сан-Сальвадор."
+    },
+    "rhythm_of_the_year.pupusa_day": {
+      "es": "El segundo domingo de noviembre es el Día Nacional de la Pupusa, por una ley de 2005 que declaró la pupusa plato nacional; pueblos como Olocuilta celebran festivales de pupusas.",
+      "ru": "Второе воскресенье ноября — Национальный день пупусы: так установлено законом 2005 года, объявившим пупусу национальным блюдом; в городках вроде Олокуильты проходят фестивали пупус."
+    },
+    "rhythm_of_the_year.school_year": {
+      "es": "El año escolar público empieza a finales de enero o principios de febrero y termina alrededor de noviembre: confirma el calendario del ministerio (MINEDUCYT).",
+      "ru": "Учебный год в государственных школах начинается в конце января или начале февраля и заканчивается примерно в ноябре — уточните календарь министерства (MINEDUCYT)."
+    },
+    "rhythm_of_the_year.rainy_season": {
+      "es": "La época lluviosa va más o menos de mayo a octubre, y la seca de noviembre a abril.",
+      "ru": "Сезон дождей длится примерно с мая по октябрь, сухой сезон — с ноября по апрель."
+    },
+    "holidays.list": {
+      "es": "Entre los feriados están: 1 de enero, Semana Santa (de jueves a domingo; el miércoles es feriado bancario), 1 de mayo, 10 de mayo (Día de la Madre), 17 de junio (Día del Padre), 15 de septiembre (Independencia), 2 de noviembre (Día de los Difuntos), 24 de diciembre desde el mediodía, 25 de diciembre, 31 de diciembre desde el mediodía. La lista no está completa: revisa el calendario oficial.",
+      "ru": "Среди государственных праздников: 1 января, Страстная неделя (с четверга по воскресенье; среда — банковский выходной), 1 мая, 10 мая (День матери), 17 июня (День отца), 15 сентября (День независимости), 2 ноября (День поминовения усопших), 24 декабря с полудня, 25 декабря, 31 декабря с полудня. Список неполный — сверяйтесь с официальным календарём."
+    },
+    "holidays.agosto6": {
+      "es": "El 6 de agosto (Divino Salvador del Mundo) es día libre nacional según el Código de Trabajo.",
+      "ru": "6 августа (Divino Salvador del Mundo) — общенациональный выходной по Трудовому кодексу."
+    },
+    "greetings_and_courtesy.chero": {
+      "es": "'Chero / chera': amigo, amiga; 'es mi chero'.",
+      "ru": "«Chero / chera» — друг, подруга: «es mi chero»."
+    },
+    "greetings_and_courtesy.vaya_pues": {
+      "es": "'Vaya pues': un amistoso 'bueno, nos vemos'.",
+      "ru": "«Vaya pues» — дружеское «ну ладно, увидимся»."
+    },
+    "greetings_and_courtesy.mothers_day": {
+      "es": "El Día de la Madre (10 de mayo) es feriado",
+      "ru": "День матери (10 мая) — государственный выходной"
+    },
+    "time.holy_week_long": {
+      "es": "La Semana Santa es una pausa larga: de jueves a domingo son feriados, y los bancos también cierran el miércoles.",
+      "ru": "Страстная неделя — долгий перерыв: с четверга по воскресенье праздничные дни, а банки закрыты ещё и в среду."
+    },
+    "family_and_friends.bicho": {
+      "es": "A los niños se les dice 'bichos' / 'bichas' (literalmente, 'insectos'), con cariño, no de forma grosera.",
+      "ru": "Детей называют «bichos» / «bichas» (буквально «жучки») — ласково, а не грубо."
+    },
+    "family_and_friends.fathers_day": {
+      "es": "El Día del Padre, 17 de junio, también es feriado.",
+      "ru": "День отца, 17 июня, тоже государственный выходной."
+    },
+    "school_life.agosto_break": {
+      "es": "Las vacaciones escolares incluyen la semana de las fiestas de agosto.",
+      "ru": "Школьные каникулы включают неделю августовских праздников."
+    },
+    "school_life.calendar": {
+      "es": "La capacitación docente y la matrícula se hacen en enero, antes de que empiecen las clases: pregunta las fechas en la escuela.",
+      "ru": "Обучение учителей и запись учеников проходят в январе, до начала занятий, — узнайте даты в школе."
+    },
+    "food_and_table.pupusa": {
+      "es": "La pupusa es el plato nacional y motivo de orgullo nacional.",
+      "ru": "Пупуса — национальное блюдо и предмет национальной гордости."
+    },
+    "food_and_table.pupusa_how": {
+      "es": "Las pupusas se comen con 'curtido' (repollo encurtido) y salsa de tomate, a menudo con las manos.",
+      "ru": "Пупусы едят с «curtido» (маринованной капустой) и томатным соусом, часто руками."
+    },
+    "everyday_life.pista": {
+      "es": "Al dinero se le dice 'pisto' o 'pista' en jerga.",
+      "ru": "Деньги на сленге — «pisto» или «pista»."
+    },
+    "everyday_life.sivarland": {
+      "es": "Durante las fiestas de agosto hay una gran feria con juegos mecánicos en San Salvador.",
+      "ru": "Во время августовских праздников в Сан-Сальвадоре работает большая ярмарка с аттракционами."
+    },
+    "local_expressions.chivo": {
+      "es": "'¡Qué chivo!': '¡qué genial!'; 'chivo' también significa 'está bien, de acuerdo'.",
+      "ru": "«¡Qué chivo!» — «как здорово!»; «chivo» также значит «ладно, хорошо»."
+    },
+    "local_expressions.puchica": {
+      "es": "'¡Púchica!': un suave '¡ay, caramba!', '¡qué lástima!'.",
+      "ru": "«¡Púchica!» — мягкое «вот это да!», «вот досада!»."
+    },
+    "local_expressions.cabal": {
+      "es": "'¡Cabal!': 'exacto'.",
+      "ru": "«¡Cabal!» — «точно»."
+    },
+    "local_expressions.bayunco": {
+      "es": "'Bayunco': tonto, loco (en tono de juego).",
+      "ru": "«Bayunco» — глупый, чокнутый (в шутку)."
+    },
+    "newcomers_find_hard.district_holidays": {
+      "es": "Los días libres de agosto que aplican en San Salvador pero no en otros distritos.",
+      "ru": "Августовские выходные, которые действуют в Сан-Сальвадоре, но не в других округах."
+    },
+    "newcomers_find_hard.half_days": {
+      "es": "Los feriados de medio día el 24 y el 31 de diciembre: las oficinas cierran al mediodía.",
+      "ru": "Праздники на полдня 24 и 31 декабря — учреждения закрываются в полдень."
+    },
+    "folk_culture.bajada": {
+      "es": "La 'Bajada' del 5 de agosto, cuando la imagen del Divino Salvador del Mundo se baja y se transfigura, es el centro religioso de las fiestas.",
+      "ru": "«Bajada» 5 августа, когда статую Divino Salvador del Mundo опускают и представляют её преображение, — религиозный центр праздников."
+    },
+    "folk_culture.desfile_correo": {
+      "es": "El 'Desfile del Correo' es uno de los eventos tradicionales de las fiestas agostinas.",
+      "ru": "«Desfile del Correo» — одно из традиционных событий fiestas agostinas."
+    }
+  },
+  "moments": {
+    "agostinas": {"es": "Tus primeras fiestas agostinas", "ru": "Ваши первые fiestas agostinas (августовские праздники)"},
+    "pupusa_day": {"es": "El Día de la Pupusa", "ru": "День пупусы"},
+    "sept15": {"es": "Tu primer 15 de septiembre", "ru": "Ваше первое 15 сентября (15 de septiembre)"},
+    "mothers_day": {"es": "El Día de la Madre, 10 de mayo", "ru": "День матери, 10 мая"},
+    "semana_santa": {"es": "La Semana Santa", "ru": "Страстная неделя"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "В гостях у местной семьи"}
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "name": {"es": "Bolivia", "ru": "Боливия"},
+  "items": {
+    "rhythm_of_the_year.school_year": {
+      "es": "El año escolar (gestión escolar) va de principios de febrero a principios de diciembre; en 2026, del 2 de febrero al 2 de diciembre, con 200 días de clase.",
+      "ru": "Учебный год (gestión escolar) длится с начала февраля до начала декабря — в 2026 году со 2 февраля по 2 декабря, 200 учебных дней."
+    },
+    "rhythm_of_the_year.winter_break": {
+      "es": "El descanso de invierno ('descanso pedagógico'), alrededor de junio-julio, ya no es igual en todas partes: desde 2026 cada departamento fija sus fechas junto con las autoridades de salud; revisa el anuncio de tu departamento.",
+      "ru": "Зимние каникулы («descanso pedagógico») примерно в июне–июле теперь проходят не везде одинаково: с 2026 года каждый департамент устанавливает даты вместе с органами здравоохранения — следите за объявлением вашего департамента."
+    },
+    "rhythm_of_the_year.alasita": {
+      "es": "Desde el 24 de enero, La Paz celebra la Alasita: durante dos o tres semanas la gente compra objetos en miniatura 'de la suerte', ligados al Ekeko, la deidad de la abundancia, y los hace bendecir.",
+      "ru": "С 24 января в Ла-Пасе проходит Аласита: две-три недели люди покупают миниатюрные предметы «на удачу», связанные с Экеко, божеством изобилия, и освящают их."
+    },
+    "rhythm_of_the_year.carnival": {
+      "es": "El Carnaval (febrero o marzo; cambia cada año) es un feriado nacional de dos días; el Carnaval de Oruro es el más famoso, con una procesión de bailarines que dura unas veinte horas.",
+      "ru": "Карнавал (в феврале или марте — дата меняется каждый год) — двухдневный общенациональный праздник; самый известный — Карнавал в Оруро, где шествие танцоров длится около двадцати часов."
+    },
+    "rhythm_of_the_year.june21": {
+      "es": "El 21 de junio, el Año Nuevo Aymara o Andino (Año Nuevo Andino), es feriado nacional, en el solsticio de invierno.",
+      "ru": "21 июня, Новый год аймара, или Андский Новый год (Año Nuevo Andino), — общенациональный праздник в день зимнего солнцестояния."
+    },
+    "rhythm_of_the_year.todos_santos": {
+      "es": "A principios de noviembre, las familias creen que las almas de sus difuntos regresan y arman en casa un altar con fotos, flores, su comida y bebida favoritas y t'anta wawas.",
+      "ru": "В начале ноября семьи верят, что души их умерших возвращаются, и устраивают дома алтарь с фотографиями, цветами, любимой едой и напитками умерших и t'anta wawas."
+    },
+    "holidays.list": {
+      "es": "Feriados: 1 de enero, 22 de enero (Día del Estado Plurinacional), lunes y martes de Carnaval, Viernes Santo, 1 de mayo (se pasa al lunes si cae domingo), Corpus Christi (mayo o junio), 21 de junio (Año Nuevo Andino), 6 de agosto (Independencia), 2 de noviembre (Día de los Difuntos), 25 de diciembre. Las fechas móviles cambian cada año.",
+      "ru": "Государственные праздники: 1 января, 22 января (День Многонационального государства), понедельник и вторник Карнавала, Страстная пятница, 1 мая (переносится на понедельник, если выпадает на воскресенье), праздник Тела и Крови Христовых (Corpus Christi, май или июнь), 21 июня (Андский Новый год), 6 августа (День независимости), 2 ноября (День поминовения усопших), 25 декабря. Переходящие даты меняются каждый год."
+    },
+    "holidays.departments": {
+      "es": "Cada departamento tiene además su propio feriado de aniversario (por ejemplo, La Paz el 16 de julio y Santa Cruz el 24 de septiembre).",
+      "ru": "У каждого департамента есть и свой праздник — годовщина основания (например, у Ла-Паса 16 июля, у Санта-Круса 24 сентября)."
+    },
+    "greetings_and_courtesy.usted": {
+      "es": "Usa 'usted' con las personas mayores y en las oficinas; mucha gente lo usa más que en otros países.",
+      "ru": "Обращайтесь на «usted» к старшим и в учреждениях; многие используют его чаще, чем в других странах."
+    },
+    "greetings_and_courtesy.greet_shop": {
+      "es": "Saludar al entrar a una tiendita o a un minibús es una cortesía común.",
+      "ru": "Здороваться, входя в маленький магазин или в микроавтобус, — обычная вежливость."
+    },
+    "time.soroche": {
+      "es": "El mal de altura se llama 'soroche': al llegar a La Paz u Oruro, tómate los primeros días con calma.",
+      "ru": "Горную болезнь называют «soroche»: по прибытии в Ла-Пас или Оруро проведите первые дни неспешно."
+    },
+    "time.entrada_long": {
+      "es": "Las procesiones de las fiestas ('entradas') duran muchas horas.",
+      "ru": "Праздничные шествия («entradas») длятся много часов."
+    },
+    "family_and_friends.altar_home": {
+      "es": "En Todos Santos muchas familias reciben visitas ante el altar de su casa y comparten pan y comida en memoria de los difuntos.",
+      "ru": "На Todos Santos многие семьи принимают гостей у домашнего алтаря и делятся с ними хлебом и едой в память об умерших."
+    },
+    "family_and_friends.chango": {
+      "es": "A los jóvenes se les dice 'changos' / 'changas', con cariño, tanto a niños como a adultos jóvenes.",
+      "ru": "Молодёжь называют «changos» / «changas» — ласково, так говорят и о детях, и о молодых взрослых."
+    },
+    "family_and_friends.alasita_gifts": {
+      "es": "En la Alasita, las miniaturas también se regalan e incluso se usan de forma simbólica para pagar deudas.",
+      "ru": "На Аласите миниатюры также дарят и даже символически используют для уплаты долгов."
+    },
+    "school_life.calendar_2026": {
+      "es": "Los días de clase empiezan en febrero, después de la inscripción en enero; revisa el calendario del ministerio cada año.",
+      "ru": "Занятия начинаются в феврале, после записи в январе, — сверяйтесь с календарём министерства каждый год."
+    },
+    "school_life.winter_by_department": {
+      "es": "Las fechas del descanso de invierno las deciden las direcciones departamentales de educación: las escuelas de dos ciudades pueden tener fechas distintas.",
+      "ru": "Даты зимних каникул определяют департаментские управления образования — в школах двух разных городов они могут не совпадать."
+    },
+    "food_and_table.tantawawas": {
+      "es": "Las 't'anta wawas' son panes dulces con forma de bebés o de personas, que se preparan para Todos Santos como ofrenda a los difuntos.",
+      "ru": "«T'anta wawas» — сладкий хлеб в форме младенцев или людей, который пекут на Todos Santos как подношение умершим."
+    },
+    "food_and_table.salteñas": {
+      "es": "Las salteñas (empanadas horneadas y jugosas) son un bocadillo de media mañana, y se comen con cuidado para que no se derrame el jugo.",
+      "ru": "Сальтеньи (salteñas, сочные печёные эмпанады) едят как перекус в середине утра — аккуратно, чтобы не пролить сок."
+    },
+    "everyday_life.yapa": {
+      "es": "'La yapa' es el poquito extra que agrega quien vende en el mercado; a menudo se espera, y pedirla no es de mala educación.",
+      "ru": "«La yapa» — небольшая добавка, которую продавец на рынке кладёт сверху; её часто ждут, и попросить о ней не считается грубостью."
+    },
+    "everyday_life.miniatures_blessing": {
+      "es": "Las miniaturas de la Alasita las bendicen ritualistas andinos o en una iglesia católica.",
+      "ru": "Миниатюры Аласиты освящают либо андские ритуальные мастера, либо в католической церкви."
+    },
+    "local_expressions.pucha": {
+      "es": "'¡Pucha!': '¡ay, no!', '¡caramba!'; expresa frustración o decepción.",
+      "ru": "«¡Pucha!» — «ой, нет!», «вот досада!»: выражает раздражение или разочарование."
+    },
+    "local_expressions.jailon": {
+      "es": "'Jailón / jailona': alguien presumido o que alardea.",
+      "ru": "«Jailón / jailona» — человек, который важничает или любит покрасоваться."
+    },
+    "local_expressions.chango2": {
+      "es": "Cuidado: 'chango' significa joven en Bolivia, pero mono en México.",
+      "ru": "Осторожно: в Боливии «chango» означает молодого человека, а в Мексике — обезьяну."
+    },
+    "newcomers_find_hard.altitude": {
+      "es": "La altura: Oruro está a unos 3.700 m y gran parte del occidente de Bolivia es alto; los recién llegados necesitan tiempo para adaptarse.",
+      "ru": "Высота: Оруро находится примерно на 3700 м, и большая часть запада Боливии лежит высоко — новоприбывшим нужно время на адаптацию."
+    },
+    "newcomers_find_hard.school_dates_vary": {
+      "es": "Las fechas del descanso de invierno, que cambian según el departamento.",
+      "ru": "Даты зимних каникул, которые различаются по департаментам."
+    },
+    "folk_culture.oruro_unesco": {
+      "es": "El Carnaval de Oruro, con la 'diablada' como danza principal, fue proclamado por la UNESCO en 2001 e inscrito en la lista del Patrimonio Inmaterial en 2008; está ligado a la Candelaria (2 de febrero).",
+      "ru": "Карнавал в Оруро, главный танец которого — «diablada», был провозглашён ЮНЕСКО в 2001 году и внесён в список нематериального наследия в 2008 году; он связан с праздником Сретения — Candelaria (2 февраля)."
+    },
+    "folk_culture.alasita_unesco": {
+      "es": "Los recorridos rituales de la Alasita se inscribieron en la lista del Patrimonio Inmaterial de la UNESCO en 2017.",
+      "ru": "Ритуальные обходы Аласиты внесены в список нематериального наследия ЮНЕСКО в 2017 году."
+    },
+    "folk_culture.mixed_roots": {
+      "es": "Los rituales de Todos Santos combinan elementos precolombinos con elementos católicos.",
+      "ru": "Обряды Todos Santos сочетают доколумбовы элементы с католическими."
+    },
+    "folk_culture.corpus": {
+      "es": "Corpus Christi es a la vez feriado religioso y nacional, y una de las festividades más concurridas.",
+      "ru": "Corpus Christi — одновременно религиозный и государственный праздник и одно из самых многолюдных торжеств."
+    }
+  },
+  "moments": {
+    "first_alasita": {"es": "Tu primera Alasita", "ru": "Ваша первая Аласита (Alasita)"},
+    "first_carnival": {"es": "Tu primer Carnaval", "ru": "Ваш первый карнавал"},
+    "todos_santos": {"es": "Todos Santos y las t'anta wawas", "ru": "Todos Santos и t'anta wawas"},
+    "andean_new_year": {"es": "El Año Nuevo Andino", "ru": "Андский Новый год"},
+    "soroche": {"es": "Acostumbrarse a la altura", "ru": "Привыкание к высоте"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "В гостях у местной семьи"}
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "name": {"es": "Uruguay", "ru": "Уругвай"},
+  "items": {
+    "rhythm_of_the_year.school_year": {
+      "es": "El año escolar público va de inicios de marzo a mediados de diciembre: en 2026, del 2 de marzo al 18 de diciembre, con una semana de vacaciones de invierno (29 de junio-3 de julio) y, como novedad en 2026, una semana completa de primavera (21-25 de septiembre).",
+      "ru": "Учебный год в государственных школах длится с начала марта до середины декабря: в 2026 году — со 2 марта по 18 декабря, с зимней неделей каникул (29 июня-3 июля) и, впервые в 2026 году, с целой весенней неделей (21-25 сентября)."
+    },
+    "rhythm_of_the_year.turismo_week": {
+      "es": "La Semana Santa se llama oficialmente 'Semana de Turismo', un nombre que figura en la ley desde 1919: es una semana de descanso con actividades en todo el país.",
+      "ru": "Страстная неделя официально называется «Semana de Turismo» («Неделя туризма») — это название закреплено в законе с 1919 года; это неделя отдыха с мероприятиями по всей стране."
+    },
+    "rhythm_of_the_year.semana_criolla": {
+      "es": "Durante la Semana de Turismo, la Semana Criolla del Prado en Montevideo, que se organiza desde 1925, celebra las tradiciones gauchas con jineteadas, danzas folclóricas y música.",
+      "ru": "Во время Недели туризма Semana Criolla в Prado (Montevideo), которую проводят с 1925 года, чествует традиции гаучо: родео, народные танцы и музыка."
+    },
+    "rhythm_of_the_year.carnival_long": {
+      "es": "El Carnaval es largo, unos 40 días o más desde finales de enero, con murgas y otras agrupaciones que compiten.",
+      "ru": "Карнавал длинный — около 40 дней или больше, начиная с конца января; в нём соревнуются murgas и другие коллективы."
+    },
+    "rhythm_of_the_year.january_6": {
+      "es": "El 6 de enero es el Día de los Niños; no es un día libre pago.",
+      "ru": "6 января — День детей (Día de los Niños); это не оплачиваемый выходной."
+    },
+    "holidays.paid": {
+      "es": "Días no laborables pagos: 1 de enero, 1 de mayo, 18 de julio (Jura de la Constitución), 25 de agosto (Independencia), 25 de diciembre (oficialmente 'Día de la Familia').",
+      "ru": "Оплачиваемые нерабочие дни: 1 января, 1 мая, 18 июля (День Конституции), 25 августа (День независимости), 25 декабря (официально «День семьи»)."
+    },
+    "holidays.other": {
+      "es": "Otros feriados: 6 de enero, Carnaval (febrero o marzo), Semana de Turismo (marzo o abril), 19 de abril, 18 de mayo, 19 de junio (Artigas), 12 de octubre, 2 de noviembre. Por ley algunos se trasladan al lunes; revísalo cada año.",
+      "ru": "Другие праздники: 6 января, карнавал (февраль или март), Неделя туризма (март или апрель), 19 апреля, 18 мая, 19 июня (Artigas), 12 октября, 2 ноября. По закону некоторые из них переносятся на понедельник — проверяйте каждый год."
+    },
+    "holidays.family_day": {
+      "es": "Uruguay es un Estado fuertemente laico: el 25 de diciembre es oficialmente el 'Día de la Familia' y la Semana Santa es la 'Semana de Turismo'.",
+      "ru": "Уругвай — подчёркнуто светское государство: 25 декабря официально называется «День семьи», а Страстная неделя — «Неделя туризма»."
+    },
+    "greetings_and_courtesy.ta": {
+      "es": "'Ta': 'de acuerdo', 'está bien', 'listo' (de 'está'); lo oirás constantemente.",
+      "ru": "«Ta» — «ладно», «хорошо», «готово» (от «está»); вы будете слышать это постоянно."
+    },
+    "greetings_and_courtesy.bo": {
+      "es": "'Bo': para llamar la atención de alguien, como 'oye' o 'amigo'.",
+      "ru": "«Bo» — чтобы привлечь чьё-то внимание, вроде «эй» или «слушай, друг»."
+    },
+    "greetings_and_courtesy.voseo": {
+      "es": "Se usa 'vos' ('vos tenés'), y en algunas zonas 'tú' con formas verbales de 'vos' ('tú tenés').",
+      "ru": "Говорят на «vos» («vos tenés»), а в некоторых районах — «tú» с глагольными формами от «vos» («tú tenés»)."
+    },
+    "time.late_dinner": {
+      "es": "La cena suele ser tarde, hacia las 9 de la noche o más tarde.",
+      "ru": "Ужинают часто поздно — около 9 вечера или позже."
+    },
+    "family_and_friends.gurises": {
+      "es": "'Gurí / gurisa' (del guaraní): niño, niña; 'los gurises' también es una forma cariñosa de llamar a un grupo de amigos.",
+      "ru": "«Gurí / gurisa» (из гуарани) — ребёнок; «los gurises» — ещё и тёплое название для компании друзей."
+    },
+    "family_and_friends.botija": {
+      "es": "'Botija': un niño pequeño (no se usa para adultos).",
+      "ru": "«Botija» — маленький ребёнок (не о взрослых)."
+    },
+    "family_and_friends.mate": {
+      "es": "Mucha gente lleva el mate y el termo a todas partes; compartir el mate es una invitación a formar parte del grupo.",
+      "ru": "Многие повсюду носят с собой мате и термос; поделиться мате — значит пригласить в свой круг."
+    },
+    "school_life.spring_week_new": {
+      "es": "Desde 2026 las vacaciones de primavera son una semana completa en septiembre (antes eran tres días).",
+      "ru": "С 2026 года весенние каникулы — целая неделя в сентябре (раньше было три дня)."
+    },
+    "school_life.private_starts": {
+      "es": "Algunos colegios privados fijan sus propias fechas de inicio a principios de marzo.",
+      "ru": "Некоторые частные школы сами назначают даты начала занятий в начале марта."
+    },
+    "food_and_table.asado": {
+      "es": "El asado del domingo en familia es un ritual habitual.",
+      "ru": "Воскресный asado (барбекю) с семьёй — привычный ритуал."
+    },
+    "food_and_table.chivito": {
+      "es": "El 'chivito' es un gran sándwich de carne, uno de los favoritos del país.",
+      "ru": "«Chivito» — большой сэндвич со стейком, всенародный любимец."
+    },
+    "everyday_life.llamadas_sunday": {
+      "es": "Los domingos y muchos feriados, las comparsas de tambores de candombe ('llamadas') recorren las calles de los barrios Sur, Palermo y Cordón de Montevideo.",
+      "ru": "По воскресеньям и во многие праздники группы барабанщиков кандомбе («llamadas») проходят по улицам районов Sur, Palermo и Cordón в Montevideo."
+    },
+    "everyday_life.barbaro": {
+      "es": "'¡Bárbaro!': '¡genial!', expresa acuerdo o alegría.",
+      "ru": "«¡Bárbaro!» — «отлично!», согласие или восторг."
+    },
+    "local_expressions.ta_repeated": {
+      "es": "'Ta, ta' repetido puede significar 'bueno, ya entendí', a veces con impaciencia.",
+      "ru": "Повторённое «ta, ta» может значить «ладно, понял» — иногда с нетерпением."
+    },
+    "local_expressions.bo_name": {
+      "es": "'Bo' puede reemplazar el nombre de alguien en una frase: '¿Qué hacés, bo?'.",
+      "ru": "«Bo» может заменять имя человека во фразе: «¿Qué hacés, bo?»."
+    },
+    "newcomers_find_hard.secular_calendar": {
+      "es": "Nombres de feriados distintos a los del resto de Latinoamérica: Semana de Turismo, Día de la Familia.",
+      "ru": "Названия праздников, отличающиеся от остальной Латинской Америки: Неделя туризма, День семьи."
+    },
+    "newcomers_find_hard.long_carnival": {
+      "es": "Una temporada de carnaval que dura más de un mes.",
+      "ru": "Карнавальный сезон, который длится больше месяца."
+    },
+    "folk_culture.candombe_unesco": {
+      "es": "El candombe, la tradición de tambores de origen afrouruguayo, fue inscrito en la lista del Patrimonio Inmaterial de la UNESCO en 2009.",
+      "ru": "Кандомбе (candombe), барабанная традиция афроуругвайского происхождения, в 2009 году внесён в список нематериального наследия ЮНЕСКО."
+    },
+    "folk_culture.murga": {
+      "es": "Las murgas son coros de carnaval que cantan canciones satíricas sobre el país y el año.",
+      "ru": "Murgas — карнавальные хоры, которые поют сатирические песни о стране и событиях года."
+    }
+  },
+  "moments": {
+    "first_llamadas": {"es": "El candombe y las Llamadas", "ru": "Кандомбе и Llamadas"},
+    "first_carnaval": {"es": "Tu primer carnaval y las murgas", "ru": "Ваш первый карнавал и murgas"},
+    "semana_turismo": {"es": "Semana de Turismo", "ru": "Semana de Turismo"},
+    "dia_ninos": {"es": "Día de los Niños, 6 de enero", "ru": "Día de los Niños, 6 января"},
+    "winter_break": {"es": "Vacaciones escolares de invierno y primavera", "ru": "Зимние и весенние школьные каникулы"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "Приглашение от местной семьи"}
+  }
+}

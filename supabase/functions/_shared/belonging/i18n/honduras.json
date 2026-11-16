@@ -1,0 +1,149 @@
+{
+  "name": {"es": "Honduras", "ru": "Гондурас"},
+  "items": {
+    "rhythm_of_the_year.school_year": {
+      "es": "El año escolar público va de inicios de febrero a finales de noviembre: del 2 de febrero al 30 de noviembre en 2026.",
+      "ru": "Учебный год в государственных школах длится с начала февраля до конца ноября: со 2 февраля по 30 ноября в 2026 году."
+    },
+    "rhythm_of_the_year.mid_year": {
+      "es": "Una semana de vacaciones escolares a mitad de año, en julio (del 13 al 17 de julio en 2026).",
+      "ru": "Недельные школьные каникулы в середине года, в июле (13-17 июля в 2026 году)."
+    },
+    "rhythm_of_the_year.morazanica": {
+      "es": "A inicios de octubre llega la 'Semana Morazánica', una semana sin clases y un feriado largo para muchos; la semana exacta se fija cada año.",
+      "ru": "В начале октября наступает «Semana Morazánica» — неделя без уроков и для многих длинные выходные; точную неделю назначают каждый год."
+    },
+    "rhythm_of_the_year.september_patria": {
+      "es": "Septiembre es el mes patrio: el 15 de septiembre desfilan los alumnos y las bandas escolares, encabezados por las 'palillonas' (bastoneras); en Tegucigalpa los desfiles terminan en el Estadio Nacional.",
+      "ru": "Сентябрь — патриотический месяц: 15 сентября маршируют школьники и школьные оркестры во главе с «palillonas» (девушками с жезлами); в Tegucigalpa парады заканчиваются на Национальном стадионе."
+    },
+    "rhythm_of_the_year.suyapa": {
+      "es": "3 de febrero: mucha gente viaja para honrar a la Virgen de Suyapa, patrona de Honduras, con una vigilia que dura toda la noche (la 'alborada') y cantos transmitidos por televisión.",
+      "ru": "3 февраля: многие едут почтить Virgen de Suyapa, покровительницу Гондураса, — всенощное бдение («alborada») и песни, которые транслируют по телевидению."
+    },
+    "rhythm_of_the_year.holy_week": {
+      "es": "Semana Santa (marzo o abril; cambia cada año): el jueves, el viernes y el sábado son feriados, con procesiones sobre alfombras de aserrín en Tegucigalpa y Comayagua.",
+      "ru": "Страстная неделя (март или апрель, дата каждый год меняется): четверг, пятница и суббота — выходные, с процессиями по коврам из опилок в Tegucigalpa и Comayagua."
+    },
+    "holidays.mandatory": {
+      "es": "Feriados: 1 de enero, del Jueves al Sábado Santo, 14 de abril (Día de las Américas), 1 de mayo, 15 de septiembre, 3 de octubre (Morazán), 12 de octubre, 21 de octubre (Fuerzas Armadas), 25 de diciembre. Las escuelas descansan una 'Semana Morazánica' a inicios de octubre.",
+      "ru": "Официальные выходные: 1 января, с Великого четверга по Великую субботу, 14 апреля (День Америк), 1 мая, 15 сентября, 3 октября (Morazán), 12 октября, 21 октября (День вооружённых сил), 25 декабря. В начале октября у школ неделя отдыха — «Semana Morazánica»."
+    },
+    "holidays.observances": {
+      "es": "Días que se celebran pero no son libres: 3 de febrero (Suyapa), 19 de marzo (Día del Padre), Día de la Madre (segundo domingo de mayo), 11 de junio (Día del Estudiante), 20 de julio (Día de Lempira), 1 de septiembre (Día de la Bandera), 10 de septiembre (Día del Niño), 17 de septiembre (Día del Maestro).",
+      "ru": "Памятные дни, которые отмечают, но не выходные: 3 февраля (Suyapa), 19 марта (День отца), День матери (второе воскресенье мая), 11 июня (День студента), 20 июля (День Lempira), 1 сентября (День флага), 10 сентября (День детей), 17 сентября (День учителя)."
+    },
+    "greetings_and_courtesy.vos": {
+      "es": "El 'vos' es parte del habla cotidiana hondureña: 'mirá vos', 'dejate de cuentos'.",
+      "ru": "«Vos» — обычная повседневная речь в Гондурасе: «mirá vos», «dejate de cuentos»."
+    },
+    "greetings_and_courtesy.cheque": {
+      "es": "'¿Cheque?': '¿de acuerdo?', '¿está bien?'; se responde '¡cheque!'.",
+      "ru": "«¿Cheque?» — «окей?», «договорились?»; отвечают «¡cheque!»."
+    },
+    "greetings_and_courtesy.maje": {
+      "es": "'Maje': 'compa', 'amigo', solo entre amigos; con otras personas puede ofender.",
+      "ru": "«Maje» — «чувак», «приятель», только между друзьями; с другими людьми может обидеть."
+    },
+    "time.heat_hours": {
+      "es": "En épocas de mucho calor, la Secretaría de Educación ha acortado el horario de clases y la educación física; está atento a los avisos de la escuela.",
+      "ru": "В очень жаркие периоды министерство образования сокращало время уроков и физкультуру — следите за объявлениями школы."
+    },
+    "time.late_social": {
+      "es": "Las reuniones sociales suelen empezar más tarde de la hora indicada.",
+      "ru": "Встречи с друзьями и гостями часто начинаются позже назначенного времени."
+    },
+    "family_and_friends.cipote": {
+      "es": "A los niños se les dice 'cipotes' / 'cipotas'.",
+      "ru": "Детей называют «cipotes» / «cipotas»."
+    },
+    "family_and_friends.alero": {
+      "es": "El mejor amigo, el que siempre te respalda, es tu 'alero'.",
+      "ru": "Лучший друг, который всегда за вас горой, — это ваш «alero»."
+    },
+    "family_and_friends.stadium": {
+      "es": "Ir al Estadio Nacional a apoyar a la selección o a un club de la liga es algo que mucha gente hace al menos una vez.",
+      "ru": "Сходить на Национальный стадион поболеть за сборную или клуб местной лиги многие делают хотя бы раз."
+    },
+    "family_and_friends.weekend_outings": {
+      "es": "Las familias de Tegucigalpa suelen ir los fines de semana al parque La Tigra o al mirador del Cristo del Picacho.",
+      "ru": "Семьи из Tegucigalpa по выходным часто ездят в парк La Tigra или на смотровую площадку Cristo del Picacho."
+    },
+    "school_life.parades_school": {
+      "es": "La mayoría de los niños desfila con su escuela el 15 de septiembre, con bandas escolares y palillonas.",
+      "ru": "15 сентября большинство детей маршируют на параде со своей школой — со школьными оркестрами и palillonas."
+    },
+    "school_life.days_celebrated": {
+      "es": "En la escuela se celebran el Día del Estudiante (11 de junio), el Día del Niño (10 de septiembre) y el Día del Maestro (17 de septiembre).",
+      "ru": "В школе отмечают День студента (11 июня), День детей (10 сентября) и День учителя (17 сентября)."
+    },
+    "food_and_table.baleada": {
+      "es": "Las baleadas, una tortilla de harina con frijoles refritos, huevo y 'mantequilla', son un desayuno común, recién hechas en un puesto de la esquina.",
+      "ru": "Baleadas — пшеничная лепёшка с пережаренной фасолью, яйцом и «mantequilla» — обычный завтрак, их пекут прямо при вас в киоске на углу."
+    },
+    "food_and_table.roadside_corn": {
+      "es": "En los puestos de carretera venden elote asado, tamalitos de elote dulce y atol.",
+      "ru": "В придорожных киосках продают жареную кукурузу, сладкие кукурузные tamalitos и atol."
+    },
+    "food_and_table.sopa_semana_santa": {
+      "es": "En Semana Santa muchas familias preparan sopa de mariscos con leche de coco.",
+      "ru": "На Страстной неделе многие семьи готовят суп из морепродуктов на кокосовом молоке."
+    },
+    "everyday_life.pulperia": {
+      "es": "La tienda de la esquina es la 'pulpería' (o 'pulpe').",
+      "ru": "Магазинчик на углу называют «pulpería» (или «pulpe»)."
+    },
+    "everyday_life.pisto": {
+      "es": "Al dinero se le dice 'pisto'.",
+      "ru": "Деньги называют «pisto»."
+    },
+    "local_expressions.catracho": {
+      "es": "Los hondureños se llaman a sí mismos 'catrachos' / 'catrachas'.",
+      "ru": "Жители Гондураса называют себя «catrachos» / «catrachas»."
+    },
+    "local_expressions.que_pepsi": {
+      "es": "'¡Qué pepsi!' / 'macizo': '¡qué bien!', 'genial'.",
+      "ru": "«¡Qué pepsi!» / «macizo» — «как круто!», «отлично»."
+    },
+    "local_expressions.yuca": {
+      "es": "'Está yuca': está difícil (un maestro exigente, un examen duro).",
+      "ru": "«Está yuca» — это трудно (строгий учитель, сложный экзамен)."
+    },
+    "local_expressions.pijin": {
+      "es": "'Pijin': una fiesta.",
+      "ru": "«Pijin» — вечеринка."
+    },
+    "local_expressions.chunche": {
+      "es": "'Chunche': una cosa cuyo nombre no sabes.",
+      "ru": "«Chunche» — штука, название которой вы не знаете."
+    },
+    "newcomers_find_hard.school_calendar": {
+      "es": "El año escolar va de febrero a noviembre, no de septiembre a junio: planifica la llegada de tu hijo con la escuela.",
+      "ru": "Учебный год идёт с февраля по ноябрь, а не с сентября по июнь — планируйте поступление ребёнка вместе со школой."
+    },
+    "newcomers_find_hard.heat": {
+      "es": "Olas de calor tan fuertes que cambian el horario escolar.",
+      "ru": "Волны жары, настолько сильные, что меняется школьное расписание."
+    },
+    "folk_culture.punta": {
+      "es": "Los bailes folclóricos son coloridos y coquetos, con 'bombas' (versos cortos rimados); la punta viene de la tradición garífuna.",
+      "ru": "Народные танцы яркие и кокетливые, с «bombas» (короткими рифмованными куплетами); punta пришла из традиции гарифуна (Garífuna)."
+    },
+    "folk_culture.alfombras": {
+      "es": "El Viernes Santo los centros de Tegucigalpa y Comayagua se cubren de alfombras de aserrín para las procesiones; las de Comayagua son famosas.",
+      "ru": "В Страстную пятницу центр Tegucigalpa и Comayagua устилают коврами из опилок для процессий — ковры Comayagua знамениты."
+    },
+    "folk_culture.feria_juniana": {
+      "es": "En junio San Pedro Sula celebra la Feria Juniana, con música en vivo y un carnaval.",
+      "ru": "В июне в San Pedro Sula проходит Feria Juniana — с живой музыкой и карнавалом."
+    }
+  },
+  "moments": {
+    "first_desfile": {"es": "Tu primer 15 de septiembre", "ru": "Ваше первое 15 de septiembre"},
+    "suyapa": {"es": "La alborada de Suyapa", "ru": "Alborada в честь Suyapa"},
+    "morazanica": {"es": "Semana Morazánica", "ru": "Semana Morazánica"},
+    "semana_santa": {"es": "Semana Santa y las alfombras de aserrín", "ru": "Страстная неделя и ковры из опилок"},
+    "baleadas": {"es": "Baleadas en el desayuno", "ru": "Baleadas на завтрак"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "Приглашение от местной семьи"}
+  }
+}

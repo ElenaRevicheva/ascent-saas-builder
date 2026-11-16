@@ -8,6 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { readFamilyProfile, PACK_COUNTRIES } from './FamilyProfileDialog';
 import { loadCountryPack } from '@/data/countryLessons';
+import { localizePack } from '@/data/packI18n';
 import { momentsIn, nextDateOf, type Moment } from '../../../supabase/functions/_shared/moments';
 
 /*
@@ -42,6 +43,9 @@ export const BelongingPath = () => {
   const { user } = useAuth();
   const { t, i18n } = useTranslation();
   const [pack, setPack] = useState<Pack | null | undefined>(undefined);
+  // 15 Nov 2026: `pack` = the checked English guide (matching words and dates run on it); `shown` = the same guide in the
+  // family's language (belonging/i18n), used only for what is displayed. A missing translation shows the English.
+  const [shown, setShown] = useState<Pack | null>(null);
   const [order, setOrder] = useState<Moment[]>([]);
   const [lived, setLived] = useState<Set<string>>(new Set());
   const [talked, setTalked] = useState<Record<string, Seen>>({});
@@ -82,6 +86,7 @@ export const BelongingPath = () => {
         return (days <= 45 ? days : 100) + (want.includes(m.id) ? -50 : 0); };
       setOrder([...moments].sort((a, b) => score(a) - score(b)));
       setArrived(String(profile?.arrived ?? ''));
+      setShown(pk ? ((await localizePack(pk as never, i18n.language)) as unknown as Pack) : null);
       setPack(pk);
     })().catch(() => { if (!cancelled) setPack(null); });
     return () => { cancelled = true; };
@@ -107,10 +112,16 @@ export const BelongingPath = () => {
   const fmt = (d: Date) => d.toLocaleDateString(i18n.language || undefined, { day: 'numeric', month: 'short' });
   const guideLines = (m: Moment): Item[] => {
     const words = (m.words ?? []).map(plain).filter((w) => w.length >= 4);
-    const all = Object.values(pack.sections).flat().filter((it) => it.status === 'checked');
-    return all.filter((it) => words.some((w) => plain(`${it.text} ${it.es ?? ''}`).includes(w))).slice(0, 3);
+    const hits: Item[] = [];
+    for (const [sec, items] of Object.entries(pack.sections)) for (const [i, it] of items.entries()) {
+      if (it.status !== 'checked' || !words.some((w) => plain(`${it.text} ${it.es ?? ''}`).includes(w))) continue;
+      hits.push(shown?.sections[sec]?.[i] ?? it);
+    }
+    return hits.slice(0, 3);
   };
-  const first30 = FIRST30.flatMap((k) => (pack.sections[k] ?? []).filter((it) => it.status === 'checked').slice(0, 2).map((it) => ({ ...it, key: `${k}:${it.id}` }))).slice(0, 8);
+  const labelOf = (m: Moment) => shown?.belonging_moments?.find((x) => x.id === m.id)?.label ?? m.label;
+  const countryName = shown?.name ?? pack.name;
+  const first30 = FIRST30.flatMap((k) => ((shown ?? pack).sections[k] ?? []).filter((it) => it.status === 'checked').slice(0, 2).map((it) => ({ ...it, key: `${k}:${it.id}` }))).slice(0, 8);
   const livedCount = order.filter((m) => lived.has(m.id)).length;
 
   return (
@@ -118,9 +129,9 @@ export const BelongingPath = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Compass className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
-          {t('fy.title', { country: pack.name })}
+          {t('fy.title', { country: countryName })}
         </CardTitle>
-        <p className="text-sm text-muted-foreground">{t('fy.sub', { country: pack.name })}</p>
+        <p className="text-sm text-muted-foreground">{t('fy.sub', { country: countryName })}</p>
         <div className="flex items-center gap-3 pt-1">
           <Progress value={order.length ? (livedCount / order.length) * 100 : 0} className="h-2 flex-1 bg-muted" />
           <span className="text-xs text-muted-foreground">{t('fy.lived', { n: livedCount, of: order.length })}{arrived ? ` · ${t('fy.arrived', { when: arrived })}` : ''}</span>
@@ -140,7 +151,7 @@ export const BelongingPath = () => {
                   {isLived ? <Check className="h-4 w-4" /> : seen ? <MessageCircle className="h-4 w-4" /> : <CalendarDays className="h-4 w-4" />}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block font-semibold text-foreground">{m.label}</span>
+                  <span className="block font-semibold text-foreground">{labelOf(m)}</span>
                   <span className="block text-xs text-muted-foreground">
                     {isLived ? t('fy.youLived') : d && days !== null && days <= 60 ? t('fy.coming', { date: fmt(d), count: days }) : d ? t('fy.on', { date: fmt(d) }) : t('fy.whenItComes')}
                     {seen ? ` · ${t('fy.talked', { channel: seen.channel, date: fmt(new Date(seen.at)) })}` : ''}
@@ -154,11 +165,11 @@ export const BelongingPath = () => {
                     <p key={it.id} className="text-sm text-foreground">{it.text}{it.es ? <span className="block text-xs text-primary">{it.es}</span> : null}</p>
                   ))}
                   {!guideLines(m).length && <p className="text-sm text-muted-foreground">{t('fy.askForMore')}</p>}
-                  <p className="text-[11px] text-muted-foreground/80">{t('fy.checked', { country: pack.name })}</p>
+                  <p className="text-[11px] text-muted-foreground/80">{t('fy.checked', { country: countryName })}</p>
                   <div className="flex flex-wrap gap-2 pt-1">
-                    <Button size="sm" onClick={() => fire('espaluz:ask', { text: t('fy.askText', { moment: m.label, country: pack.name }) })}>{t('fy.ask')}</Button>
-                    <Button size="sm" variant="outline" onClick={() => fire('espaluz:practice', { scene: `${m.label} (${pack.name})` })}>{t('fy.rehearse')}</Button>
-                    <Button size="sm" variant="outline" onClick={() => fire('espaluz:celebrate', { occasion: m.label })}>{t('fy.celebrate')}</Button>
+                    <Button size="sm" onClick={() => fire('espaluz:ask', { text: t('fy.askText', { moment: labelOf(m), country: countryName }) })}>{t('fy.ask')}</Button>
+                    <Button size="sm" variant="outline" onClick={() => fire('espaluz:practice', { scene: `${labelOf(m)} (${countryName})` })}>{t('fy.rehearse')}</Button>
+                    <Button size="sm" variant="outline" onClick={() => fire('espaluz:celebrate', { occasion: labelOf(m) })}>{t('fy.celebrate')}</Button>
                     {!isLived && <Button size="sm" variant="ghost" onClick={() => save('belonging_moment', m.id)}><Check className="mr-1 h-4 w-4" />{t('fy.weLived')}</Button>}
                   </div>
                 </div>
@@ -169,7 +180,7 @@ export const BelongingPath = () => {
 
         <div className="rounded-xl border border-dashed border-border/70 p-3">
           <button type="button" className="flex w-full items-center justify-between text-left" onClick={() => setShow30(!show30)}>
-            <span className="font-semibold text-foreground">{t('fy.first30', { country: pack.name })}</span>
+            <span className="font-semibold text-foreground">{t('fy.first30', { country: countryName })}</span>
             <span className="text-xs text-muted-foreground">{t('fy.doneOf', { n: first30.filter((x) => done30.has(x.key)).length, of: first30.length })}</span>
           </button>
           {show30 && (

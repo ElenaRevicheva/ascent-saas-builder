@@ -1,4 +1,5 @@
 import type { Lesson, Exercise } from './spanishLessons';
+import { localizePack, type Pack as FullPack } from './packI18n';
 
 /*
  * 15 Nov 2026 (Elena: the lessons must "serve the goals, not generic simulations"): "Living in <country>" lessons,
@@ -44,7 +45,10 @@ function spanishOf(it: Item): { es: string; meaning: string } {
   return q && SPANISHY.test(q[1]) ? { es: q[1], meaning: '' } : { es: '', meaning: '' };
 }
 
-export function lessonsFromPack(pack: Pack): Lesson[] {
+// `shown` = the same guide in the family's language (belonging/i18n, via localizePack). Matching, the Spanish lines and
+// the quiz answers come from the checked English guide; only the explanatory text a card shows is taken from `shown`.
+export function lessonsFromPack(pack: Pack, shown: Pack = pack): Lesson[] {
+  const textOf = (sec: string, it: Item) => shown.sections[sec]?.find((x) => x.id === it.id)?.text ?? it.text;
   const out: Lesson[] = [];
   const pairs: { es: string; meaning: string }[] = [];
   for (const s of SECTIONS) for (const it of pack.sections[s.key] ?? []) {
@@ -54,7 +58,7 @@ export function lessonsFromPack(pack: Pack): Lesson[] {
   for (const s of SECTIONS) {
     const items = (pack.sections[s.key] ?? []).filter((it) => it.status === 'checked');
     if (items.length < 2) continue;
-    const cards = items.map((it) => ({ ...spanishOf(it), text: it.text }));
+    const cards = items.map((it) => ({ ...spanishOf(it), text: textOf(s.key, it) }));
     const mine = cards.filter((c) => c.es && c.meaning);
     const exercises: Exercise[] = mine.map((c, i) => {
       const others = pairs.filter((p) => p.meaning !== c.meaning).map((p) => p.meaning);
@@ -85,14 +89,16 @@ export async function loadCountryPack(country: string): Promise<Pack | null> {
   return (mod.default ?? mod) as Pack;
 }
 
-export async function loadCountryLessons(country: string): Promise<Lesson[]> {
+export async function loadCountryLessons(country: string, lng?: string): Promise<Lesson[]> {
   const pack = await loadCountryPack(country);
-  return pack ? lessonsFromPack(pack) : [];
+  if (!pack) return [];
+  const shown = (await localizePack(pack as FullPack, lng).catch(() => pack)) as Pack;
+  return lessonsFromPack(pack, shown);
 }
 
 // "country-<country>-<section>" -> that lesson (the lesson page opens it by id).
-export async function loadCountryLesson(id: string): Promise<Lesson | undefined> {
+export async function loadCountryLesson(id: string, lng?: string): Promise<Lesson | undefined> {
   const m = id.match(/^country-([a-z_]+?)-(greetings_and_courtesy|everyday_life|food_and_table|time|family_and_friends|local_expressions|school_life|rhythm_of_the_year|folk_culture|newcomers_find_hard)$/);
   if (!m) return undefined;
-  return (await loadCountryLessons(m[1])).find((l) => l.id === id);
+  return (await loadCountryLessons(m[1], lng)).find((l) => l.id === id);
 }

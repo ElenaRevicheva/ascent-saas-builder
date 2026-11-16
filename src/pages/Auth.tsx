@@ -12,6 +12,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { signupErrorKind, track } from '@/lib/track';
 import { Eye, EyeOff, ArrowLeft, Sparkles } from 'lucide-react';
+import { useTranslation, Trans } from 'react-i18next';
 import SubscriptionRecovery from '@/components/SubscriptionRecovery';
 
 const Auth = () => {
@@ -33,6 +34,7 @@ const Auth = () => {
   );
   const [notice, setNotice] = useState('');
 
+  const { t } = useTranslation();
   const { signIn, signUp, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -66,8 +68,8 @@ const Auth = () => {
         console.log('Subscription already exists:', existingSub);
         localStorage.removeItem('pending-subscription');
         toast({
-          title: "Subscription Already Active!",
-          description: "Your subscription is already activated. Welcome to EspaLuz!",
+          title: t('auth.subAlreadyTitle'),
+          description: t('auth.subAlreadyBody'),
         });
         return;
       }
@@ -95,8 +97,8 @@ const Auth = () => {
           localStorage.removeItem('pending-subscription');
           console.log('Subscription activated successfully for user:', user.id, 'PayPal ID:', subscriptionData.subscriptionId);
           toast({
-            title: "Subscription Activated!",
-            description: "Welcome to EspaLuz Premium! Your subscription is now active.",
+            title: t('auth.subActivatedTitle'),
+            description: t('auth.subActivatedBody'),
           });
           return;
         }
@@ -118,8 +120,8 @@ const Auth = () => {
       
       // Don't clear localStorage so user can retry or support can recover
       toast({
-        title: "Almost There!",
-        description: "Your payment was successful! We're just finishing up your subscription setup. You can retry below or it will complete automatically.",
+        title: t('auth.almostTitle'),
+        description: t('auth.almostBody'),
         duration: 8000 // Show longer but less scary
       });
 
@@ -142,8 +144,8 @@ const Auth = () => {
       });
       
       toast({
-        title: "Setting Up Your Subscription",
-        description: "Your payment was successful! We're working on activating your subscription. Please check the options below.",
+        title: t('auth.settingUpTitle'),
+        description: t('auth.settingUpBody'),
         duration: 8000
       });
 
@@ -189,15 +191,15 @@ const Auth = () => {
         localStorage.removeItem('subscription-processing-error');
         
         toast({
-          title: "Subscription Verified!",
-          description: "Your subscription is active and ready to use.",
+          title: t('auth.verifiedTitle'),
+          description: t('auth.verifiedBody'),
         });
       } else {
         console.warn('Subscription verification failed - no active subscription found');
         // Keep pending data for potential recovery
         toast({
-          title: "Subscription Verification",
-          description: "We're still processing your subscription. It should be active shortly.",
+          title: t('auth.verifyingTitle'),
+          description: t('auth.verifyingBody'),
           variant: "default"
         });
       }
@@ -228,11 +230,11 @@ const Auth = () => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      setError('Please fill in your email and a password');
+      setError(t('auth.errEmailPassword'));
       return;
     }
     if (formData.password.length < 8) {
-      setError('Please use at least 8 characters for your password');
+      setError(t('auth.errShortPassword'));
       return;
     }
     setIsLoading(true);
@@ -242,15 +244,15 @@ const Auth = () => {
       if (error) {
         track('app_signup_error', { kind: signupErrorKind(error.message) });
         setError(/registered|exists/i.test(error.message)
-          ? 'This email already has an account. Please sign in, or reset your password.'
+          ? t('auth.errEmailTaken')
           : error.message);
       } else {
         track('app_signup_sent');
-        setNotice(`Almost there! We sent a confirmation link to ${formData.email.trim()}. Open it, then sign in here. Your 14 free days start now.`);
+        setNotice(t('auth.noticeConfirm', { email: formData.email.trim() }));
         setMode('signin');
       }
     } catch {
-      setError('An unexpected error occurred. Please try again.');
+      setError(t('auth.errUnexpected'));
     } finally {
       setIsLoading(false);
     }
@@ -259,7 +261,7 @@ const Auth = () => {
   const handleForgot = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.email) {
-      setError('Please type the email of your account');
+      setError(t('auth.errNoEmail'));
       return;
     }
     setIsLoading(true);
@@ -269,13 +271,13 @@ const Auth = () => {
     });
     setIsLoading(false);
     if (error) setError(error.message);
-    else setNotice(`If ${formData.email.trim()} has an account, a link to choose a new password is on its way.`);
+    else setNotice(t('auth.noticeReset', { email: formData.email.trim() }));
   };
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password.length < 8) {
-      setError('Please use at least 8 characters for your new password');
+      setError(t('auth.errShortNewPassword'));
       return;
     }
     setIsLoading(true);
@@ -285,7 +287,7 @@ const Auth = () => {
     if (error) {
       setError(error.message);
     } else {
-      toast({ title: 'Password updated', description: 'Welcome back to EspaLuz.' });
+      toast({ title: t('auth.pwUpdatedTitle'), description: t('auth.pwUpdatedBody') });
       navigate(afterSignIn);
     }
   };
@@ -314,7 +316,7 @@ const Auth = () => {
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      setError('Please fill in all fields');
+      setError(t('auth.errAllFields'));
       return;
     }
 
@@ -326,23 +328,23 @@ const Auth = () => {
       
       if (error) {
         if (error.message.includes('Invalid login credentials')) {
-          setError('Invalid email or password. Please check your credentials.');
+          setError(t('auth.errInvalid'));
         } else if (error.message.includes('Email not confirmed')) {
           track('app_signin_unconfirmed');
-          setError('Please check your email and click the confirmation link before signing in.');
+          setError(t('auth.errUnconfirmed'));
         } else {
           setError(error.message);
         }
       } else {
         track('app_signin');
         toast({
-          title: "Welcome back!",
-          description: "You have successfully signed in.",
+          title: t('auth.signedInTitle'),
+          description: t('auth.signedInBody'),
         });
         navigate(afterSignIn);
       }
     } catch (error) {
-      setError('An unexpected error occurred. Please try again.');
+      setError(t('auth.errUnexpected'));
     } finally {
       setIsLoading(false);
     }
@@ -368,7 +370,7 @@ const Auth = () => {
         size="sm"
         className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
         onClick={() => setShowPassword(!showPassword)}
-        aria-label={showPassword ? 'Hide password' : 'Show password'}
+        aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
       >
         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
       </Button>
@@ -377,17 +379,17 @@ const Auth = () => {
 
   const emailField = (
     <div className="space-y-2">
-      <Label htmlFor="auth-email">Email</Label>
-      <Input id="auth-email" name="email" type="email" placeholder="your@email.com" autoComplete="email"
+      <Label htmlFor="auth-email">{t('auth.email')}</Label>
+      <Input id="auth-email" name="email" type="email" placeholder={t('auth.emailPlaceholder')} autoComplete="email"
         value={formData.email} onChange={handleInputChange} required />
     </div>
   );
 
   const titles: Record<Mode, { title: string; sub: string }> = {
-    signin: { title: 'Welcome back', sub: 'Sign in to your family space' },
-    signup: { title: 'Start free for 14 days', sub: 'No card needed. The classroom, your chat, WhatsApp and Telegram.' },
-    forgot: { title: 'Forgot your password?', sub: 'Type your email and we will send you a link' },
-    reset: { title: 'Choose a new password', sub: 'At least 8 characters' },
+    signin: { title: t('auth.signinTitle'), sub: t('auth.signinSub') },
+    signup: { title: t('auth.signupTitle'), sub: t('auth.signupSub') },
+    forgot: { title: t('auth.forgotTitle'), sub: t('auth.forgotSub') },
+    reset: { title: t('auth.resetTitle'), sub: t('auth.min8') },
   };
 
   return (
@@ -396,13 +398,13 @@ const Auth = () => {
         <div className="mb-8 text-center">
           <Link to="/" className="inline-flex items-center gap-2 text-primary hover:underline mb-6">
             <ArrowLeft className="h-4 w-4" />
-            Back to Home
+            {t('auth.backHome')}
           </Link>
           <div className="flex items-center justify-center gap-2 mb-4">
             <img src="/espaluz-icon.svg?v=el4" alt="" className="h-9 w-9" />
             <h1 className="text-2xl font-bold text-foreground">EspaLuz</h1>
           </div>
-          <p className="text-muted-foreground">Live your new country in Spanish, with your family</p>
+          <p className="text-muted-foreground">{t('auth.tagline')}</p>
         </div>
 
         <div className="mb-6">
@@ -414,14 +416,14 @@ const Auth = () => {
             <CardTitle>{titles[mode].title}</CardTitle>
             <CardDescription>{titles[mode].sub}</CardDescription>
             {(mode === 'signin' || mode === 'signup') && (
-              <div className="mt-4 grid grid-cols-2 gap-1 rounded-full bg-muted p-1" role="tablist" aria-label="Sign in or create account">
+              <div className="mt-4 grid grid-cols-2 gap-1 rounded-full bg-muted p-1" role="tablist" aria-label={t('auth.tabsLabel')}>
                 <button type="button" role="tab" aria-selected={mode === 'signin'} onClick={() => switchMode('signin')}
                   className={`rounded-full py-2 text-sm font-semibold ${mode === 'signin' ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}>
-                  Sign in
+                  {t('auth.signIn')}
                 </button>
                 <button type="button" role="tab" aria-selected={mode === 'signup'} onClick={() => switchMode('signup')}
                   className={`rounded-full py-2 text-sm font-semibold ${mode === 'signup' ? 'bg-card text-foreground shadow' : 'text-muted-foreground'}`}>
-                  Create account
+                  {t('auth.createAccount')}
                 </button>
               </div>
             )}
@@ -444,15 +446,15 @@ const Auth = () => {
                 {emailField}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="auth-password">Password</Label>
+                    <Label htmlFor="auth-password">{t('auth.password')}</Label>
                     <button type="button" onClick={() => switchMode('forgot')} className="text-sm font-medium text-primary hover:underline">
-                      Forgot password?
+                      {t('auth.forgotLink')}
                     </button>
                   </div>
-                  {passwordField('auth-password', 'Your password')}
+                  {passwordField('auth-password', t('auth.passwordPlaceholder'))}
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading} variant="hero">
-                  {isLoading ? 'Signing in...' : 'Sign in'}
+                  {isLoading ? t('auth.signingIn') : t('auth.signIn')}
                 </Button>
               </form>
             )}
@@ -460,22 +462,23 @@ const Auth = () => {
             {mode === 'signup' && (
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="auth-name">Your name</Label>
-                  <Input id="auth-name" name="fullName" placeholder="e.g. Ana" autoComplete="name"
+                  <Label htmlFor="auth-name">{t('auth.name')}</Label>
+                  <Input id="auth-name" name="fullName" placeholder={t('auth.namePlaceholder')} autoComplete="name"
                     value={formData.fullName} onChange={handleInputChange} />
                 </div>
                 {emailField}
                 <div className="space-y-2">
-                  <Label htmlFor="auth-password">Password</Label>
-                  {passwordField('auth-password', 'At least 8 characters')}
+                  <Label htmlFor="auth-password">{t('auth.password')}</Label>
+                  {passwordField('auth-password', t('auth.min8'))}
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading} variant="hero">
-                  {isLoading ? 'Creating your account...' : 'Create my free account'}
+                  {isLoading ? t('auth.creating') : t('auth.createFree')}
                 </Button>
                 <p className="text-xs text-muted-foreground text-center">
-                  14 days free, then $11 a month only if you choose to stay. By creating an account you accept the{' '}
-                  <Link to="/terms-of-service" className="underline">terms</Link> and{' '}
-                  <Link to="/privacy-policy" className="underline">privacy policy</Link>.
+                  <Trans i18nKey="auth.terms" components={{
+                    terms: <Link to="/terms-of-service" className="underline" />,
+                    privacy: <Link to="/privacy-policy" className="underline" />,
+                  }} />
                 </p>
               </form>
             )}
@@ -484,10 +487,10 @@ const Auth = () => {
               <form onSubmit={handleForgot} className="space-y-4">
                 {emailField}
                 <Button type="submit" className="w-full" disabled={isLoading} variant="hero">
-                  {isLoading ? 'Sending...' : 'Send me a link'}
+                  {isLoading ? t('auth.sending') : t('auth.sendLink')}
                 </Button>
                 <button type="button" onClick={() => switchMode('signin')} className="w-full text-sm font-medium text-primary hover:underline">
-                  Back to sign in
+                  {t('auth.backToSignIn')}
                 </button>
               </form>
             )}
@@ -495,20 +498,20 @@ const Auth = () => {
             {mode === 'reset' && (
               <form onSubmit={handleReset} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="auth-password">New password</Label>
-                  {passwordField('auth-password', 'At least 8 characters')}
+                  <Label htmlFor="auth-password">{t('auth.newPassword')}</Label>
+                  {passwordField('auth-password', t('auth.min8'))}
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading} variant="hero">
-                  {isLoading ? 'Saving...' : 'Save new password'}
+                  {isLoading ? t('auth.saving') : t('auth.saveNewPassword')}
                 </Button>
               </form>
             )}
 
             {(mode === 'signin' || mode === 'signup') && (
               <p className="mt-6 border-t border-border pt-4 text-center text-sm text-muted-foreground">
-                Not ready?{' '}
+                {t('auth.notReady')}{' '}
                 <button type="button" onClick={() => navigate('/dashboard')} className="font-semibold text-primary hover:underline">
-                  Try 20 messages without an account
+                  {t('auth.tryWithout')}
                 </button>
               </p>
             )}

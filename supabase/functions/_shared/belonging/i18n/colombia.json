@@ -1,0 +1,223 @@
+{
+  "name": {"es": "Colombia", "ru": "Колумбия"},
+  "items": {
+    "rhythm_of_the_year.two_rainy_seasons": {
+      "es": "En la región andina (Bogotá, Medellín) las lluvias llegan en dos temporadas: más o menos de marzo a junio y de finales de septiembre a noviembre; la segunda suele ser más fuerte, con su pico en octubre-noviembre. Diciembre y enero son la temporada seca tradicional.",
+      "ru": "В Андском регионе (Богота, Медельин) дожди идут в два сезона: примерно с марта по июнь и с конца сентября по ноябрь; второй обычно сильнее, с пиком в октябре–ноябре. Декабрь и январь — традиционный сухой сезон."
+    },
+    "rhythm_of_the_year.altitude": {
+      "es": "La temperatura depende de la altura más que del mes: las ciudades de montaña se mantienen frescas todo el año y la costa sigue caliente: 'tierra fría' y 'tierra caliente'.",
+      "ru": "Температура зависит скорее от высоты, чем от месяца: горные города прохладны круглый год, а на побережье всегда жарко — «tierra fría» и «tierra caliente»."
+    },
+    "rhythm_of_the_year.december_season": {
+      "es": "La temporada navideña se abre la noche del 7 de diciembre con velas (Noche de Velitas), y luego vienen las novenas del 16 al 24 de diciembre.",
+      "ru": "Рождественский сезон открывается вечером 7 декабря свечами (Noche de Velitas), затем с 16 по 24 декабря идут новены (novenas)."
+    },
+    "rhythm_of_the_year.puentes": {
+      "es": "Muchos feriados se pasan al lunes siguiente, así que el año está lleno de fines de semana de tres días ('puentes') en los que las ciudades se vacían y las carreteras se llenan.",
+      "ru": "Многие праздники переносят на следующий понедельник, поэтому год полон трёхдневных выходных («puentes»), когда города пустеют, а дороги заполняются."
+    },
+    "rhythm_of_the_year.october_receso": {
+      "es": "Los colegios de calendario A tienen un receso obligatorio de una semana en octubre, la semana anterior al festivo del 12 de octubre; confirma las fechas cada año.",
+      "ru": "В школах, работающих по календарю A, в октябре обязательны недельные каникулы — на неделе перед праздником 12 октября; уточняйте даты каждый год."
+    },
+    "rhythm_of_the_year.cycling": {
+      "es": "Durante las grandes vueltas ciclísticas (Giro, Tour de Francia, Vuelta) mucha gente sigue a los ciclistas colombianos por televisión o radio.",
+      "ru": "Во время крупных велогонок («Джиро», «Тур де Франс», «Вуэльта») многие следят за колумбийскими гонщиками по телевизору или радио."
+    },
+    "holidays.fixed": {
+      "es": "Festivos fijos: 1 de enero, 1 de mayo, 20 de julio (Independencia), 7 de agosto (Batalla de Boyacá), 8 de diciembre (Inmaculada Concepción), 25 de diciembre.",
+      "ru": "Фиксированные выходные: 1 января, 1 мая, 20 июля (День независимости), 7 августа (битва при Бояке), 8 декабря (Непорочное зачатие), 25 декабря."
+    },
+    "holidays.monday_rule": {
+      "es": "Unos diez festivos se pasan al lunes siguiente cuando no caen en lunes (ley de 1983): Reyes (6 de enero), San José (19 de marzo), Ascensión, Corpus Christi, Sagrado Corazón, San Pedro y San Pablo (29 de junio), Asunción (15 de agosto), 12 de octubre, Todos los Santos (1 de noviembre), Independencia de Cartagena (11 de noviembre). Confirma las fechas de cada año.",
+      "ru": "Около десяти праздников переносятся на следующий понедельник, если не выпадают на понедельник (закон 1983 года): Богоявление (6 января), День святого Иосифа (19 марта), Вознесение, Corpus Christi, праздник Святейшего Сердца, святые Пётр и Павел (29 июня), Успение (15 августа), 12 октября, День всех святых (1 ноября), День независимости Картахены (11 ноября). Уточняйте даты каждого года."
+    },
+    "holidays.holy_week": {
+      "es": "El Jueves Santo y el Viernes Santo son festivos (marzo o abril; las fechas cambian cada año).",
+      "ru": "Великий четверг и Страстная пятница — выходные дни (март или апрель — даты меняются каждый год)."
+    },
+    "holidays.oct12": {
+      "es": "El 12 de octubre hoy es el Día de la Diversidad Étnica y Cultural (antes, Día de la Raza).",
+      "ru": "12 октября теперь называется Día de la Diversidad Étnica y Cultural (День этнического и культурного разнообразия; раньше — Día de la Raza)."
+    },
+    "holidays.chiquinquira": {
+      "es": "Una ley reciente convirtió el 9 de julio (Virgen de Chiquinquirá) en festivo nacional; conviene verificar en el calendario oficial su estado y si se pasa al lunes.",
+      "ru": "Недавний закон сделал 9 июля (Virgen de Chiquinquirá) общенациональным праздником; его статус и то, переносится ли он на понедельник, стоит проверить по официальному календарю."
+    },
+    "holidays.local_carnival": {
+      "es": "Barranquilla tiene días libres locales el lunes y martes de Carnaval; Cartagena celebra una semana de fiestas alrededor del 11 de noviembre.",
+      "ru": "В Барранкилье понедельник и вторник Карнавала — местные выходные; Картахена празднует целую неделю около 11 ноября."
+    },
+    "greetings_and_courtesy.cheek_kiss": {
+      "es": "En ambientes sociales, a las mujeres se las suele saludar con un beso en la mejilla derecha, incluso al conocerlas; los hombres suelen darse la mano, con una palmada o medio abrazo si se conocen. En el trabajo, apretón de manos para todos.",
+      "ru": "В неформальной обстановке женщин обычно приветствуют поцелуем в правую щёку, даже при первой встрече; мужчины обычно пожимают руки, а если знакомы — с похлопыванием или полуобъятием. На работе всем пожимают руку."
+    },
+    "greetings_and_courtesy.greet_each": {
+      "es": "En un grupo saludas a cada persona una por una, y te despides de cada una al irte. Di 'buenas' al entrar a una tienda o a un ascensor.",
+      "ru": "В компании здороваются с каждым по отдельности и с каждым прощаются, уходя. Входя в магазин или лифт, говорите «buenas»."
+    },
+    "greetings_and_courtesy.como_estas": {
+      "es": "'¿Cómo estás?' espera una respuesta de verdad, y los saludos a menudo llegan como varias preguntas seguidas ('¿Cómo estás? ¿Qué has hecho?').",
+      "ru": "На «¿Cómo estás?» ждут настоящего ответа, а приветствие часто состоит из нескольких вопросов подряд («¿Cómo estás? ¿Qué has hecho?»)."
+    },
+    "greetings_and_courtesy.don_dona": {
+      "es": "A las personas mayores se les dice 'don' o 'doña' con su nombre de pila, se les ofrece asiento y se les escucha.",
+      "ru": "К пожилым людям обращаются «don» или «doña» с именем, уступают им место и прислушиваются к ним."
+    },
+    "greetings_and_courtesy.courtesy_words": {
+      "es": "Los tenderos y el personal dicen 'con gusto', 'a la orden' y 'por favor' todo el tiempo.",
+      "ru": "Продавцы и персонал постоянно говорят «con gusto», «a la orden» и «por favor»."
+    },
+    "greetings_and_courtesy.que_pena": {
+      "es": "'Qué pena con usted' significa 'lo siento / disculpe' (pena = vergüenza, no tristeza); suaviza un rechazo, acompaña un favor que se pide o sirve para disculparse.",
+      "ru": "«Qué pena con usted» означает «простите / извините» (pena здесь — неловкость, а не горе); этой фразой смягчают отказ, просят об одолжении или извиняются."
+    },
+    "greetings_and_courtesy.sumerce": {
+      "es": "'Sumercé', una antigua forma respetuosa de decir 'usted', todavía se usa en algunas regiones.",
+      "ru": "«Sumercé», старинное уважительное обращение на «вы», до сих пор используется в некоторых регионах."
+    },
+    "time.social_late": {
+      "es": "Una fiesta convocada para las 7 de la noche a menudo empieza de verdad hacia las 9; llegar exactamente a la hora puede resultar incómodo. 'Ya voy' o 'ahí llego' pueden significar que la persona todavía está en su casa.",
+      "ru": "Вечеринка, назначенная на 7 вечера, часто на самом деле начинается около 9; прийти точно вовремя бывает неловко. «Ya voy» или «ahí llego» могут означать, что человек ещё дома."
+    },
+    "time.work_punctual": {
+      "es": "En el trabajo es distinto: llegar 30 minutos tarde a una reunión se ve como una falta de respeto, no como 'hora colombiana'.",
+      "ru": "На работе всё иначе: опоздание на встречу на 30 минут воспринимается как неуважение, а не как «колумбийское время»."
+    },
+    "time.long_visits": {
+      "es": "Las visitas a casa a menudo duran dos o tres horas más de lo previsto.",
+      "ru": "Визиты в гости часто длятся на два-три часа дольше, чем ожидалось."
+    },
+    "family_and_friends.family_ties": {
+      "es": "Los lazos familiares son fuertes; muchas familias se reúnen seguido, sobre todo para el almuerzo del domingo, y las grandes decisiones se conversan juntos.",
+      "ru": "Семейные узы крепки; многие семьи часто собираются вместе, особенно на воскресный обед, а важные решения обсуждают сообща."
+    },
+    "family_and_friends.bendicion": {
+      "es": "Mucha gente le pide la bendición a su mamá antes de salir de casa: 'Bendición, mamá'.",
+      "ru": "Многие, выходя из дома, просят у мамы благословения: «Bendición, mamá»."
+    },
+    "family_and_friends.visit_gift": {
+      "es": "Cuando te invitan a una casa, lleva algo pequeño: vino, jugo, chocolates o un ponqué; el gesto importa más que el precio.",
+      "ru": "Если вас пригласили в гости, принесите что-нибудь небольшое — вино, сок, конфеты или ponqué (небольшой кекс); жест важнее цены."
+    },
+    "family_and_friends.parchar": {
+      "es": "'Parchar' es pasar el rato con amigos conversando; 'echar pata' es recorrer la ciudad a pie juntos.",
+      "ru": "«Parchar» — проводить время с друзьями за разговорами; «echar pata» — вместе гулять по городу."
+    },
+    "family_and_friends.dance": {
+      "es": "Cuando suena una buena canción, la gente a menudo baila: en casa, en una tienda, en una fiesta.",
+      "ru": "Когда звучит хорошая песня, люди часто танцуют — дома, в магазине, на вечеринке."
+    },
+    "school_life.calendar_ab": {
+      "es": "Los colegios siguen el calendario A (todos los colegios públicos; el receso de octubre es obligatorio) o el calendario B (algunos colegios privados e internacionales, cuyas vacaciones pueden ser distintas). Pregunta cuál usa tu colegio.",
+      "ru": "Школы работают по календарю A (все государственные школы; октябрьские каникулы обязательны) или по календарю B (некоторые частные и международные школы, где каникулы могут отличаться). Узнайте, какой календарь у вашей школы."
+    },
+    "school_life.calendar_months": {
+      "es": "El año del calendario A suele ir de finales de enero a finales de noviembre, más o menos; el del calendario B, de agosto/septiembre a junio, aproximadamente; confírmalo con el colegio.",
+      "ru": "Учебный год по календарю A обычно длится примерно с конца января до конца ноября, по календарю B — примерно с августа/сентября по июнь; уточните в школе."
+    },
+    "school_life.twelve_weeks": {
+      "es": "Los estudiantes tienen unas doce semanas de vacaciones al año, fijadas por la secretaría de educación de cada región; una de ellas debe ser la semana de receso de octubre.",
+      "ru": "У школьников около двенадцати недель каникул в год, их устанавливает отдел образования каждого региона; одна из них обязательно приходится на октябрьскую неделю отдыха."
+    },
+    "food_and_table.tinto": {
+      "es": "A las visitas se les ofrece café casi enseguida ('¿quiere un tintico?'), y aceptar es de buena educación. Un 'tinto' es un café negro pequeño.",
+      "ru": "Гостям почти сразу предлагают кофе — «¿quiere un tintico?», — и согласиться вежливо. «Tinto» — маленькая чашка чёрного кофе."
+    },
+    "food_and_table.plantain": {
+      "es": "El plátano aparece de muchas formas: patacón, plátano maduro dulce y plátano con bocadillo (con dulce de guayaba).",
+      "ru": "Плантан (овощной банан) готовят по-разному: патакон (patacón), сладкий спелый плантан и plátano con bocadillo (с пастой из гуавы)."
+    },
+    "food_and_table.christmas_food": {
+      "es": "Los buñuelos y la natilla son la comida clásica de las novenas y de la Navidad.",
+      "ru": "Буньюэлос (buñuelos) и натилья (natilla) — классическое угощение новен и Рождества."
+    },
+    "food_and_table.la_pega": {
+      "es": "El arroz crocante que se pega al fondo de la olla, 'la pega', es un manjar.",
+      "ru": "Хрустящий рис, пригоревший ко дну кастрюли, — «la pega» — считается лакомством."
+    },
+    "everyday_life.veci": {
+      "es": "A los tenderos del barrio se les trata como vecinos ('Hola veci, ¿me regalas...?'), y a los clientes habituales se les conoce por su nombre.",
+      "ru": "С продавцами в районных лавках общаются как с соседями — «Hola veci, ¿me regalas...?», — а постоянных покупателей знают по имени."
+    },
+    "everyday_life.napa": {
+      "es": "Al comprar, a veces se pide un poquito extra, 'la ñapa' (un pan más).",
+      "ru": "При покупке иногда просят небольшую добавку — «la ñapa» (ещё одну булочку)."
+    },
+    "everyday_life.haggle": {
+      "es": "Pedir un pequeño descuento ('una rebajita') en los mercados es común; en los supermercados, no.",
+      "ru": "Просить небольшую скидку («una rebajita») на рынках принято; в супермаркетах — нет."
+    },
+    "everyday_life.tejo": {
+      "es": "El tejo es un juego tradicional: se lanza un disco de metal contra pequeños blancos con pólvora que estallan, con un grito de '¡mecha!'.",
+      "ru": "Техо (tejo) — традиционная игра: металлический диск бросают в маленькие мишени с порохом, которые хлопают, — под крик «¡mecha!»."
+    },
+    "local_expressions.parce": {
+      "es": "'Parce' / 'parcero': amigo, compañero.",
+      "ru": "«Parce» / «parcero» — друг, приятель."
+    },
+    "local_expressions.chevere": {
+      "es": "'Chévere' / 'bacano': genial, buenísimo.",
+      "ru": "«Chévere» / «bacano» — отлично, классно."
+    },
+    "local_expressions.guayabo": {
+      "es": "'Guayabo': la resaca (literalmente, el árbol de guayaba).",
+      "ru": "«Guayabo» — похмелье (буквально — дерево гуавы)."
+    },
+    "local_expressions.todo_bien": {
+      "es": "'Todo bien': se dice a menudo, incluso cuando las cosas no están del todo bien.",
+      "ru": "«Todo bien» — «всё хорошо»: говорят часто, даже когда дела идут не совсем гладко."
+    },
+    "local_expressions.tranco": {
+      "es": "'Trancón': un embotellamiento.",
+      "ru": "«Trancón» — пробка на дороге."
+    },
+    "local_expressions.de_una": {
+      "es": "'¡De una!': '¡ya mismo! / ¡hagámoslo!'.",
+      "ru": "«¡De una!» — «сразу же / давай!»."
+    },
+    "newcomers_find_hard.party_time": {
+      "es": "El tiempo social frente al tiempo de trabajo: a una fiesta llega 30-45 minutos tarde, pero al trabajo llega puntual.",
+      "ru": "Время для встреч и время для работы: на вечеринку приходите на 30–45 минут позже, а на работу — вовремя."
+    },
+    "newcomers_find_hard.que_pena_no": {
+      "es": "'Qué pena con usted...' a menudo antecede a un 'no' en una oficina: es una forma cortés de negarse.",
+      "ru": "«Qué pena con usted...» в учреждении часто предшествует отказу — это вежливый способ сказать «нет»."
+    },
+    "newcomers_find_hard.greeting_everyone": {
+      "es": "Saludar y despedirse de cada persona en una reunión familiar: irse con un solo gesto de la mano puede parecer frío.",
+      "ru": "Здороваться и прощаться с каждым на семейном сборе — если уйти, просто махнув всем рукой, это может показаться холодным."
+    },
+    "newcomers_find_hard.climate_altitude": {
+      "es": "Empacar según la altura: una familia en Bogotá necesita chaquetas y paraguas todo el año.",
+      "ru": "Собирать вещи с учётом высоты: семье в Боготе куртки и зонты нужны круглый год."
+    },
+    "folk_culture.novena": {
+      "es": "La Novena de Aguinaldos, del 16 al 24 de diciembre: familias y vecinos rezan y cantan villancicos juntos cada noche, y luego comparten buñuelos y natilla.",
+      "ru": "Novena de Aguinaldos, 16–24 декабря: семьи и соседи каждый вечер вместе молятся и поют рождественские песни, а потом угощаются буньюэлос и натильей."
+    },
+    "folk_culture.velitas": {
+      "es": "Noche de Velitas, 7 de diciembre: velas y faroles en las puertas y las calles en honor a la Inmaculada Concepción.",
+      "ru": "Noche de Velitas, 7 декабря: свечи и фонарики у порогов и на улицах в честь Непорочного зачатия."
+    },
+    "folk_culture.music": {
+      "es": "El vallenato, la salsa, la cumbia y el reguetón están en todas partes; cada región tiene su propia música.",
+      "ru": "Вальенато, сальса, кумбия и реггетон звучат повсюду; у каждого региона своя музыка."
+    },
+    "folk_culture.patron_saints": {
+      "es": "Las procesiones, las peregrinaciones y las fiestas patronales son parte de la vida local, como la Semana Santa en Popayán y la Virgen del Carmen.",
+      "ru": "Процессии, паломничества и праздники святых покровителей — часть местной жизни, например Страстная неделя в Попаяне и праздник Virgen del Carmen."
+    }
+  },
+  "moments": {
+    "first_velitas": {"es": "Tu primera Noche de Velitas", "ru": "Ваша первая Noche de Velitas (Ночь свечей)"},
+    "first_novena": {"es": "Tu primera novena", "ru": "Ваша первая новена"},
+    "puente": {"es": "Un fin de semana largo (puente)", "ru": "Длинные выходные (puente)"},
+    "october_recess": {"es": "El receso escolar de octubre", "ru": "Октябрьские школьные каникулы"},
+    "july20": {"es": "Tu primer 20 de julio", "ru": "Ваше первое 20 июля (20 de julio)"},
+    "tinto_visit": {"es": "Un café en casa de un vecino", "ru": "Кофе у соседей"},
+    "rainy_season": {"es": "La temporada de lluvias", "ru": "Сезон дождей"},
+    "local_food": {"es": "Comida local en tu mesa", "ru": "Местная еда на вашем столе"}
+  }
+}

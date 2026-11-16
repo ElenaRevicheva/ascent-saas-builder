@@ -164,7 +164,7 @@ const Index = () => {
             (still from her Warm Smile reference -> 10 s Loop). Replaces the cartoon circle; brand-avatar-2.jpg kept. */}
         <div className="mx-auto mb-6 w-52 sm:w-60 md:w-64">
           <div className="hero-seat" style={{ aspectRatio: "540 / 804" }}>
-            <HeroClip src={heroWeb} poster={heroWebPoster} label="EspaLuz, your family's companion on the web" className="block h-full w-full object-cover" />
+            <HeroClip src={heroWeb} poster={heroWebPoster} label={t("land.heroWebLabel")} className="block h-full w-full object-cover" />
           </div>
         </div>
         <div className="-mt-3 mb-6"><TalkingHello variant="landing" /></div>
@@ -192,15 +192,15 @@ const Index = () => {
           {[
             // 14 Nov 2026 (Elena approved): order You -> Your child -> Your whole family, so the page is not "for kids only".
             { icon: MessageCircle, color: "--espaluz-purple", title: t("hero4.card1Title"), body: t("hero4.card1"),
-              clip: { src: heroRemote, poster: heroRemotePoster, label: "Working remotely by the window while the child learns with Pere and Titi" } },
+              clip: { src: heroRemote, poster: heroRemotePoster, label: t("land.remoteLabel") } },
             { icon: Shapes, color: "--espaluz-yellow", title: t("hero4.card2Title"), body: t("hero4.card2"), kids: true },
             { icon: Users, color: "--espaluz-green", title: t("hero4.card3Title"), body: t("hero4.card3"),
-              clip: { src: heroFamily, poster: heroFamilyPoster, label: "The whole family celebrating together at a restaurant in Panama City" } },
+              clip: { src: heroFamily, poster: heroFamilyPoster, label: t("land.familyLabel") } },
           ].map((c) => (
             <div key={c.title} className="rounded-2xl border border-border bg-card p-5" style={{ boxShadow: "var(--shadow-card)" }}>
               {"kids" in c && (
-                <Link to="/classroom" className="hero-seat mb-4 block" style={{ aspectRatio: "720 / 484", borderRadius: "1.25rem" }} aria-label="Open the kids classroom with Pere and Titi">
-                  <HeroClip src={heroKids} poster={heroKidsPoster} label="Pere and Titi in the kids classroom" className="block h-full w-full object-cover" />
+                <Link to="/classroom" className="hero-seat mb-4 block" style={{ aspectRatio: "720 / 484", borderRadius: "1.25rem" }} aria-label={t("land.kidsOpen")}>
+                  <HeroClip src={heroKids} poster={heroKidsPoster} label={t("land.kidsLabel")} className="block h-full w-full object-cover" />
                 </Link>
               )}
               {/* 5 Nov 2026 (Elena: these two cards "look very lonely"): remote work by the open window with the child
@@ -239,7 +239,7 @@ const Index = () => {
             <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
               <div className="flex flex-col items-center space-y-4 order-2 lg:order-1">
                 <div className="hero-seat w-40 md:w-48" style={{ aspectRatio: "540 / 804" }}>
-                  <HeroClip src={heroWhatsapp} poster={heroWhatsappPoster} label="EspaLuz on WhatsApp" className="block h-full w-full object-cover" />
+                  <HeroClip src={heroWhatsapp} poster={heroWhatsappPoster} label={t("land.waLabel")} className="block h-full w-full object-cover" />
                 </div>
                 <a 
                   href="https://bit.ly/EspaLuz" 
@@ -263,7 +263,7 @@ const Index = () => {
                   <span className="relative block transition-transform duration-300 hover:scale-105">
                     <img 
                       src={whatsappQr} 
-                      alt="EspaLuz WhatsApp QR Code" 
+                      alt={t("land.waQrAlt")} 
                       className="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 object-contain rounded-2xl shadow-magical border-4 border-green-400 hover:border-green-500 hover:shadow-vibrant transition-all duration-300 bg-white/95 backdrop-blur-sm ring-2 ring-green-200 hover:ring-green-300" 
                     />
                     <span aria-hidden className="pointer-events-none absolute inset-[4px]">
@@ -284,7 +284,7 @@ const Index = () => {
           <div className="flex flex-col items-center space-y-6">
             <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
             <div className="hero-seat w-40 md:w-48" style={{ aspectRatio: "540 / 804" }}>
-              <HeroClip src={heroTelegram} poster={heroTelegramPoster} label="EspaLuz on Telegram" className="block h-full w-full object-cover" />
+              <HeroClip src={heroTelegram} poster={heroTelegramPoster} label={t("land.tgLabel")} className="block h-full w-full object-cover" />
             </div>
             <div className="relative">
               <div className="absolute -inset-2 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl blur opacity-30 animate-pulse"></div>
@@ -294,7 +294,7 @@ const Index = () => {
               <span className="relative block transition-transform duration-300 hover:scale-105">
                 <img 
                   src={telegramQr} 
-                  alt="EspaLuz Telegram QR Code" 
+                  alt={t("land.tgQrAlt")} 
                   className="relative w-56 h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain rounded-2xl shadow-magical border-4 border-blue-400 hover:border-blue-500 hover:shadow-vibrant transition-all duration-300 bg-white/95 backdrop-blur-sm ring-2 ring-blue-200 hover:ring-blue-300" 
                 />
                 <span aria-hidden className="pointer-events-none absolute inset-[4px]">
@@ -571,7 +571,7 @@ const Index = () => {
                 <a href="https://aideazz.xyz/card" target="_blank" rel="noopener noreferrer" className="relative mx-auto mt-6 block w-56">
                   <span aria-hidden className="absolute -inset-3 rounded-3xl opacity-30 blur-md animate-pulse"
                     style={{ background: "linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)))" }} />
-                  <img src={creatorQr} alt="QR code: Elena Revicheva's portfolio" width={224} height={224}
+                  <img src={creatorQr} alt={t("land.creatorQrAlt")} width={224} height={224}
                     className="relative h-56 w-56 rounded-2xl border-4 border-primary bg-white object-contain p-1 shadow-xl transition-transform duration-300 hover:scale-105" />
                 </a>
                 <p className="mt-2 text-xs text-muted-foreground">{t("creator.scan")}</p>

@@ -199,7 +199,7 @@ export const ChatWithEspaluz = ({ onUpgradeClick }: ChatWithEspaluzProps) => {
     try {
       await sendMessage(await shrinkPhoto(file));
     } catch {
-      toast.error('No pude abrir la foto. / I could not open the photo.');
+      toast.error(t('chatx.photoError'));
     }
   };
 
@@ -210,7 +210,7 @@ export const ChatWithEspaluz = ({ onUpgradeClick }: ChatWithEspaluzProps) => {
     if (!user) {
       if (hasReachedLimit) {
         track('app_free_wall', { via: 'text' });
-        toast.error('Free message limit reached! Subscribe to continue unlimited conversations.');
+        toast.error(t('chatx.limitReached'));
         setShowSubscriptionDialog(true);
         return;
       }
@@ -331,7 +331,7 @@ The video script will be used to generate an avatar video with synchronized audi
       const errorMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: "Lo siento, hubo un error. Sorry, there was an error. Please try again.",
+        content: t('chatx.replyError'),
         timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
@@ -437,17 +437,17 @@ The video script will be used to generate an avatar video with synchronized audi
         msg.id === messageId ? { ...msg, audioUrl } : msg
       ));
 
-      toast.success('Voice generated successfully!');
+      toast.success(t('chatx.voiceDone'));
     } catch (error) {
       console.error('❌ Voice generation error:', error);
       
       // Handle voice generation errors
       if (error.message === 'RATE_LIMIT_EXCEEDED') {
-        toast.error('Voice generation rate limit exceeded. Please wait a moment and try again.');
+        toast.error(t('chatx.voiceRateLimit'));
       } else if (error.message === 'ACCESS_DENIED') {
-        toast.error('Access denied to voice service. Please try again later.');
+        toast.error(t('chatx.voiceDenied'));
       } else {
-        toast.error('Failed to generate voice using OpenAI TTS');
+        toast.error(t('chatx.voiceFailed'));
       }
     } finally {
       setLoadingMedia(prev => ({ ...prev, [messageId]: null }));
@@ -529,7 +529,7 @@ The video script will be used to generate an avatar video with synchronized audi
     if (!message || !message.videoAudioUrl) {
       console.error('🎬 No video audio URL found for video playback');
       console.log('🎬 Message:', message);
-      toast.error('Video audio not available. Please regenerate the video.');
+      toast.error(t('chatx.videoAudioMissing'));
       return;
     }
 
@@ -585,7 +585,7 @@ The video script will be used to generate an avatar video with synchronized audi
           console.log('🎬 Video and audio started successfully');
         }).catch(e => {
           console.error('🎬 Failed to start synchronized playback:', e);
-          toast.error('Failed to play video with audio');
+          toast.error(t('chatx.videoPlayFailed'));
           setPlayingVideo(null);
         });
       }
@@ -596,7 +596,7 @@ The video script will be used to generate an avatar video with synchronized audi
     // Check free message limit for non-authenticated users
     if (!user && hasReachedLimit) {
       track('app_free_wall', { via: 'voice' });
-      toast.error('Free message limit reached! Subscribe to continue unlimited conversations.');
+      toast.error(t('chatx.limitReached'));
       setShowSubscriptionDialog(true);
       return;
     }
@@ -622,10 +622,10 @@ The video script will be used to generate an avatar video with synchronized audi
 
       mediaRecorderRef.current.start();
       setIsRecording(true);
-      toast.success(`Recording in ${recordingLanguage === 'ru' ? 'Russian' : recordingLanguage === 'es' ? 'Spanish' : 'English'}...`);
+      toast.success(t('chatx.recordingIn', { lang: recordingLanguage === 'ru' ? t('chatx.langRu') : recordingLanguage === 'es' ? t('chatx.langEs') : t('chatx.langEn') }));
     } catch (error) {
       console.error('Error starting recording:', error);
-      toast.error('Failed to start recording. Please check microphone permissions.');
+      toast.error(t('chatx.recordFailed'));
     }
   };
 
@@ -671,7 +671,7 @@ The video script will be used to generate an avatar video with synchronized audi
           }
           
           const transcribedText = transcriptionData.text;
-          toast.success(`Transcribed: "${transcribedText.substring(0, 50)}${transcribedText.length > 50 ? '...' : ''}"`);
+          toast.success(t('chatx.transcribed', { text: `${transcribedText.substring(0, 50)}${transcribedText.length > 50 ? '...' : ''}` }));
           
           // Add user message with transcribed text
           const userMessage: ChatMessage = {
@@ -730,12 +730,12 @@ The video script will be used to generate an avatar video with synchronized audi
           
         } catch (error) {
           console.error('Error processing voice message:', error);
-          toast.error('Failed to process voice message');
+          toast.error(t('chatx.voiceMsgFailed'));
         }
       };
     } catch (error) {
       console.error('Error processing voice message:', error);
-      toast.error('Failed to process voice message');
+      toast.error(t('chatx.voiceMsgFailed'));
     } finally {
       setLoading(false);
     }
@@ -761,9 +761,9 @@ The video script will be used to generate an avatar video with synchronized audi
 
   const getFamilyMemberBadge = (familyMember?: string) => {
     const memberInfo = {
-      alisa: { label: 'Alisa (4yo)', color: 'bg-pink-500' },
-      marina: { label: 'Marina (65yo)', color: 'bg-purple-500' },
-      elena: { label: 'Elena (39yo)', color: 'bg-blue-500' }
+      alisa: { label: t('chatx.memberAge', { name: 'Alisa', age: 4 }), color: 'bg-pink-500' },
+      marina: { label: t('chatx.memberAge', { name: 'Marina', age: 65 }), color: 'bg-purple-500' },
+      elena: { label: t('chatx.memberAge', { name: 'Elena', age: 39 }), color: 'bg-blue-500' }
     };
     
     const member = memberInfo[familyMember as keyof typeof memberInfo];
@@ -785,33 +785,33 @@ The video script will be used to generate an avatar video with synchronized audi
           <AlertDescription className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="font-medium">
-                🎯 Free Trial - {remainingMessages} messages remaining
+                🎯 {t('chatx.freeLeft', { count: remainingMessages })}
               </span>
               {isNearLimit && (
                 <Badge variant="destructive" className="animate-pulse">
                   <Crown className="h-3 w-3 mr-1" />
-                  Sign Up Soon!
+                  {t('chatx.signUpSoon')}
                 </Badge>
               )}
             </div>
             <div className="text-sm space-y-1">
               {/* 7 Nov 2026 (Elena: "otherwise it will be scamming the user"): only what is true today. The old list promised
                   unlimited video, learning paths and chats "saved forever" - none of that is built, and this free chat saves nothing. */}
-              <p>✨ <strong>Sign up free for 14 days / Regístrate gratis, 14 días:</strong></p>
+              <p>✨ <strong>{t('chatx.signUpTitle')}</strong></p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-1 text-xs">
-                <span>• Your chats and family notes kept in your account</span>
-                <span>• Pere and Titi's kids classroom</span>
-                <span>• Replies in Spanish and English, with voice</span>
-                <span>• The same EspaLuz on WhatsApp and Telegram</span>
+                <span>• {t('chatx.perk1')}</span>
+                <span>• {t('chatx.perk2')}</span>
+                <span>• {t('chatx.perk3')}</span>
+                <span>• {t('chatx.perk4')}</span>
               </div>
-              <p className="text-xs text-muted-foreground">This free chat is not saved. / Este chat gratis no se guarda.</p>
+              <p className="text-xs text-muted-foreground">{t('chatx.notSaved')}</p>
               <Button 
                 size="sm" 
                 className="mt-2 bg-[hsl(var(--espaluz-primary))] hover:bg-[hsl(var(--espaluz-primary))]/90"
                 onClick={() => window.location.assign('/auth')}
               >
                 <Star className="h-3 w-3 mr-1" />
-                Sign up free / Regístrate gratis
+                {t('chatx.signUp')}
               </Button>
             </div>
           </AlertDescription>
@@ -824,11 +824,11 @@ The video script will be used to generate an avatar video with synchronized audi
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
-            Chat with EspaLuz
+            {t('chatx.title')}
             <Heart className="h-4 w-4 text-[hsl(var(--espaluz-secondary))]" />
             {!user && (
               <Badge variant="outline" className="text-xs">
-                Free Trial
+                {t('pr.freeName')}
               </Badge>
             )}
           </CardTitle>
@@ -900,7 +900,7 @@ The video script will be used to generate an avatar video with synchronized audi
                           ) : (
                             <Volume2 className="h-3 w-3 mr-1" />
                           )}
-                          {message.audioUrl ? 'Regenerate Voice' : 'Generate Voice'}
+                          {message.audioUrl ? t('chatx.regenVoice') : t('chatx.genVoice')}
                         </Button>
 
                          {/* 6 Nov 2026 (Elena: "always tappable"): on every reply, for everyone. Paying families get a new clip; everyone else her pre-made hello. */}
@@ -930,13 +930,13 @@ The video script will be used to generate an avatar video with synchronized audi
                           <div className="flex items-center gap-2 text-sm text-purple-700">
                             <div className="w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
                             <span>
-                              {loadingMedia[message.id] === 'voice' ? '🎧 Generating voice audio...' : '🎬 Creating avatar video...'}
+                              {loadingMedia[message.id] === 'voice' ? `🎧 ${t('chatx.genVoiceProgress')}` : `🎬 ${t('chatx.genVideoProgress')}`}
                             </span>
                           </div>
                           <div className="text-xs text-purple-600 mt-1">
                             {loadingMedia[message.id] === 'voice' 
-                              ? 'Converting text to natural speech using Nova voice'
-                              : 'Syncing audio with avatar video (30 seconds)'
+                              ? t('chatx.genVoiceHint')
+                              : t('chatx.genVideoHint')
                             }
                           </div>
                         </div>
@@ -962,14 +962,14 @@ The video script will be used to generate an avatar video with synchronized audi
                                       <Play className="h-4 w-4" />
                                     )}
                                   </Button>
-                                  <div className="text-sm font-medium text-blue-700">Voice Audio</div>
+                                  <div className="text-sm font-medium text-blue-700">{t('chatx.voiceAudio')}</div>
                                 </div>
                                 <a
                                   href={message.audioUrl}
                                   download={`espaluz-voice-${message.id}.mp3`}
                                   className="text-xs text-blue-600 hover:text-blue-800 underline"
                                 >
-                                  Download
+                                  {t('vm.celebDownload')}
                                 </a>
                               </div>
                               {playingAudio === message.id && (
@@ -977,7 +977,7 @@ The video script will be used to generate an avatar video with synchronized audi
                                   <div className="flex-1 h-1 bg-blue-200 rounded">
                                     <div className="h-1 bg-blue-500 rounded animate-pulse w-1/3"></div>
                                   </div>
-                                  <span className="text-xs text-blue-600">Playing...</span>
+                                  <span className="text-xs text-blue-600">{t('chatx.playing')}</span>
                                 </div>
                               )}
                             </div>
@@ -1014,12 +1014,12 @@ The video script will be used to generate an avatar video with synchronized audi
                                         onEnded={() => setPlayingVideo(null)}
                                       >
                                         <source src={message.videoUrl} type="video/mp4" />
-                                        Your browser does not support the video tag.
+                                        {t('lp.noVideo')}
                                       </video>
                                   ) : (
                                     <img 
                                       src={message.videoUrl.startsWith('blob:') ? message.videoUrl : avatarImage} 
-                                      alt="EspaLuz Avatar"
+                                      alt={t('chatx.avatarAlt')}
                                       className="w-full h-full object-cover"
                                     />
                                   )}
@@ -1029,7 +1029,7 @@ The video script will be used to generate an avatar video with synchronized audi
                                  {/* Video Info and Controls */}
                                  <div className="flex-1 min-w-0">
                                    <div className="flex items-center justify-between">
-                                     <div className="text-sm font-medium text-purple-700">Avatar Video</div>
+                                     <div className="text-sm font-medium text-purple-700">{t('chatx.avatarVideo')}</div>
                                      <div className="flex items-center gap-2">
                                        <Badge variant="outline" className="text-xs bg-purple-100 text-purple-700">
                                          30s
@@ -1049,14 +1049,14 @@ The video script will be used to generate an avatar video with synchronized audi
                                      </div>
                                    </div>
                                    <div className="text-xs text-purple-600 mt-1">
-                                     EspaLuz speaking with synchronized audio
+                                     {t('chatx.avatarVideoHint')}
                                    </div>
                                   {playingVideo === message.id && (
                                     <div className="mt-2 flex items-center gap-2">
                                       <div className="flex-1 h-1 bg-purple-200 rounded">
                                         <div className="h-1 bg-purple-500 rounded animate-pulse w-2/3"></div>
                                       </div>
-                                      <span className="text-xs text-purple-600">Playing</span>
+                                      <span className="text-xs text-purple-600">{t('chatx.playing')}</span>
                                     </div>
                                   )}
                                 </div>
@@ -1108,9 +1108,9 @@ The video script will be used to generate an avatar video with synchronized audi
             className="text-xs px-2 py-1 rounded border bg-background"
             disabled={isRecording}
           >
-            <option value="en">🇺🇸 English</option>
-            <option value="es">🇪🇸 Spanish</option>
-            <option value="ru">🇷🇺 Russian</option>
+            <option value="en">🇺🇸 {t('chatx.langEn')}</option>
+            <option value="es">🇪🇸 {t('chatx.langEs')}</option>
+            <option value="ru">🇷🇺 {t('chatx.langRu')}</option>
           </select>
           
           <Button
@@ -1123,12 +1123,12 @@ The video script will be used to generate an avatar video with synchronized audi
             {isRecording ? (
               <>
                 <Square className="h-3 w-3 mr-1" />
-                Stop
+                {t('chatx.stop')}
               </>
             ) : (
               <>
                 <Mic className="h-3 w-3 mr-1" />
-                Record
+                {t('chatx.record')}
               </>
             )}
           </Button>
@@ -1151,11 +1151,11 @@ The video script will be used to generate an avatar video with synchronized audi
             onChange={(e) => sendPhoto(e.target.files?.[0])} />
           <div className="flex flex-col gap-1 self-end">
             <Button onClick={() => cameraInput.current?.click()} disabled={loading || isRecording} size="sm" variant="outline"
-              aria-label="Camera" title="Foto / Photo">
+              aria-label={t('chatx.camera')} title={t('chatx.photo')}>
               <Camera className="h-4 w-4" />
             </Button>
             <Button onClick={() => galleryInput.current?.click()} disabled={loading || isRecording} size="sm" variant="outline"
-              aria-label="Gallery" title="Galería / Gallery">
+              aria-label={t('chatx.gallery')} title={t('chatx.gallery')}>
               <ImagePlus className="h-4 w-4" />
             </Button>
           </div>
@@ -1176,7 +1176,7 @@ The video script will be used to generate an avatar video with synchronized audi
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="text-center">
-              🚀 Upgrade to Unlimited EspaLuz!
+              🚀 {t('chatx.upgradeTitle')}
             </DialogTitle>
           </DialogHeader>
           <SubscriptionFlow
@@ -1184,11 +1184,11 @@ The video script will be used to generate an avatar video with synchronized audi
             onSuccess={(subscriptionId) => {
               console.log('Subscription successful:', subscriptionId);
               setShowSubscriptionDialog(false);
-              toast.success('Subscription successful! Please create your account to continue.');
+              toast.success(t('chatx.subOk'));
             }}
             onError={(error) => {
               console.error('Subscription error:', error);
-              toast.error('Subscription failed. Please try again.');
+              toast.error(t('chatx.subFailed'));
             }}
           />
         </DialogContent>

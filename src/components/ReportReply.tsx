@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Flag } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
  * through the API: read policy is `false`). Nothing about the user is attached.
  */
 export function ReportReply({ text, where }: { text: string; where: 'chat' | 'classroom' }) {
+  const { t } = useTranslation();
   const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');
 
   const report = async () => {
@@ -19,11 +21,11 @@ export function ReportReply({ text, where }: { text: string; where: 'chat' | 'cl
     const { error } = await supabase.from('feedback').insert({ message: `[REPORT ${where}] ${excerpt}` });
     if (error) {
       setState('idle');
-      toast.error('No se pudo enviar. Inténtalo otra vez. / Could not send. Please try again.');
+      toast.error(t('misc.reportFailed'));
       return;
     }
     setState('sent');
-    toast.success('Gracias, lo revisaremos. / Thank you, we will review it.');
+    toast.success(t('misc.reportThanks'));
   };
 
   return (
@@ -33,10 +35,10 @@ export function ReportReply({ text, where }: { text: string; where: 'chat' | 'cl
       onClick={report}
       disabled={state !== 'idle'}
       className="h-7 px-2 text-xs text-muted-foreground hover:text-red-600"
-      aria-label="Report this reply / Reportar esta respuesta"
+      aria-label={t('misc.reportAria')}
     >
       <Flag className="h-3 w-3 mr-1" />
-      {state === 'sent' ? 'Reportado / Reported' : 'Reportar / Report'}
+      {state === 'sent' ? t('misc.reported') : t('misc.report')}
     </Button>
   );
 }

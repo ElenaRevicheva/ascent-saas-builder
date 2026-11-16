@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Share2, Copy, Users, Gift, Check } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 interface Referral {
   id: string;
@@ -16,6 +17,7 @@ interface Referral {
 }
 
 export const ReferralSystem = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [referrals, setReferrals] = useState<Referral[]>([]);
   const [loading, setLoading] = useState(true);
@@ -94,10 +96,10 @@ export const ReferralSystem = () => {
 
       if (insertError) throw insertError;
       fetchReferrals();
-      toast.success('New referral code generated!');
+      toast.success(t('ref.newCodeToast'));
     } catch (error) {
       console.error('Error generating referral code:', error);
-      toast.error('Failed to generate referral code');
+      toast.error(t('ref.newCodeFail'));
     }
   };
 
@@ -105,23 +107,23 @@ export const ReferralSystem = () => {
     const referralLink = `${window.location.origin}/auth?ref=${code}`;
     navigator.clipboard.writeText(referralLink);
     setCopySuccess(true);
-    toast.success('Referral link copied!');
+    toast.success(t('ref.linkCopied'));
     setTimeout(() => setCopySuccess(false), 2000);
   };
 
   const shareReferralLink = (code: string) => {
     const referralLink = `${window.location.origin}/auth?ref=${code}`;
-    const text = `Join me on EspaLuz - the AI Spanish tutor that's helping families learn Spanish naturally! Use my referral link to get started: ${referralLink}`;
+    const text = t('ref.shareText', { link: referralLink });
     
     if (navigator.share) {
       navigator.share({
-        title: 'Learn Spanish with EspaLuz',
+        title: t('ref.shareTitle'),
         text: text,
         url: referralLink,
       });
     } else {
       navigator.clipboard.writeText(text);
-      toast.success('Referral message copied!');
+      toast.success(t('ref.messageCopied'));
     }
   };
 
@@ -149,10 +151,10 @@ export const ReferralSystem = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Gift className="h-5 w-5 text-primary" />
-            Refer Friends & Earn Rewards
+            {t('ref.title')}
           </CardTitle>
           <CardDescription>
-            Share EspaLuz with friends and family. You both get 1 month free when they subscribe!
+            {t('ref.desc')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -183,11 +185,11 @@ export const ReferralSystem = () => {
               <div className="grid grid-cols-2 gap-4 mt-4">
                 <div className="text-center p-3 bg-muted/30 rounded-lg">
                   <div className="text-2xl font-bold text-primary">{conversions}</div>
-                  <div className="text-sm text-muted-foreground">Successful Referrals</div>
+                  <div className="text-sm text-muted-foreground">{t('ref.successful')}</div>
                 </div>
                 <div className="text-center p-3 bg-muted/30 rounded-lg">
                   <div className="text-2xl font-bold text-orange-500">{pendingReferrals}</div>
-                  <div className="text-sm text-muted-foreground">Pending Invites</div>
+                  <div className="text-sm text-muted-foreground">{t('ref.pendingInvites')}</div>
                 </div>
               </div>
             </div>
@@ -195,10 +197,10 @@ export const ReferralSystem = () => {
 
           <div className="flex justify-between items-center pt-4 border-t">
             <div className="text-sm text-muted-foreground">
-              Need more referral codes?
+              {t('ref.needMore')}
             </div>
             <Button onClick={generateNewReferralCode} variant="outline" size="sm">
-              Generate New Code
+              {t('ref.generate')}
             </Button>
           </div>
         </CardContent>
@@ -210,7 +212,7 @@ export const ReferralSystem = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="h-5 w-5" />
-              Your Referral Codes
+              {t('ref.yourCodes')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -220,14 +222,14 @@ export const ReferralSystem = () => {
                   <div className="space-y-1">
                     <div className="font-mono text-sm">{referral.referral_code}</div>
                     <div className="text-xs text-muted-foreground">
-                      Created {new Date(referral.created_at).toLocaleDateString()}
+                      {t('ref.created', { date: new Date(referral.created_at).toLocaleDateString() })}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     {referral.converted_at ? (
-                      <Badge variant="default">Converted</Badge>
+                      <Badge variant="default">{t('ref.converted')}</Badge>
                     ) : (
-                      <Badge variant="outline">Pending</Badge>
+                      <Badge variant="outline">{t('ref.pending')}</Badge>
                     )}
                     <Button 
                       size="sm" 
@@ -247,7 +249,7 @@ export const ReferralSystem = () => {
       {/* How it Works */}
       <Card>
         <CardHeader>
-          <CardTitle>How Referrals Work</CardTitle>
+          <CardTitle>{t('ref.howTitle')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
@@ -255,22 +257,22 @@ export const ReferralSystem = () => {
               <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
                 <span className="text-primary font-bold">1</span>
               </div>
-              <div className="font-medium mb-1">Share Your Link</div>
-              <div className="text-muted-foreground">Send your referral link to friends and family</div>
+              <div className="font-medium mb-1">{t('ref.step1Title')}</div>
+              <div className="text-muted-foreground">{t('ref.step1Body')}</div>
             </div>
             <div className="text-center p-4 border rounded-lg">
               <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
                 <span className="text-primary font-bold">2</span>
               </div>
-              <div className="font-medium mb-1">They Sign Up</div>
-              <div className="text-muted-foreground">Your friend creates an account using your link</div>
+              <div className="font-medium mb-1">{t('ref.step2Title')}</div>
+              <div className="text-muted-foreground">{t('ref.step2Body')}</div>
             </div>
             <div className="text-center p-4 border rounded-lg">
               <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
                 <span className="text-primary font-bold">3</span>
               </div>
-              <div className="font-medium mb-1">Both Get Rewards</div>
-              <div className="text-muted-foreground">You both receive 1 month free when they subscribe</div>
+              <div className="font-medium mb-1">{t('ref.step3Title')}</div>
+              <div className="text-muted-foreground">{t('ref.step3Body')}</div>
             </div>
           </div>
         </CardContent>

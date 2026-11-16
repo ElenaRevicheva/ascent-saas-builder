@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { MessageSquare, Monitor, Smartphone, Bot, Users, Zap, ArrowRight, CheckCircle, Smile } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface LearningOption {
   id: string;
@@ -28,6 +29,7 @@ interface LearningOptionsProps {
 }
 
 export const LearningOptions = ({ open: controlledOpen, onOpenChange }: LearningOptionsProps = {}) => {
+  const { t } = useTranslation();
   const [internalOpen, setInternalOpen] = useState(false);
   
   // Use controlled state if provided, otherwise use internal state
@@ -37,77 +39,77 @@ export const LearningOptions = ({ open: controlledOpen, onOpenChange }: Learning
   const learningOptions: LearningOption[] = [
     {
       id: 'telegram-bot',
-      title: 'Telegram Bot Chat',
-      description: 'Chat with EspaLuz bot on Telegram for convenient learning anywhere, anytime.',
+      title: t('opts.tg.title'),
+      description: t('opts.tg.description'),
       icon: Bot,
       features: [
-        'Mobile-first experience',
-        'Instant notifications',
-        'Voice messages support',
-        'Family group chats',
-        'Offline message handling'
+        t('opts.tg.f1'),
+        t('opts.tg.f2'),
+        t('opts.tg.f3'),
+        t('opts.tg.f4'),
+        t('opts.tg.f5')
       ],
       pros: [
-        'Learn on-the-go',
-        'No app switching needed',
-        'Natural messaging experience',
-        'Works on any device'
+        t('opts.tg.p1'),
+        t('opts.tg.p2'),
+        t('opts.tg.p3'),
+        t('opts.tg.p4')
       ],
-      action: 'Connect Telegram / WhatsApp',
+      action: t('opts.tg.action'),
       actionLink: '/connect-bot',
       actionType: 'link',
       gradient: 'from-blue-500 to-cyan-500',
-      badgeText: 'Most Popular',
+      badgeText: t('opts.tg.badgeText'),
       popular: true
     },
     {
       id: 'kids-classroom',
-      title: "Pere and Titi's Classroom",
-      description: 'For children 5-8 (kinder to 2nd grade), each at their own level: a calm sloth and a playful tamarin teach real Spanish and English sentences by voice, with games and praise.',
+      title: t('opts.kids.title'),
+      description: t('opts.kids.description'),
       icon: Smile,
       features: [
-        'Voice only - the child holds the mic and talks',
-        'Two animated heroes with their own voices',
-        'Spanish and English both ways - not one language only',
-        'A real conversation that follows what your child talks about',
-        'A new story from Panama every week, with feelings and true facts',
-        'A gentle "¡Casi!" when a word is off, and a real-life mission each day',
-        'A star for every answer - every 5 stars Titi dances'
+        t('opts.kids.f1'),
+        t('opts.kids.f2'),
+        t('opts.kids.f3'),
+        t('opts.kids.f4'),
+        t('opts.kids.f5'),
+        t('opts.kids.f6'),
+        t('opts.kids.f7')
       ],
       pros: [
-        'Ages 5-8: kinder, 1st and 2nd grade, chosen by age',
-        'Reads along: every sentence is on screen',
-        'Five to ten minutes a day',
-        'Same heroes as the Telegram bot'
+        t('opts.kids.p1'),
+        t('opts.kids.p2'),
+        t('opts.kids.p3'),
+        t('opts.kids.p4')
       ],
-      action: 'Open the Classroom',
+      action: t('opts.kids.action'),
       actionLink: '/classroom',
       actionType: 'link',
       gradient: 'from-green-500 to-emerald-500',
-      badgeText: 'For kids'
+      badgeText: t('opts.kids.badgeText')
     },
     {
       id: 'dashboard-chat',
-      title: 'Dashboard Web Chat',
-      description: 'Use the integrated chat feature right here in your dashboard for focused learning.',
+      title: t('opts.web.title'),
+      description: t('opts.web.description'),
       icon: Monitor,
       features: [
-        'Full-screen chat experience',
-        'Rich text formatting',
-        'Progress tracking',
-        'Learning analytics',
-        'File sharing support'
+        t('opts.web.f1'),
+        t('opts.web.f2'),
+        t('opts.web.f3'),
+        t('opts.web.f4'),
+        t('opts.web.f5')
       ],
       pros: [
-        'Distraction-free environment',
-        'Better for longer sessions',
-        'Full dashboard integration',
-        'Advanced features'
+        t('opts.web.p1'),
+        t('opts.web.p2'),
+        t('opts.web.p3'),
+        t('opts.web.p4')
       ],
-      action: 'Start Dashboard Chat',
+      action: t('opts.web.action'),
       actionType: 'scroll',
       gradient: 'from-purple-500 to-pink-500',
-      badgeText: 'Feature Rich'
+      badgeText: t('opts.web.badgeText')
     }
   ];
 
@@ -140,7 +142,7 @@ export const LearningOptions = ({ open: controlledOpen, onOpenChange }: Learning
             data-learning-options-trigger
           >
             <Zap className="h-4 w-4 mr-2" />
-            Start Learning
+            {t('actions.title')}
           </Button>
         </DialogTrigger>
       )}
@@ -148,10 +150,10 @@ export const LearningOptions = ({ open: controlledOpen, onOpenChange }: Learning
       <DialogContent className="max-w-5xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center mb-2">
-            Choose Your Learning Experience 
+            {t('opts.title')}
           </DialogTitle>
           <p className="text-muted-foreground text-center">
-            Select how you'd like to practice Spanish with EspaLuz. Both options offer personalized learning!
+            {t('opts.sub')}
           </p>
         </DialogHeader>
         
@@ -198,7 +200,7 @@ export const LearningOptions = ({ open: controlledOpen, onOpenChange }: Learning
                   <div>
                     <h4 className="font-semibold mb-3 flex items-center gap-2 text-sm">
                       <CheckCircle className="h-4 w-4 text-green-500" />
-                      Key Features
+                      {t('opts.keyFeatures')}
                     </h4>
                     <div className="space-y-2">
                       {option.features.map((feature, index) => (
@@ -214,7 +216,7 @@ export const LearningOptions = ({ open: controlledOpen, onOpenChange }: Learning
                   <div>
                     <h4 className="font-semibold mb-3 flex items-center gap-2 text-sm">
                       <Zap className="h-4 w-4 text-yellow-500" />
-                      Why Choose This
+                      {t('opts.whyChoose')}
                     </h4>
                     <div className="grid gap-1">
                       {option.pros.map((pro, index) => (
@@ -261,17 +263,16 @@ export const LearningOptions = ({ open: controlledOpen, onOpenChange }: Learning
           <div className="text-center">
             <h3 className="font-semibold text-green-800 mb-2 flex items-center justify-center gap-2">
               <Users className="h-5 w-5" />
-              Perfect for Families!
+              {t('opts.familiesTitle')}
             </h3>
             <p className="text-sm text-green-700 max-w-2xl mx-auto">
-              Both options work great for family learning! You can even use both - start with Telegram for casual practice, 
-              then use the dashboard for focused learning sessions. Your progress syncs across both platforms.
+              {t('opts.familiesBody')}
             </p>
           </div>
         </div>
         
         <div className="text-center text-xs text-muted-foreground mt-4">
-           You can switch between methods anytime - your learning progress is always saved!
+           {t('opts.switchNote')}
         </div>
       </DialogContent>
     </Dialog>

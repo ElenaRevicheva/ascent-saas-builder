@@ -8,6 +8,8 @@ import { Lock, Crown, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { insidePlayApp } from '@/lib/playBilling';
 import { PlaySubscribe } from '@/components/PlaySubscribe';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 
 interface FeatureGateProps {
   feature: string;
@@ -22,16 +24,16 @@ interface FeatureGateProps {
  * "Your free trial has ended". True, but with no dates it reads like a trick. Same clock as
  * get_user_subscription_status: app_metadata.trial_until (bot families) or account creation + 14 days.
  */
-const trialEndedText = (user: { created_at?: string; app_metadata?: Record<string, unknown> } | null): string => {
+const trialEndedText = (user: { created_at?: string; app_metadata?: Record<string, unknown> } | null, t: TFunction): string => {
   const fmt = (d: Date) => d.toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
   const created = user?.created_at ? new Date(user.created_at) : null;
   const fromBot = typeof user?.app_metadata?.trial_until === 'string' ? new Date(user.app_metadata.trial_until as string) : null;
   const end = fromBot ?? (created ? new Date(created.getTime() + 14 * 86400000) : null);
-  if (!end || isNaN(end.getTime())) return 'Your 14 free days are over - EspaLuz Family unlocks it again';
+  if (!end || isNaN(end.getTime())) return t('misc.gateEndedUnknown');
   if (!fromBot && created) {
-    return `Your 14 free days started when this account was created (${fmt(created)}) and ended on ${fmt(end)}. EspaLuz Family unlocks it again.`;
+    return t('misc.gateEndedFromCreated', { created: fmt(created), end: fmt(end) });
   }
-  return `Your 14 free days ended on ${fmt(end)}. EspaLuz Family unlocks it again.`;
+  return t('misc.gateEnded', { end: fmt(end) });
 };
 
 export const FeatureGate = ({
@@ -40,6 +42,7 @@ export const FeatureGate = ({
   fallback, 
   showUpgrade = true 
 }: FeatureGateProps) => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { hasFeatureAccess, isTrialActive, trialDaysLeft, isPremium, loading } = useSubscription();
 
@@ -56,14 +59,14 @@ export const FeatureGate = ({
       <Card className="border-border shadow-card">
         <CardHeader className="text-center">
           <Lock className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <CardTitle>Sign In Required</CardTitle>
+          <CardTitle>{t('misc.gateSignInTitle')}</CardTitle>
           <CardDescription>
-            Please sign in to access this feature
+            {t('misc.gateSignInBody')}
           </CardDescription>
         </CardHeader>
         <CardContent className="text-center">
           <Link to="/auth">
-            <Button variant="hero">Sign In</Button>
+            <Button variant="hero">{t('nav.signIn')}</Button>
           </Link>
         </CardContent>
       </Card>
@@ -90,17 +93,17 @@ export const FeatureGate = ({
           {isTrialActive && (
             <Badge variant="secondary" className="ml-2">
               <Clock className="h-3 w-3 mr-1" />
-              {trialDaysLeft} days left in trial
+              {t('misc.gateDaysLeft', { count: trialDaysLeft })}
             </Badge>
           )}
         </div>
         <CardTitle>
-          {isTrialActive ? 'Trial Feature' : 'Premium Feature'}
+          {isTrialActive ? t('misc.gateTrialTitle') : t('misc.gatePaidTitle')}
         </CardTitle>
         <CardDescription>
           {isTrialActive 
-            ? `This feature is available during your free trial. ${trialDaysLeft} days remaining.`
-            : trialEndedText(user)
+            ? t('misc.gateTrialBody', { count: trialDaysLeft })
+            : trialEndedText(user, t)
           }
         </CardDescription>
       </CardHeader>
@@ -108,13 +111,13 @@ export const FeatureGate = ({
         {!isPremium && (
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">
-              Get unlimited access to:
+              {t('misc.gateAccessTo')}
             </p>
             <ul className="text-sm text-left space-y-1 max-w-xs mx-auto">
-              <li>• Pere & Titi's kids classroom</li>
-              <li>• A parent report after every lesson</li>
-              <li>• Unlimited bilingual chat and voice</li>
-              <li>• One family on WhatsApp, Telegram and the web</li>
+              <li>• {t('misc.gateB1')}</li>
+              <li>• {t('misc.gateB2')}</li>
+              <li>• {t('misc.gateB3')}</li>
+              <li>• {t('misc.gateB4')}</li>
             </ul>
           </div>
         )}
@@ -128,7 +131,7 @@ export const FeatureGate = ({
           ) : (
             <Link to="/#pricing">
               <Button variant="hero" className="w-full">
-                {isTrialActive ? 'Upgrade to Continue' : 'Get EspaLuz Family'}
+                {isTrialActive ? t('misc.gateUpgrade') : t('misc.gateGet')}
               </Button>
             </Link>
           )}
@@ -138,7 +141,7 @@ export const FeatureGate = ({
               this line only repeated it, so it shows on the website only. */}
           {!insidePlayApp() && (
             <p className="text-xs text-muted-foreground">
-              $11/month by PayPal - cancel any time • or $11 for 30 days with PágueloFácil: type pagar in EspaLuz WhatsApp
+              {t('misc.gatePayNote')}
             </p>
           )}
         </div>

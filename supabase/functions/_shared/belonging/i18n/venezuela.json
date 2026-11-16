@@ -1,0 +1,133 @@
+{
+  "name": {"es": "Venezuela", "ru": "Венесуэла"},
+  "items": {
+    "rhythm_of_the_year.december_hallacas": {
+      "es": "Diciembre es el mes de las hallacas: muchas familias se reúnen para hacer hallacas juntas para Navidad; cada familia y cada región tiene su propio relleno.",
+      "ru": "Декабрь — месяц hallacas: многие семьи собираются, чтобы вместе приготовить hallacas к Рождеству; у каждой семьи и каждого региона своя начинка."
+    },
+    "rhythm_of_the_year.carnival": {
+      "es": "El lunes y el martes de Carnaval (febrero o marzo; cambian cada año) son feriados nacionales.",
+      "ru": "Карнавальные понедельник и вторник (февраль или март, даты каждый год меняются) — национальные выходные."
+    },
+    "rhythm_of_the_year.corpus_diablos": {
+      "es": "En Corpus Christi (mayo o junio) bailan los Diablos Danzantes de Yare y de otros pueblos; en Yare es una tradición de unos 277 años.",
+      "ru": "В праздник Тела и Крови Христовых (Corpus Christi, май или июнь) танцуют Танцующие дьяволы (Diablos Danzantes) из Yare и других городов; в Yare этой традиции около 277 лет."
+    },
+    "rhythm_of_the_year.july_patrios": {
+      "es": "Junio y julio reúnen tres fechas patrias: el 24 de junio (Batalla de Carabobo), el 5 de julio (Independencia) y el 24 de julio (natalicio de Bolívar).",
+      "ru": "На июнь-июль приходятся три национальных дня: 24 июня (Битва при Carabobo), 5 июля (День независимости) и 24 июля (день рождения Bolívar)."
+    },
+    "rhythm_of_the_year.school_year": {
+      "es": "El año escolar va aproximadamente de mediados de septiembre a julio; confirma el calendario del ministerio.",
+      "ru": "Учебный год длится примерно с середины сентября по июль — сверьтесь с календарём министерства."
+    },
+    "holidays.list": {
+      "es": "Feriados: 1 de enero, lunes y martes de Carnaval, Semana Santa (del Domingo de Ramos al Domingo de Resurrección; cambia cada año), 19 de abril, 1 de mayo, 24 de junio, 5 de julio, 24 de julio, 12 de octubre (Día de la Resistencia Indígena), 24, 25 y 31 de diciembre.",
+      "ru": "Официальные праздники: 1 января, карнавальные понедельник и вторник, Страстная неделя (от Вербного воскресенья до Пасхи, дата каждый год меняется), 19 апреля, 1 мая, 24 июня, 5 июля, 24 июля, 12 октября (День сопротивления коренных народов), 24, 25 и 31 декабря."
+    },
+    "holidays.extra_days": {
+      "es": "A veces el gobierno anuncia días libres adicionales con poca anticipación; sigue las noticias.",
+      "ru": "Иногда правительство объявляет дополнительные выходные в последний момент — следите за новостями."
+    },
+    "greetings_and_courtesy.bendicion": {
+      "es": "Los niños y los jóvenes piden la bendición a sus familiares mayores, y también a los amigos de la familia: 'Bendición'.",
+      "ru": "Дети и молодёжь просят благословения у старших родственников — и у друзей семьи: «Bendición»."
+    },
+    "greetings_and_courtesy.confianza": {
+      "es": "La gente entabla conversación con desconocidos con facilidad en la panadería, en la cola del banco o en la parada del autobús.",
+      "ru": "Люди легко заговаривают с незнакомыми в пекарне, в очереди в банке или на автобусной остановке."
+    },
+    "greetings_and_courtesy.epale": {
+      "es": "'¡Épale!': un '¡hola!' informal; '¿Qué más?': '¿qué tal?'.",
+      "ru": "«¡Épale!» — непринуждённое «привет!»; «¿Qué más?» — «как дела?»."
+    },
+    "greetings_and_courtesy.loud": {
+      "es": "Mucha gente habla alto sin darse cuenta: no es enojo.",
+      "ru": "Многие говорят громко, сами того не замечая, — это не гнев."
+    },
+    "time.late_social": {
+      "es": "Las fiestas empiezan más tarde de la hora indicada.",
+      "ru": "Вечеринки начинаются позже назначенного времени."
+    },
+    "family_and_friends.pana": {
+      "es": "A un amigo se le dice 'pana' (para hombres y mujeres); 'chamo / chama': chico, chica, niño.",
+      "ru": "Друга называют «pana» (и мужчину, и женщину); «chamo / chama» — парень, девушка, ребёнок."
+    },
+    "family_and_friends.arroceros": {
+      "es": "Los invitados que llegan a las fiestas sin invitación, los 'arroceros', son tan comunes que los anfitriones los incluyen en el presupuesto.",
+      "ru": "Незваные гости на вечеринках — «arroceros» — встречаются так часто, что хозяева заранее закладывают их в бюджет."
+    },
+    "family_and_friends.humour": {
+      "es": "El humor llega a todo, incluso a los temas serios; no pretende ofender.",
+      "ru": "Юмор касается всего, даже серьёзных тем, — он не призван обидеть."
+    },
+    "family_and_friends.negrito": {
+      "es": "'Negro', 'negrito', 'mi negra' son apodos cariñosos entre familiares y amigos, no tienen que ver con el color de piel; pero alguien recién llegado no debería empezar usándolos.",
+      "ru": "«Negro», «negrito», «mi negra» — ласковые прозвища среди родных и друзей, они не о цвете кожи; но новичку не стоит начинать с них."
+    },
+    "school_life.school_unknown": {
+      "es": "Pregunta en la escuela por los uniformes, el horario y los útiles: las condiciones varían mucho de una escuela a otra.",
+      "ru": "Спросите в школе о форме, расписании и школьных принадлежностях — условия в разных школах сильно различаются."
+    },
+    "food_and_table.arepa": {
+      "es": "Para muchas familias una comida sin arepa no está completa: se come en el desayuno, en la cena e incluso como merienda.",
+      "ru": "Для многих семей еда без arepa — неполная: её едят на завтрак, на ужин и даже как перекус."
+    },
+    "food_and_table.hallaca": {
+      "es": "La hallaca, una masa de maíz rellena de guiso, envuelta en hojas de plátano y atada con pabilo, es el plato de la Navidad; en el Zulia la masa se hace con plátano.",
+      "ru": "Hallaca — кукурузное тесто с начинкой из рагу, завёрнутое в листья плантана и перевязанное бечёвкой, — главное рождественское блюдо; в Zulia тесто делают из плантана."
+    },
+    "everyday_life.motos": {
+      "es": "Mucha gente desconfía de las motos que pasan muy cerca de noche, por la delincuencia callejera.",
+      "ru": "Многие настороженно относятся к мотоциклам, которые проезжают совсем близко ночью, из-за уличной преступности."
+    },
+    "everyday_life.red_lights": {
+      "es": "De noche algunos conductores no se detienen en los semáforos en rojo en calles vacías por miedo a un robo; los peatones deben tener cuidado.",
+      "ru": "Ночью на пустых улицах некоторые водители не останавливаются на красный свет из страха ограбления — пешеходам нужно быть осторожными."
+    },
+    "everyday_life.superstitions": {
+      "es": "Creencias populares: una mariposa negra en casa es mal agüero y una azul, buenas noticias; las manchas blancas en las uñas significan que dijiste una mentira.",
+      "ru": "Народные приметы: чёрная бабочка в доме — дурной знак, синяя — к хорошим новостям; белые пятнышки на ногтях означают, что вы солгали."
+    },
+    "local_expressions.chevere": {
+      "es": "'Chévere': genial, buenísimo; los venezolanos la consideran su palabra.",
+      "ru": "«Chévere» — отлично, круто; венесуэльцы считают это слово своим."
+    },
+    "local_expressions.burda": {
+      "es": "'Burda': muy, mucho: 'burda de bueno'.",
+      "ru": "«Burda» — очень, много: «burda de bueno»."
+    },
+    "local_expressions.fino": {
+      "es": "'Todo fino': todo bien.",
+      "ru": "«Todo fino» — всё хорошо, всё в порядке."
+    },
+    "local_expressions.marico_warning": {
+      "es": "Algunas palabras de jerga muy comunes entre amigos ('marico', 'verga') son groseras en otros contextos y en otros países: no las copies en la escuela ni en el trabajo.",
+      "ru": "Некоторые очень распространённые среди друзей жаргонные слова («marico», «verga») грубы в другом контексте и в других странах — не повторяйте их в школе или на работе."
+    },
+    "newcomers_find_hard.volume": {
+      "es": "El volumen de las conversaciones, que puede sonar a discusión.",
+      "ru": "Громкость разговоров, которые могут звучать как ссора."
+    },
+    "newcomers_find_hard.street_safety": {
+      "es": "Los hábitos de seguridad en la calle por la noche que la gente local da por sentados.",
+      "ru": "Привычки ночной безопасности на улице, которые местные жители считают само собой разумеющимися."
+    },
+    "folk_culture.diablos_unesco": {
+      "es": "Los Diablos Danzantes de Corpus Christi fueron inscritos en la lista del Patrimonio Inmaterial de la UNESCO en 2012.",
+      "ru": "Танцующие дьяволы праздника Corpus Christi в 2012 году внесены в список нематериального наследия ЮНЕСКО."
+    },
+    "folk_culture.gaita": {
+      "es": "En diciembre, la gaita zuliana de Maracaibo llena las radios y las fiestas.",
+      "ru": "В декабре музыка gaita zuliana из Maracaibo звучит по радио и на праздниках."
+    }
+  },
+  "moments": {
+    "hallacas": {"es": "Haciendo hallacas juntos", "ru": "Готовим hallacas вместе"},
+    "diablos": {"es": "Los Diablos Danzantes de Corpus Christi", "ru": "Танцующие дьяволы на Corpus Christi"},
+    "carnival": {"es": "Carnaval", "ru": "Карнавал"},
+    "july5": {"es": "Independencia, 5 de julio", "ru": "День независимости, 5 июля"},
+    "gaitas": {"es": "Gaitas en diciembre", "ru": "Gaitas в декабре"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "Приглашение от местной семьи"}
+  }
+}

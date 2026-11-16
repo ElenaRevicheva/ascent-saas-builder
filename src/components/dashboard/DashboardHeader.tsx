@@ -48,7 +48,7 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
                 <LanguageSwitcher variant="select" size="sm" />
                 {getStatusBadge()}
                 <Button asChild variant="hero" size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg">
-                  <Link to="/classroom">Kids classroom</Link>
+                  <Link to="/classroom">{t('hdr.kidsClassroom')}</Link>
                 </Button>
                 <Button
                   variant="hero"
@@ -61,7 +61,7 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
                     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }}
                 >
-                   Add your family
+                   {t('hdr.addFamily')}
                 </Button>
                 <Button variant="ghost" size="sm" onClick={signOut}>
                   {t('dashboard.signOut')}

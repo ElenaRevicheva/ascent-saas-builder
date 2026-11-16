@@ -1,0 +1,141 @@
+{
+  "name": {"es": "Ecuador", "ru": "Эквадор"},
+  "items": {
+    "rhythm_of_the_year.two_calendars": {
+      "es": "Los años escolares varían según la región: en Sierra-Amazonía empieza en septiembre (1 de septiembre de 2026, escalonado por nivel) y termina alrededor de junio-julio; en Costa-Galápagos empieza a finales de abril o en mayo (4 de mayo de 2026) y termina a finales de febrero. Son unos 200 días de clase en tres trimestres.",
+      "ru": "Учебные годы различаются по регионам: в режиме Sierra-Amazonía год начинается в сентябре (1 сентября 2026 года, поэтапно по уровням) и заканчивается примерно в июне–июле; в режиме Costa-Galápagos — в конце апреля или в мае (4 мая 2026 года) и заканчивается в конце февраля. Около 200 учебных дней в трёх триместрах."
+    },
+    "rhythm_of_the_year.difuntos_season": {
+      "es": "De finales de octubre al 2 de noviembre es la temporada de la colada morada y las guaguas de pan por el Día de los Difuntos; la colada se vende casi solo en esta temporada.",
+      "ru": "С конца октября по 2 ноября — сезон colada morada и guaguas de pan ко Дню поминовения усопших; коладу продают почти исключительно в это время."
+    },
+    "rhythm_of_the_year.new_year_monigotes": {
+      "es": "En la víspera de Año Nuevo muchas familias hacen o compran un 'monigote' (un muñeco relleno que representa el año viejo) y lo queman a medianoche para dejar atrás lo malo.",
+      "ru": "В новогоднюю ночь многие семьи делают или покупают «monigote» (набитое чучело уходящего года) и сжигают его в полночь, чтобы оставить плохое позади."
+    },
+    "rhythm_of_the_year.carnival": {
+      "es": "El lunes y martes de Carnaval (febrero o marzo; cambian cada año) son feriados nacionales; muchas familias viajan.",
+      "ru": "Понедельник и вторник Карнавала (февраль или март — даты меняются каждый год) — общенациональные праздники; многие семьи уезжают."
+    },
+    "rhythm_of_the_year.foundation_quito": {
+      "es": "El 6 de diciembre, Fundación de Quito, es feriado; el 3 de noviembre es el de Cuenca y el 9 de octubre, el de Guayaquil.",
+      "ru": "6 декабря, День основания Кито, — праздничный день; 3 ноября — праздник Куэнки, 9 октября — Гуаякиля."
+    },
+    "holidays.list": {
+      "es": "Feriados nacionales: 1 de enero, lunes y martes de Carnaval, Viernes Santo, 1 de mayo, 24 de mayo (Batalla de Pichincha), 10 de agosto (Primer Grito de Independencia), 9 de octubre (Independencia de Guayaquil), 2 de noviembre (Día de los Difuntos), 3 de noviembre (Independencia de Cuenca), 6 de diciembre (Fundación de Quito), 25 de diciembre.",
+      "ru": "Государственные праздники: 1 января, понедельник и вторник Карнавала, Страстная пятница, 1 мая, 24 мая (битва при Пичинче), 10 августа (Первый клич независимости), 9 октября (независимость Гуаякиля), 2 ноября (День поминовения усопших), 3 ноября (независимость Куэнки), 6 декабря (основание Кито), 25 декабря."
+    },
+    "holidays.moved": {
+      "es": "Varios feriados (1 de mayo, 24 de mayo, 9 de octubre) son 'trasladables' y pueden pasarse a otro día: revisa el anuncio del gobierno cada año.",
+      "ru": "Несколько праздников (1 мая, 24 мая, 9 октября) «плавающие» и могут переноситься на другой день — следите за объявлением правительства каждый год."
+    },
+    "holidays.galapagos": {
+      "es": "El 12 de febrero es el Día de Galápagos, el día propio de la provincia.",
+      "ru": "12 февраля — День Галапагосских островов, собственный праздник провинции."
+    },
+    "greetings_and_courtesy.usted": {
+      "es": "Mucha gente usa 'usted' incluso con amigos y familia, sobre todo en la Sierra; sigue lo que hace la otra persona.",
+      "ru": "Многие говорят «usted» даже друзьям и родным, особенно в горном регионе (Sierra); ориентируйтесь на собеседника."
+    },
+    "greetings_and_courtesy.que_fue": {
+      "es": "'¿Qué fue?': un '¿qué tal?' informal en la costa.",
+      "ru": "«¿Qué fue?» — неформальное «как дела?» на побережье."
+    },
+    "greetings_and_courtesy.cheek_kiss": {
+      "es": "A las mujeres a menudo se las saluda con un beso en la mejilla derecha; los hombres se dan la mano.",
+      "ru": "Женщин часто приветствуют одним поцелуем в правую щёку; мужчины пожимают руки."
+    },
+    "time.late_social": {
+      "es": "Los planes sociales a menudo empiezan más tarde de la hora indicada; la escuela y las citas oficiales, no.",
+      "ru": "Встречи с друзьями часто начинаются позже назначенного времени; школа и официальные приёмы — нет."
+    },
+    "family_and_friends.cemetery_meal": {
+      "es": "El 2 de noviembre muchas familias visitan el cementerio y comen junto a las tumbas de sus parientes, a veces llevando la comida favorita de la persona.",
+      "ru": "2 ноября многие семьи приходят на кладбище и едят рядом с могилами родственников, иногда принося любимое блюдо умершего."
+    },
+    "family_and_friends.guagua_meaning": {
+      "es": "Las guaguas de pan representan a los seres queridos que han muerto y a veces se dejan como ofrenda sobre las tumbas.",
+      "ru": "Guaguas de pan символизируют умерших близких, и иногда их оставляют на могилах как подношение."
+    },
+    "family_and_friends.viudas": {
+      "es": "El 31 de diciembre, hombres vestidos de 'viudas' del año viejo detienen el tráfico pidiendo monedas para su 'funeral', por lo general para la fiesta del barrio.",
+      "ru": "31 декабря мужчины, переодетые «вдовами» уходящего года, останавливают машины и просят монетки на его «похороны» — обычно на праздник района."
+    },
+    "family_and_friends.ñaño": {
+      "es": "'Ñaño / ñaña': hermano / hermana; también se usa con los amigos cercanos.",
+      "ru": "«Ñaño / ñaña» — брат / сестра; так называют и близких друзей."
+    },
+    "school_life.staggered_start": {
+      "es": "Los primeros días de clase se escalonan por nivel: revisa qué día empieza el grado de tu hijo.",
+      "ru": "Начало занятий идёт поэтапно по уровням — узнайте, в какой день начинает учиться класс вашего ребёнка."
+    },
+    "school_life.regime_matters": {
+      "es": "Mudarse entre Quito y Guayaquil puede implicar cambiar de calendario escolar: pregunta en la oficina distrital cómo funcionan los traslados.",
+      "ru": "Переезд между Кито и Гуаякилем может означать смену школьного календаря — узнайте в районном управлении образования, как оформляется перевод."
+    },
+    "food_and_table.colada": {
+      "es": "La colada morada es una bebida espesa y morada de harina de maíz morado con frutas (mortiño, mora, naranjilla) y especias como canela e ishpingo.",
+      "ru": "Colada morada — густой фиолетовый напиток из муки фиолетовой кукурузы с фруктами (мортиньо, ежевика, наранхилья) и пряностями — корицей и ишпинго."
+    },
+    "food_and_table.guagua_bread": {
+      "es": "Las guaguas de pan son panes dulces con forma de bebé; 'guagua' es la palabra kichwa para bebé o niño.",
+      "ru": "Guaguas de pan — сладкий хлеб в форме младенца; «guagua» на языке кичва значит «младенец» или «ребёнок»."
+    },
+    "food_and_table.regional_food": {
+      "es": "El encebollado (sopa de pescado) es un desayuno clásico de la costa; el locro de papa (sopa de papa), uno de la Sierra.",
+      "ru": "Энсебольядо (encebollado, рыбный суп) — классический завтрак побережья; locro de papa (картофельный суп) — классика высокогорья."
+    },
+    "everyday_life.monigote_rules": {
+      "es": "Quito y Guayaquil multan a quienes queman monigotes en el lugar equivocado: revisa las normas de tu ciudad sobre dónde quemarlos.",
+      "ru": "В Кито и Гуаякиле штрафуют тех, кто сжигает мониготе в неположенном месте, — уточните городские правила, где это можно делать."
+    },
+    "everyday_life.altitude": {
+      "es": "Quito y Cuenca están en lo alto (alrededor de 2.500-2.800 m): tómate los primeros días con calma.",
+      "ru": "Кито и Куэнка расположены высоко (около 2500–2800 м): первые дни не перегружайте себя."
+    },
+    "local_expressions.chuta": {
+      "es": "'¡Chuta!': '¡caramba!', sorpresa o fastidio.",
+      "ru": "«¡Chuta!» — «чёрт!»: удивление или досада."
+    },
+    "local_expressions.achachay": {
+      "es": "'¡Achachay!': '¡brrr, qué frío!'; '¡Arrarray!': '¡ay, qué caliente!' (las dos vienen del kichwa).",
+      "ru": "«¡Achachay!» — «брр, холодно!»; «¡Arrarray!» — «ой, горячо!» (оба слова из кичва)."
+    },
+    "local_expressions.de_ley": {
+      "es": "'De ley': 'seguro', 'sin duda'.",
+      "ru": "«De ley» — «точно», «обязательно»."
+    },
+    "local_expressions.chevere": {
+      "es": "'Chévere': genial, buenísimo.",
+      "ru": "«Chévere» — отлично, классно."
+    },
+    "newcomers_find_hard.two_regimes": {
+      "es": "Los dos calendarios escolares: tus amigos de otra ciudad pueden estar de vacaciones mientras tus hijos están en clases.",
+      "ru": "Два школьных календаря: у друзей из другого города могут быть каникулы, пока ваши дети учатся."
+    },
+    "newcomers_find_hard.year_end_fires": {
+      "es": "Las fogatas de monigotes en la calle en la víspera de Año Nuevo.",
+      "ru": "Костры из мониготе на улицах в новогоднюю ночь."
+    },
+    "folk_culture.monigote_origin": {
+      "es": "Antes de quemarlo, a menudo se golpea al monigote para sacar las frustraciones del año.",
+      "ru": "Перед сожжением мониготе часто бьют, чтобы выплеснуть накопившиеся за год обиды и раздражение."
+    },
+    "folk_culture.difuntos_roots": {
+      "es": "La colada morada tiene raíces andinas que se remontan a mucho antes de la llegada de los españoles.",
+      "ru": "У colada morada андские корни, уходящие далеко в прошлое — задолго до прихода испанцев."
+    },
+    "folk_culture.testamento": {
+      "es": "Algunas familias leen un 'testamento' en broma del año viejo antes de quemar el monigote.",
+      "ru": "Некоторые семьи перед сожжением мониготе зачитывают шуточное «завещание» уходящего года."
+    }
+  },
+  "moments": {
+    "first_difuntos": {"es": "Colada morada y guaguas de pan", "ru": "Colada morada и guaguas de pan"},
+    "first_ano_viejo": {"es": "La quema del año viejo", "ru": "Сожжение año viejo (старого года)"},
+    "carnival": {"es": "Tu primer Carnaval", "ru": "Ваш первый карнавал"},
+    "school_start": {"es": "El nuevo año escolar", "ru": "Новый учебный год"},
+    "fiestas_quito": {"es": "Fiestas de Quito", "ru": "Fiestas de Quito (праздники Кито)"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "В гостях у местной семьи"}
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "name": {"es": "Nicaragua", "ru": "Никарагуа"},
+  "items": {
+    "rhythm_of_the_year.purisima_season": {
+      "es": "De finales de noviembre al 7 de diciembre es la temporada de La Purísima: muchas familias católicas arman en casa un altar a la Virgen María, y la noche del 7 de diciembre llega La Gritería, la mayor fiesta religiosa de Nicaragua.",
+      "ru": "С конца ноября по 7 декабря длится сезон La Purísima: многие католические семьи устраивают дома алтарь Деве Марии, а вечером 7 декабря наступает La Gritería — главный религиозный праздник Никарагуа."
+    },
+    "rhythm_of_the_year.holy_week_beach": {
+      "es": "Semana Santa (marzo o abril; cambia cada año) es feriado nacional y muchas familias van a la playa.",
+      "ru": "Страстная неделя (март или апрель, дата каждый год меняется) — национальные выходные, и многие семьи едут на пляж."
+    },
+    "rhythm_of_the_year.september_parades": {
+      "es": "De mediados de agosto al 15 de septiembre las escuelas hacen desfiles patrios; el 14 de septiembre (Batalla de San Jacinto) y el 15 de septiembre (Independencia) son feriados nacionales.",
+      "ru": "С середины августа по 15 сентября школы проводят патриотические парады; 14 сентября (Битва при San Jacinto) и 15 сентября (День независимости) — национальные выходные."
+    },
+    "rhythm_of_the_year.managua_august": {
+      "es": "En Managua, el 1 y el 10 de agosto son días libres pagados por las fiestas de Santo Domingo de Guzmán, el santo patrono de la ciudad.",
+      "ru": "В Managua 1 и 10 августа — оплачиваемые выходные в честь праздника Santo Domingo de Guzmán, покровителя города."
+    },
+    "rhythm_of_the_year.school_year": {
+      "es": "El año escolar público va más o menos de febrero a inicios de diciembre; confirma cada año el calendario del Mined.",
+      "ru": "Учебный год в государственных школах длится примерно с февраля до начала декабря — каждый год сверяйтесь с календарём Mined."
+    },
+    "holidays.national": {
+      "es": "Feriados nacionales: 1 de enero, Jueves y Viernes Santo, 1 de mayo, 19 de julio, 14 y 15 de septiembre, 8 de diciembre (Inmaculada Concepción, después de La Gritería del día 7), 25 de diciembre.",
+      "ru": "Национальные праздники: 1 января, Великий четверг и Страстная пятница, 1 мая, 19 июля, 14 и 15 сентября, 8 декабря (Непорочное зачатие, после La Gritería 7-го числа), 25 декабря."
+    },
+    "holidays.local": {
+      "es": "Muchas localidades tienen sus propios días libres por sus santos patronos: Santiago (25 de julio) en Boaco y Somoto, Santa Ana (26 de julio) en Nandaime y Ometepe, San Jerónimo (30 de septiembre) en Masaya, el Día de la Sopa de Cangrejo (27 de agosto) en las Islas del Maíz.",
+      "ru": "Во многих городах есть свои выходные в дни святых покровителей: Santiago (25 июля) в Boaco и Somoto, Santa Ana (26 июля) в Nandaime и Ometepe, San Jerónimo (30 сентября) в Masaya, День супа из крабов (27 августа) на Кукурузных островах (Corn Islands)."
+    },
+    "holidays.all_souls": {
+      "es": "2 de noviembre: las familias visitan los cementerios para rezar y dejar flores.",
+      "ru": "2 ноября: семьи приходят на кладбища помолиться и оставить цветы."
+    },
+    "greetings_and_courtesy.kiubole": {"es": "'¡Kiubole!': un '¿qué tal?' informal.", "ru": "«¡Kiubole!» — непринуждённое «как дела?»."},
+    "greetings_and_courtesy.dale_pues": {
+      "es": "'Dale pues': 'de acuerdo, adelante'; también sirve para cerrar una conversación.",
+      "ru": "«Dale pues» — «хорошо, давай», так же завершают разговор."
+    },
+    "greetings_and_courtesy.maje": {
+      "es": "'Maje': 'compa'; el tono decide si es amistoso o grosero.",
+      "ru": "«Maje» — «чувак»; от тона зависит, дружелюбно это или грубо."
+    },
+    "time.griteria_time": {
+      "es": "El 7 de diciembre los fuegos artificiales anuncian La Gritería desde temprano en la mañana; las visitas de casa en casa a los altares empiezan hacia las 6 pm.",
+      "ru": "7 декабря фейерверки возвещают La Gritería с раннего утра; обход алтарей от дома к дому начинается около 6 pm."
+    },
+    "time.new_year_fireworks": {
+      "es": "Nochebuena y Nochevieja son noches en familia con fuegos artificiales, a medianoche y durante toda la noche.",
+      "ru": "Сочельник и новогодняя ночь — семейные вечера с фейерверками в полночь и всю ночь напролёт."
+    },
+    "family_and_friends.altar_visits": {
+      "es": "Durante La Gritería gente de todas las edades va de altar en altar; en cada uno gritan '¿Quién causa tanta alegría?' y responden '¡La Concepción de María!', cantan y reciben pequeños regalos: dulces, fruta, bebidas, juguetitos.",
+      "ru": "Во время La Gritería люди всех возрастов ходят от алтаря к алтарю; у каждого кричат «¿Quién causa tanta alegría?» и отвечают «¡La Concepción de María!», поют и получают небольшие подарки — сладости, фрукты, напитки, маленькие игрушки."
+    },
+    "family_and_friends.host_meal": {
+      "es": "Las familias que ponen un altar suelen invitar a los visitantes a cantar y luego a compartir una comida, a menudo nacatamales.",
+      "ru": "Семьи, у которых стоит алтарь, часто приглашают гостей спеть, а потом разделить трапезу — нередко с nacatamales."
+    },
+    "family_and_friends.chavalo": {
+      "es": "A los niños y jóvenes se les dice 'chavalos' / 'chavalas'; 'chinear' es cargar o mimar a un bebé.",
+      "ru": "Детей и молодёжь называют «chavalos» / «chavalas»; «chinear» — держать на руках или нянчить малыша."
+    },
+    "school_life.parades_august": {
+      "es": "El Ministerio de Educación programa los desfiles escolares de mediados a finales de agosto, antes del 14 y 15 de septiembre.",
+      "ru": "Министерство образования назначает школьные парады на середину и конец августа, перед 14-15 сентября."
+    },
+    "food_and_table.nacatamal": {
+      "es": "En las reuniones de La Purísima se sirven nacatamales y otros platos típicos, con fresco de cacao para los visitantes.",
+      "ru": "На встречах в честь La Purísima подают nacatamales и другие традиционные блюда, а гостям — fresco de cacao."
+    },
+    "food_and_table.gallo_pinto": {
+      "es": "El gallo pinto (arroz con frijoles rojos) se come en casi todas las comidas.",
+      "ru": "Gallo pinto (рис с красной фасолью) едят почти при каждой трапезе."
+    },
+    "everyday_life.coyotero": {
+      "es": "A los cambistas callejeros que cambian dólares por córdobas se les llama 'coyoteros'.",
+      "ru": "Уличных менял, которые меняют доллары на кордобы, называют «coyoteros»."
+    },
+    "everyday_life.chunche": {
+      "es": "'Chunche' / 'chochada': cosa, cosas (cuidado: 'chunche' también puede ser vulgar).",
+      "ru": "«Chunche» / «chochada» — вещь, штуковина (осторожно: «chunche» может звучать и вульгарно)."
+    },
+    "local_expressions.tuani": {"es": "'Tuani' / 'salvaje': genial, buenísimo.", "ru": "«Tuani» / «salvaje» — круто, отлично."},
+    "local_expressions.ideay": {
+      "es": "'¡Ideay!': sorpresa o fastidio: '¿qué?', '¡no puede ser!'.",
+      "ru": "«¡Ideay!» — удивление или досада: «что?!», «да ладно!»."
+    },
+    "local_expressions.tapudo": {
+      "es": "'Tapudo': alguien que habla demasiado o chismea; 'fachento': presumido.",
+      "ru": "«Tapudo» — тот, кто слишком много болтает или сплетничает; «fachento» — хвастун."
+    },
+    "local_expressions.bacanal": {"es": "'Un bacanal': una fiesta grande y animada.", "ru": "«Un bacanal» — большая шумная вечеринка."},
+    "newcomers_find_hard.fireworks": {
+      "es": "Fuegos artificiales al amanecer del 7 de diciembre y durante las noches de Navidad y Año Nuevo: avisa a los niños pequeños y ten en cuenta a las mascotas.",
+      "ru": "Фейерверки на рассвете 7 декабря и в рождественскую и новогоднюю ночи — предупредите маленьких детей и позаботьтесь о питомцах."
+    },
+    "newcomers_find_hard.local_days": {
+      "es": "Los días libres por los santos patronos cambian de un lugar a otro.",
+      "ru": "Местные выходные в дни святых покровителей в каждом городе свои."
+    },
+    "folk_culture.purisima_origin": {
+      "es": "La Purísima nació en León en el siglo XVIII; el grito de la 'gritería' se añadió en 1857.",
+      "ru": "La Purísima зародилась в León в XVIII веке; клич «gritería» добавился в 1857 году."
+    },
+    "folk_culture.abroad": {
+      "es": "La Gritería es la fiesta religiosa más importante del país, y los nicaragüenses en el extranjero también la mantienen viva.",
+      "ru": "La Gritería — самый важный религиозный праздник страны, его хранят и никарагуанцы за рубежом."
+    }
+  },
+  "moments": {
+    "first_griteria": {"es": "Tu primera Gritería", "ru": "Ваша первая Gritería"},
+    "santo_domingo": {"es": "Las fiestas de Santo Domingo", "ru": "Праздник Santo Domingo"},
+    "sept_parades": {"es": "Desfiles escolares en septiembre", "ru": "Школьные парады в сентябре"},
+    "semana_santa_beach": {"es": "Semana Santa en la playa", "ru": "Страстная неделя на пляже"},
+    "nacatamal": {"es": "Nacatamales en la mesa", "ru": "Nacatamales на столе"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "Приглашение от местной семьи"}
+  }
+}

@@ -1,0 +1,244 @@
+{
+  "name": {"es": "México", "ru": "Мексика"},
+  "items": {
+    "rhythm_of_the_year.rainy_season": {
+      "es": "En gran parte de México la temporada de lluvias empieza hacia mayo y alcanza su punto máximo en los meses más cálidos; la temporada de huracanes en las costas va de junio a octubre, y en algunas zonas hasta noviembre.",
+      "ru": "На большей части Мексики сезон дождей начинается примерно в мае и достигает пика в самые тёплые месяцы; сезон ураганов на побережьях длится с июня по октябрь, а в некоторых районах — до ноября."
+    },
+    "rhythm_of_the_year.afternoon_rain": {
+      "es": "La lluvia suele llegar como un aguacero corto por la tarde o la noche después de una mañana despejada; mucha gente planea sus salidas para la mañana. Varía mucho según la región.",
+      "ru": "Дождь часто приходит коротким ливнем днём или вечером после ясного утра — многие планируют прогулки на утро. Сильно зависит от региона."
+    },
+    "rhythm_of_the_year.season_end_year": {
+      "es": "La temporada de fin de año va de mediados de diciembre (Día de Guadalupe, luego las posadas) a Nochebuena, Año Nuevo y el Día de Reyes, el 6 de enero, y para muchas familias se extiende hasta el 2 de febrero.",
+      "ru": "Сезон конца года длится с середины декабря (Día de Guadalupe, затем posadas) через Сочельник, Новый год и Día de Reyes 6 января, а для многих семей — до 2 февраля."
+    },
+    "rhythm_of_the_year.muertos_season": {
+      "es": "De finales de octubre al 2 de noviembre: las familias ponen una 'ofrenda' (altar en casa) con flores de cempasúchil para sus familiares fallecidos; el 1 de noviembre es tradicionalmente para los niños que murieron, el 2 de noviembre para los adultos.",
+      "ru": "С конца октября по 2 ноября семьи устраивают дома «ofrenda» (домашний алтарь) с бархатцами (cempasúchil) в память об умерших родственниках; 1 ноября традиционно посвящено умершим детям, 2 ноября — взрослым."
+    },
+    "rhythm_of_the_year.september_patria": {
+      "es": "Septiembre es el mes patrio: el Día de la Independencia, 16 de septiembre, es feriado nacional.",
+      "ru": "Сентябрь — патриотический месяц: День независимости, 16 сентября, — национальный выходной."
+    },
+    "rhythm_of_the_year.grito": {
+      "es": "La noche del 15 de septiembre muchos pueblos se reúnen en la plaza principal para 'el Grito', el grito de independencia, con comida y fuegos artificiales.",
+      "ru": "Вечером 15 сентября во многих городах люди собираются на главной площади на «el Grito» — клич независимости — с едой и фейерверками."
+    },
+    "rhythm_of_the_year.school_year_shape": {
+      "es": "El año escolar público va de finales de agosto o inicios de septiembre a mediados de julio, con vacaciones de invierno en Navidad y Año Nuevo; confirma el calendario de la SEP de este año.",
+      "ru": "Учебный год в государственных школах длится с конца августа или начала сентября до середины июля, с зимними каникулами на Рождество и Новый год — сверьтесь с календарём SEP на этот год."
+    },
+    "holidays.jan1": {"es": "1 de enero: Año Nuevo.", "ru": "1 января — Новый год."},
+    "holidays.feb_constitution": {
+      "es": "Día de la Constitución (5 de febrero): se descansa el primer lunes de febrero.",
+      "ru": "День Конституции (5 февраля) — выходной переносится на первый понедельник февраля."
+    },
+    "holidays.mar_juarez": {
+      "es": "Natalicio de Benito Juárez (21 de marzo): se descansa el tercer lunes de marzo.",
+      "ru": "День рождения Benito Juárez (21 марта) — выходной переносится на третий понедельник марта."
+    },
+    "holidays.may1": {"es": "1 de mayo: Día del Trabajo.", "ru": "1 мая — День труда."},
+    "holidays.sep16": {"es": "16 de septiembre: Día de la Independencia.", "ru": "16 сентября — День независимости."},
+    "holidays.nov_revolution": {
+      "es": "Día de la Revolución (20 de noviembre): se descansa el tercer lunes de noviembre.",
+      "ru": "День революции (20 ноября) — выходной переносится на третий понедельник ноября."
+    },
+    "holidays.dec25": {"es": "25 de diciembre: Navidad.", "ru": "25 декабря — Рождество."},
+    "holidays.sunday_rule": {
+      "es": "Cuando un feriado oficial cae en domingo, se descansa el lunes. Los días de elecciones federales también son de descanso.",
+      "ru": "Если официальный праздник выпадает на воскресенье, выходным становится понедельник. Дни федеральных выборов тоже выходные."
+    },
+    "holidays.not_days_off": {
+      "es": "Fechas importantes que NO son días de descanso oficial: Día del Niño (30 de abril), Día de las Madres (10 de mayo), Día de Muertos (1-2 de noviembre), Día de la Virgen de Guadalupe (12 de diciembre). Aun así, muchas escuelas y oficinas los celebran.",
+      "ru": "Большие даты, которые НЕ являются официальными выходными: Día del Niño (30 апреля), Día de las Madres (10 мая), Día de Muertos (1-2 ноября), Día de la Virgen de Guadalupe (12 декабря). Многие школы и учреждения всё равно их отмечают."
+    },
+    "holidays.holy_week": {
+      "es": "Semana Santa (marzo o abril; cambia cada año): el jueves y el viernes se toman libres de forma muy extendida y muchas familias viajan; confírmalo con tu empleador.",
+      "ru": "Страстная неделя (Semana Santa, март или апрель, дата каждый год меняется): четверг и пятница у многих выходные, и многие семьи уезжают; уточните у работодателя."
+    },
+    "greetings_and_courtesy.kiss_hug": {
+      "es": "Entre amigos y familia mucha gente saluda con un beso en la mejilla y un abrazo corto; con desconocidos y en el trabajo es más seguro dar la mano hasta ver qué hacen los demás.",
+      "ru": "Среди друзей и родных многие здороваются поцелуем в щёку и коротким объятием; с незнакомыми и на работе надёжнее пожать руку, пока не увидите, как поступают другие."
+    },
+    "greetings_and_courtesy.please_thanks": {
+      "es": "'Por favor' y 'gracias' se dicen todo el tiempo; es difícil exagerar con ellos.",
+      "ru": "«Por favor» и «gracias» звучат постоянно — переборщить с ними трудно."
+    },
+    "greetings_and_courtesy.mande": {
+      "es": "'¿Mande?' es la forma cortés de decir '¿perdón?' / '¿sí?'; lo oirás todo el tiempo, y un '¿qué?' a secas puede sonar brusco.",
+      "ru": "«¿Mande?» — вежливый способ сказать «простите?» / «да?»; вы будете слышать это постоянно, а голое «¿qué?» может прозвучать резко."
+    },
+    "greetings_and_courtesy.provecho": {
+      "es": "'¡Provecho!' se les dice a quienes están comiendo, van a comer o acaban de terminar, incluso a desconocidos en un restaurante al pasar junto a su mesa.",
+      "ru": "«¡Provecho!» говорят тем, кто ест, собирается есть или только что закончил, — даже незнакомым людям в ресторане, проходя мимо их столика."
+    },
+    "greetings_and_courtesy.bueno_phone": {
+      "es": "'¿Bueno?' es como la gente contesta el teléfono.",
+      "ru": "«¿Bueno?» — так отвечают по телефону."
+    },
+    "greetings_and_courtesy.gracias_no": {
+      "es": "La oferta de un vendedor ambulante o de un anfitrión a menudo se rechaza con un simple 'gracias' o 'ahorita, gracias': significa 'no, gracias'.",
+      "ru": "Предложение уличного торговца или хозяина дома часто отклоняют простым «gracias» или «ahorita, gracias» — это значит «нет, спасибо»."
+    },
+    "greetings_and_courtesy.comper": {
+      "es": "'Con permiso' (muchas veces abreviado) se dice para abrirse paso entre la gente o para levantarse de la mesa o salir de una habitación.",
+      "ru": "«Con permiso» (часто сокращённо) говорят, чтобы пройти через толпу или выйти из-за стола или из комнаты."
+    },
+    "time.social_late": {
+      "es": "A las fiestas y reuniones de amigos mucha gente llega 15-30 minutos o más después de la hora indicada, y los anfitriones lo esperan; los conciertos y las obras de teatro suelen empezar 15-30 minutos tarde.",
+      "ru": "На вечеринки и встречи с друзьями многие приходят на 15-30 минут или больше позже назначенного времени, и хозяева этого ждут; концерты и спектакли часто начинаются с опозданием на 15-30 минут."
+    },
+    "time.tolerancia": {
+      "es": "Las escuelas, los médicos y las citas son más estrictos: muchos anuncian una 'tolerancia' de 10-15 minutos, y si llegas más tarde puedes perder la cita.",
+      "ru": "Школы, врачи и записи на приём строже: многие объявляют «tolerancia» в 10-15 минут, и если вы опоздаете сильнее, приём могут отменить."
+    },
+    "time.ahorita": {
+      "es": "'Ahorita' literalmente significa 'ahora mismo', pero puede querer decir en un minuto, en unas horas o nunca; si lo necesitas ya, pide 'ahora mismo' o 'ya'.",
+      "ru": "«Ahorita» буквально значит «прямо сейчас», но может означать через минуту, через несколько часов или никогда; если нужно немедленно, просите «ahora mismo» или «ya»."
+    },
+    "time.ratito": {
+      "es": "'Un ratito' (un momento) suele durar más de cinco minutos.",
+      "ru": "«Un ratito» (минуточка) обычно длится дольше пяти минут."
+    },
+    "family_and_friends.birthdays_big": {
+      "es": "Los cumpleaños son eventos familiares, a menudo con 15 personas o más: 'no hay fiesta pequeña'.",
+      "ru": "Дни рождения — семейные события, часто на 15 человек и больше: «маленьких праздников не бывает»."
+    },
+    "family_and_friends.mananitas": {
+      "es": "En los cumpleaños se cantan 'Las Mañanitas'; aprender la primera estrofa es una forma fácil de unirte.",
+      "ru": "На днях рождения поют «Las Mañanitas»; выучить первый куплет — простой способ присоединиться."
+    },
+    "family_and_friends.quinceanera": {
+      "es": "Los 15 años de una chica, los 'quince años' o quinceañera, suelen ser una gran celebración familiar.",
+      "ru": "15-летие девушки, «quince años» или quinceañera, часто становится большим семейным праздником."
+    },
+    "family_and_friends.rosca_host": {
+      "es": "El 6 de enero las familias comparten la 'rosca de Reyes'; quien encuentra un pequeño muñequito en su rebanada ofrece una reunión con tamales el 2 de febrero (Día de la Candelaria).",
+      "ru": "6 января семьи вместе едят «rosca de Reyes»; тот, кому в куске попадётся маленькая фигурка-куколка, 2 февраля (Día de la Candelaria) устраивает угощение тамалес (tamales)."
+    },
+    "family_and_friends.pride": {
+      "es": "A mucha gente le encanta mostrar su país: preguntar por la comida, la música o los lugares de allí abre conversaciones.",
+      "ru": "Многие любят показывать свою страну: вопросы о местной еде, музыке или местах помогают завязать разговор."
+    },
+    "school_life.calendar_sep": {
+      "es": "La educación básica pública sigue el calendario nacional de la SEP (unos 185 días de clase en 2025-2026); las escuelas también tienen días de capacitación docente sin clases; revisa el calendario oficial cada año.",
+      "ru": "Государственное базовое образование следует национальному календарю SEP (около 185 учебных дней в 2025-2026 году); в школах бывают и дни повышения квалификации учителей без уроков — каждый год сверяйтесь с официальным календарём."
+    },
+    "school_life.honores": {
+      "es": "Muchas escuelas hacen 'honores a la bandera' los lunes por la mañana: se recibe la bandera con honores y se canta el himno nacional.",
+      "ru": "Во многих школах по понедельникам утром проходит «honores a la bandera»: флаг встречают с почестями и поют государственный гимн."
+    },
+    "school_life.dia_maestro": {
+      "es": "El 15 de mayo es el Día del Maestro: muchas escuelas hacen pequeñas celebraciones o suspenden clases; revisa el aviso de la escuela.",
+      "ru": "15 мая — День учителя: многие школы устраивают небольшие праздники или отменяют уроки — проверьте объявление школы."
+    },
+    "school_life.dia_nino": {
+      "es": "El 30 de abril, Día del Niño, se celebra en muchas escuelas aunque no es día de descanso.",
+      "ru": "30 апреля, Día del Niño, отмечают во многих школах, хотя это не выходной."
+    },
+    "food_and_table.tortilla": {
+      "es": "Las tortillas están en la mesa en casi todas las comidas, y casi cualquier cosa puede convertirse en taco.",
+      "ru": "Кукурузные лепёшки (tortillas) стоят на столе почти при каждой еде, и почти всё что угодно может стать тако."
+    },
+    "food_and_table.salsa_lime": {
+      "es": "La salsa y el limón van en casi todo; incluso una salsa 'que no pica' suele picar para alguien recién llegado: pregunta '¿pica?' antes de probar.",
+      "ru": "Соус (salsa) и лайм добавляют почти ко всему; даже «неострая» salsa для новичка обычно острая — спросите «¿pica?», прежде чем пробовать."
+    },
+    "food_and_table.diminutive_food": {
+      "es": "Los diminutivos en la comida ('un caldito', 'un tacito') no significan una porción pequeña: son una forma cariñosa.",
+      "ru": "Уменьшительные слова в еде («un caldito», «un tacito») не означают маленькую порцию — это просто дружелюбная форма."
+    },
+    "food_and_table.nochebuena": {
+      "es": "La cena de Nochebuena, el 24 de diciembre, es la principal comida navideña para muchas familias.",
+      "ru": "Ужин в Nochebuena, 24 декабря, для многих семей — главная рождественская трапеза."
+    },
+    "food_and_table.mal_puerco": {
+      "es": "La somnolencia después de una comida abundante tiene nombre: 'el mal del puerco'.",
+      "ru": "Сонливость после сытной еды имеет название: «el mal del puerco»."
+    },
+    "food_and_table.comida_time": {
+      "es": "La comida principal, 'la comida', suele hacerse a media tarde (hacia las 2-4 pm), con una cena más ligera por la noche.",
+      "ru": "Основной приём пищи, «la comida», часто бывает в середине дня (примерно в 2-4 pm), а вечером — более лёгкий ужин."
+    },
+    "everyday_life.tianguis": {
+      "es": "Muchos barrios tienen un mercado semanal al aire libre, el 'tianguis', para hacer las compras de la semana y comer algo.",
+      "ru": "Во многих районах раз в неделю работает рынок под открытым небом, «tianguis», — там закупаются на неделю и перекусывают."
+    },
+    "everyday_life.markets_fruit": {
+      "es": "Los mercados tienen una enorme variedad de frutas y verduras, a menudo a precios bajos.",
+      "ru": "На рынках огромный выбор фруктов и овощей, часто по низким ценам."
+    },
+    "everyday_life.small_change": {
+      "es": "Muchas veces escasea el cambio: lleva billetes pequeños y monedas, sobre todo para los taxis.",
+      "ru": "Мелочи часто не хватает — носите с собой мелкие купюры и монеты, особенно для такси."
+    },
+    "everyday_life.gas_station": {
+      "es": "En las gasolineras un empleado carga el combustible y puede limpiar el parabrisas; se espera una pequeña propina.",
+      "ru": "На заправках топливо заливает работник, он может и протереть лобовое стекло; принято оставить небольшие чаевые."
+    },
+    "everyday_life.crosswalk": {
+      "es": "Es posible que los conductores no se detengan en los pasos peatonales: enseña a los niños a esperar y mirar.",
+      "ru": "Водители могут не останавливаться на пешеходных переходах — учите детей ждать и смотреть по сторонам."
+    },
+    "everyday_life.public_toilets": {
+      "es": "Los baños públicos a menudo cobran unos pocos pesos, que pueden incluir un poco de papel higiénico.",
+      "ru": "Общественные туалеты часто платные — несколько песо, в цену может входить немного туалетной бумаги."
+    },
+    "local_expressions.que_onda": {"es": "'¿Qué onda?': '¿qué tal?', entre amigos.", "ru": "«¿Qué onda?» — «как дела?», «что нового?», между друзьями."},
+    "local_expressions.orale": {
+      "es": "'¡Órale!': normalmente 'de acuerdo, trato hecho', pero según el tono también 'apúrate' o '¡guau!'.",
+      "ru": "«¡Órale!» — обычно «ладно, договорились», но в зависимости от тона также «давай быстрее» или «ого!»."
+    },
+    "local_expressions.aguas": {"es": "'¡Aguas!': '¡cuidado!'.", "ru": "«¡Aguas!» — «осторожно!»."},
+    "local_expressions.padre_chido": {
+      "es": "'¡Qué padre!' / 'chido': 'genial, buenísimo'; 'chingón' significa lo mismo, pero es grosero.",
+      "ru": "«¡Qué padre!» / «chido» — «здорово, круто»; «chingón» значит то же самое, но грубо."
+    },
+    "local_expressions.camara": {"es": "'Cámara': 'trato hecho', 'de acuerdo', informal.", "ru": "«Cámara» — «договорились», «идёт», неформально."},
+    "local_expressions.guey": {
+      "es": "'Güey': 'compa' entre amigos; también puede ser un insulto, así que déjalo para los amigos cercanos.",
+      "ru": "«Güey» — «чувак» между друзьями; это может быть и оскорблением, так что оставьте его для близких друзей."
+    },
+    "newcomers_find_hard.ahorita_gap": {
+      "es": "'Ahorita' y un 'gracias' cortés que significan 'ahora no' o 'no': los recién llegados se quedan esperando cosas que no van a llegar.",
+      "ru": "«Ahorita» и вежливое «gracias», которые оба означают «не сейчас» или «нет», — новички ждут того, что так и не произойдёт."
+    },
+    "newcomers_find_hard.social_vs_appointment": {
+      "es": "Llegar 'a tiempo' a una fiesta es llegar temprano, mientras que llegar 10-15 minutos tarde al médico puede hacerte perder la cita.",
+      "ru": "Прийти на вечеринку «вовремя» — значит прийти рано, а опоздание к врачу на 10-15 минут может стоить вам приёма."
+    },
+    "newcomers_find_hard.spice": {
+      "es": "El nivel de picante: el propósito de la salsa es picar, así que hasta una suave pica.",
+      "ru": "Острота: смысл salsa в том, чтобы жечь, поэтому даже мягкая всё равно щиплет."
+    },
+    "newcomers_find_hard.pedestrian": {
+      "es": "El tránsito: los pasos peatonales no garantizan que los conductores se detengan.",
+      "ru": "Движение на дорогах: пешеходный переход не гарантирует, что водители остановятся."
+    },
+    "folk_culture.muertos_unesco": {
+      "es": "El Día de Muertos está en la lista del Patrimonio Cultural Inmaterial de la Humanidad de la UNESCO.",
+      "ru": "День мёртвых (Día de Muertos) внесён ЮНЕСКО в список нематериального культурного наследия человечества."
+    },
+    "folk_culture.posadas": {
+      "es": "Las Posadas, del 16 al 24 de diciembre: procesiones con velas que recuerdan a María y José buscando posada, cantos y una piñata al final.",
+      "ru": "Las Posadas, с 16 по 24 декабря: шествия со свечами в память о том, как Мария и Иосиф искали ночлег, песни и piñata в конце."
+    },
+    "folk_culture.guadalupe": {
+      "es": "El 12 de diciembre, Día de la Virgen de Guadalupe, es uno de los días religiosos más importantes del año y abre las fiestas de fin de año.",
+      "ru": "12 декабря, Día de la Virgen de Guadalupe, — один из крупнейших религиозных дней года, с него начинаются праздники конца года."
+    }
+  },
+  "moments": {
+    "first_muertos": {"es": "Tu primer Día de Muertos", "ru": "Ваш первый Día de Muertos"},
+    "first_posada": {"es": "Tu primera posada", "ru": "Ваша первая posada"},
+    "rosca_tamales": {"es": "La rosca de Reyes y los tamales de la Candelaria", "ru": "Rosca de Reyes и тамалес на Candelaria"},
+    "first_grito": {"es": "Tu primer 16 de septiembre", "ru": "Ваше первое 16 de septiembre"},
+    "mananitas": {"es": "Un cumpleaños con Las Mañanitas", "ru": "День рождения с Las Mañanitas"},
+    "school_honores": {"es": "Honores a la bandera en la escuela", "ru": "Honores a la bandera в школе"},
+    "teachers_day": {"es": "Día del Maestro / Día del Niño", "ru": "Día del Maestro / Día del Niño"},
+    "tianguis": {"es": "De compras en el tianguis", "ru": "Покупки на tianguis"},
+    "rainy_season": {"es": "Tu primera temporada de lluvias", "ru": "Ваш первый сезон дождей"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "Приглашение от местной семьи"}
+  }
+}

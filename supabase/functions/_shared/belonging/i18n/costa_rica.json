@@ -1,0 +1,178 @@
+{
+  "name": {"es": "Costa Rica", "ru": "Коста-Рика"},
+  "items": {
+    "rhythm_of_the_year.two_seasons": {
+      "es": "Hay dos estaciones: la lluviosa, más o menos de mayo a octubre/noviembre, y la seca, de noviembre a abril. Las fechas de inicio y fin cambian según la región.",
+      "ru": "Два сезона: сезон дождей — примерно с мая по октябрь/ноябрь — и сухой сезон, с ноября по апрель. Даты начала и конца различаются по регионам."
+    },
+    "rhythm_of_the_year.afternoon_rain": {
+      "es": "En la época lluviosa, a una mañana calurosa a menudo le siguen aguaceros por la tarde: planea las actividades al aire libre para la mañana.",
+      "ru": "В сезон дождей за жарким утром часто следуют послеобеденные ливни — планируйте время на улице на утро."
+    },
+    "rhythm_of_the_year.school_year_2026": {
+      "es": "En 2026 las clases de las escuelas públicas fueron del 23 de febrero a principios de diciembre, con una pausa en Semana Santa y dos semanas de vacaciones de medio año en julio (del 6 al 17 de julio).",
+      "ru": "В 2026 году занятия в государственных школах шли с 23 февраля до начала декабря, с перерывом на Страстную неделю и двумя неделями каникул в середине года, в июле (6–17 июля)."
+    },
+    "rhythm_of_the_year.school_year_2027": {
+      "es": "A partir de 2027 el MEP cambia el calendario: clases del 1 de marzo al 30 de noviembre, 180 días lectivos más 20 días de capacitación docente; confírmalo con la escuela, los colegios privados pueden ser distintos.",
+      "ru": "С 2027 года MEP меняет календарь: занятия с 1 марта по 30 ноября, 180 учебных дней плюс 20 дней повышения квалификации учителей — уточните в школе, у частных школ может быть иначе."
+    },
+    "rhythm_of_the_year.fixed_daylight": {
+      "es": "El sol sale y se pone casi a la misma hora todo el año, así que mucha gente se levanta alrededor de las 6 o 7 de la mañana y mantiene un ritmo diario constante.",
+      "ru": "Солнце восходит и садится почти в одно и то же время круглый год, поэтому многие встают около 6–7 утра и держатся ровного распорядка дня."
+    },
+    "rhythm_of_the_year.rezo_nino": {
+      "es": "Desde el 6 de enero muchas familias hacen el 'Rezo del Niño', una reunión familiar de oración.",
+      "ru": "С 6 января многие семьи проводят «Rezo del Niño» — семейную встречу для молитвы."
+    },
+    "holidays.list": {
+      "es": "Feriados: 1 de enero, Jueves Santo y Viernes Santo (marzo o abril; cambian cada año), 11 de abril (Juan Santamaría), 1 de mayo, 25 de julio (Anexión del Partido de Nicoya), 2 de agosto (Virgen de los Ángeles), 15 de agosto (Día de la Madre), 31 de agosto (Día de la Persona Negra y la Cultura Afrocostarricense), 15 de septiembre (Independencia), 1 de diciembre (Abolición del Ejército), 25 de diciembre.",
+      "ru": "Государственные праздники: 1 января, Великий четверг и Страстная пятница (март или апрель — даты меняются каждый год), 11 апреля (Хуан Сантамария), 1 мая, 25 июля (присоединение Никои), 2 августа (Virgen de los Ángeles), 15 августа (День матери), 31 августа (День чернокожих и афро-костариканской культуры), 15 сентября (День независимости), 1 декабря (День упразднения армии), 25 декабря."
+    },
+    "holidays.moved_mondays": {
+      "es": "En los últimos años algunos feriados se han pasado a lunes por decreto para impulsar el turismo nacional; revisa la lista de cada año.",
+      "ru": "В последние годы некоторые праздники указом переносят на понедельник, чтобы поддержать внутренний туризм, — сверяйтесь со списком каждого года."
+    },
+    "holidays.mothers_day": {
+      "es": "El Día de la Madre es el 15 de agosto y es feriado.",
+      "ru": "День матери отмечают 15 августа, и это государственный выходной."
+    },
+    "greetings_and_courtesy.pura_vida": {
+      "es": "'¡Pura vida!' sirve para saludar, despedirse, agradecer y decir 'todo bien', y es toda una actitud ante la vida.",
+      "ru": "«¡Pura vida!» — это и «привет», и «пока», и «спасибо», и «всё хорошо», а ещё целое отношение к жизни."
+    },
+    "greetings_and_courtesy.con_gusto": {
+      "es": "A un 'gracias' se responde con 'con mucho gusto'; la gente dice 'por favor', 'gracias' y 'con permiso' al sentarse a la mesa o al levantarse.",
+      "ru": "На благодарность отвечают «con mucho gusto»; люди говорят «por favor», «gracias» и «con permiso», садясь за стол или вставая из-за него."
+    },
+    "greetings_and_courtesy.don_dona": {
+      "es": "A las personas mayores se les trata de 'don' o 'doña'.",
+      "ru": "К пожилым людям обращаются «don» или «doña»."
+    },
+    "greetings_and_courtesy.por_dicha": {
+      "es": "'Todo bien, por dicha': 'todo bien, gracias a Dios'; 'si Dios lo permite' también es común.",
+      "ru": "«Todo bien, por dicha» — «всё хорошо, слава богу»; часто говорят и «si Dios lo permite» («если Бог позволит»)."
+    },
+    "greetings_and_courtesy.usted": {
+      "es": "Mucha gente usa 'usted' incluso con amigos, familia y niños.",
+      "ru": "Многие говорят «usted» даже друзьям, родным и детям."
+    },
+    "time.early_days": {
+      "es": "Los días empiezan temprano y las comidas siguen horarios bastante fijos.",
+      "ru": "День начинается рано, а еда — в довольно постоянные часы."
+    },
+    "time.tico_time": {
+      "es": "Los planes sociales pueden empezar más tarde de la hora indicada; el trabajo y la escuela, no.",
+      "ru": "Встречи с друзьями могут начинаться позже назначенного времени; работа и школа — нет."
+    },
+    "family_and_friends.family_first": {
+      "es": "La familia es lo primero: las fechas especiales se pasan en familia antes de salir con amigos, y algunas personas llevan a sus padres a las fiestas.",
+      "ru": "Семья на первом месте: особые даты проводят с семьёй, а уже потом идут к друзьям, а некоторые приводят на вечеринки своих родителей."
+    },
+    "family_and_friends.hablantines": {
+      "es": "La gente es conversadora y hospitalaria, ofrece ayuda y te dice que la pidas: acéptala.",
+      "ru": "Люди разговорчивы и гостеприимны, предлагают помощь и говорят, чтобы вы обращались, — пользуйтесь этим."
+    },
+    "family_and_friends.quince": {
+      "es": "Los 15 años de una muchacha (los quince) suelen ser una gran celebración.",
+      "ru": "Пятнадцатилетие девушки (los quince) часто отмечают с большим размахом."
+    },
+    "family_and_friends.baby_shower": {
+      "es": "El 'té de canastilla' (baby shower) se ha convertido en una fiesta mixta con familia y amigos.",
+      "ru": "«Té de canastilla» (праздник в ожидании малыша) стал общей вечеринкой для родных и друзей, мужчин и женщин."
+    },
+    "family_and_friends.mejenga": {
+      "es": "Los amigos juegan partidos informales de fútbol, una 'mejenga'; el fútbol cinco después del trabajo es popular y es una forma fácil de hacer amigos.",
+      "ru": "Друзья играют в дворовый футбол — «mejenga»; мини-футбол пять на пять после работы популярен, и это лёгкий способ завести друзей."
+    },
+    "school_life.teacher_training": {
+      "es": "Antes de que empiecen las clases, los docentes tienen dos semanas de capacitación nacional en febrero.",
+      "ru": "Перед началом занятий у учителей в феврале две недели общенационального обучения."
+    },
+    "school_life.private_schools": {
+      "es": "Los colegios privados no están obligados a seguir el nuevo calendario de 2027, aunque las fechas de las pruebas nacionales son las mismas para todos.",
+      "ru": "Частные школы не обязаны переходить на новый календарь 2027 года, хотя даты национальных экзаменов для всех одинаковы."
+    },
+    "food_and_table.gallo_pinto": {
+      "es": "El arroz y los frijoles son la base de las comidas: el 'gallo pinto' o un plato de 'casado' aparece en casi todas las comidas.",
+      "ru": "Рис и фасоль — основа рациона: «gallo pinto» или тарелка «casado» бывают почти за каждой едой."
+    },
+    "food_and_table.fruit": {
+      "es": "Hay jugos de frutas frescas y ensaladas de frutas todo el año.",
+      "ru": "Свежие фруктовые соки и фруктовые салаты есть круглый год."
+    },
+    "everyday_life.service": {
+      "es": "El personal de servicio suele ser atento y amable.",
+      "ru": "Персонал в сфере обслуживания обычно внимателен и вежлив."
+    },
+    "everyday_life.music": {
+      "es": "En la mayoría de las fiestas se baila cumbia, salsa, merengue y bachata.",
+      "ru": "На большинстве вечеринок танцуют кумбию, сальсу, меренге и бачату."
+    },
+    "everyday_life.football_teams": {
+      "es": "Los equipos de fútbol tienen apodos (morados, manudos, florenses, brumosos) y te van a preguntar de cuál eres.",
+      "ru": "У футбольных команд есть прозвища — morados, manudos, florenses, brumosos, — и вас спросят, за кого вы болеете."
+    },
+    "local_expressions.mae": {
+      "es": "'Mae': algo como 'amigo', 'compa'; muy común entre los jóvenes.",
+      "ru": "«Mae» — «чувак», «приятель»; очень распространено среди молодёжи."
+    },
+    "local_expressions.tuanis": {
+      "es": "'Tuanis': genial, bien, buenísimo.",
+      "ru": "«Tuanis» — классно, нормально, отлично."
+    },
+    "local_expressions.brete": {
+      "es": "'Brete': trabajo; 'mucho brete'.",
+      "ru": "«Brete» — работа: «mucho brete»."
+    },
+    "local_expressions.chunche": {
+      "es": "'Chunche': cosa, cachivache.",
+      "ru": "«Chunche» — вещь, штуковина."
+    },
+    "local_expressions.diay": {
+      "es": "'Diay': una muletilla como 'bueno...', o '¿y qué pasó?'.",
+      "ru": "«Diay» — словечко-заполнитель вроде «ну...» или «и что же случилось?»."
+    },
+    "local_expressions.tico": {
+      "es": "A la gente de Costa Rica se le dice 'ticos' / 'ticas'.",
+      "ru": "Жителей Коста-Рики называют «ticos» / «ticas»."
+    },
+    "newcomers_find_hard.rainy_months": {
+      "es": "Meses de aguaceros por la tarde en la época lluviosa.",
+      "ru": "Месяцы послеобеденных ливней в сезон дождей."
+    },
+    "newcomers_find_hard.calendar_change": {
+      "es": "El calendario escolar cambia en 2027: los consejos basados en años anteriores pueden estar desactualizados.",
+      "ru": "Школьный календарь меняется в 2027 году — советы, основанные на прошлых годах, могут устареть."
+    },
+    "newcomers_find_hard.gueon": {
+      "es": "Palabras como 'güevón' se usan entre amigos, pero pueden ser insultos: los recién llegados deberían esperar antes de usarlas.",
+      "ru": "Слова вроде «güevón» используют между друзьями, но они могут быть оскорблением — новоприбывшим лучше не торопиться с ними."
+    },
+    "folk_culture.angeles": {
+      "es": "El 2 de agosto es la fiesta de la Virgen de los Ángeles, patrona de Costa Rica.",
+      "ru": "2 августа — праздник Virgen de los Ángeles, покровительницы Коста-Рики."
+    },
+    "folk_culture.romeria": {
+      "es": "En los días previos al 2 de agosto mucha gente camina hasta la basílica de Cartago en peregrinación, la 'romería'.",
+      "ru": "В дни перед 2 августа многие идут пешком к базилике в Картаго — это паломничество называют «romería»."
+    },
+    "folk_culture.afro_day": {
+      "es": "El 31 de agosto es un día nacional que celebra la cultura afrocostarricense.",
+      "ru": "31 августа — национальный день, посвящённый афро-костариканской культуре."
+    },
+    "folk_culture.pride": {
+      "es": "Mucha gente está orgullosa de su país y recomienda con gusto lugares, comida y música.",
+      "ru": "Многие гордятся своей страной и с удовольствием советуют места, еду и музыку."
+    }
+  },
+  "moments": {
+    "first_rainy": {"es": "Tu primera época lluviosa", "ru": "Ваш первый сезон дождей"},
+    "first_romeria": {"es": "La romería a Cartago", "ru": "Паломничество (romería) в Картаго"},
+    "sept15": {"es": "El Día de la Independencia", "ru": "День независимости"},
+    "rezo_nino": {"es": "Rezo del Niño", "ru": "Rezo del Niño"},
+    "mejenga": {"es": "Una mejenga con los vecinos", "ru": "Мехенга (mejenga) с соседями"},
+    "mothers_day": {"es": "El Día de la Madre, 15 de agosto", "ru": "День матери, 15 августа"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "В гостях у местной семьи"}
+  }
+}

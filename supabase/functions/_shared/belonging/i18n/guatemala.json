@@ -1,0 +1,145 @@
+{
+  "name": {"es": "Guatemala", "ru": "Гватемала"},
+  "items": {
+    "rhythm_of_the_year.school_year": {
+      "es": "El año escolar público va de enero/febrero a octubre: en 2026 las escuelas públicas empezaron el 2 de febrero (las privadas desde mediados de enero) y el plan diario anual cierra el 30 de octubre. Así que las vacaciones largas son de noviembre a enero.",
+      "ru": "Учебный год в государственных школах длится с января/февраля по октябрь: в 2026 году государственные школы начали занятия 2 февраля (частные — с середины января), а годовой учебный план закрывается 30 октября. Поэтому длинные каникулы — с ноября по январь."
+    },
+    "rhythm_of_the_year.june_recess": {
+      "es": "Las escuelas públicas tienen un receso de una semana a mitad de año, a finales de junio (del 24 al 30 de junio): confirma el calendario del Mineduc de cada año.",
+      "ru": "В государственных школах в конце июня — недельные каникулы в середине года (24–30 июня); уточняйте календарь Mineduc каждый год."
+    },
+    "rhythm_of_the_year.september": {
+      "es": "Septiembre es el mes de la Independencia (15 de septiembre): el 14, corredores llevan la 'Antorcha de la Independencia' por todo el país, y luego vienen los desfiles y las bandas escolares.",
+      "ru": "Сентябрь — месяц независимости (15 сентября): 14-го бегуны несут «Antorcha de la Independencia» (факел независимости) через всю страну, а затем проходят парады и выступают школьные оркестры."
+    },
+    "rhythm_of_the_year.november_kites": {
+      "es": "1 de noviembre: las familias arreglan las tumbas de sus parientes, comparten comida y comen fiambre; en Sumpango y Santiago Sacatepéquez se elevan barriletes gigantes sobre los cementerios.",
+      "ru": "1 ноября семьи ухаживают за могилами родственников, вместе едят и угощаются фьямбре (fiambre); в Сумпанго и Сантьяго-Сакатепекесе над кладбищами поднимаются гигантские воздушные змеи."
+    },
+    "rhythm_of_the_year.december_7": {
+      "es": "7 de diciembre a las 6 de la tarde: la 'Quema del Diablo'. Muchas familias encienden fogatas y queman una figura del diablo en la víspera de la Inmaculada Concepción, para 'limpiar el camino' a la Virgen.",
+      "ru": "7 декабря в 6 вечера — «Quema del Diablo» (сожжение дьявола): многие семьи разводят костры и сжигают фигуру дьявола накануне праздника Непорочного зачатия, чтобы «расчистить путь» Деве Марии."
+    },
+    "rhythm_of_the_year.rainy_season": {
+      "es": "La temporada de lluvias, llamada 'invierno', va más o menos de mayo a octubre; el 'verano' seco, de noviembre a abril.",
+      "ru": "Сезон дождей, который называют «invierno» («зима»), длится примерно с мая по октябрь; сухое «verano» («лето») — с ноября по апрель."
+    },
+    "holidays.list": {
+      "es": "Feriados según el Código de Trabajo: 1 de enero, Jueves Santo, Viernes Santo y Sábado Santo (marzo o abril; cambian cada año), 1 de mayo, 30 de junio (Día del Ejército), 15 de septiembre (Independencia), 20 de octubre (Revolución de 1944), 1 de noviembre, 24 de diciembre desde el mediodía, 25 de diciembre, 31 de diciembre.",
+      "ru": "Праздники по Трудовому кодексу: 1 января, Великий четверг, Страстная пятница и Великая суббота (март или апрель — даты меняются каждый год), 1 мая, 30 июня (День армии), 15 сентября (День независимости), 20 октября (Революция 1944 года), 1 ноября, 24 декабря с полудня, 25 декабря, 31 декабря."
+    },
+    "holidays.capital_aug15": {
+      "es": "El 15 de agosto (Asunción) es feriado solo en la Ciudad de Guatemala.",
+      "ru": "15 августа (Успение) — выходной только в городе Гватемала."
+    },
+    "greetings_and_courtesy.vos": {
+      "es": "En Guatemala se usa mucho el 'vos' entre amigos y familia; usa 'usted' hasta que te inviten a otra cosa.",
+      "ru": "В Гватемале среди друзей и родных широко используют «vos»; говорите «usted», пока вам не предложат иначе."
+    },
+    "greetings_and_courtesy.cabal": {
+      "es": "'¡Es cabal!': 'exacto, así es', para mostrar que estás de acuerdo.",
+      "ru": "«¡Es cabal!» — «точно, в яблочко»: так выражают согласие."
+    },
+    "greetings_and_courtesy.buenas": {
+      "es": "Se espera que saludes a todos ('buenos días') al entrar a una tienda, un bus o una sala de espera.",
+      "ru": "Входя в магазин, автобус или приёмную, принято поздороваться со всеми («buenos días»)."
+    },
+    "time.diablo_time": {
+      "es": "La Quema del Diablo es, por tradición, a las 6 de la tarde del 7 de diciembre.",
+      "ru": "Quema del Diablo по традиции проходит 7 декабря в 6 вечера."
+    },
+    "time.late_social": {
+      "es": "Las reuniones sociales a menudo empiezan más tarde de la hora indicada.",
+      "ru": "Встречи с друзьями часто начинаются позже назначенного времени."
+    },
+    "family_and_friends.cemetery_day": {
+      "es": "El 1 de noviembre las familias limpian y adornan las tumbas, comparten comida juntas en el cementerio y preparan fiambre en casa.",
+      "ru": "1 ноября семьи убирают и украшают могилы, вместе едят на кладбище и готовят дома фьямбре."
+    },
+    "family_and_friends.chapin": {
+      "es": "La gente de Guatemala se llama a sí misma 'chapines', con cariño.",
+      "ru": "Гватемальцы с любовью называют себя «chapines»."
+    },
+    "family_and_friends.patojo": {
+      "es": "A los niños y jóvenes se les dice 'patojos' / 'patojas'.",
+      "ru": "Детей и молодёжь называют «patojos» / «patojas»."
+    },
+    "school_life.public_private": {
+      "es": "Las escuelas privadas, por cooperativa y municipales pueden empezar antes que las públicas.",
+      "ru": "Частные, кооперативные и муниципальные школы могут начинать учебный год раньше государственных."
+    },
+    "school_life.parades": {
+      "es": "Septiembre trae desfiles escolares con bandas y carreras de antorcha.",
+      "ru": "В сентябре проходят школьные парады с оркестрами и эстафеты с факелом."
+    },
+    "school_life.international_calendar": {
+      "es": "Las escuelas con plan internacional siguen otro calendario, que empieza alrededor de agosto.",
+      "ru": "Школы с международной программой работают по другому календарю, который начинается примерно в августе."
+    },
+    "food_and_table.fiambre": {
+      "es": "El fiambre es el plato guatemalteco de esta época del año, que las familias preparan para el 1 de noviembre.",
+      "ru": "Фьямбре — гватемальское блюдо этого времени года, которое семьи готовят к 1 ноября."
+    },
+    "food_and_table.fiambre_what": {
+      "es": "El fiambre es un gran plato frío con muchas carnes, embutidos, quesos y verduras encurtidas; cada familia tiene su propia receta.",
+      "ru": "Фьямбре — большое холодное блюдо из множества видов мяса, колбас, сыров и маринованных овощей; у каждой семьи свой рецепт."
+    },
+    "food_and_table.christmas_tamales": {
+      "es": "En Nochebuena muchas familias comen tamales y toman ponche caliente a medianoche.",
+      "ru": "В сочельник многие семьи в полночь едят тамалес и пьют горячий пунш (ponche)."
+    },
+    "everyday_life.pisto": {
+      "es": "Al dinero se le dice 'pisto'.",
+      "ru": "Деньги называют «pisto»."
+    },
+    "everyday_life.diablo_safety": {
+      "es": "El 7 de diciembre las autoridades piden a las familias evitar quemaduras: nada de fogatas bajo los cables eléctricos y cuidado con la pirotecnia cerca de los niños.",
+      "ru": "7 декабря власти просят семьи беречься от ожогов: не разводить костры под линиями электропередачи и осторожно обращаться с фейерверками рядом с детьми."
+    },
+    "local_expressions.chilero": {
+      "es": "'¡Qué chilero!': qué bonito, qué genial.",
+      "ru": "«¡Qué chilero!» — как мило, здорово."
+    },
+    "local_expressions.cabal2": {
+      "es": "'Cabal': exacto, precisamente.",
+      "ru": "«Cabal» — точно, именно так."
+    },
+    "local_expressions.a_huevo": {
+      "es": "'¡A huevo!': '¡claro que sí!'; muy informal, no es para la escuela ni la oficina.",
+      "ru": "«¡A huevo!» — «конечно!»; очень неформально, не для школы и не для офиса."
+    },
+    "newcomers_find_hard.school_calendar": {
+      "es": "El año escolar termina en octubre, no en junio: los niños que llegan de un país con calendario de septiembre a junio necesitan hablar con la escuela sobre a qué grado entrar.",
+      "ru": "Учебный год заканчивается в октябре, а не в июне — детям, приехавшим из страны с учебным годом с сентября по июнь, нужно обсудить со школой, в какой класс поступать."
+    },
+    "newcomers_find_hard.local_variety": {
+      "es": "Las tradiciones cambian según el departamento y el pueblo: lo que describe un vecino puede ser distinto en el pueblo de al lado.",
+      "ru": "Традиции различаются по департаментам и городам — то, что рассказывает сосед, в соседнем городке может быть иначе."
+    },
+    "folk_culture.kites_unesco": {
+      "es": "En 2024 la UNESCO inscribió la elaboración de los barriletes gigantes de Santiago Sacatepéquez y Sumpango en su lista del Patrimonio Cultural Inmaterial.",
+      "ru": "В 2024 году ЮНЕСКО внесла изготовление гигантских воздушных змеев Сантьяго-Сакатепекеса и Сумпанго в список нематериального культурного наследия."
+    },
+    "folk_culture.diablo_meaning": {
+      "es": "La Quema del Diablo viene de la época colonial: el fuego 'limpia el camino' para la Inmaculada Concepción, patrona de Guatemala.",
+      "ru": "Quema del Diablo пришла из колониальных времён: огонь «расчищает путь» для Непорочного зачатия — покровительницы Гватемалы."
+    },
+    "folk_culture.antorcha_origin": {
+      "es": "La carrera de la antorcha conmemora a María Dolores Bedoya, que en 1821 recorrió las calles con una antorcha convocando a la gente por la independencia.",
+      "ru": "Эстафета с факелом увековечивает память Марии Долорес Бедойи, которая в 1821 году прошла по улицам с факелом, призывая людей к независимости."
+    },
+    "folk_culture.alfombras": {
+      "es": "Durante la Semana Santa, sobre todo en Antigua, los vecinos hacen alfombras de aserrín de colores y flores para que las procesiones pasen sobre ellas.",
+      "ru": "На Страстной неделе, особенно в Антигуа, соседи выкладывают ковры из цветных опилок и цветов, по которым проходят процессии."
+    }
+  },
+  "moments": {
+    "first_antorcha": {"es": "Tu primera carrera de la antorcha de la Independencia", "ru": "Ваша первая эстафета факела независимости"},
+    "first_barriletes": {"es": "Barriletes gigantes y fiambre", "ru": "Гигантские змеи и фьямбре"},
+    "quema_diablo": {"es": "La Quema del Diablo", "ru": "La Quema del Diablo (сожжение дьявола)"},
+    "semana_santa": {"es": "La Semana Santa y las alfombras de aserrín", "ru": "Страстная неделя и ковры из опилок"},
+    "school_end": {"es": "El fin del año escolar en octubre", "ru": "Конец учебного года в октябре"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "В гостях у местной семьи"}
+  }
+}

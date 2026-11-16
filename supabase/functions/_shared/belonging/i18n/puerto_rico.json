@@ -1,0 +1,122 @@
+{
+  "name": {"es": "Puerto Rico", "ru": "Пуэрто-Рико"},
+  "items": {
+    "rhythm_of_the_year.long_christmas": {
+      "es": "La temporada navideña es larga: desde justo después del Día de Acción de Gracias hasta mediados de enero, y termina con las Fiestas de la Calle San Sebastián en el Viejo San Juan. La gente la llama con orgullo 'la Navidad más larga del mundo'.",
+      "ru": "Рождественский сезон длинный: сразу после Дня благодарения и до середины января, а завершается он праздником Fiestas de la Calle San Sebastián в Старом Сан-Хуане. Его с гордостью называют «самым длинным Рождеством в мире»."
+    },
+    "rhythm_of_the_year.octavitas": {
+      "es": "Después del Día de Reyes vienen las 'Octavitas' (del 7 al 14 de enero): más música, comida y juegos para que la temporada dure un poco más.",
+      "ru": "После Дня Трёх королей наступают «Octavitas» (7-14 января): ещё музыка, еда и игры, чтобы сезон длился чуть дольше."
+    },
+    "rhythm_of_the_year.sanse": {
+      "es": "Las Fiestas de la Calle San Sebastián ('La SanSe'), normalmente en la tercera semana de enero, cierran la temporada con música, comparsas y puestos de artesanía en el Viejo San Juan.",
+      "ru": "Fiestas de la Calle San Sebastián («La SanSe»), обычно в третью неделю января, закрывают сезон музыкой, comparsas и ремесленными лотками в Старом Сан-Хуане."
+    },
+    "rhythm_of_the_year.school_year": {
+      "es": "El año escolar público va de inicios de agosto a finales de mayo: las clases de 2026-2027 empezaron a inicios de agosto, y las graduaciones pueden comenzar a partir del 24 de mayo de 2027.",
+      "ru": "Учебный год в государственных школах длится с начала августа до конца мая: занятия 2026-2027 года начались в начале августа, а выпускные могут начаться с 24 мая 2027 года."
+    },
+    "rhythm_of_the_year.hurricane_season": {
+      "es": "La temporada de huracanes va del 1 de junio al 30 de noviembre; sigue las alertas oficiales de la oficina de manejo de emergencias.",
+      "ru": "Сезон ураганов длится с 1 июня по 30 ноября; следите за официальными предупреждениями службы по чрезвычайным ситуациям."
+    },
+    "holidays.pr_specific": {
+      "es": "Feriados propios de Puerto Rico: 6 de enero (Reyes), 2 de marzo (Día de la Ciudadanía Americana), 22 de marzo (Día de la Abolición de la Esclavitud), 25 de julio (Día de la Constitución), 27 de julio (José Celso Barbosa), 19 de noviembre (Descubrimiento de Puerto Rico), además del Viernes Santo.",
+      "ru": "Собственные праздники Пуэрто-Рико: 6 января (День Трёх королей), 2 марта (День американского гражданства), 22 марта (День эмансипации — отмены рабства), 25 июля (День Конституции), 27 июля (José Celso Barbosa), 19 ноября (День открытия Пуэрто-Рико), а также Страстная пятница."
+    },
+    "holidays.us_federal": {
+      "es": "También rigen los feriados federales de EE. UU.: Año Nuevo, Día de Martin Luther King Jr., Día de los Presidentes, Día de la Recordación, Juneteenth, 4 de julio, Día del Trabajo, Día de Colón, Día del Veterano, Acción de Gracias y Navidad.",
+      "ru": "Действуют и федеральные праздники США: Новый год, День Мартина Лютера Кинга-младшего, День президентов, День памяти, Juneteenth, 4 июля, День труда, День Колумба, День ветеранов, День благодарения, Рождество."
+    },
+    "greetings_and_courtesy.ay_bendito": {
+      "es": "'¡Ay, bendito!': compasión, sorpresa o frustración, según el tono; lo oirás todos los días.",
+      "ru": "«¡Ay, bendito!» — сочувствие, удивление или досада, в зависимости от тона; вы будете слышать это каждый день."
+    },
+    "greetings_and_courtesy.wepa": {
+      "es": "'¡Wepa!': '¡bien!', '¡yupi!', alegría o aprobación.",
+      "ru": "«¡Wepa!» — «ура!», «йу-ху!», радость или одобрение."
+    },
+    "time.thanksgiving_start": {
+      "es": "Para muchas familias la Navidad empieza el día después de Acción de Gracias.",
+      "ru": "Для многих семей Рождество начинается на следующий день после Дня благодарения."
+    },
+    "time.island_time": {
+      "es": "Los planes sociales suelen empezar más tarde de la hora indicada; las citas y la escuela, no.",
+      "ru": "Встречи с друзьями часто начинаются позже назначенного времени; приёмы и школа — нет."
+    },
+    "family_and_friends.parrandas": {
+      "es": "En una 'parranda' o 'asalto navideño' un grupo de amigos va de casa en casa cantando aguinaldos con pandereta, güiro y cuatro; los anfitriones les dan comida y bebida, y la fiesta sigue su camino.",
+      "ru": "Во время «parranda», или «asalto navideño», компания друзей ходит от дома к дому и поёт aguinaldos под pandereta, güiro и cuatro; хозяева угощают едой и напитками, и праздник движется дальше."
+    },
+    "family_and_friends.pasteles_family": {
+      "es": "Las familias se reúnen para hacer pasteles juntos (una masa de guineo verde o yuca envuelta en hojas de plátano) y los comparten con amigos y vecinos.",
+      "ru": "Семьи собираются, чтобы вместе готовить pasteles — тесто из зелёных бананов или юки, завёрнутое в листья плантана, — и делятся ими с друзьями и соседями."
+    },
+    "family_and_friends.corillo": {
+      "es": "Tu grupo de amigos es tu 'corillo'; salir a pasar el rato es 'janguear'.",
+      "ru": "Ваша компания друзей — ваш «corillo»; проводить вместе время — «janguear»."
+    },
+    "school_life.teachers_first": {
+      "es": "Los maestros se reportan unos días antes de que empiecen los alumnos en agosto.",
+      "ru": "Учителя выходят на работу на несколько дней раньше, чем в августе начинают учиться дети."
+    },
+    "school_life.calendar_portal": {
+      "es": "El Departamento de Educación publica cada verano el calendario oficial, con las fechas conmemorativas; revísalo antes de planear viajes.",
+      "ru": "Департамент образования каждое лето публикует официальный календарь с памятными датами — сверьтесь с ним, прежде чем планировать поездки."
+    },
+    "food_and_table.christmas_table": {
+      "es": "La mesa navideña: lechón asado, arroz con gandules, pasteles y postres como tembleque, arroz con dulce y majarete.",
+      "ru": "Рождественский стол: lechón asado (жареная свинина), arroz con gandules, pasteles и десерты — tembleque, arroz con dulce и majarete."
+    },
+    "food_and_table.coquito": {
+      "es": "El coquito, un ponche de coco, es la bebida navideña que muchas familias preparan y regalan.",
+      "ru": "Coquito, кокосовый эгг-ног, — рождественский напиток, который многие семьи готовят сами и дарят."
+    },
+    "everyday_life.guagua": {"es": "Al autobús se le dice 'guagua'.", "ru": "Автобус называют «guagua»."},
+    "everyday_life.chavos": {
+      "es": "Al dinero se le dice 'chavos' (en México la misma palabra significa jóvenes).",
+      "ru": "Деньги называют «chavos» (в Мексике это же слово означает молодёжь)."
+    },
+    "everyday_life.bilingual": {
+      "es": "El español es el idioma de todos los días, con muchas palabras en inglés mezcladas.",
+      "ru": "В повседневной жизни говорят по-испански, с большим количеством вкраплённых английских слов."
+    },
+    "local_expressions.janguear": {
+      "es": "'Janguear': salir, pasar el rato; viene del inglés.",
+      "ru": "«Janguear» — тусоваться, проводить время вместе; от английского."
+    },
+    "local_expressions.boricua": {
+      "es": "Los puertorriqueños se llaman a sí mismos 'boricuas', de Borikén, el nombre taíno de la isla.",
+      "ru": "Жители Пуэрто-Рико называют себя «boricuas» — от Borikén, названия острова на языке таино."
+    },
+    "newcomers_find_hard.parranda_surprise": {
+      "es": "Una parranda que llega a tu puerta: se espera que los anfitriones ofrezcan comida y bebida.",
+      "ru": "Parranda, которая появляется у вашей двери: от хозяев ждут угощения едой и напитками."
+    },
+    "newcomers_find_hard.two_holiday_sets": {
+      "es": "Dos juegos de feriados: los federales de EE. UU. y los puertorriqueños.",
+      "ru": "Два набора праздников — федеральные праздники США и пуэрториканские."
+    },
+    "folk_culture.reyes_grass": {
+      "es": "La noche del 5 de enero los niños ponen hierba para los camellos de los Reyes en cajas de zapatos; muchos pueblos hacen desfiles de Reyes.",
+      "ru": "Вечером 5 января дети кладут в обувные коробки траву для верблюдов Трёх королей; во многих городах проходят шествия Трёх королей."
+    },
+    "folk_culture.santos": {
+      "es": "Los artesanos tallan figuras de 'santos' en madera, parte de la tradición de los Reyes.",
+      "ru": "Мастера вырезают из дерева фигурки «santos» — это часть традиции Трёх королей."
+    },
+    "folk_culture.nacimiento": {
+      "es": "En el nacimiento de la familia, el Niño Jesús se coloca solo el 25 de diciembre.",
+      "ru": "В семейном вертепе младенца Иисуса ставят только 25 декабря."
+    }
+  },
+  "moments": {
+    "first_parranda": {"es": "Tu primera parranda", "ru": "Ваша первая parranda"},
+    "reyes": {"es": "Los Reyes: hierba en la caja de zapatos", "ru": "Три короля: трава в обувной коробке"},
+    "sanse": {"es": "La SanSe", "ru": "La SanSe"},
+    "pasteles": {"es": "Haciendo pasteles juntos", "ru": "Готовим pasteles вместе"},
+    "school_start": {"es": "El año escolar empieza en agosto", "ru": "Учебный год начинается в августе"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "Приглашение от местной семьи"}
+  }
+}

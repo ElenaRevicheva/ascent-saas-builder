@@ -6,12 +6,14 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { AlertTriangle, RefreshCw, CheckCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const SubscriptionRecovery = () => {
   const [isRetrying, setIsRetrying] = useState(false);
   const [autoRetryAttempted, setAutoRetryAttempted] = useState(false);
   type RecoveryStatus = 'idle' | 'success' | 'failed';
   const [recoveryStatus, setRecoveryStatus] = useState<RecoveryStatus>('idle');
+  const { t } = useTranslation();
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -56,8 +58,8 @@ const SubscriptionRecovery = () => {
   const retrySubscriptionActivation = async () => {
     if (!user || !pendingSubscription) {
       toast({
-        title: "Cannot Retry",
-        description: "Missing user or subscription information. Please contact support.",
+        title: t('rec.cannotRetryTitle'),
+        description: t('rec.cannotRetryBody'),
         variant: "destructive"
       });
       return;
@@ -90,8 +92,8 @@ const SubscriptionRecovery = () => {
         
         setRecoveryStatus('success');
         toast({
-          title: "Subscription Found!",
-          description: "Your subscription is already active. Refreshing page...",
+          title: t('rec.foundTitle'),
+          description: t('rec.foundBody'),
         });
         
         setTimeout(() => {
@@ -124,8 +126,8 @@ const SubscriptionRecovery = () => {
 
       setRecoveryStatus('success');
       toast({
-        title: "Subscription Activated!",
-        description: "Your subscription has been successfully activated. Refreshing page...",
+        title: t('rec.activatedTitle'),
+        description: t('rec.activatedBody'),
       });
 
       setTimeout(() => {
@@ -136,8 +138,8 @@ const SubscriptionRecovery = () => {
       console.error('Retry failed:', error);
       setRecoveryStatus('failed');
       toast({
-        title: "Retry Failed",
-        description: `Unable to activate subscription: ${error.message}. Please contact support.`,
+        title: t('rec.failedTitle'),
+        description: t('rec.failedBody', { message: error.message }),
         variant: "destructive"
       });
     } finally {
@@ -160,15 +162,15 @@ const SubscriptionRecovery = () => {
     navigator.clipboard.writeText(JSON.stringify(errorData, null, 2))
       .then(() => {
         toast({
-          title: "Error Details Copied",
-          description: "Error details have been copied to your clipboard. Please include this when contacting support.",
+          title: t('rec.copiedTitle'),
+          description: t('rec.copiedBody'),
         });
       })
       .catch(() => {
         console.log('Error data for support:', errorData);
         toast({
-          title: "Error Details Available",
-          description: "Check the browser console for error details to share with support.",
+          title: t('rec.consoleTitle'),
+          description: t('rec.consoleBody'),
         });
       });
   };
@@ -179,11 +181,11 @@ const SubscriptionRecovery = () => {
         <CardHeader>
           <div className="flex items-center gap-2">
             <CheckCircle className="h-5 w-5 text-green-600" />
-            <CardTitle className="text-green-800">Subscription Recovered!</CardTitle>
+            <CardTitle className="text-green-800">{t('rec.recoveredTitle')}</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-green-700">Your subscription has been successfully activated. The page will refresh shortly.</p>
+          <p className="text-green-700">{t('rec.recoveredBody')}</p>
         </CardContent>
       </Card>
     );
@@ -194,12 +196,12 @@ const SubscriptionRecovery = () => {
       <CardHeader>
         <div className="flex items-center gap-2">
           <RefreshCw className="h-5 w-5 text-blue-600" />
-          <CardTitle className="text-blue-800">Finalizing Your Subscription</CardTitle>
+          <CardTitle className="text-blue-800">{t('rec.finalizingTitle')}</CardTitle>
         </div>
         <CardDescription className="text-blue-700">
-          Great news! Your PayPal payment was successful. We're just finishing up your subscription setup.
+          {t('rec.finalizingBody')}
           {!autoRetryAttempted && !isRetrying && (
-            <span className="block mt-2 text-sm font-medium">⏳ Auto-completing in a few seconds...</span>
+            <span className="block mt-2 text-sm font-medium">{t('rec.autoCompleting')}</span>
           )}
         </CardDescription>
       </CardHeader>
@@ -207,10 +209,10 @@ const SubscriptionRecovery = () => {
         {pendingSubscription && (
           <Alert className="bg-blue-50 border-blue-200">
             <AlertDescription className="text-blue-800">
-              <strong>Payment Details:</strong><br />
-              Subscription ID: {pendingSubscription.subscriptionId}<br />
-              Plan: {pendingSubscription.planType}<br />
-              Email: {pendingSubscription.email}
+              <strong>{t('rec.paymentDetails')}</strong><br />
+              {t('rec.subscriptionId')} {pendingSubscription.subscriptionId}<br />
+              {t('rec.plan')} {pendingSubscription.planType}<br />
+              {t('rec.email')} {pendingSubscription.email}
             </AlertDescription>
           </Alert>
         )}
@@ -225,12 +227,12 @@ const SubscriptionRecovery = () => {
             {isRetrying ? (
               <>
                 <RefreshCw className="h-4 w-4 animate-spin" />
-                Completing Setup...
+                {t('rec.completing')}
               </>
             ) : (
               <>
                 <RefreshCw className="h-4 w-4" />
-                Complete Setup
+                {t('rec.complete')}
               </>
             )}
           </Button>
@@ -241,27 +243,27 @@ const SubscriptionRecovery = () => {
             className="flex items-center gap-2"
           >
             <AlertTriangle className="h-4 w-4" />
-            Contact Support
+            {t('rec.contactSupport')}
           </Button>
         </div>
 
         {recoveryStatus === 'failed' && (
           <Alert className="bg-yellow-50 border-yellow-200">
             <AlertDescription className="text-yellow-800">
-              The setup is taking a bit longer than usual. Our support team can complete this for you quickly - just click "Contact Support" above.
+              {t('rec.slowBody')}
             </AlertDescription>
           </Alert>
         )}
 
         <div className="text-sm text-muted-foreground">
-          <p><strong>What's happening?</strong></p>
-          <p>Your PayPal payment was processed successfully! We're just completing the final setup steps for your subscription.</p>
+          <p><strong>{t('rec.whatsHappening')}</strong></p>
+          <p>{t('rec.whatsHappeningBody')}</p>
           <br />
-          <p><strong>What to do:</strong></p>
+          <p><strong>{t('rec.whatToDo')}</strong></p>
           <ul className="list-disc list-inside space-y-1">
-            <li>Click "Complete Setup" above to finish the process</li>
-            <li>This usually completes in seconds</li>
-            <li>If you need help, our support team is ready to assist</li>
+            <li>{t('rec.step1')}</li>
+            <li>{t('rec.step2')}</li>
+            <li>{t('rec.step3')}</li>
           </ul>
         </div>
       </CardContent>

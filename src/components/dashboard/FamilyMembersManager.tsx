@@ -91,7 +91,7 @@ export const FamilyMembersManager = () => {
       setFamilyMembers(data || []);
     } catch (error) {
       console.error('Error loading family members:', error);
-      toast.error('Error loading family members');
+      toast.error(t('fam.loadError'));
     }
   };
 
@@ -148,7 +148,7 @@ export const FamilyMembersManager = () => {
         if (error) throw error;
       }
 
-      toast.success(editingMember ? 'Family member updated!' : 'Family member added!');
+      toast.success(editingMember ? t('fam.updated') : t('fam.added'));
       setIsDialogOpen(false);
       resetForm();
       await loadFamilyMembers();
@@ -158,7 +158,7 @@ export const FamilyMembersManager = () => {
         const firstError = error.errors[0];
         toast.error(firstError.message);
       } else {
-        toast.error('Error saving family member');
+        toast.error(t('fam.saveError'));
       }
     } finally {
       setLoading(false);
@@ -173,11 +173,11 @@ export const FamilyMembersManager = () => {
         .eq('id', id);
 
       if (error) throw error;
-      toast.success('Family member deleted');
+      toast.success(t('fam.deleted'));
       await loadFamilyMembers();
     } catch (error) {
       console.error('Error deleting family member:', error);
-      toast.error('Error deleting family member');
+      toast.error(t('fam.deleteError'));
     }
   };
 
@@ -228,37 +228,37 @@ export const FamilyMembersManager = () => {
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
-            Family Members
+            {t('fam.title')}
           </CardTitle>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button onClick={openAddDialog} size="sm" className="bg-[hsl(var(--espaluz-primary))]">
+              <Button onClick={openAddDialog} size="sm" className="bg-[hsl(var(--espaluz-primary))]" data-add-member>
                 <Plus className="h-4 w-4 mr-1" />
-                Add Member
+                {t('fam.addMember')}
               </Button>
             </DialogTrigger>
             
             <DialogContent className="max-w-2xl">
               <DialogHeader>
                 <DialogTitle>
-                  {editingMember ? 'Edit Family Member' : 'Add Family Member'}
+                  {editingMember ? t('fam.editTitle') : t('fam.addTitle')}
                 </DialogTitle>
               </DialogHeader>
               
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="name">Name *</Label>
+                    <Label htmlFor="name">{t('fam.name')}</Label>
                     <Input
                       id="name"
                       value={formData.name || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                      placeholder="e.g. Elena, Sofia, Carlos"
+                      placeholder={t('fam.namePh')}
                     />
                   </div>
                   
                   <div>
-                    <Label htmlFor="age">Age</Label>
+                    <Label htmlFor="age">{t('fam.age')}</Label>
                     <Input
                       id="age"
                       type="number"
@@ -271,7 +271,7 @@ export const FamilyMembersManager = () => {
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="role">Role</Label>
+                    <Label htmlFor="role">{t('fam.role')}</Label>
                     <Select value={formData.role} onValueChange={(value: any) => setFormData(prev => ({ ...prev, role: value }))}>
                       <SelectTrigger>
                         <SelectValue />
@@ -279,7 +279,7 @@ export const FamilyMembersManager = () => {
                       <SelectContent>
                         {ROLE_OPTIONS.map(option => (
                           <SelectItem key={option.value} value={option.value}>
-                            {option.label}
+                            {t(`fam.roles.${option.value}`, { defaultValue: option.label })}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -287,7 +287,7 @@ export const FamilyMembersManager = () => {
                   </div>
                   
                   <div>
-                    <Label htmlFor="learning_level">Learning Level</Label>
+                    <Label htmlFor="learning_level">{t('fam.level')}</Label>
                     <Select value={formData.learning_level} onValueChange={(value: any) => setFormData(prev => ({ ...prev, learning_level: value }))}>
                       <SelectTrigger>
                         <SelectValue />
@@ -295,7 +295,7 @@ export const FamilyMembersManager = () => {
                       <SelectContent>
                         {LEVEL_OPTIONS.map(option => (
                           <SelectItem key={option.value} value={option.value}>
-                            {option.label}
+                            {t(`fam.levels.${option.value}`, { defaultValue: option.label })}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -304,7 +304,7 @@ export const FamilyMembersManager = () => {
                 </div>
                 
                 <div>
-                  <Label htmlFor="tone">Communication Tone</Label>
+                  <Label htmlFor="tone">{t('fam.tone')}</Label>
                   <Select value={formData.tone} onValueChange={(value: any) => setFormData(prev => ({ ...prev, tone: value }))}>
                     <SelectTrigger>
                       <SelectValue />
@@ -312,7 +312,7 @@ export const FamilyMembersManager = () => {
                     <SelectContent>
                       {TONE_OPTIONS.map(option => (
                         <SelectItem key={option.value} value={option.value}>
-                          {option.label}
+                          {t(`fam.tones.${option.value}`, { defaultValue: option.label })}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -321,7 +321,7 @@ export const FamilyMembersManager = () => {
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="spanish_pref">Spanish Preference ({Math.round((formData.spanish_preference || 0.5) * 100)}%)</Label>
+                    <Label htmlFor="spanish_pref">{t('fam.spanishPref', { pct: Math.round((formData.spanish_preference || 0.5) * 100) })}</Label>
                     <input
                       type="range"
                       min="0"
@@ -334,7 +334,7 @@ export const FamilyMembersManager = () => {
                   </div>
                   
                   <div>
-                    <Label htmlFor="english_pref">English Preference ({Math.round((formData.english_preference || 0.5) * 100)}%)</Label>
+                    <Label htmlFor="english_pref">{t('fam.englishPref', { pct: Math.round((formData.english_preference || 0.5) * 100) })}</Label>
                     <input
                       type="range"
                       min="0"
@@ -348,32 +348,32 @@ export const FamilyMembersManager = () => {
                 </div>
                 
                 <div>
-                  <Label htmlFor="interests">Interests (comma-separated)</Label>
+                  <Label htmlFor="interests">{t('fam.interestsLabel')}</Label>
                    <Input
                      id="interests"
                      value={typeof formData.interests === 'string' ? formData.interests : (Array.isArray(formData.interests) ? formData.interests.join(', ') : '')}
                      onChange={(e) => handleInterestsChange(e.target.value)}
-                     placeholder="e.g. cooking, travel, music, sports"
+                     placeholder={t('fam.interestsPh')}
                    />
                 </div>
                 
                 <div>
-                  <Label htmlFor="variants">Name Variants (comma-separated)</Label>
+                  <Label htmlFor="variants">{t('fam.variantsLabel')}</Label>
                    <Input
                      id="variants"
                      value={typeof formData.name_variants === 'string' ? formData.name_variants : (Array.isArray(formData.name_variants) ? formData.name_variants.join(', ') : '')}
                      onChange={(e) => handleVariantsChange(e.target.value)}
-                     placeholder="e.g. Elena, Лена, Lenka"
+                     placeholder={t('fam.variantsPh')}
                    />
                 </div>
               </div>
               
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                  Cancel
+                  {t('common.cancel')}
                 </Button>
                 <Button onClick={saveFamilyMember} disabled={loading}>
-                  {loading ? 'Saving...' : 'Save'}
+                  {loading ? t('fam.saving') : t('common.save')}
                 </Button>
               </div>
             </DialogContent>
@@ -385,8 +385,8 @@ export const FamilyMembersManager = () => {
         {familyMembers.length === 0 ? (
           <div className="text-center text-muted-foreground py-8">
             <Users className="h-12 w-12 mx-auto mb-3 opacity-50" />
-            <p>No family members added yet</p>
-            <p className="text-sm mt-1">Add family members to personalize your learning experience</p>
+            <p>{t('fam.empty')}</p>
+            <p className="text-sm mt-1">{t('fam.emptyHint')}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -396,22 +396,22 @@ export const FamilyMembersManager = () => {
                   <div className="flex items-center gap-2 mb-1">
                     <h4 className="font-medium">{member.name}</h4>
                     <Badge variant="outline" className="text-xs">
-                      {member.role}
+                      {t(`fam.roles.${member.role}`, { defaultValue: member.role })}
                     </Badge>
                     <Badge variant="outline" className="text-xs">
-                      {member.learning_level}
+                      {t(`fam.levels.${member.learning_level}`, { defaultValue: member.learning_level })}
                     </Badge>
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    <span>Age: {member.age || 'N/A'}</span>
+                    <span>{t('fam.ageLine', { age: member.age || t('fam.na') })}</span>
                     <span className="mx-2">•</span>
-                    <span>Tone: {member.tone}</span>
+                    <span>{t('fam.toneLine', { tone: t(`fam.tones.${member.tone}`, { defaultValue: member.tone }) })}</span>
                     <span className="mx-2">•</span>
-                    <span>Spanish: {Math.round(member.spanish_preference * 100)}%</span>
+                    <span>{t('fam.spanishLine', { pct: Math.round(member.spanish_preference * 100) })}</span>
                   </div>
                    {member.interests && (Array.isArray(member.interests) ? member.interests.length > 0 : member.interests.length > 0) && (
                      <div className="text-xs text-muted-foreground mt-1">
-                       Interests: {Array.isArray(member.interests) ? member.interests.join(', ') : member.interests}
+                       {t('fam.interestsLine', { list: Array.isArray(member.interests) ? member.interests.join(', ') : member.interests })}
                      </div>
                    )}
                 </div>

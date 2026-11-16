@@ -1,0 +1,121 @@
+{
+  "name": {"es": "Paraguay", "ru": "Парагвай"},
+  "items": {
+    "rhythm_of_the_year.school_year": {
+      "es": "El año escolar va de finales de febrero al 30 de noviembre: en 2026 las clases empezaron el 23 de febrero, con vacaciones de invierno en julio. Confirma cada año el calendario del MEC, porque las fechas pueden cambiar.",
+      "ru": "Учебный год длится с конца февраля по 30 ноября: в 2026 году занятия начались 23 февраля, зимние каникулы — в июле. Каждый год сверяйтесь с календарём MEC: даты могут меняться."
+    },
+    "rhythm_of_the_year.terere_day": {
+      "es": "El último sábado de febrero es el Día Nacional del Tereré, por una ley de 2011 que declaró el tereré bebida nacional.",
+      "ru": "Последняя суббота февраля — Национальный день терере (tereré): по закону 2011 года tereré стал национальным напитком."
+    },
+    "rhythm_of_the_year.san_juan": {
+      "es": "Junio es el mes de las fiestas de San Juan: la fiesta es el 24 de junio y empieza la noche del 23 con música, baile y juegos tradicionales alrededor de una gran fogata; los eventos de 'San Juan ára' siguen durante todo el mes.",
+      "ru": "Июнь — месяц праздников San Juan: сам праздник 24 июня, а начинается он вечером 23-го с музыкой, танцами и традиционными играми вокруг большого костра; мероприятия «San Juan ára» продолжаются весь месяц."
+    },
+    "rhythm_of_the_year.caacupe": {
+      "es": "El 8 de diciembre es el día de la Virgen de Caacupé, patrona del Paraguay, y feriado nacional.",
+      "ru": "8 декабря — день Virgen de Caacupé, покровительницы Парагвая, и национальный праздник."
+    },
+    "holidays.list": {
+      "es": "Feriados: 1 de enero, 1 de marzo (Héroes de la Patria), Jueves y Viernes Santo (marzo o abril; cambian cada año), 1 de mayo, 14 de mayo (Independencia), 12 de junio (Paz del Chaco), 20 de junio (Constitución), 15 de agosto (Fundación de Asunción), 29 de septiembre (Batalla de Boquerón), 8 de diciembre (Caacupé), 25 de diciembre. Confirma cada año la lista oficial.",
+      "ru": "Официальные праздники: 1 января, 1 марта (День национальных героев), Великий четверг и Страстная пятница (март или апрель, даты каждый год меняются), 1 мая, 14 мая (День независимости), 12 июня (Мир в Чако), 20 июня (День Конституции), 15 августа (Основание Asunción), 29 сентября (Битва при Boquerón), 8 декабря (Caacupé), 25 декабря. Каждый год сверяйтесь с официальным списком."
+    },
+    "greetings_and_courtesy.guarani_official": {
+      "es": "El español y el guaraní son ambos idiomas oficiales; mucha gente pasa de uno a otro, incluso dentro de una misma frase. Esta mezcla se llama 'jopará' ('mezcla').",
+      "ru": "Испанский и гуарани — оба официальные языки; многие переходят с одного на другой даже внутри одной фразы. Такую смесь называют «jopará» («смесь»)."
+    },
+    "greetings_and_courtesy.learn_greeting": {
+      "es": "Unas pocas palabras en guaraní conquistan corazones: 'Mba'éichapa?' (¿cómo estás?) - 'Iporã' (bien), 'Aguyje' (gracias).",
+      "ru": "Несколько слов на гуарани покоряют сердца: «Mba'éichapa?» (как дела?) — «Iporã» (хорошо), «Aguyje» (спасибо)."
+    },
+    "time.terere_any_time": {
+      "es": "El tereré se trata sobre todo de compartir: que te ofrezcan una ronda es un gesto amistoso.",
+      "ru": "Tereré — это прежде всего про то, чтобы делиться: если вам предлагают круг, это дружеский жест."
+    },
+    "time.siesta": {
+      "es": "La siesta es una tradición muy arraigada, sobre todo en las zonas rurales.",
+      "ru": "Сиеста — глубоко укоренившаяся традиция, особенно в сельской местности."
+    },
+    "time.terere_hours": {
+      "es": "En las zonas rurales muchos creen que el tereré corresponde a la franja entre media mañana y la hora de la siesta.",
+      "ru": "В сельской местности многие считают, что время tereré — с середины утра до сиесты."
+    },
+    "family_and_friends.terere_round": {
+      "es": "El tereré, yerba mate con agua fría, está ligado a la cultura guaraní de las hierbas medicinales ('pohã ñana') y se comparte en ronda.",
+      "ru": "Tereré — йерба мате с холодной водой — связан с культурой лекарственных трав гуарани («pohã ñana») и пьётся по кругу."
+    },
+    "family_and_friends.san_juan_games": {
+      "es": "Entre los juegos tradicionales de San Juan están el 'toro candil', el 'kambuchi jejoka', la 'pelota tatá' y la quema de un muñeco de 'Judas' ('Judas kái').",
+      "ru": "Среди традиционных игр San Juan — «toro candil», «kambuchi jejoka», «pelota tatá» и сожжение чучела «Иуды» («Judas kái»)."
+    },
+    "family_and_friends.youngest_serves": {
+      "es": "Por costumbre, el más joven del grupo sirve el tereré a los mayores; hoy cualquiera puede servir, y los niños también se suman a la ronda.",
+      "ru": "По обычаю самый младший в компании наливает tereré старшим; сегодня наливать может любой, и дети тоже участвуют в круге."
+    },
+    "family_and_friends.terere_welcome": {
+      "es": "A los recién llegados se les suele invitar a tomar tereré: es la forma del país de compartir y hacer comunidad.",
+      "ru": "Новичков обычно приглашают на tereré — так в этой стране делятся и создают общность."
+    },
+    "school_life.mec_calendar": {
+      "es": "Las escuelas abren para el trabajo administrativo unas dos semanas antes de las clases; los docentes trabajan hasta mediados de diciembre.",
+      "ru": "Школы открываются для административной работы примерно за две недели до начала занятий; учителя работают до середины декабря."
+    },
+    "school_life.san_juan_school": {
+      "es": "Muchas escuelas organizan su propia fiesta de San Juan en junio, a la que las familias llevan comida típica.",
+      "ru": "Многие школы в июне устраивают свой праздник San Juan, куда семьи приносят традиционную еду."
+    },
+    "food_and_table.sanjuan_food": {
+      "es": "En San Juan aparecen las comidas típicas: chipa, sopa paraguaya, mbejú, pastel mandi'o y más.",
+      "ru": "На San Juan появляются традиционные блюда: chipa, sopa paraguaya, mbejú, pastel mandi'o и другие."
+    },
+    "food_and_table.sopa_paraguaya": {
+      "es": "La 'sopa paraguaya' no es una sopa, sino un pastel salado de maíz y queso horneado.",
+      "ru": "«Sopa paraguaya» — не суп, а несладкая запеканка из кукурузы и сыра."
+    },
+    "everyday_life.terere_heat": {
+      "es": "Con el calor, mucha gente lleva a todas partes un 'termo' de agua helada y su vaso de tereré.",
+      "ru": "В жару многие повсюду носят с собой термос («termo») с ледяной водой и свою чашку для tereré."
+    },
+    "everyday_life.pohã_sellers": {
+      "es": "En puestos callejeros se venden hierbas frescas (pohã ñana) para machacar en el agua del tereré; se dice que cada una ayuda con una dolencia distinta.",
+      "ru": "В уличных киосках продают свежие травы (pohã ñana), которые толкут и добавляют в воду для tereré; считается, что каждая помогает от своего недуга."
+    },
+    "local_expressions.jopara_words": {
+      "es": "El habla cotidiana mezcla palabras en español y en guaraní: aprender algunas expresiones en guaraní es la forma más rápida de conectar.",
+      "ru": "Повседневная речь смешивает испанские слова и слова гуарани; выучить несколько выражений на гуарани — самый быстрый способ сблизиться с людьми."
+    },
+    "local_expressions.nde": {
+      "es": "'Nde' (tú, en guaraní) aparece en muchas expresiones; 'che' (mi/yo) también: 'che ra'a', mi amigo.",
+      "ru": "«Nde» («ты» на гуарани) встречается во многих выражениях; «che» («мой»/«я») тоже: «che ra'a» — мой друг."
+    },
+    "newcomers_find_hard.two_languages": {
+      "es": "Entender conversaciones que pasan del español al guaraní y viceversa.",
+      "ru": "Понимать разговоры, которые переключаются между испанским и гуарани."
+    },
+    "newcomers_find_hard.calendar_changes": {
+      "es": "Fechas de vacaciones escolares que pueden cambiar durante el año: sigue los anuncios del MEC.",
+      "ru": "Даты школьных каникул могут меняться в течение года — следите за объявлениями MEC."
+    },
+    "newcomers_find_hard.siesta_hours": {
+      "es": "Las primeras horas de la tarde tranquilas fuera de las grandes ciudades, cuando mucha gente descansa.",
+      "ru": "Тихие первые часы после полудня за пределами больших городов, когда многие отдыхают."
+    },
+    "folk_culture.terere_unesco": {
+      "es": "En diciembre de 2020 la UNESCO inscribió las prácticas y saberes del tereré en la cultura del pohã ñana en su lista del Patrimonio Cultural Inmaterial.",
+      "ru": "В декабре 2020 года ЮНЕСКО внесла практики и знания, связанные с tereré в культуре pohã ñana, в свой список нематериального культурного наследия."
+    },
+    "folk_culture.san_juan_roots": {
+      "es": "San Juan es una fiesta religiosa que mezcla tradiciones católicas y populares.",
+      "ru": "San Juan — религиозный праздник, в котором смешаны католические и народные традиции."
+    }
+  },
+  "moments": {
+    "terere_round": {"es": "Tu primera ronda de tereré", "ru": "Ваш первый круг tereré"},
+    "san_juan": {"es": "Tu primer San Juan", "ru": "Ваш первый San Juan"},
+    "caacupe": {"es": "Caacupé, 8 de diciembre", "ru": "Caacupé, 8 декабря"},
+    "guarani_words": {"es": "Tus primeras palabras en guaraní", "ru": "Ваши первые слова на гуарани"},
+    "independence": {"es": "Independencia, 14-15 de mayo", "ru": "День независимости, 14-15 мая"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "Приглашение от местной семьи"}
+  }
+}

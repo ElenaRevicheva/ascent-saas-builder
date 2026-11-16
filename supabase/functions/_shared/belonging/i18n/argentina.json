@@ -1,0 +1,187 @@
+{
+  "name": {"es": "Argentina", "ru": "Аргентина"},
+  "items": {
+    "rhythm_of_the_year.school_year": {
+      "es": "El año escolar empieza a fines de febrero o a principios de marzo y termina en diciembre; el mínimo nacional es de 190 días de clase y cada provincia fija su propio calendario.",
+      "ru": "Учебный год начинается в конце февраля или в начале марта и заканчивается в декабре; минимум по стране — 190 учебных дней, и каждая провинция устанавливает свой календарь."
+    },
+    "rhythm_of_the_year.summer_holidays": {
+      "es": "Las vacaciones de verano van de diciembre a febrero; enero es el gran mes de las vacaciones en familia y muchas oficinas bajan el ritmo.",
+      "ru": "Летние каникулы длятся с декабря по февраль; январь — главный месяц семейного отдыха, и многие учреждения работают в замедленном ритме."
+    },
+    "rhythm_of_the_year.winter_break": {
+      "es": "En julio hay dos semanas de vacaciones escolares de invierno, escalonadas por provincia en dos o tres bloques: confirma las fechas de tu provincia.",
+      "ru": "В июле — две недели зимних школьных каникул, которые идут по провинциям в два-три этапа: уточните даты для вашей провинции."
+    },
+    "rhythm_of_the_year.dia_amigo": {
+      "es": "El 20 de julio es el Día del Amigo: los amigos se juntan, los restaurantes se llenan y los mensajes vuelan; no es feriado.",
+      "ru": "20 июля — День друга (Día del Amigo): друзья встречаются, рестораны заполнены, сообщения летят одно за другим; это не выходной день."
+    },
+    "rhythm_of_the_year.noquis_29": {
+      "es": "El día 29 de cada mes muchas familias comen ñoquis con un billete debajo del plato, para la suerte y la prosperidad.",
+      "ru": "29-го числа каждого месяца многие семьи едят ньокки (ñoquis), положив под тарелку банкноту — на удачу и достаток."
+    },
+    "rhythm_of_the_year.bridge_days": {
+      "es": "Cada año el gobierno agrega algunos 'feriados puente' para armar fines de semana largos; revisa la lista oficial cada año.",
+      "ru": "Каждый год правительство добавляет несколько «feriados puente» (дней-«мостиков»), чтобы получились длинные выходные, — сверяйтесь с официальным списком каждый год."
+    },
+    "holidays.fixed": {
+      "es": "Feriados fijos: 1 de enero, 24 de marzo (Día de la Memoria por la Verdad y la Justicia), 2 de abril (veteranos de Malvinas), 1 de mayo, 25 de mayo (Revolución de Mayo), 20 de junio (Belgrano / Día de la Bandera), 9 de julio (Independencia), 8 de diciembre, 25 de diciembre.",
+      "ru": "Фиксированные праздники: 1 января, 24 марта (День памяти во имя правды и справедливости), 2 апреля (ветераны Мальвин), 1 мая, 25 мая (Майская революция), 20 июня (Бельграно / День флага), 9 июля (День независимости), 8 декабря, 25 декабря."
+    },
+    "holidays.movable": {
+      "es": "Feriados trasladables: lunes y martes de Carnaval (febrero o marzo), Viernes Santo, 17 de junio (Güemes), 17 de agosto (San Martín), 12 de octubre (Respeto a la Diversidad Cultural), 20 de noviembre (Soberanía Nacional). Los que caen martes o miércoles pasan al lunes anterior; los que caen de jueves a domingo, al lunes siguiente.",
+      "ru": "Переносимые праздники: понедельник и вторник Карнавала (февраль или март), Страстная пятница, 17 июня (Гуэмес), 17 августа (Сан-Мартин), 12 октября (День уважения к культурному разнообразию), 20 ноября (День национального суверенитета). Если они выпадают на вторник или среду, их переносят на предыдущий понедельник, если на четверг–воскресенье — на следующий понедельник."
+    },
+    "holidays.non_working": {
+      "es": "Algunos días religiosos son 'días no laborables' para quienes profesan esa fe (Jueves Santo, Pésaj, Año Nuevo judío, Iom Kipur, días del Eid); para los empleadores son optativos.",
+      "ru": "Некоторые религиозные дни — «días no laborables» (нерабочие дни) для людей соответствующей веры (Великий четверг, Песах, еврейский Новый год, Йом Кипур, дни Ид); для работодателей они необязательны."
+    },
+    "greetings_and_courtesy.cheek_kiss": {
+      "es": "El saludo habitual es un beso en la mejilla, en lugar de un apretón de manos: con la familia, los amigos, la gente que acabas de conocer y, a menudo, incluso con el jefe.",
+      "ru": "Обычное приветствие — поцелуй в щёку вместо рукопожатия: с родными, друзьями, людьми, с которыми вы только что познакомились, а часто даже с начальником."
+    },
+    "greetings_and_courtesy.men_kiss": {
+      "es": "Los hombres también suelen saludar con un beso a sus amigos y parientes varones; no hay una regla fija sobre a quién se besa, y hasta los locales lo dicen: sigue lo que hace la otra persona.",
+      "ru": "Мужчины тоже часто приветствуют друзей и родственников-мужчин поцелуем; чёткого правила, кого целовать, нет — это признают даже местные, — так что ориентируйтесь на собеседника."
+    },
+    "greetings_and_courtesy.talk_anyone": {
+      "es": "La gente conversa con facilidad con desconocidos, te mira a los ojos y pasa rápido de la charla ligera a temas profundos.",
+      "ru": "Люди легко заговаривают с незнакомцами, смотрят в глаза и быстро переходят от светской беседы к серьёзным темам."
+    },
+    "greetings_and_courtesy.che": {
+      "es": "'Che' se usa para llamar la atención de alguien: 'Che, ¿venís?'",
+      "ru": "«Che» используют, чтобы привлечь чьё-то внимание: «Che, ¿venís?»"
+    },
+    "time.late_dinner": {
+      "es": "La cena suele empezar alrededor de las 9 o 10 de la noche; si llegas temprano a un plan de las 10, probablemente serás el primero.",
+      "ru": "Ужин часто начинается около 9–10 вечера; если прийти на встречу в 10 вечера пораньше, вы, скорее всего, окажетесь первыми."
+    },
+    "time.sobremesa": {
+      "es": "Después de la cena, la conversación en la mesa puede seguir durante horas; irse apenas terminas de comer se siente brusco.",
+      "ru": "После ужина разговор за столом может продолжаться часами — уйти сразу после еды воспринимается как резкость."
+    },
+    "time.asado_time": {
+      "es": "En un asado el fuego se prende un par de horas antes de comer; los invitados pican algo y conversan mientras la carne se cocina despacio.",
+      "ru": "На асадо огонь разводят за пару часов до еды; гости перекусывают и беседуют, пока мясо медленно готовится."
+    },
+    "family_and_friends.friends_central": {
+      "es": "La amistad es central y cualquier excusa es buena para celebrar; los grupos suelen hacerle lugar a alguien nuevo.",
+      "ru": "Дружба занимает центральное место, и любой повод хорош для праздника; компании обычно охотно принимают новичка."
+    },
+    "family_and_friends.asado": {
+      "es": "El asado reúne a familia y amigos, a menudo cada semana y también fuera del verano; el 'asador', quien cocina, tiene un papel especial.",
+      "ru": "Асадо (барбекю) собирает родных и друзей, часто каждую неделю и не только летом; у «asador», того, кто жарит мясо, особая роль."
+    },
+    "family_and_friends.mate_round": {
+      "es": "El mate se comparte de una sola calabaza y una sola bombilla de metal: una persona ceba y lo hace circular; se lo devuelves a quien ceba, y decir 'gracias' significa que ya no quieres más.",
+      "ru": "Мате пьют из одного калебаса через одну металлическую трубочку (bombilla): один человек заваривает и пускает его по кругу; вы возвращаете калебас тому, кто заваривает, а «gracias» означает, что вам больше не нужно."
+    },
+    "family_and_friends.opinions": {
+      "es": "La gente debate con pasión (fútbol, política, comida) y rara vez se vuelve hostil; la política aparece seguido, incluso en las comidas familiares.",
+      "ru": "Люди страстно спорят — о футболе, политике, еде, — но это редко перерастает во враждебность; о политике говорят часто, даже за семейным столом."
+    },
+    "family_and_friends.football": {
+      "es": "El fútbol es una pasión; tarde o temprano te van a preguntar de qué equipo eres.",
+      "ru": "Футбол — это страсть; рано или поздно вас спросят, за какую команду вы болеете."
+    },
+    "school_life.guardapolvo": {
+      "es": "En muchas escuelas públicas los niños usan una bata blanca, el 'guardapolvo blanco', pensada para que todos sean iguales.",
+      "ru": "Во многих государственных школах дети носят белый халат — «guardapolvo blanco», — призванный уравнять всех."
+    },
+    "school_life.province_calendar": {
+      "es": "Las fechas de inicio, las vacaciones de invierno y el fin de año cambian según la provincia: consulta el calendario del ministerio de tu provincia.",
+      "ru": "Даты начала учёбы, зимних каникул и окончания года различаются по провинциям — смотрите календарь министерства вашей провинции."
+    },
+    "school_life.flag_day": {
+      "es": "El 20 de junio (Día de la Bandera) muchos alumnos de cuarto grado prometen lealtad a la bandera en actos escolares: 'la promesa a la bandera'.",
+      "ru": "20 июня (День флага) многие ученики четвёртого класса на школьных церемониях клянутся в верности флагу — «la promesa a la bandera»."
+    },
+    "food_and_table.cheese": {
+      "es": "El queso aparece en la pizza, las empanadas, las medialunas y la milanesa napolitana.",
+      "ru": "Сыр оказывается и в пицце, и в эмпанадах, и в медиалунас (medialunas), и в миланесе по-неаполитански (milanesa napolitana)."
+    },
+    "food_and_table.mate_snacks": {
+      "es": "El mate se acompaña con galletitas y facturas; algunos lo toman amargo y otros dulce.",
+      "ru": "К мате подают печенье и facturas (выпечку); одни пьют его горьким, другие — сладким."
+    },
+    "food_and_table.asado_cuts": {
+      "es": "En un asado espera cortes enteros (vacío, ojo de bife), además de chorizo, morcilla y achuras.",
+      "ru": "На асадо ждите целые куски мяса (vacío, ojo de bife), а также чоризо, морсилью (morcilla) и субпродукты (achuras)."
+    },
+    "food_and_table.merienda": {
+      "es": "'La merienda', algo para comer a la tarde con mate o café y facturas, cubre la larga espera hasta la cena tardía.",
+      "ru": "«La merienda» — полдник с мате или кофе и выпечкой — помогает продержаться до позднего ужина."
+    },
+    "everyday_life.fernet": {
+      "es": "El fernet con cola es una bebida muy popular entre adultos, que a menudo se comparte.",
+      "ru": "Фернет с колой — очень популярный напиток среди взрослых, его часто пьют вместе, из одного стакана."
+    },
+    "everyday_life.queja": {
+      "es": "Quejarse es una forma habitual de hablar; no significa que la persona esté en verdaderos problemas.",
+      "ru": "Жаловаться — привычная манера разговора; это не значит, что у человека действительно беда."
+    },
+    "everyday_life.noquis_money": {
+      "es": "El billete debajo del plato de ñoquis es para la suerte y la prosperidad.",
+      "ru": "Банкнота под тарелкой с ньокки (ñoquis) — на удачу и достаток."
+    },
+    "local_expressions.voseo": {
+      "es": "Se usa 'vos' en lugar de 'tú', con el acento al final: 'vos tenés', 'vos sos', 'vos podés', 'vení', 'decime'.",
+      "ru": "Вместо «tú» говорят «vos», с ударением на конце: «vos tenés», «vos sos», «vos podés», «vení», «decime»."
+    },
+    "local_expressions.boludo": {
+      "es": "'Boludo' es muy común entre amigos (algo así como 'amigo', 'hermano'), pero con desconocidos es un insulto: déjalo para los amigos cercanos.",
+      "ru": "«Boludo» очень распространено среди друзей («чувак»), но для незнакомых людей это оскорбление — оставьте его для близких друзей."
+    },
+    "local_expressions.copado": {
+      "es": "'Copado' / 're copado': genial, buenísimo.",
+      "ru": "«Copado» / «re copado» — отлично, классно."
+    },
+    "local_expressions.chamuyar": {
+      "es": "'Chamuyar': hablar con labia, seducir con palabras.",
+      "ru": "«Chamuyar» — заговаривать зубы, флиртовать, «подкатывать» к кому-то."
+    },
+    "local_expressions.laburo": {
+      "es": "'Laburo' / 'laburar': trabajo / trabajar (del italiano).",
+      "ru": "«Laburo» / «laburar» — работа / работать (из итальянского)."
+    },
+    "local_expressions.bondi": {
+      "es": "'Bondi': el colectivo, el autobús urbano.",
+      "ru": "«Bondi» — городской автобус."
+    },
+    "newcomers_find_hard.late_hours": {
+      "es": "Los horarios tardíos: cenar a las 10 de la noche con niños pequeños cuesta al principio.",
+      "ru": "Поздний распорядок: ужинать в 10 вечера с маленькими детьми поначалу тяжело."
+    },
+    "newcomers_find_hard.kisses": {
+      "es": "Saber cuándo dar un beso: no hay una regla clara, y que los hombres se saluden con un beso sorprende a muchos recién llegados.",
+      "ru": "Понять, когда целоваться при встрече: чёткого правила нет, а поцелуи между мужчинами удивляют многих новоприбывших."
+    },
+    "newcomers_find_hard.mate_etiquette": {
+      "es": "La etiqueta del mate: una sola calabaza para todos, la misma persona ceba cada ronda y 'gracias' significa que terminaste; los recién llegados lo dicen en el primer sorbo y ya no les vuelven a servir.",
+      "ru": "Этикет мате: один калебас на всех, каждый круг заваривает один и тот же человек, а «gracias» значит, что вы закончили; новички говорят это после первого глотка — и им больше не наливают."
+    },
+    "newcomers_find_hard.province_dates": {
+      "es": "Las fechas escolares cambian según la provincia: el consejo de un amigo de otra provincia puede no servirte.",
+      "ru": "Школьные даты зависят от провинции — совет друга из другой провинции может оказаться неверным."
+    },
+    "folk_culture.idols": {
+      "es": "Los ídolos nacionales de la música y el deporte (Gardel, Cerati, Maradona, Messi) forman parte de la conversación diaria.",
+      "ru": "Национальные кумиры музыки и спорта (Гардель, Серати, Марадона, Месси) — часть повседневных разговоров."
+    },
+    "folk_culture.tango": {
+      "es": "El tango y sus milongas (salones de baile) son parte de la vida en Buenos Aires; en las provincias tienen mucha fuerza la música folklórica y las peñas.",
+      "ru": "Танго и его милонги (танцевальные залы) — часть жизни Буэнос-Айреса; в провинциях сильны фольклорная музыка и пеньи (peñas)."
+    }
+  },
+  "moments": {
+    "first_asado": {"es": "Tu primer asado", "ru": "Ваше первое асадо"},
+    "mate_round": {"es": "Tu primera ronda de mate", "ru": "Ваш первый круг мате"},
+    "noquis_29": {"es": "Ñoquis el 29", "ru": "Ñoquis 29-го числа"},
+    "dia_amigo": {"es": "Día del Amigo", "ru": "Día del Amigo (День друга)"},
+    "winter_break": {"es": "Vacaciones escolares de invierno", "ru": "Зимние школьные каникулы"},
+    "guardapolvo": {"es": "El guardapolvo blanco", "ru": "Белый школьный халат"},
+    "football": {"es": "Elegir un equipo", "ru": "Выбор команды"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "В гостях у местной семьи"}
+  }
+}

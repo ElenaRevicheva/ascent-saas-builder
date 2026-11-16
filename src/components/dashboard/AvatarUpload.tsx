@@ -38,13 +38,13 @@ export const AvatarUpload = () => {
 
     // Validate file type
     if (!file.type.startsWith('video/')) {
-      toast.error('Please select a video file');
+      toast.error(t('avx.notVideo'));
       return;
     }
 
     // Validate file size (max 50MB)
     if (file.size > 50 * 1024 * 1024) {
-      toast.error('File size must be less than 50MB');
+      toast.error(t('avx.tooBig'));
       return;
     }
 
@@ -76,10 +76,10 @@ export const AvatarUpload = () => {
 
       setAvatarUrl(`${data.publicUrl}?v=${Date.now()}`);
       setOwnName(fileName);
-      toast.success('Avatar video uploaded successfully!');
+      toast.success(t('avx.uploaded'));
     } catch (error) {
       console.error('Error uploading avatar:', error);
-      toast.error('Failed to upload avatar video');
+      toast.error(t('avx.uploadFailed'));
     } finally {
       setUploading(false);
     }
@@ -97,10 +97,10 @@ export const AvatarUpload = () => {
 
       setOwnName(null);
       setAvatarUrl(null);
-      toast.success('Avatar video deleted successfully!');
+      toast.success(t('avx.deleted'));
     } catch (error) {
       console.error('Error deleting avatar:', error);
-      toast.error('Failed to delete avatar video');
+      toast.error(t('avx.deleteFailed'));
     }
   };
 
@@ -171,9 +171,9 @@ export const AvatarUpload = () => {
             </Button>
 
             <div className="text-xs text-muted-foreground space-y-1">
-              <p>• Supported formats: MP4, WebM, MOV</p>
-              <p>• Maximum file size: 50MB</p>
-              <p>• Recommended duration: 30 seconds</p>
+              <p>• {t('avx.formats')}</p>
+              <p>• {t('avx.maxSize')}</p>
+              <p>• {t('avx.duration')}</p>
             </div>
           </div>
         ) : (

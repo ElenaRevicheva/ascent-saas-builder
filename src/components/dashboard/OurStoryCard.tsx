@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { Heart, ArrowRight, CalendarDays, Lock, Phone, Send, Globe, Search, CheckCircle2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerClose } from '@/components/ui/drawer';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { readFamilyProfile, PACK_COUNTRIES } from './FamilyProfileDialog';
 
 /*
  * 8 Nov 2026 (Elena): card 7 of the family map, "Your life in Panama, with EspaLuz". Not a list of notes: the proof that
@@ -27,25 +30,36 @@ type Story = {
   newThisWeek: number; remembered: number;
 };
 
-const COUNTRY = 'Panama';
+// 15 Nov 2026: the title names the family's OWN country (it said "Panama" to every family). Russian needs the
+// prepositional form with its preposition ("в Мексике", "на Кубе"), so ru has story.countryIn.<key>; en/es use the
+// country name (lm.country.<key>). No country yet -> "your new country".
 const tint = 'hsl(var(--espaluz-purple))';
 const day = (iso?: string | null) => (iso ? new Date(iso.length === 10 ? `${iso}T12:00:00` : iso).toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) : '');
-const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
-const where = (s: string) => (s === 'whatsapp' ? 'WhatsApp' : s === 'telegram' ? 'Telegram' : s === 'web' ? 'the web' : s || 'EspaLuz');
+const where = (s: string, t: TFunction) => (s === 'whatsapp' ? 'WhatsApp' : s === 'telegram' ? 'Telegram' : s === 'web' ? t('story.web') : s || 'EspaLuz');
 const channelIcon = (p: string) => (p === 'telegram' ? Send : p === 'whatsapp' ? Phone : Globe);
 
-function personLine(m: Member): string {
+function personLine(m: Member, t: TFunction): string {
   const bits: string[] = [];
-  if (m.talks) bits.push(`${plural(m.talks, 'talk', 'talks')} with Pere & Titi on ${plural(m.days, 'day', 'days')}`);
-  const on = m.channels.map((c) => where(c.platform));
-  if (m.webTalks) on.push('the web');
-  if (on.length) bits.push(`talks with EspaLuz on ${on.join(', ')}`);
-  if (m.interests.length) bits.push(`loves ${m.interests.slice(0, 2).join(' and ')}`);
+  if (m.talks) bits.push(t('story.talksWithKids', { talks: t('story.talks', { count: m.talks }), days: t('story.days', { count: m.days }) }));
+  const on = m.channels.map((c) => where(c.platform, t));
+  if (m.webTalks) on.push(t('story.web'));
+  if (on.length) bits.push(t('story.talksOn', { where: on.join(', ') }));
+  if (m.interests.length) bits.push(t('story.loves', { what: m.interests.slice(0, 2).join(t('story.and')) }));
   return bits.join(' · ');
 }
 
 export const OurStoryCard = ({ index, onDone }: { index: number; onDone?: (done: boolean) => void }) => {
   const { user } = useAuth();
+  const { t } = useTranslation();
+  const [countryKey, setCountryKey] = useState('');
+  useEffect(() => {
+    if (!user) return;
+    readFamilyProfile(user.id).then((p) => setCountryKey(String(p?.country_now ?? ''))).catch(() => undefined);
+  }, [user]);
+  const countryEn = PACK_COUNTRIES.find(([k]) => k === countryKey)?.[1];
+  const COUNTRY = countryEn
+    ? t(`story.countryIn.${countryKey}`, { defaultValue: t(`lm.country.${countryKey}`, { defaultValue: countryEn }) })
+    : t('story.countryNew');
   const [story, setStory] = useState<Story | null>(null);
   const [failed, setFailed] = useState(false);
   const [open, setOpen] = useState(false);
@@ -87,13 +101,13 @@ export const OurStoryCard = ({ index, onDone }: { index: number; onDone?: (done:
         <div className="min-w-0 flex-1">
           <p className={`text-sm ${gone ? 'text-muted-foreground line-through' : 'text-foreground'}`}>{n.fact}</p>
           <p className="text-xs text-muted-foreground">
-            {gone ? 'Forgotten on every channel' : `Told on ${where(n.source)} · ${day(n.at)}${n.until ? ` · for ${day(n.until)}` : ''}`}
-            {n.isNew && !gone ? ' · new this week' : ''}
+            {gone ? t('story.forgotten') : `${t('story.toldOn', { where: where(n.source, t), date: day(n.at) })}${n.until ? ` · ${t('story.forDate', { date: day(n.until) })}` : ''}`}
+            {n.isNew && !gone ? ` · ${t('story.newThisWeekTag')}` : ''}
           </p>
         </div>
         <button type="button" disabled={busy === n.id} onClick={() => toggle(n.id)}
           className="shrink-0 rounded-full border border-border px-3 py-1 text-xs font-semibold text-foreground hover:bg-muted disabled:opacity-50">
-          {gone ? 'Undo' : 'Forget'}
+          {gone ? t('story.undo') : t('story.forget')}
         </button>
       </li>
     );
@@ -107,25 +121,25 @@ export const OurStoryCard = ({ index, onDone }: { index: number; onDone?: (done:
           <Heart className="h-5 w-5" aria-hidden />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{index} · Everyone</p>
-          <h3 className="text-lg leading-tight text-foreground">Your life in {COUNTRY}, with EspaLuz</h3>
-          {story?.since && <p className="text-sm text-muted-foreground">Together since {day(story.since)}</p>}
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{index} · {t('map.everyone')}</p>
+          <h3 className="text-lg leading-tight text-foreground">{t('story.title', { country: COUNTRY })}</h3>
+          {story?.since && <p className="text-sm text-muted-foreground">{t('story.since', { date: day(story.since) })}</p>}
         </div>
         {done ? (
           <span className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold text-white" style={{ background: 'hsl(var(--espaluz-green))' }}>
-            <CheckCircle2 className="h-3.5 w-3.5" aria-hidden /> Done
+            <CheckCircle2 className="h-3.5 w-3.5" aria-hidden /> {t('fw.done')}
           </span>
-        ) : story ? <span className="rounded-full bg-accent px-2 py-1 text-xs font-semibold text-accent-foreground">Next</span> : null}
+        ) : story ? <span className="rounded-full bg-accent px-2 py-1 text-xs font-semibold text-accent-foreground">{t('map.next')}</span> : null}
       </div>
 
-      {!story && !failed && <p className="mt-2 text-sm text-muted-foreground">Checking what EspaLuz knows…</p>}
-      {failed && <p className="mt-2 text-sm text-muted-foreground">Could not open your family's story right now. Please try again later.</p>}
+      {!story && !failed && <p className="mt-2 text-sm text-muted-foreground">{t('story.checking')}</p>}
+      {failed && <p className="mt-2 text-sm text-muted-foreground">{t('story.failed')}</p>}
 
       {story && (
         <>
           {people.length === 0 || !done ? (
             <p className="mt-2 text-sm text-muted-foreground">
-              EspaLuz is just getting to know you. Add your family, and tell her about your days on WhatsApp, Telegram or in the chat here: she will remember, and you will see it here.
+              {t('story.gettingToKnow')}
             </p>
           ) : (
             <ul className="mt-3 space-y-2">
@@ -136,32 +150,32 @@ export const OurStoryCard = ({ index, onDone }: { index: number; onDone?: (done:
                   </span>
                   <p className="text-sm text-foreground">
                     <span className="font-semibold">{m.name}</span>{m.age ? `, ${m.age}` : ''}
-                    {personLine(m) && <span className="text-muted-foreground"> — {personLine(m)}</span>}
+                    {personLine(m, t) && <span className="text-muted-foreground"> — {personLine(m, t)}</span>}
                     {/* The notes themselves stay inside the panel: the card face can be seen by anyone near the screen. */}
-                    {m.notes.length > 0 && <span className="text-muted-foreground"> · EspaLuz remembers {plural(m.notes.length, 'thing', 'things')}</span>}
+                    {m.notes.length > 0 && <span className="text-muted-foreground"> · {t('story.remembers', { count: m.notes.length })}</span>}
                   </p>
                 </li>
               ))}
-              {people.length > 4 && <li className="text-sm text-muted-foreground">and {people.length - 4} more</li>}
+              {people.length > 4 && <li className="text-sm text-muted-foreground">{t('story.andMore', { count: people.length - 4 })}</li>}
             </ul>
           )}
           <div className="mt-3 flex flex-wrap gap-2 text-sm">
             {next && (
               <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1 text-foreground">
-                <CalendarDays className="h-4 w-4" aria-hidden /> Coming up: {plural(story.comingUp.length, 'thing', 'things')}, next {day(next.until)}
+                <CalendarDays className="h-4 w-4" aria-hidden /> {t('story.comingUpLine', { count: story.comingUp.length, date: day(next.until) })}
               </span>
             )}
             {moments.length > 0 && (
-              <span className="rounded-full border border-border bg-background px-3 py-1 text-foreground">Our story: {plural(moments.length, 'moment', 'moments')}</span>
+              <span className="rounded-full border border-border bg-background px-3 py-1 text-foreground">{t('story.momentsLine', { count: moments.length })}</span>
             )}
             {story.newThisWeek > 0 && (
-              <span className="rounded-full border border-border bg-background px-3 py-1 text-foreground">{story.newThisWeek} new this week</span>
+              <span className="rounded-full border border-border bg-background px-3 py-1 text-foreground">{t('story.newThisWeek', { count: story.newThisWeek })}</span>
             )}
           </div>
           <div className="mt-3">
             <button type="button" onClick={() => setOpen(true)}>
               <span className="inline-flex items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold text-white" style={{ background: tint }}>
-                Open our story <ArrowRight className="h-4 w-4" aria-hidden />
+                {t('story.open')} <ArrowRight className="h-4 w-4" aria-hidden />
               </span>
             </button>
           </div>
@@ -170,42 +184,42 @@ export const OurStoryCard = ({ index, onDone }: { index: number; onDone?: (done:
             <DrawerContent className="max-h-[88vh]">
               <div className="mx-auto w-full max-w-2xl overflow-y-auto px-4 pb-6">
                 <DrawerHeader className="px-0 text-left">
-                  <DrawerTitle>Your life in {COUNTRY}, with EspaLuz</DrawerTitle>
+                  <DrawerTitle>{t('story.title', { country: COUNTRY })}</DrawerTitle>
                   <DrawerDescription>
-                    What EspaLuz knows about your family, from every channel. Only your family sees this. “Forget” stops EspaLuz using a family note on WhatsApp, Telegram and the web.
+                    {t('story.drawerDesc')}
                   </DrawerDescription>
                 </DrawerHeader>
                 <Tabs defaultValue="people">
                   <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="people">Each of you</TabsTrigger>
-                    <TabsTrigger value="next">Coming up</TabsTrigger>
-                    <TabsTrigger value="story">Our story</TabsTrigger>
+                    <TabsTrigger value="people">{t('story.tabPeople')}</TabsTrigger>
+                    <TabsTrigger value="next">{t('story.tabNext')}</TabsTrigger>
+                    <TabsTrigger value="story">{t('story.tabStory')}</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="people" className="space-y-5 pt-3">
                     {people.map((m) => (
                       <section key={m.id}>
                         <h4 className="text-base font-semibold text-foreground">{m.name}{m.age ? `, ${m.age}` : ''}</h4>
-                        {personLine(m) && <p className="text-sm text-muted-foreground">{personLine(m)}</p>}
-                        {m.lastTheme && <p className="text-sm text-muted-foreground">Last class: {m.lastTheme}</p>}
+                        {personLine(m, t) && <p className="text-sm text-muted-foreground">{personLine(m, t)}</p>}
+                        {m.lastTheme && <p className="text-sm text-muted-foreground">{t('story.lastClass', { theme: m.lastTheme })}</p>}
                         {m.channels.length > 0 && (
                           <p className="mt-1 flex flex-wrap gap-2 text-xs text-muted-foreground">
                             {m.channels.map((c) => { const I = channelIcon(c.platform); return (
-                              <span key={c.platform} className="inline-flex items-center gap-1"><I className="h-3.5 w-3.5" aria-hidden />{where(c.platform)} since {day(c.since)}</span>
+                              <span key={c.platform} className="inline-flex items-center gap-1"><I className="h-3.5 w-3.5" aria-hidden />{t('story.channelSince', { where: where(c.platform, t), date: day(c.since) })}</span>
                             ); })}
                           </p>
                         )}
                         {m.notes.length > 0
                           ? <ul className="mt-2 space-y-2">{m.notes.map((n) => <NoteRow key={n.id} n={n} />)}</ul>
-                          : <p className="mt-1 text-sm text-muted-foreground">No notes about {m.name} yet.</p>}
+                          : <p className="mt-1 text-sm text-muted-foreground">{t('story.noNotes', { name: m.name })}</p>}
                       </section>
                     ))}
                     {(story.otherNotes.length > 0 || story.unnamedChannels.length > 0) && (
                       <section>
-                        <h4 className="text-base font-semibold text-foreground">The whole family</h4>
+                        <h4 className="text-base font-semibold text-foreground">{t('story.wholeFamily')}</h4>
                         {story.unnamedChannels.length > 0 && (
                           <p className="text-xs text-muted-foreground">
-                            Also connected: {story.unnamedChannels.map((c) => `${where(c.platform)} since ${day(c.since)}`).join(', ')}
+                            {t('story.alsoConnected', { list: story.unnamedChannels.map((c) => t('story.channelSince', { where: where(c.platform, t), date: day(c.since) })).join(', ') })}
                           </p>
                         )}
                         <ul className="mt-2 space-y-2">{story.otherNotes.map((n) => <NoteRow key={n.id} n={n} />)}</ul>
@@ -214,7 +228,7 @@ export const OurStoryCard = ({ index, onDone }: { index: number; onDone?: (done:
                     {story.hiddenNotes.length > 0 && (
                       <section className="rounded-xl border border-border bg-muted/40 p-3">
                         <p className="flex items-center gap-1.5 text-sm text-foreground"><Lock className="h-4 w-4" aria-hidden />
-                          {plural(story.hiddenNotes.length, 'private note', 'private notes')} — kept only for the person who said {story.hiddenNotes.length === 1 ? 'it' : 'them'}
+                          {t('story.privateNotes', { count: story.hiddenNotes.length })}
                           {[...new Set(story.hiddenNotes.map((h) => h.by).filter(Boolean))].length ? ` (${[...new Set(story.hiddenNotes.map((h) => h.by).filter(Boolean))].join(', ')})` : ''}.
                         </p>
                       </section>
@@ -224,14 +238,14 @@ export const OurStoryCard = ({ index, onDone }: { index: number; onDone?: (done:
                   <TabsContent value="next" className="pt-3">
                     {story.comingUp.length
                       ? <ul className="space-y-2">{story.comingUp.map((n) => <NoteRow key={n.id} n={n} />)}</ul>
-                      : <p className="text-sm text-muted-foreground">Nothing with a date yet. Tell EspaLuz about an appointment, a school day or a trip, and she will help you get ready for it.</p>}
+                      : <p className="text-sm text-muted-foreground">{t('story.nothingDated')}</p>}
                   </TabsContent>
 
                   <TabsContent value="story" className="pt-3">
                     {moments.length > 6 && (
                       <label className="mb-3 flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5">
                         <Search className="h-4 w-4 text-muted-foreground" aria-hidden />
-                        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search your story"
+                        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('story.search')}
                           className="w-full bg-transparent text-sm text-foreground outline-none" />
                       </label>
                     )}
@@ -244,11 +258,11 @@ export const OurStoryCard = ({ index, onDone }: { index: number; onDone?: (done:
                           </li>
                         ))}
                       </ol>
-                    ) : <p className="text-sm text-muted-foreground">Your story with EspaLuz starts with your first talk.</p>}
+                    ) : <p className="text-sm text-muted-foreground">{t('story.startsWithFirst')}</p>}
                   </TabsContent>
                 </Tabs>
                 <DrawerClose asChild>
-                  <button type="button" className="mt-5 w-full rounded-full border border-border py-2 text-sm font-semibold text-foreground">Close</button>
+                  <button type="button" className="mt-5 w-full rounded-full border border-border py-2 text-sm font-semibold text-foreground">{t('common.close')}</button>
                 </DrawerClose>
               </div>
             </DrawerContent>

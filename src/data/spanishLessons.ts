@@ -173,3 +173,62 @@ export const getLessonsByDifficulty = (difficulty: 'beginner' | 'intermediate' |
 export const getLessonsByCategory = (category: 'vocabulary' | 'grammar' | 'conversation' | 'culture'): Lesson[] => {
   return spanishLessons.filter(lesson => lesson.category === category);
 };
+
+/*
+ * 15 Nov 2026 (Elena: EN / ES / RU of everything): display helpers. The lesson data above stays English (it is also
+ * what progress rows and answer checks compare against); the page shows each English line through i18n keys
+ * (lesson.<lessonId>.* for these five lessons, lm.section.<sectionKey>.* for the "Living in <country>" lessons),
+ * falling back to the English value. Spanish words and phrases are what is being taught, so they are never translated.
+ */
+type Tf = (key: string, opts?: Record<string, unknown>) => string;
+
+const COUNTRY_SECTIONS = ['greetings_and_courtesy', 'everyday_life', 'food_and_table', 'time', 'family_and_friends',
+  'local_expressions', 'school_life', 'rhythm_of_the_year', 'folk_culture', 'newcomers_find_hard'];
+
+/** "country-<country>-<section>" -> { country, section }, else null. */
+export function countryLessonParts(id: string): { country: string; section: string } | null {
+  if (!id.startsWith('country-')) return null;
+  const section = COUNTRY_SECTIONS.find((s) => id.endsWith(`-${s}`));
+  if (!section) return null;
+  return { country: id.slice('country-'.length, id.length - section.length - 1), section };
+}
+
+export function lessonTitle(l: Lesson, t: Tf): string {
+  const c = countryLessonParts(l.id);
+  if (!c) return t(`lesson.${l.id}.title`, { defaultValue: l.title });
+  const title = t(`lm.section.${c.section}.title`, { defaultValue: '' });
+  const country = t(`lm.country.${c.country}`, { defaultValue: '' });
+  return title && country ? t('lm.countryLessonTitle', { title, country }) : l.title;
+}
+
+export function lessonDescription(l: Lesson, t: Tf): string {
+  const c = countryLessonParts(l.id);
+  return c
+    ? t(`lm.section.${c.section}.about`, { defaultValue: l.description })
+    : t(`lesson.${l.id}.description`, { defaultValue: l.description });
+}
+
+/** The learner's-language meaning of phrase #i (country-guide meanings stay as the guide wrote them). */
+export function phraseMeaning(l: Lesson, i: number, t: Tf): string {
+  const english = l.phrases[i]?.english ?? '';
+  return countryLessonParts(l.id) ? english : t(`lesson.${l.id}.p${i + 1}`, { defaultValue: english });
+}
+
+export function exerciseQuestion(l: Lesson, ex: Exercise, t: Tf): string {
+  if (countryLessonParts(l.id)) {
+    const m = ex.question.match(/^What does "(.+)" mean\?$/);
+    return m ? t('lesson.whatDoesMean', { phrase: m[1] }) : ex.question;
+  }
+  return t(`lesson.${l.id}.${ex.id}.q`, { defaultValue: ex.question });
+}
+
+export function exerciseExplanation(l: Lesson, ex: Exercise, t: Tf): string {
+  return countryLessonParts(l.id) ? ex.explanation : t(`lesson.${l.id}.${ex.id}.e`, { defaultValue: ex.explanation });
+}
+
+/** How an answer option (or the correct answer) is shown; the stored value stays the English/Spanish original. */
+export function exerciseOption(l: Lesson, ex: Exercise, value: string, t: Tf): string {
+  const i = ex.options?.indexOf(value) ?? -1;
+  if (countryLessonParts(l.id) || i < 0) return value;
+  return t(`lesson.${l.id}.${ex.id}.o${i + 1}`, { defaultValue: value });
+}

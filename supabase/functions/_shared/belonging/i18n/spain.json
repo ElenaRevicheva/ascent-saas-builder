@@ -1,0 +1,195 @@
+{
+  "name": {"es": "España", "ru": "Испания"},
+  "items": {
+    "rhythm_of_the_year.school_year": {
+      "es": "El curso escolar va desde la primera o segunda semana de septiembre hasta más o menos la tercera o cuarta semana de junio; cada comunidad autónoma fija sus propias fechas.",
+      "ru": "Учебный год длится с первой или второй недели сентября примерно до третьей или четвёртой недели июня; каждое автономное сообщество устанавливает свои даты."
+    },
+    "rhythm_of_the_year.christmas_break": {
+      "es": "Las vacaciones escolares de Navidad van aproximadamente del 22-24 de diciembre al 6-10 de enero, y hay una semana o más de vacaciones en torno a Semana Santa (marzo o abril); consulta el calendario de tu comunidad.",
+      "ru": "Рождественские школьные каникулы длятся примерно с 22-24 декабря по 6-10 января, а вокруг Страстной недели (март или апрель) бывает неделя отдыха или больше — сверьтесь с календарём своего сообщества."
+    },
+    "rhythm_of_the_year.lottery_22": {
+      "es": "El 22 de diciembre el sorteo de la Lotería de Navidad ('El Gordo') se retransmite toda la mañana; para mucha gente es el inicio simbólico de la Navidad.",
+      "ru": "22 декабря всё утро транслируют розыгрыш Рождественской лотереи («El Gordo»); для многих это символическое начало Рождества."
+    },
+    "rhythm_of_the_year.nochevieja": {
+      "es": "En Nochevieja la gente se come doce uvas, una con cada una de las doce campanadas de medianoche, mientras ve en la tele el reloj de la Puerta del Sol de Madrid.",
+      "ru": "В новогоднюю ночь едят двенадцать виноградин — по одной на каждый из двенадцати ударов курантов в полночь, глядя по телевизору на часы Puerta del Sol в Madrid."
+    },
+    "rhythm_of_the_year.reyes": {
+      "es": "Los Reyes Magos traen los regalos de los niños la noche del 5 al 6 de enero; la tarde del 5 casi todos los pueblos celebran un desfile, la 'cabalgata'.",
+      "ru": "Три короля (Reyes Magos) приносят детям подарки в ночь с 5 на 6 января; вечером 5-го почти в каждом городе проходит шествие — «cabalgata»."
+    },
+    "rhythm_of_the_year.puentes": {
+      "es": "España tiene muchos festivos, y cuando uno cae cerca de un fin de semana la gente hace 'puente' para tener un fin de semana largo.",
+      "ru": "В Испании много праздников, и когда праздник выпадает рядом с выходными, люди берут «puente» («мост»), чтобы получились длинные выходные."
+    },
+    "holidays.national": {
+      "es": "Festivos nacionales: 1 de enero, 6 de enero (Epifanía), Viernes Santo (cambia cada año), 1 de mayo, 15 de agosto (Asunción), 12 de octubre (Fiesta Nacional), 1 de noviembre (Todos los Santos), 6 de diciembre (Día de la Constitución), 8 de diciembre (Inmaculada Concepción), 25 de diciembre.",
+      "ru": "Национальные праздники: 1 января, 6 января (Богоявление), Страстная пятница (дата каждый год меняется), 1 мая, 15 августа (Успение), 12 октября (Национальный праздник), 1 ноября (День всех святых), 6 декабря (День Конституции), 8 декабря (Непорочное зачатие), 25 декабря."
+    },
+    "holidays.regional_local": {
+      "es": "Además, cada comunidad añade hasta tres festivos y cada municipio al menos dos locales, a menudo el de su patrón, así que los festivos cambian entre pueblos vecinos. En total, hasta 14 al año.",
+      "ru": "Кроме того, каждый регион добавляет до трёх праздников, а каждый город — не меньше двух местных, часто в честь своего святого покровителя, поэтому праздники в соседних городах различаются. Всего — до 14 в год."
+    },
+    "holidays.holy_thursday_monday": {
+      "es": "El Jueves Santo o el Lunes de Pascua son festivos en algunas comunidades, pero no en otras.",
+      "ru": "Великий четверг или Пасхальный понедельник — выходные в одних регионах и рабочие дни в других."
+    },
+    "holidays.sunday_rule": {
+      "es": "Cuando un festivo nacional cae en domingo, la comunidad puede trasladarlo al lunes o ceder el día a los municipios; consulta el calendario autonómico.",
+      "ru": "Если национальный праздник выпадает на воскресенье, регион может перенести его на понедельник или отдать этот день городам — сверьтесь с региональным календарём."
+    },
+    "greetings_and_courtesy.dos_besos": {
+      "es": "Mucha gente saluda con dos besos en las mejillas ('dos besos'), incluso en algunos entornos profesionales.",
+      "ru": "Многие здороваются двумя поцелуями в щёки («dos besos»), даже в некоторых деловых ситуациях."
+    },
+    "greetings_and_courtesy.vale": {
+      "es": "'Vale' es el 'de acuerdo' de todos los días; lo oirás todo el día.",
+      "ru": "«Vale» — повседневное «ладно», «окей»; вы будете слышать его весь день."
+    },
+    "greetings_and_courtesy.tio": {
+      "es": "'Tío / tía': 'colega', 'amigo' entre amigos; no es para tu casero ni para tu jefe.",
+      "ru": "«Tío / tía» — «приятель», «чувак» между друзьями; не для арендодателя и не для начальника."
+    },
+    "greetings_and_courtesy.shoes": {
+      "es": "La gente suele quedarse con los zapatos puestos en casa; pregunta antes de ir descalzo en casa ajena.",
+      "ru": "Дома обычно не разуваются; прежде чем ходить босиком в чужом доме, спросите."
+    },
+    "time.meal_times": {
+      "es": "La comida, la principal del día, suele ser hacia las 2-3 de la tarde, y la cena hacia las 9-10 de la noche; a las 7 de la tarde los restaurantes pueden estar vacíos.",
+      "ru": "Обед — главная трапеза дня — обычно около 2-3 часов дня, ужин — около 9-10 вечера; в 7 вечера рестораны могут пустовать."
+    },
+    "time.time_zone": {
+      "es": "Parte del motivo: España usa la hora de Europa Central aunque está más al oeste, así que el reloj va 'adelantado' respecto al sol.",
+      "ru": "Отчасти причина в том, что Испания живёт по центральноевропейскому времени, хотя расположена западнее, поэтому часы «спешат» относительно солнца."
+    },
+    "time.midday_close": {
+      "es": "Muchas tiendas pequeñas cierran dos horas o más a mediodía y vuelven a abrir hasta las 8-9 de la noche, sobre todo para comer, no para echarse la siesta.",
+      "ru": "Многие небольшие магазины закрываются в середине дня на два часа или дольше и снова работают до 8-9 вечера — в основном чтобы пообедать, а не чтобы поспать."
+    },
+    "time.late_nights": {
+      "es": "Se sale tarde; la vida nocturna se alarga hasta muy tarde.",
+      "ru": "Куда-нибудь выходят поздно; ночная жизнь продолжается допоздна."
+    },
+    "family_and_friends.meet_at_bars": {
+      "es": "Los amigos suelen quedar en bares y terrazas más que en casa; una invitación a casa es señal de cercanía.",
+      "ru": "Друзья обычно встречаются в барах и на террасах, а не дома; приглашение домой — знак близости."
+    },
+    "family_and_friends.aperitivo": {
+      "es": "Los fines de semana es normal tomar un 'aperitivo' antes de comer, con una caña o un vermut.",
+      "ru": "По выходным принято «aperitivo» перед обедом — с маленьким пивом (caña) или вермутом."
+    },
+    "family_and_friends.living_with_parents": {
+      "es": "Muchos jóvenes adultos viven con sus padres hasta casi los 30 o hasta los 30 y tantos, y vuelven de las visitas con recipientes de comida ('tuppers').",
+      "ru": "Многие молодые взрослые живут с родителями почти до 30 лет или и после 30 и возвращаются из гостей с контейнерами еды («tuppers»)."
+    },
+    "family_and_friends.family_meals": {
+      "es": "Después de las grandes comidas familiares los adultos suelen tomar un chupito de licor, que según dicen ayuda a hacer la digestión.",
+      "ru": "После больших семейных застолий взрослые часто выпивают рюмочку ликёра — говорят, она помогает пищеварению."
+    },
+    "school_life.community_calendar": {
+      "es": "No hay un único calendario escolar nacional: la educación la gestiona cada comunidad autónoma; consulta el calendario oficial de tu comunidad.",
+      "ru": "Единого национального школьного календаря нет: образованием управляет каждое автономное сообщество — смотрите официальный календарь своего сообщества."
+    },
+    "school_life.bachillerato_ends_may": {
+      "es": "El último curso de secundaria superior (2º de Bachillerato) suele terminar en mayo por las pruebas de acceso a la universidad.",
+      "ru": "Последний год старшей школы (2º de Bachillerato) обычно заканчивается в мае из-за вступительных экзаменов в университет."
+    },
+    "school_life.coofficial_school": {
+      "es": "En las comunidades con lengua cooficial (Cataluña, Comunidad Valenciana, Islas Baleares, País Vasco, Navarra, Galicia) buena parte de las clases puede impartirse en esa lengua; pregunta en el colegio por el apoyo a los recién llegados.",
+      "ru": "В сообществах со вторым официальным языком (Каталония, Валенсия, Балеарские острова, Страна Басков, Наварра, Галисия) значительная часть занятий может вестись на этом языке — спросите в школе о поддержке для новичков."
+    },
+    "food_and_table.bread": {
+      "es": "El pan acompaña todas las comidas y se considera algo básico.",
+      "ru": "Хлеб подают к каждой трапезе, он считается предметом первой необходимости."
+    },
+    "food_and_table.olive_oil": {
+      "es": "El aceite de oliva se usa con generosidad; las patatas de la tortilla española se fríen en él, no se cuecen.",
+      "ru": "Оливковое масло не жалеют; картофель для испанской тортильи жарят в нём, а не варят."
+    },
+    "food_and_table.breakfast": {
+      "es": "El desayuno es ligero y a menudo dulce: café y tostadas, o leche con galletas.",
+      "ru": "Завтрак небольшой и часто сладкий — кофе с тостами или молоко с печеньем."
+    },
+    "food_and_table.tapas": {
+      "es": "Salir de tapas es una forma habitual de comer con amigos en lugar de cocinar.",
+      "ru": "Сходить на тапас — обычный способ поесть с друзьями вместо того, чтобы готовить."
+    },
+    "food_and_table.roscon": {
+      "es": "El 6 de enero las familias comparten un 'roscón de Reyes', un bollo en forma de rosca con una figurita y un haba escondidas dentro.",
+      "ru": "6 января семьи вместе едят «roscón de Reyes» — кольцеобразный пирог, внутри которого спрятаны маленькая фигурка и боб."
+    },
+    "everyday_life.street_clothes": {
+      "es": "La gente suele llevar ropa de calle normal, no ropa deportiva, fuera del gimnasio.",
+      "ru": "Вне спортзала люди обычно носят повседневную уличную одежду, а не спортивную."
+    },
+    "everyday_life.dubbing": {
+      "es": "Mucha gente prefiere las películas y las series dobladas al español.",
+      "ru": "Многие предпочитают фильмы и сериалы с дубляжом на испанский."
+    },
+    "everyday_life.holidays_many": {
+      "es": "Entre festivos nacionales, autonómicos y locales, consulta el calendario antes de planificar trámites.",
+      "ru": "С учётом национальных, региональных и местных праздников сверяйтесь с календарём, прежде чем планировать оформление документов."
+    },
+    "local_expressions.guay": {
+      "es": "'Guay': genial, estupendo (se usa sobre todo en España).",
+      "ru": "«Guay» — круто, здорово (в основном в Испании)."
+    },
+    "local_expressions.mola": {
+      "es": "'¡Mola!': 'está genial', 'me gusta' (de 'molar').",
+      "ru": "«¡Mola!» — «это круто», «мне нравится» (от «molar»)."
+    },
+    "local_expressions.currar": {
+      "es": "'Currar': trabajar: 'tengo que currar'.",
+      "ru": "«Currar» — работать: «tengo que currar»."
+    },
+    "local_expressions.que_te_pasa_boca": {
+      "es": "Los amigos pueden tomarle el pelo a alguien que pronuncia el inglés 'demasiado bien'; es una broma, no un insulto.",
+      "ru": "Друзья могут подшучивать над тем, кто произносит английские слова «слишком правильно», — это шутка, а не оскорбление."
+    },
+    "local_expressions.vosotros": {
+      "es": "En España se usa 'vosotros' para hablar a varias personas entre amigos ('¿Venís?'), donde en Latinoamérica se usa 'ustedes'.",
+      "ru": "В Испании к нескольким людям в дружеском кругу обращаются на «vosotros» («¿Venís?»), а в Латинской Америке в этом случае говорят «ustedes»."
+    },
+    "newcomers_find_hard.late_schedule": {
+      "es": "El horario tardío: la comida a las 2-3 de la tarde y la cena a las 9-10 de la noche.",
+      "ru": "Поздний распорядок: обед в 2-3 часа дня, ужин в 9-10 вечера."
+    },
+    "newcomers_find_hard.shops_closed": {
+      "es": "Las tiendas cerradas a mediodía.",
+      "ru": "Магазины, закрытые в середине дня."
+    },
+    "newcomers_find_hard.bread_charge": {
+      "es": "A mucha gente le sorprende que en el restaurante le cobren la cesta del pan.",
+      "ru": "Многих удивляет, что в ресторане берут плату за корзинку с хлебом."
+    },
+    "newcomers_find_hard.patchwork_holidays": {
+      "es": "Un festivo en tu pueblo puede ser un día laborable normal en el de al lado.",
+      "ru": "Праздник в вашем городе может быть обычным рабочим днём в соседнем."
+    },
+    "folk_culture.patron_fiestas": {
+      "es": "Cada pueblo tiene sus fiestas, normalmente en honor a su patrón, con al menos dos festivos locales al año.",
+      "ru": "В каждом городе есть свои fiestas, обычно в честь святого покровителя, и не меньше двух местных праздничных дней в году."
+    },
+    "folk_culture.semana_santa": {
+      "es": "Las procesiones de Semana Santa ('pasos', con hermandades llamadas 'cofradías') son un gran acontecimiento en muchas ciudades, sobre todo en Andalucía y Castilla.",
+      "ru": "Процессии Страстной недели («pasos», братства, которые называют «cofradías») — большое событие во многих городах, особенно в Андалусии и Кастилии."
+    },
+    "folk_culture.cabalgata_oldest": {
+      "es": "Alcoy (Alicante) afirma tener la cabalgata de Reyes más antigua, desde 1885.",
+      "ru": "Alcoy (Alicante) считает своё шествие Трёх королей самым старым — с 1885 года."
+    }
+  },
+  "moments": {
+    "first_reyes": {"es": "Tus primeros Reyes", "ru": "Ваши первые Reyes"},
+    "first_uvas": {"es": "Las doce uvas en Nochevieja", "ru": "Двенадцать виноградин в Новый год"},
+    "loteria": {"es": "La Lotería de Navidad", "ru": "Рождественская лотерея"},
+    "town_fiestas": {"es": "Las fiestas de tu pueblo", "ru": "Fiestas вашего города"},
+    "puente": {"es": "Un fin de semana largo (puente)", "ru": "Длинные выходные (puente)"},
+    "semana_santa": {"es": "Semana Santa", "ru": "Страстная неделя"},
+    "tapas_friends": {"es": "De tapas con nuevos amigos", "ru": "На тапас с новыми друзьями"},
+    "local_friends": {"es": "Invitados a casa por una familia local", "ru": "Приглашение в дом местной семьи"}
+  }
+}

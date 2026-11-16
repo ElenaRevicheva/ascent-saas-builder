@@ -1,0 +1,146 @@
+{
+  "name": {"es": "República Dominicana", "ru": "Доминиканская Республика"},
+  "items": {
+    "rhythm_of_the_year.school_year": {
+      "es": "El año escolar va de finales de agosto a finales de junio: del 24 de agosto de 2026 al 29 de junio de 2027, con 190 días de clase, para escuelas públicas y privadas.",
+      "ru": "Учебный год длится с конца августа до конца июня: с 24 августа 2026 года по 29 июня 2027 года, 190 учебных дней — для государственных и частных школ."
+    },
+    "rhythm_of_the_year.carnival_february": {
+      "es": "Febrero es el mes del Carnaval: en La Vega los 'diablos cojuelos' salen todos los domingos de febrero, y todo termina con un gran día de cierre a fin de mes.",
+      "ru": "Февраль — месяц карнавала: в Ла-Веге «diablos cojuelos» выходят на улицы каждое воскресенье февраля, а в конце месяца проходит большой заключительный день."
+    },
+    "rhythm_of_the_year.hurricane_season": {
+      "es": "La temporada de huracanes va del 1 de junio al 30 de noviembre; los meses críticos son agosto, septiembre y la primera quincena de octubre. Sigue los boletines oficiales (COE, Indomet).",
+      "ru": "Сезон ураганов длится с 1 июня по 30 ноября; самые опасные месяцы — август, сентябрь и первая половина октября. Следите за официальными сводками (COE, Indomet)."
+    },
+    "rhythm_of_the_year.baseball_season": {
+      "es": "Durante la temporada de béisbol los fanáticos discuten con pasión sobre sus equipos: es una forma fácil de entrar en una conversación.",
+      "ru": "Во время бейсбольного сезона болельщики страстно спорят о своих командах — это лёгкий способ завязать разговор."
+    },
+    "holidays.list": {
+      "es": "Feriados: 1 de enero, 6 de enero (Día de Reyes), 21 de enero (Virgen de la Altagracia), 26 de enero (natalicio de Duarte), 27 de febrero (Independencia), Viernes Santo (marzo o abril), 1 de mayo, Corpus Christi (mayo o junio), 16 de agosto (Restauración), 24 de septiembre (Virgen de las Mercedes), 6 de noviembre (Constitución), 25 de diciembre.",
+      "ru": "Государственные праздники: 1 января, 6 января (День трёх королей), 21 января (Virgen de la Altagracia), 26 января (день рождения Дуарте), 27 февраля (День независимости), Страстная пятница (март или апрель), 1 мая, Corpus Christi (май или июнь), 16 августа (День реставрации), 24 сентября (Virgen de las Mercedes), 6 ноября (День конституции), 25 декабря."
+    },
+    "holidays.moved": {
+      "es": "Por ley, algunos feriados se pasan al lunes más cercano: revisa la lista oficial de cada año.",
+      "ru": "По закону некоторые праздники переносятся на ближайший понедельник — сверяйтесь с официальным списком каждого года."
+    },
+    "greetings_and_courtesy.instant_family": {
+      "es": "La gente saluda a los desconocidos con calidez y enseguida habla como si fueran viejos amigos: '¿De qué parte tú eres?' es una forma típica de empezar.",
+      "ru": "Люди тепло здороваются с незнакомцами и быстро начинают общаться как старые друзья: «¿De qué parte tú eres?» — типичное начало разговора."
+    },
+    "greetings_and_courtesy.que_lo_que": {
+      "es": "'¿Qué lo que?': '¿qué tal?' informal.",
+      "ru": "«¿Qué lo que?» — неформальное «как дела?», «что новенького?»."
+    },
+    "greetings_and_courtesy.neighbourhood_dress": {
+      "es": "En el barrio, la gente puede ir al colmado de la esquina con ropa de casa y rolos: está entre gente conocida.",
+      "ru": "В своём районе люди могут выйти в магазинчик на углу в домашней одежде и бигуди — они среди знакомых."
+    },
+    "time.voy_ahora": {
+      "es": "'Voy ahora' puede significar en cinco minutos, en una hora o mañana.",
+      "ru": "«Voy ahora» может означать «через пять минут», «через час» или «завтра»."
+    },
+    "time.bolita": {
+      "es": "La gente a menudo pide que la lleven un tramo corto, 'una bolita', y 'hasta la esquina' puede quedar mucho más lejos.",
+      "ru": "Люди часто просят подвезти их недалеко — «una bolita», — а «до угла» может оказаться гораздо дальше."
+    },
+    "family_and_friends.colmado": {
+      "es": "El 'colmado' (la tienda de la esquina) es un punto de encuentro: la gente conversa, escucha música, juega dominó y se pone al día con las noticias del barrio.",
+      "ru": "«Colmado» (магазинчик на углу) — место встреч: здесь болтают, слушают музыку, играют в домино и узнают местные новости."
+    },
+    "family_and_friends.dominoes": {
+      "es": "El dominó se juega en voz alta y en serio: fichas golpeadas contra la mesa y gritos de '¡Tranca eso ahí!'.",
+      "ru": "В домино играют громко и всерьёз — костяшки с силой бьют о стол, а игроки кричат «¡Tranca eso ahí!»."
+    },
+    "family_and_friends.dance": {
+      "es": "No saber bailar se presta a bromas suaves ('pariguayo' es una palabra burlona para eso); bailar merengue o bachata es una forma fácil de integrarse.",
+      "ru": "Над неумением танцевать беззлобно подшучивают — для этого есть насмешливое словечко «pariguayo»; станцевать меренге или бачату — простой способ влиться в компанию."
+    },
+    "school_life.ordinance": {
+      "es": "El calendario nacional lo fija una ordenanza del Ministerio de Educación (MINERD) y se aplica a escuelas públicas y privadas; incluye feriados y días de formación docente.",
+      "ru": "Общенациональный календарь устанавливается распоряжением Министерства образования (MINERD) и действует для государственных и частных школ; в нём учтены праздники и дни обучения учителей."
+    },
+    "school_life.teachers_earlier": {
+      "es": "Los docentes vuelven a principios de agosto, tres semanas antes que los alumnos.",
+      "ru": "Учителя возвращаются в начале августа, на три недели раньше учеников."
+    },
+    "food_and_table.bandera": {
+      "es": "El almuerzo de todos los días es 'la bandera': arroz, habichuelas y carne, a menudo al mediodía; el arroz crujiente del fondo de la olla es 'el concón'.",
+      "ru": "Повседневный обед — «la bandera»: рис, фасоль (habichuelas) и мясо, чаще всего в полдень; хрустящий рис со дна кастрюли называют «el concón»."
+    },
+    "food_and_table.un_chin": {
+      "es": "'Un chin' significa 'un poquito': 'dame un chin'.",
+      "ru": "«Un chin» значит «чуть-чуть»: «dame un chin»."
+    },
+    "everyday_life.music_always": {
+      "es": "En muchos barrios casi siempre hay una bocina sonando con merengue, bachata o dembow: es simplemente 'ambiente'.",
+      "ru": "Во многих районах почти всегда играет колонка — меренге, бачата или дембоу; это просто «ambiente» (атмосфера)."
+    },
+    "everyday_life.guagua": {
+      "es": "Al autobús se le dice 'guagua'.",
+      "ru": "Автобус называют «guagua»."
+    },
+    "everyday_life.motorbikes": {
+      "es": "En las motos a menudo van tres personas, a veces con un niño en el medio: enséñales a los niños seguridad vial desde temprano.",
+      "ru": "На мотоциклах часто ездят втроём, иногда с ребёнком посередине, — учите детей правилам дорожной безопасности с ранних лет."
+    },
+    "everyday_life.cheerful": {
+      "es": "Al calor, el tráfico y los apagones se les responde con música, bromas y fiestas improvisadas.",
+      "ru": "На жару, пробки и отключения электричества здесь отвечают музыкой, шутками и импровизированными праздниками."
+    },
+    "local_expressions.vaina": {
+      "es": "'Vaina': 'cosa'; reemplaza casi cualquier sustantivo.",
+      "ru": "«Vaina» — «штука»: может заменить почти любое существительное."
+    },
+    "local_expressions.tiguere": {
+      "es": "'Tíguere': una persona astuta y espabilada, con estilo y desenvoltura (puede ser un elogio o una advertencia).",
+      "ru": "«Tíguere» — хитрый, тёртый уличной жизнью человек с уверенной манерой (может быть и похвалой, и предостережением)."
+    },
+    "local_expressions.jevi": {
+      "es": "'Jevi': genial, chévere.",
+      "ru": "«Jevi» — классно, круто."
+    },
+    "local_expressions.en_olla": {
+      "es": "'Estar en olla': estar sin dinero.",
+      "ru": "«Estar en olla» — сидеть без денег."
+    },
+    "local_expressions.coba": {
+      "es": "'Dar coba': adular a alguien, normalmente para conseguir algo.",
+      "ru": "«Dar coba» — льстить кому-то, обычно чтобы чего-то добиться."
+    },
+    "newcomers_find_hard.noise": {
+      "es": "La música y el dominó a todo volumen en el barrio, de día y de noche.",
+      "ru": "Музыка и домино на полной громкости в районе — днём и вечером."
+    },
+    "newcomers_find_hard.time_words": {
+      "es": "Un 'voy ahora' que no es ahora.",
+      "ru": "«Voy ahora», которое означает вовсе не «сейчас»."
+    },
+    "newcomers_find_hard.hurricanes": {
+      "es": "La temporada de huracanes de junio a noviembre: averigua de dónde vienen las alertas oficiales antes de que empiece.",
+      "ru": "Сезон ураганов с июня по ноябрь — заранее узнайте, откуда приходят официальные предупреждения."
+    },
+    "folk_culture.diablos_names": {
+      "es": "Los diablos del Carnaval tienen nombres distintos según la región: diablos cojuelos en La Vega, 'cachúas' en Cabral, 'toros' en Montecristi, 'papeluses' en Cotuí.",
+      "ru": "У карнавальных дьяволов в разных регионах разные имена: diablos cojuelos в Ла-Веге, «cachúas» в Кабрале, «toros» в Монтекристи, «papeluses» в Котуи."
+    },
+    "folk_culture.altagracia": {
+      "es": "El 21 de enero, día de la Virgen de la Altagracia, es uno de los días religiosos más importantes del año.",
+      "ru": "21 января, день Virgen de la Altagracia, — один из главных религиозных дней года."
+    },
+    "folk_culture.baseball": {
+      "es": "Las rivalidades del béisbol se toman muy en serio: 'Las Águilas son las mejores' es una afirmación típica.",
+      "ru": "К бейсбольному соперничеству относятся очень серьёзно — «Las Águilas son las mejores» («„Орлы“ — лучшие») — типичное заявление."
+    }
+  },
+  "moments": {
+    "first_carnival": {"es": "Tu primer Carnaval", "ru": "Ваш первый карнавал"},
+    "colmado": {"es": "Pasar el rato en el colmado", "ru": "Время в колмадо (colmado)"},
+    "first_hurricane_season": {"es": "Tu primera temporada de huracanes", "ru": "Ваш первый сезон ураганов"},
+    "baseball": {"es": "Un juego de béisbol", "ru": "Бейсбольный матч"},
+    "independence": {"es": "27 de febrero", "ru": "27 февраля (27 de febrero)"},
+    "school_start": {"es": "El año escolar empieza en agosto", "ru": "Учебный год начинается в августе"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "В гостях у местной семьи"}
+  }
+}

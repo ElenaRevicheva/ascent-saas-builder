@@ -15,7 +15,8 @@ import {
   MessageSquare,
   Globe
 } from 'lucide-react';
-import { spanishLessons, Lesson } from '@/data/spanishLessons';
+import { spanishLessons, Lesson, lessonTitle, lessonDescription } from '@/data/spanishLessons';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -25,6 +26,7 @@ import { readFamilyProfile, PACK_COUNTRIES } from './FamilyProfileDialog';
 export const LearningModules = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t, i18n } = useTranslation();
   const [selectedDifficulty, setSelectedDifficulty] = useState<'beginner' | 'intermediate' | 'advanced'>('beginner');
   const [userProgress, setUserProgress] = useState<Record<string, { progress: number; isCompleted: boolean }>>({});
   const [loading, setLoading] = useState(true);
@@ -32,15 +34,17 @@ export const LearningModules = () => {
   // from the checked guide come first in every level; the five original lessons stay below them.
   const [countryLessons, setCountryLessons] = useState<Lesson[]>([]);
   const [countryName, setCountryName] = useState('');
+  const [countryKey, setCountryKey] = useState('');
   useEffect(() => {
     if (!user) return;
     readFamilyProfile(user.id).then(async (p) => {
       const c = String(p?.country_now ?? '');
       if (!PACK_COUNTRIES.some(([k]) => k === c)) return;
       setCountryName(PACK_COUNTRIES.find(([k]) => k === c)?.[1] ?? '');
-      setCountryLessons(await loadCountryLessons(c));
+      setCountryKey(c);
+      setCountryLessons(await loadCountryLessons(c, i18n.language));
     }).catch(() => undefined);
-  }, [user]);
+  }, [user, i18n.language]);
 
   useEffect(() => {
     if (!user) return;
@@ -102,10 +106,10 @@ export const LearningModules = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Trophy className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
-          Spanish Learning Modules
+          {t('lm.title')}
         </CardTitle>
         {countryName && (
-          <p className="text-sm text-muted-foreground">Living in {countryName}: lessons from your checked country guide come first, then Spanish basics.</p>
+          <p className="text-sm text-muted-foreground">{t('lm.livingIn', { country: t(`lm.country.${countryKey}`, { defaultValue: countryName }) })}</p>
         )}
         
         {/* Difficulty Filter */}
@@ -118,7 +122,7 @@ export const LearningModules = () => {
               onClick={() => setSelectedDifficulty(difficulty)}
               className={selectedDifficulty === difficulty ? "bg-[hsl(var(--espaluz-primary))]" : ""}
             >
-              {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
+              {t(`fam.levels.${difficulty}`)}
             </Button>
           ))}
         </div>
@@ -131,31 +135,31 @@ export const LearningModules = () => {
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
                   {getCategoryIcon(lesson.category)}
-                  <h3 className="font-semibold">{lesson.title}</h3>
+                  <h3 className="font-semibold">{lessonTitle(lesson, t)}</h3>
                   <Badge 
                     variant="outline" 
                     className={`${getDifficultyColor(lesson.difficulty)} border-0`}
                   >
-                    {lesson.difficulty}
+                    {t(`fam.levels.${lesson.difficulty}`, { defaultValue: lesson.difficulty })}
                   </Badge>
                 </div>
                 
                 <p className="text-sm text-muted-foreground mb-3">
-                  {lesson.description}
+                  {lessonDescription(lesson, t)}
                 </p>
                 
                 <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
                   <div className="flex items-center gap-1">
                     <Clock className="h-3 w-3" />
-                    <span>{lesson.estimatedMinutes} min</span>
+                    <span>{t('lm.minutes', { count: lesson.estimatedMinutes })}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <BookOpen className="h-3 w-3" />
-                    <span>{lesson.vocabulary.length} words</span>
+                    <span>{t('lm.words', { count: lesson.vocabulary.length })}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <MessageSquare className="h-3 w-3" />
-                    <span>{lesson.phrases.length} phrases</span>
+                    <span>{t('lm.phrases', { count: lesson.phrases.length })}</span>
                   </div>
                 </div>
 
@@ -168,7 +172,7 @@ export const LearningModules = () => {
                   ))}
                   {lesson.vocabulary.length > 5 && (
                     <Badge variant="secondary" className="text-xs">
-                      +{lesson.vocabulary.length - 5} more
+                      {t('lm.more', { count: lesson.vocabulary.length - 5 })}
                     </Badge>
                   )}
                 </div>
@@ -186,10 +190,10 @@ export const LearningModules = () => {
                       />
                       <span className="text-xs text-muted-foreground">
                         {userProgress[lesson.id]?.isCompleted 
-                          ? 'Complete' 
+                          ? t('lm.complete')
                           : userProgress[lesson.id]?.progress 
                           ? `${userProgress[lesson.id].progress}%` 
-                          : 'Not started'}
+                          : t('lm.notStarted')}
                       </span>
                       {userProgress[lesson.id]?.isCompleted && <CheckCircle2 className="h-4 w-4 text-green-500" />}
                     </>
@@ -204,10 +208,10 @@ export const LearningModules = () => {
               >
                 <Play className="h-4 w-4 mr-1" />
                 {userProgress[lesson.id]?.isCompleted 
-                  ? 'Review' 
+                  ? t('lm.review')
                   : userProgress[lesson.id]?.progress 
-                  ? 'Continue' 
-                  : 'Start'}
+                  ? t('lm.continue')
+                  : t('lm.start')}
               </Button>
             </div>
           </div>
@@ -216,11 +220,11 @@ export const LearningModules = () => {
         <div className="text-center pt-4">
           {filteredLessons.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              {countryName ? 'No lessons at this level yet.' : 'Tell EspaLuz where home is now (the family map, "About your new life") and your country lessons appear here.'}
+              {countryName ? t('lm.noLessons') : t('lm.noCountry')}
             </p>
           ) : (
             <p className="text-sm text-muted-foreground">
-              {countryName ? `Every ${countryName} card is a checked fact from your country guide - the same one EspaLuz uses on WhatsApp and Telegram.` : 'Tell EspaLuz where home is now and your country lessons appear here.'}
+              {countryName ? t('lm.everyCard', { country: t(`lm.country.${countryKey}`, { defaultValue: countryName }) }) : t('lm.noCountryShort')}
             </p>
           )}
         </div>

@@ -144,7 +144,7 @@ const Navigation = () => {
       {menu === "phone" && (
         <div id="menu-phone" className="lg:hidden max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-border bg-card px-3 pb-4 pt-1 shadow-xl">
           <div className="flex items-center justify-between px-3 py-2 sm:hidden">
-            <span className="text-sm text-muted-foreground">Language / Idioma</span>
+            <span className="text-sm text-muted-foreground">{t("misc.langLabel")}</span>
             <LanguageSwitcher />
           </div>
           <MenuTree onPick={pick} />

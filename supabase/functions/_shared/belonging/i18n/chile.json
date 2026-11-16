@@ -1,0 +1,170 @@
+{
+  "name": {"es": "Chile", "ru": "Чили"},
+  "items": {
+    "rhythm_of_the_year.school_year": {
+      "es": "El año escolar empieza a principios de marzo (el 4 de marzo de 2026 para los estudiantes) y termina en diciembre; las vacaciones de invierno son dos semanas entre fines de junio y julio, con fechas que cambian según la región: confirma el calendario del Mineduc de tu región.",
+      "ru": "Учебный год начинается в начале марта (для учеников — 4 марта 2026 года) и заканчивается в декабре; зимние каникулы длятся две недели между концом июня и июлем, и даты различаются по регионам — уточните календарь Mineduc для вашего региона."
+    },
+    "rhythm_of_the_year.winter_break_rm": {
+      "es": "En 2026, la Región Metropolitana (Santiago) tuvo sus vacaciones de invierno del 22 de junio al 3 de julio; en otras regiones las fechas son distintas.",
+      "ru": "В 2026 году в столичном регионе Сантьяго (Región Metropolitana) зимние каникулы шли с 22 июня по 3 июля; в других регионах даты другие."
+    },
+    "rhythm_of_the_year.summer_christmas": {
+      "es": "La Navidad cae en verano: el 'Viejito Pascuero' (Papá Noel) suda con su traje rojo, y a los niños se les advierte que no recibirán regalos si se portan mal.",
+      "ru": "Рождество приходится на лето: «Viejito Pascuero» (Дед Мороз) потеет в своём красном костюме, а детей предупреждают, что без подарков останутся те, кто плохо себя ведёт."
+    },
+    "rhythm_of_the_year.september": {
+      "es": "Septiembre es el mes de las Fiestas Patrias (18 y 19 de septiembre): durante semanas antes, las calles, tiendas, ventanas y autos se decoran de blanco, rojo y azul.",
+      "ru": "Сентябрь — месяц Fiestas Patrias (национальных праздников, 18 и 19 сентября): за несколько недель до них улицы, магазины, окна и машины украшают в белый, красный и синий."
+    },
+    "rhythm_of_the_year.summer_holidays": {
+      "es": "Enero y febrero son las vacaciones escolares de verano, cuando muchas familias van a la costa o al sur; Santiago se vacía en febrero.",
+      "ru": "Январь и февраль — летние школьные каникулы, когда многие семьи уезжают на побережье или на юг; в феврале Сантьяго пустеет."
+    },
+    "holidays.mandatory": {
+      "es": "Los feriados 'irrenunciables': 1 de enero, 1 de mayo, 18 de septiembre, 19 de septiembre, 25 de diciembre.",
+      "ru": "«Обязательные» праздники: 1 января, 1 мая, 18 сентября, 19 сентября, 25 декабря."
+    },
+    "holidays.others": {
+      "es": "Otros feriados nacionales: Viernes Santo y Sábado Santo (marzo o abril; cambian cada año), 21 de mayo (Día de las Glorias Navales), Día Nacional de los Pueblos Indígenas en el solsticio de invierno (alrededor del 20-21 de junio), 29 de junio (San Pedro y San Pablo, puede pasarse al lunes), 16 de julio (Virgen del Carmen), 15 de agosto, 12 de octubre (Encuentro de Dos Mundos, puede pasarse al lunes), 31 de octubre (Día de las Iglesias Evangélicas y Protestantes, puede pasarse a un viernes), 1 de noviembre, 8 de diciembre.",
+      "ru": "Другие государственные праздники: Страстная пятница и Великая суббота (март или апрель — даты меняются каждый год), 21 мая (День военно-морского флота), Национальный день коренных народов в день зимнего солнцестояния (около 20–21 июня), 29 июня (святые Пётр и Павел, может переноситься на понедельник), 16 июля (Virgen del Carmen), 15 августа, 12 октября (Encuentro de Dos Mundos, «Встреча двух миров», может переноситься на понедельник), 31 октября (День евангелических и протестантских церквей, может переноситься на пятницу), 1 ноября, 8 декабря."
+    },
+    "holidays.regional": {
+      "es": "Algunos feriados son solo regionales, como el 7 de junio en Arica y Parinacota.",
+      "ru": "Некоторые праздники только региональные — например, 7 июня в Арике и Паринакоте."
+    },
+    "greetings_and_courtesy.chilean_speech": {
+      "es": "El español chileno es rápido, se come sílabas y usa muchos diminutivos: a todos les toma un tiempo; pedir que te repitan es normal.",
+      "ru": "Чилийский испанский быстрый, в нём «проглатывают» слоги и используют много уменьшительных форм — привыкать приходится всем; просить повторить — нормально."
+    },
+    "greetings_and_courtesy.double_meaning": {
+      "es": "El humor es rápido y está lleno de dobles sentidos; con el tiempo empiezas a entender los chistes.",
+      "ru": "Юмор быстрый и полон двусмысленностей; со временем вы начнёте понимать шутки."
+    },
+    "greetings_and_courtesy.po": {
+      "es": "'Po' (de 'pues') se agrega para dar énfasis: 'sí po', 'ya po'.",
+      "ru": "«Po» (от «pues») добавляют для выразительности: «sí po», «ya po»."
+    },
+    "greetings_and_courtesy.cachai": {
+      "es": "'¿Cachai?': '¿entiendes?', para comprobar que lo estás siguiendo.",
+      "ru": "«¿Cachai?» — «понимаешь?»: так проверяют, успеваете ли вы следить за мыслью."
+    },
+    "greetings_and_courtesy.cheek_kiss": {
+      "es": "Mucha gente saluda con un beso en la mejilla derecha, también al conocer a alguien; los hombres suelen darse la mano.",
+      "ru": "Многие здороваются одним поцелуем в правую щёку, в том числе при знакомстве; мужчины обычно пожимают друг другу руки."
+    },
+    "time.once": {
+      "es": "'La once' es la hora del té, más o menos entre las 6 y las 8 de la tarde: té con pan (la marraqueta es la favorita) y cosas para ponerle; en muchas casas reemplaza a la cena.",
+      "ru": "«La once» — время чаепития, примерно с 6 до 8 вечера: чай с хлебом (любимый — marraqueta) и всем, что можно на него положить; во многих домах оно заменяет ужин."
+    },
+    "time.late_parties": {
+      "es": "Las fiestas ('carretes') empiezan con una 'previa' en casa alrededor de las 9 o 10 de la noche y pueden durar hasta el amanecer.",
+      "ru": "Вечеринки («carretes») начинаются с «previa» дома около 9–10 вечера и могут продолжаться до рассвета."
+    },
+    "time.al_tiro": {
+      "es": "'Al tiro' significa 'de inmediato', aunque en la práctica puede significar 'pronto'.",
+      "ru": "«Al tiro» означает «сразу же», хотя на практике может значить «скоро»."
+    },
+    "family_and_friends.asado": {
+      "es": "Un asado acompaña casi cualquier ocasión: un partido, una despedida, una casa nueva, el fin del semestre.",
+      "ru": "Асадо (барбекю) устраивают почти по любому поводу: матч, проводы, новоселье, конец семестра."
+    },
+    "family_and_friends.pololo": {
+      "es": "Al novio o la novia se le dice 'pololo' / 'polola'; andar de novios es 'pololear'.",
+      "ru": "Парня или девушку называют «pololo» / «polola»; встречаться — «pololear»."
+    },
+    "family_and_friends.weon": {
+      "es": "'Weón' entre amigos suele significar 'amigo', pero en otros tonos es un insulto: déjalo para los amigos cercanos.",
+      "ru": "«Weón» среди друзей обычно значит «приятель», но другим тоном это оскорбление — оставьте его для близких друзей."
+    },
+    "school_life.regional_calendar": {
+      "es": "Cada región tiene su propia resolución de calendario del Mineduc; la fecha de inicio es nacional, pero las vacaciones de invierno varían.",
+      "ru": "У каждого региона своё постановление Mineduc о календаре; дата начала учёбы общая для страны, а зимние каникулы различаются."
+    },
+    "school_life.earthquake_drills": {
+      "es": "Las escuelas tienen un plan integral de seguridad (PISE) y participan en simulacros de terremoto y evacuación; pregunta en la escuela de tu hijo por su plan.",
+      "ru": "В школах есть комплексный план безопасности (PISE), и они участвуют в учениях на случай землетрясения и эвакуации — спросите в школе вашего ребёнка о её плане."
+    },
+    "food_and_table.fiestas_food": {
+      "es": "La comida de septiembre en las 'fondas' y 'ramadas': empanadas, anticuchos, choripán, sopaipillas con pebre y mote con huesillo.",
+      "ru": "Сентябрьская еда в «fondas» и «ramadas»: эмпанады, антикучос (anticuchos), чорипан (choripán), сопайпильяс с пебре (sopaipillas con pebre) и mote con huesillo."
+    },
+    "food_and_table.wine_seasons": {
+      "es": "El vino sigue las estaciones: vino caliente con naranja y canela en invierno, vino frío con frutillas o melón en verano.",
+      "ru": "Вино следует временам года: горячее вино с апельсином и корицей зимой, холодное вино с клубникой или дыней летом."
+    },
+    "food_and_table.chupar_bigotes": {
+      "es": "Un plato delicioso está 'para chuparse los bigotes'.",
+      "ru": "О вкусном блюде говорят «para chuparse los bigotes» («пальчики оближешь»)."
+    },
+    "everyday_life.tremors_calm": {
+      "es": "La gente mantiene la calma en los temblores pequeños y a menudo adivina la magnitud al instante; solo los sismos fuertes causan alarma.",
+      "ru": "При слабых подземных толчках люди сохраняют спокойствие и часто сразу угадывают магнитуду; тревогу вызывают только сильные землетрясения."
+    },
+    "everyday_life.drills_public": {
+      "es": "Las escuelas participan en grandes simulacros de terremoto coordinados.",
+      "ru": "Школы участвуют в масштабных скоординированных учениях на случай землетрясения."
+    },
+    "local_expressions.bacan_fome": {
+      "es": "'Bacán': genial; 'fome': aburrido, sin gracia.",
+      "ru": "«Bacán» — классно; «fome» — скучно, уныло."
+    },
+    "local_expressions.pato": {
+      "es": "'Estoy pato' / 'ando pato': no tengo plata.",
+      "ru": "«Estoy pato» / «ando pato» — я на мели, без денег."
+    },
+    "local_expressions.chancho": {
+      "es": "'Lo pasamos chancho': lo pasamos muy bien.",
+      "ru": "«Lo pasamos chancho» — мы отлично провели время."
+    },
+    "local_expressions.filete": {
+      "es": "'¡Está filete!': está muy bueno.",
+      "ru": "«¡Está filete!» — это очень здорово."
+    },
+    "local_expressions.peludo": {
+      "es": "'Está peludo': está difícil, complicado.",
+      "ru": "«Está peludo» — дело трудное, непростое."
+    },
+    "local_expressions.pendejo": {
+      "es": "'Pendejo' suele significar niño o alguien infantil; no es el insulto fuerte que es en otros lugares.",
+      "ru": "«Pendejo» обычно означает ребёнка или инфантильного человека — это не то сильное оскорбление, каким слово считается в других странах."
+    },
+    "newcomers_find_hard.accent": {
+      "es": "Entender la velocidad y la jerga del español chileno.",
+      "ru": "Понимать скорость речи и сленг чилийского испанского."
+    },
+    "newcomers_find_hard.once_not_dinner": {
+      "es": "Que te inviten 'a tomar once' y descubrir que después no hay cena.",
+      "ru": "Получить приглашение «a tomar once» и обнаружить, что ужина после этого не будет."
+    },
+    "newcomers_find_hard.earthquakes": {
+      "es": "Los terremotos: los locales mantienen la calma, los recién llegados no; aprende el protocolo en casa y en la escuela.",
+      "ru": "Землетрясения: местные сохраняют спокойствие, новоприбывшие — нет; выучите порядок действий дома и в школе."
+    },
+    "newcomers_find_hard.upside_down_year": {
+      "es": "El año al revés: Navidad en la playa e invierno en julio.",
+      "ru": "Год «наоборот»: Рождество на пляже, а зима в июле."
+    },
+    "folk_culture.cueca": {
+      "es": "La cueca, el baile nacional, llena septiembre: zapateos, palmas y pañuelos blancos al aire. Muchos recién llegados intentan aprenderla en un par de semanas.",
+      "ru": "Куэка (cueca), национальный танец, наполняет сентябрь: притопывания, хлопки и взмахи белыми платками. Многие новоприбывшие пытаются выучить её за пару недель."
+    },
+    "folk_culture.fondas": {
+      "es": "Las 'fondas' y 'ramadas', recintos de feria con comida, música y baile, son el corazón de las Fiestas Patrias.",
+      "ru": "«Fondas» и «ramadas» — ярмарочные павильоны с едой, музыкой и танцами — сердце Fiestas Patrias."
+    },
+    "folk_culture.terremoto": {
+      "es": "El trago 'terremoto' (vino pipeño, helado de piña, granadina) es parte de septiembre, igual que sus 'réplicas' a la mañana siguiente. Solo para adultos.",
+      "ru": "Напиток «terremoto» (вино пипеньо, ананасовое мороженое, гренадин) — часть сентября, как и его «réplicas» («афтершоки») на следующее утро. Только для взрослых."
+    }
+  },
+  "moments": {
+    "first_dieciocho": {"es": "Tu primer Dieciocho", "ru": "Ваш первый Dieciocho (18 сентября)"},
+    "first_once": {"es": "Invitados a 'once'", "ru": "Приглашение на «once»"},
+    "first_tremor": {"es": "Tu primer temblor", "ru": "Ваш первый подземный толчок"},
+    "summer_christmas": {"es": "Una Navidad de verano", "ru": "Летнее Рождество"},
+    "winter_break": {"es": "Vacaciones escolares de invierno", "ru": "Зимние школьные каникулы"},
+    "first_asado": {"es": "Tu primer asado", "ru": "Ваше первое асадо"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "В гостях у местной семьи"}
+  }
+}

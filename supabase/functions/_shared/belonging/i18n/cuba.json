@@ -1,0 +1,125 @@
+{
+  "name": {"es": "Cuba", "ru": "Куба"},
+  "items": {
+    "rhythm_of_the_year.school_start": {
+      "es": "El año escolar empieza a principios de septiembre (el 1 de septiembre en 2025 y 2026).",
+      "ru": "Учебный год начинается в начале сентября (1 сентября в 2025 и 2026 годах)."
+    },
+    "rhythm_of_the_year.school_flex": {
+      "es": "En 2026 el fin del curso escolar se adelantó a junio por la escasez de electricidad y transporte, y el curso 2026-2027 empezó con normas flexibles de asistencia, horario y uniforme: pregunta en la escuela qué se aplica ahora.",
+      "ru": "В 2026 году окончание учебного года перенесли на июнь из-за нехватки электричества и транспорта, а 2026–2027 учебный год начался с гибкими правилами посещения, расписания и школьной формы — узнайте в школе, что действует сейчас."
+    },
+    "rhythm_of_the_year.july_holidays": {
+      "es": "El 25, 26 y 27 de julio son feriados consecutivos, el corazón del verano.",
+      "ru": "25, 26 и 27 июля — три праздничных дня подряд, сердце лета."
+    },
+    "rhythm_of_the_year.december_parrandas": {
+      "es": "Los pueblos del centro de Cuba celebran las 'parrandas', fiestas en las que compiten barrios rivales; las más conocidas son las de Remedios, a fin de año.",
+      "ru": "В городках центральной Кубы проходят «parrandas» — праздники, на которых соревнуются соперничающие кварталы; самые известные — в Ремедиосе, в конце года."
+    },
+    "rhythm_of_the_year.new_year": {
+      "es": "El 31 de diciembre es día libre para la mayoría; las escuelas y la mayoría de los negocios cierran, y el 1 y 2 de enero también son feriados.",
+      "ru": "31 декабря у большинства выходной; школы и большинство предприятий закрыты, а 1 и 2 января тоже праздничные дни."
+    },
+    "holidays.list": {
+      "es": "Feriados: 1 de enero (Día de la Liberación), 2 de enero (Día de la Victoria), Viernes Santo (marzo o abril; cambia cada año), 1 de mayo, 25-27 de julio (conmemoración del Moncada), 10 de octubre (Día de la Independencia, inicio de la guerra de 1868), 25 de diciembre, 31 de diciembre.",
+      "ru": "Государственные праздники: 1 января (День освобождения), 2 января (День победы), Страстная пятница (март или апрель — дата меняется каждый год), 1 мая, 25–27 июля (годовщина штурма казарм Монкада), 10 октября (День независимости, начало войны 1868 года), 25 декабря, 31 декабря."
+    },
+    "holidays.christmas_back": {
+      "es": "El día de Navidad fue laborable de 1969 a 1998, y el Viernes Santo pasó a ser feriado recién en 2012: las personas mayores pueden recordar años sin ellos.",
+      "ru": "Рождество было рабочим днём с 1969 по 1998 год, а Страстная пятница стала выходным только в 2012 году — пожилые люди могут помнить годы без этих праздников."
+    },
+    "greetings_and_courtesy.que_bola": {
+      "es": "'¿Qué bolá?': '¿qué tal?', el saludo diario que los recién llegados oyen en todas partes.",
+      "ru": "«¿Qué bolá?» — «как дела?», «что новенького?»: повседневное приветствие, которое новоприбывшие слышат повсюду."
+    },
+    "greetings_and_courtesy.asere": {
+      "es": "'Asere': amigo, compañero, entre amigos; ya está en el diccionario de la Real Academia Española.",
+      "ru": "«Asere» — друг, приятель (между друзьями); теперь это слово есть в словаре Королевской академии испанского языка."
+    },
+    "greetings_and_courtesy.cheek_kiss": {
+      "es": "A las mujeres a menudo se las saluda con un beso en la mejilla, incluso al conocerlas; los hombres se dan la mano.",
+      "ru": "Женщин часто приветствуют одним поцелуем в щёку, даже при первой встрече; мужчины пожимают руки."
+    },
+    "time.queues": {
+      "es": "Las colas son parte de la vida diaria: al llegar, pregunta '¿Quién es el último?' y recuerda a esa persona; desde ese momento tú eres 'el último' hasta que alguien más te lo pregunte.",
+      "ru": "Очереди — часть повседневной жизни: придя, спросите «¿Quién es el último?» («кто последний?») и запомните этого человека — теперь «el último» вы, пока следующий не спросит вас."
+    },
+    "time.queue_keep_place": {
+      "es": "Si necesitas alejarte un momento, la gente a menudo le pide a la persona de adelante o de atrás que describa su lugar o se lo guarde.",
+      "ru": "Если нужно ненадолго отойти, люди часто просят стоящего впереди или сзади описать их или придержать место."
+    },
+    "family_and_friends.yuma": {
+      "es": "A los extranjeros se les puede decir 'yuma', normalmente sin intención de insultar.",
+      "ru": "Иностранцев могут называть «yuma» — обычно без желания обидеть."
+    },
+    "family_and_friends.neighbours": {
+      "es": "Los vecinos a menudo se ayudan a encontrar y compartir lo que escasea; el verbo para arreglárselas es 'resolver'.",
+      "ru": "Соседи часто помогают друг другу находить и делить то, чего не хватает; «выкручиваться» по-местному — «resolver»."
+    },
+    "school_life.uniform_priority": {
+      "es": "Las normas del uniforme se flexibilizaron para 2026-2027 por la escasez; pregunta en la escuela qué debe ponerse tu hijo.",
+      "ru": "Правила о школьной форме на 2026–2027 год смягчили из-за дефицита — узнайте в школе, что должен носить ваш ребёнок."
+    },
+    "school_life.recesses": {
+      "es": "Las escuelas suelen hacer una pausa alrededor del 31 de diciembre-principios de enero y una semana en primavera.",
+      "ru": "Обычно в школах перерыв примерно с 31 декабря до начала января и неделя весной."
+    },
+    "food_and_table.jamar": {
+      "es": "'Jamar': comer, con ganas.",
+      "ru": "«Jamar» — есть, с аппетитом."
+    },
+    "food_and_table.rice_beans": {
+      "es": "El arroz con frijoles negros ('congrí' o 'moros y cristianos') con cerdo es el plato familiar clásico, sobre todo en las celebraciones.",
+      "ru": "Рис с чёрной фасолью («congrí» или «moros y cristianos») со свининой — классическое семейное блюдо, особенно по праздникам."
+    },
+    "everyday_life.guagua": {
+      "es": "Al autobús se le dice 'guagua'.",
+      "ru": "Автобус называют «guagua»."
+    },
+    "everyday_life.pincha": {
+      "es": "El trabajo es 'la pincha'; 'pinchar' es trabajar.",
+      "ru": "Работа — «la pincha»; «pinchar» — работать."
+    },
+    "everyday_life.power_cuts": {
+      "es": "La escasez de electricidad, combustible y transporte afecta la vida diaria: en 2026 incluso cambió el calendario y el horario escolar.",
+      "ru": "Нехватка электричества, топлива и транспорта влияет на повседневную жизнь — в 2026 году из-за неё даже изменили школьный календарь и расписание."
+    },
+    "local_expressions.chevere": {
+      "es": "'Chévere': genial, buenísimo.",
+      "ru": "«Chévere» — отлично, классно."
+    },
+    "local_expressions.que_vuelta": {
+      "es": "'¿Qué vuelta?' / '¿qué bolero?': otras formas de decir '¿qué tal?'.",
+      "ru": "«¿Qué vuelta?» / «¿qué bolero?» — другие способы спросить «как дела?»."
+    },
+    "newcomers_find_hard.queues_hard": {
+      "es": "El sistema de las colas: no hay una fila física, solo saber quién es 'el último'.",
+      "ru": "Система очередей: физической очереди нет, нужно просто знать, кто «el último»."
+    },
+    "newcomers_find_hard.apagones": {
+      "es": "Organizar la vida familiar en torno a los apagones y a los horarios escolares cambiantes.",
+      "ru": "Планировать семейную жизнь с учётом отключений электричества и меняющегося школьного расписания."
+    },
+    "folk_culture.unesco_list": {
+      "es": "La UNESCO reconoce cuatro tradiciones cubanas como Patrimonio Cultural Inmaterial: la Tumba Francesa (2008), la Rumba (2016), el Punto Cubano (2017) y Las Parrandas (2018).",
+      "ru": "ЮНЕСКО включила четыре кубинские традиции в список нематериального культурного наследия: Tumba Francesa (2008), румбу (2016), Punto Cubano (2017) и Las Parrandas (2018)."
+    },
+    "folk_culture.parrandas_old": {
+      "es": "Los expertos locales consideran las parrandas de Remedios la fiesta más antigua de la isla, con los barrios rivales San Salvador y El Carmen.",
+      "ru": "Местные специалисты считают парранды в Ремедиосе самым старым праздником на острове; в них соперничают кварталы San Salvador и El Carmen."
+    },
+    "folk_culture.music_everywhere": {
+      "es": "El son, la salsa, la rumba y el reguetón se escuchan en las calles y en las casas; a bailar se aprende de pequeño.",
+      "ru": "Сон, сальса, румба и реггетон звучат на улицах и в домах; танцевать учатся с детства."
+    }
+  },
+  "moments": {
+    "first_queue": {"es": "Tu primer '¿quién es el último?'", "ru": "Ваше первое «¿quién es el último?»"},
+    "parrandas": {"es": "Las Parrandas", "ru": "Las Parrandas"},
+    "july": {"es": "Los feriados de julio", "ru": "Июльские праздники"},
+    "school_start": {"es": "El primer día de clases", "ru": "Первый школьный день"},
+    "music": {"es": "Música y baile con los vecinos", "ru": "Музыка и танцы с соседями"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "В гостях у местной семьи"}
+  }
+}

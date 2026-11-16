@@ -1,0 +1,160 @@
+{
+  "name": {"es": "Perú", "ru": "Перу"},
+  "items": {
+    "rhythm_of_the_year.lima_winter": {
+      "es": "En Lima, el invierno (de junio a septiembre) es gris y húmedo, con unos 19 °C de día y 12 °C de noche, una llovizna fina llamada 'garúa' y una humedad de más del 90%. Lleva capas de ropa, no paraguas.",
+      "ru": "В Lima зима (с июня по сентябрь) серая и сырая: около 19 °C днём и 12 °C ночью, мелкая морось, которую называют «garúa», и влажность выше 90%. Берите одежду слоями, а не зонт."
+    },
+    "rhythm_of_the_year.lima_summer": {
+      "es": "El verano de Lima va de diciembre a abril, caluroso y húmedo; en Lima casi nunca llueve de verdad.",
+      "ru": "Лето в Lima длится с декабря по апрель, жаркое и влажное; настоящего дождя в Lima почти никогда не бывает."
+    },
+    "rhythm_of_the_year.school_year": {
+      "es": "El año escolar público empieza en marzo (16 de marzo en 2026, 36 semanas lectivas) y termina en diciembre, con semanas cortas de descanso en mayo y octubre y dos semanas de vacaciones a finales de julio e inicios de agosto. Confirma cada año el calendario del Minedu.",
+      "ru": "Учебный год в государственных школах начинается в марте (16 марта в 2026 году, 36 учебных недель) и заканчивается в декабре, с короткими неделями отдыха в мае и октябре и двухнедельными каникулами в конце июля — начале августа. Каждый год сверяйтесь с календарём Minedu."
+    },
+    "rhythm_of_the_year.july_patrias": {
+      "es": "A finales de julio son las Fiestas Patrias: la Independencia el 28 y 29 de julio, además del 23 de julio; es un feriado nacional largo en el que muchas familias viajan.",
+      "ru": "В конце июля — Fiestas Patrias: День независимости 28 и 29 июля, а также 23 июля; это длинные национальные выходные, когда многие семьи уезжают."
+    },
+    "rhythm_of_the_year.october_purple": {
+      "es": "Octubre es 'el mes morado' en Lima: la procesión del Señor de los Milagros sale varias veces, muchos devotos visten de morado y las panaderías venden turrón de Doña Pepa.",
+      "ru": "Октябрь в Lima — «фиолетовый месяц»: процессия Señor de los Milagros выходит несколько раз, многие верующие одеваются в фиолетовое, а пекарни продают turrón de Doña Pepa."
+    },
+    "holidays.list": {
+      "es": "Feriados: 1 de enero, Jueves y Viernes Santo (marzo o abril; cambian cada año), 1 de mayo, 7 de junio (Día de la Bandera), 29 de junio (San Pedro y San Pablo), 23 de julio (Día de la Fuerza Aérea), 28-29 de julio (Independencia), 6 de agosto (Batalla de Junín), 30 de agosto (Santa Rosa de Lima), 8 de octubre (Combate de Angamos), 1 de noviembre, 8 de diciembre, 9 de diciembre (Batalla de Ayacucho), 25 de diciembre.",
+      "ru": "Официальные праздники: 1 января, Великий четверг и Страстная пятница (март или апрель, даты каждый год меняются), 1 мая, 7 июня (День флага), 29 июня (Святые Пётр и Павел), 23 июля (День ВВС), 28-29 июля (День независимости), 6 августа (Битва при Junín), 30 августа (Santa Rosa de Lima), 8 октября (Битва при Angamos), 1 ноября, 8 декабря, 9 декабря (Битва при Ayacucho), 25 декабря."
+    },
+    "holidays.confirm_decree": {
+      "es": "A veces el gobierno declara días no laborables adicionales para los empleados públicos alrededor de los feriados; revisa los anuncios de cada año.",
+      "ru": "Иногда правительство объявляет дополнительные нерабочие дни для госслужащих рядом с праздниками — проверяйте объявления каждый год."
+    },
+    "greetings_and_courtesy.oye_pues_ya": {
+      "es": "El habla cotidiana está llena de 'oye', 'pues' y 'ya': '¡Ya, pues!' puede significar 'bueno, está bien', y un 'ahhh yaaa' largo significa 'ahora entiendo'.",
+      "ru": "Повседневная речь полна «oye», «pues» и «ya»: «¡Ya, pues!» может значить «ну ладно», а протяжное «ahhh yaaa» — «теперь понятно»."
+    },
+    "greetings_and_courtesy.cheek_kiss": {
+      "es": "A las mujeres se las suele saludar con un beso en la mejilla derecha; los hombres se dan la mano.",
+      "ru": "Женщин часто приветствуют одним поцелуем в правую щёку; мужчины пожимают руки."
+    },
+    "greetings_and_courtesy.usted_elders": {
+      "es": "Usa 'usted' con las personas mayores y en las oficinas hasta que te inviten a tutear.",
+      "ru": "Обращайтесь на «usted» к пожилым людям и в учреждениях, пока вас не пригласят перейти на «tú»."
+    },
+    "time.hora_peruana": {
+      "es": "Los propios peruanos bromean sobre 'la hora peruana', llegar cuando a uno le parece, en los planes sociales; el trabajo y la escuela son otra cosa.",
+      "ru": "Сами перуанцы шутят о «la hora peruana» — приходить, когда захочется, — применительно к встречам с друзьями; работа и школа — другое дело."
+    },
+    "time.al_toque": {
+      "es": "'Al toque' significa 'enseguida', pero, como 'mañana', puede estirarse a horas.",
+      "ru": "«Al toque» значит «сразу же», но, как и «mañana», может растянуться на часы."
+    },
+    "family_and_friends.loud_parties": {
+      "es": "Las fiestas suelen ser ruidosas, con la música a todo volumen.",
+      "ru": "Вечеринки часто шумные, музыка играет на полную громкость."
+    },
+    "family_and_friends.haircut_party": {
+      "es": "En algunas familias el primer corte de pelo de un niño es una celebración: los invitados hacen el corte y, a cambio, le dan dinero a la familia.",
+      "ru": "В некоторых семьях первая стрижка ребёнка — праздник: волосы стригут гости, а взамен дарят семье деньги."
+    },
+    "family_and_friends.shared_glass": {
+      "es": "En la sierra los amigos suelen compartir la cerveza en un solo vaso que pasa de mano en mano; las primeras gotas que se derraman en el suelo son una ofrenda a la tierra (Pachamama).",
+      "ru": "В горных районах друзья часто пьют пиво из одного стакана, передавая его из рук в руки; первые капли, пролитые на землю, — подношение земле (Pachamama)."
+    },
+    "family_and_friends.sleep_bus": {
+      "es": "La gente duerme en el transporte público sin pensarlo dos veces; quien acaba de llegar nota lo normal que es.",
+      "ru": "Люди спокойно дремлют в общественном транспорте — новичок замечает, насколько это обычно."
+    },
+    "school_life.minedu_calendar": {
+      "es": "Los colegios públicos y privados siguen el calendario del Minedu, en bloques de semanas con semanas de descanso entre ellos.",
+      "ru": "Государственные и частные школы следуют календарю Minedu: блоки учебных недель с неделями отдыха между ними."
+    },
+    "school_life.winter_recess": {
+      "es": "Las vacaciones de medio año caen alrededor de las Fiestas Patrias, a finales de julio e inicios de agosto.",
+      "ru": "Каникулы в середине года приходятся на Fiestas Patrias, конец июля — начало августа."
+    },
+    "food_and_table.ceviche": {
+      "es": "El ceviche es motivo de orgullo nacional: preguntar dónde está la mejor cevichería abre cualquier conversación.",
+      "ru": "Ceviche — предмет национальной гордости: вопрос о том, где лучшая cevichería, откроет любой разговор."
+    },
+    "food_and_table.rice": {
+      "es": "Una buena porción de arroz acompaña casi todas las comidas.",
+      "ru": "Почти к каждому блюду подают хорошую порцию риса."
+    },
+    "food_and_table.inca_kola": {
+      "es": "La Inca Kola, una gaseosa amarilla y dulce, se toma con las comidas; muchos recién llegados dicen que sabe a chicle.",
+      "ru": "Inca Kola, сладкую жёлтую газировку, пьют за едой — многие новички говорят, что у неё вкус жвачки."
+    },
+    "food_and_table.pisco": {
+      "es": "El pisco y el pisco sour se consideran indiscutiblemente peruanos: no digas lo contrario en la mesa.",
+      "ru": "Писко и pisco sour считаются бесспорно перуанскими — не говорите за столом обратного."
+    },
+    "food_and_table.turron": {
+      "es": "El turrón de Doña Pepa, un turrón de anís con dulces encima, se come en octubre; el Ministerio de Cultura lo declaró Patrimonio Cultural de la Nación en 2009.",
+      "ru": "Turrón de Doña Pepa, анисовая нуга со сладостями сверху, едят в октябре; в 2009 году министерство культуры объявило её национальным культурным наследием."
+    },
+    "everyday_life.shoes_inside": {
+      "es": "La mayoría de la gente usa los mismos zapatos fuera y dentro de casa.",
+      "ru": "Большинство людей ходят в одной и той же обуви на улице и дома."
+    },
+    "everyday_life.plastic_bags": {
+      "es": "En las tiendas dan bolsas de plástico con generosidad, incluso por un solo producto; lleva la tuya si lo prefieres.",
+      "ru": "В магазинах щедро раздают пластиковые пакеты, даже на одну покупку, — если хотите, берите свою сумку."
+    },
+    "everyday_life.bring_layers": {
+      "es": "La humedad de Lima hace que el invierno se sienta más frío de lo que marca el termómetro: los niños necesitan una casaca para ir al colegio.",
+      "ru": "Из-за влажности зима в Lima ощущается холоднее, чем показывает термометр, — детям в школу нужна куртка."
+    },
+    "local_expressions.pata_causa": {
+      "es": "'Pata', 'causa', 'batería': amigo, compañero. 'Causa' también es un plato de papa.",
+      "ru": "«Pata», «causa», «batería» — друг, приятель. «Causa» — это ещё и блюдо из картофеля."
+    },
+    "local_expressions.jato": {
+      "es": "'Jato': casa ('vamos a mi jato'), de una palabra quechua que significa techo o refugio.",
+      "ru": "«Jato» — дом («vamos a mi jato»), от слова кечуа, означающего «крыша» или «укрытие»."
+    },
+    "local_expressions.chamba": {"es": "'Chamba': trabajo, empleo.", "ru": "«Chamba» — работа."},
+    "local_expressions.bacan": {"es": "'Bacán': genial, chévere.", "ru": "«Bacán» — круто, отлично."},
+    "local_expressions.huachafo": {
+      "es": "'Huachafo': de mal gusto, pretencioso; todo peruano conoce sus matices.",
+      "ru": "«Huachafo» — безвкусный, претенциозный; каждый перуанец знает оттенки этого слова."
+    },
+    "newcomers_find_hard.grey_winter": {
+      "es": "El largo invierno gris de Lima, con meses de llovizna y sin lluvia de verdad.",
+      "ru": "Долгая серая зима в Lima: месяцы мороси без настоящего дождя."
+    },
+    "newcomers_find_hard.hora_peruana_gap": {
+      "es": "Los planes sociales empiezan tarde ('la hora peruana'), mientras que la escuela y el trabajo no.",
+      "ru": "Встречи с друзьями начинаются поздно («la hora peruana»), а школа и работа — нет."
+    },
+    "newcomers_find_hard.al_toque_gap": {
+      "es": "'Al toque' y 'ahorita' que no son enseguida.",
+      "ru": "«Al toque» и «ahorita», которые на деле не значат «сразу»."
+    },
+    "folk_culture.milagros": {
+      "es": "La procesión del Señor de los Milagros sale cada octubre desde 1687, desde la iglesia de las Nazarenas en Lima, acompañada por su hermandad.",
+      "ru": "Процессия Señor de los Milagros выходит каждый октябрь с 1687 года из церкви Nazarenas в Lima в сопровождении своего братства."
+    },
+    "folk_culture.santa_rosa": {
+      "es": "El 30 de agosto, Santa Rosa de Lima, patrona de Lima y de las Américas, es feriado nacional.",
+      "ru": "30 августа, день Santa Rosa de Lima, покровительницы Lima и Америк, — национальный праздник."
+    },
+    "folk_culture.inti_raymi": {
+      "es": "En Cusco, el 24 de junio llega el Inti Raymi, la fiesta del sol, con una gran escenificación.",
+      "ru": "В Cusco 24 июня проходит Inti Raymi, праздник Солнца, с большой реконструкцией."
+    },
+    "folk_culture.cancion_criolla": {
+      "es": "El 31 de octubre es el Día de la Canción Criolla: música criolla (vals, festejo) en peñas y colegios.",
+      "ru": "31 октября — Día de la Canción Criolla: música criolla (vals, festejo) звучит в peñas и школах."
+    }
+  },
+  "moments": {
+    "fiestas_patrias": {"es": "Tus primeras Fiestas Patrias", "ru": "Ваши первые Fiestas Patrias"},
+    "mes_morado": {"es": "El mes morado", "ru": "Фиолетовый месяц"},
+    "first_garua": {"es": "Tu primer invierno en Lima", "ru": "Ваша первая зима в Lima"},
+    "haircut_party": {"es": "Una fiesta del primer corte de pelo", "ru": "Праздник первой стрижки"},
+    "ceviche": {"es": "Ceviche con nuevos amigos", "ru": "Ceviche с новыми друзьями"},
+    "school_start": {"es": "El primer día de clases en marzo", "ru": "Первый день в школе в марте"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "Приглашение от местной семьи"}
+  }
+}

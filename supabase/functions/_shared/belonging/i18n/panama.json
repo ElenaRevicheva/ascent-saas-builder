@@ -1,0 +1,203 @@
+{
+  "name": {"es": "Panamá", "ru": "Панама"},
+  "items": {
+    "rhythm_of_the_year.seasons": {
+      "es": "Hay dos estaciones, no cuatro: la estación seca, que la gente llama 'verano', más o menos de mediados de diciembre a mediados de abril, y la estación lluviosa, llamada 'invierno', más o menos de mayo a noviembre. Los límites se mueven un poco cada año.",
+      "ru": "Здесь два сезона, а не четыре: сухой сезон, который называют «verano» (лето), примерно с середины декабря до середины апреля, и сезон дождей, который называют «invierno» (зима), примерно с мая по ноябрь. Границы каждый год немного сдвигаются."
+    },
+    "rhythm_of_the_year.rain_afternoons": {
+      "es": "En la estación lluviosa las mañanas suelen ser soleadas y el aguacero fuerte llega por la tarde: deja los trámites y el parque para la mañana.",
+      "ru": "В сезон дождей утро часто солнечное, а сильный дождь приходит после обеда — планируйте дела и прогулки в парке на утро."
+    },
+    "rhythm_of_the_year.veranito": {
+      "es": "Algunos años hay un breve periodo seco en julio o agosto: el 'veranito'.",
+      "ru": "В некоторые годы в июле или августе бывает короткий сухой период — «veranito»."
+    },
+    "rhythm_of_the_year.november_patria": {
+      "es": "Noviembre es 'el mes de la patria': varias fiestas nacionales muy seguidas, desfiles escolares con bandas de música y banderas por todas partes. Las oficinas cierran en los feriados y los trámites esperan.",
+      "ru": "Ноябрь — месяц родины, «el mes de la patria»: несколько национальных праздников подряд, школьные парады с оркестрами, флаги повсюду. В праздничные дни учреждения закрыты, и дела приходится отложить."
+    },
+    "rhythm_of_the_year.carnival": {
+      "es": "El Carnaval llega antes de la Cuaresma (en febrero o a inicios de marzo; la fecha cambia cada año): fiestas en la calle, música y gente empapada con agua en pleno calor. Muchas familias viajan al interior o a la playa.",
+      "ru": "Карнавал проходит перед Великим постом (в феврале или в начале марта, дата каждый год меняется): уличные праздники, музыка, и в жару людей обливают водой. Многие семьи уезжают во внутренние районы страны или на пляж."
+    },
+    "rhythm_of_the_year.new_year_water": {
+      "es": "El día de Año Nuevo muchas familias van juntas a un río o a la playa para empezar el año renovadas.",
+      "ru": "В первый день Нового года многие семьи вместе едут на реку или на пляж, чтобы начать год обновлёнными."
+    },
+    "rhythm_of_the_year.fireworks": {
+      "es": "Los fuegos artificiales acompañan casi todas las celebraciones: Año Nuevo, Carnaval, bodas, grandes eventos.",
+      "ru": "Фейерверки сопровождают почти каждый праздник: Новый год, карнавал, свадьбы, крупные события."
+    },
+    "holidays.jan1": {"es": "1 de enero: Año Nuevo.", "ru": "1 января — Новый год."},
+    "holidays.jan9": {"es": "9 de enero: Día de los Mártires.", "ru": "9 января — День мучеников (Día de los Mártires)."},
+    "holidays.carnival_tuesday": {"es": "Martes de Carnaval: la fecha cambia cada año.", "ru": "Карнавальный вторник — дата каждый год меняется."},
+    "holidays.good_friday": {"es": "Viernes Santo: la fecha cambia cada año.", "ru": "Страстная пятница (Viernes Santo) — дата каждый год меняется."},
+    "holidays.may1": {"es": "1 de mayo: Día del Trabajo.", "ru": "1 мая — День труда."},
+    "holidays.nov3": {"es": "3 de noviembre: Separación de Panamá de Colombia.", "ru": "3 ноября — День отделения Панамы от Колумбии."},
+    "holidays.nov4": {
+      "es": "4 de noviembre: Día de la Bandera. Lo observan las oficinas públicas y todas las escuelas; no es día libre en la mayoría de las empresas privadas.",
+      "ru": "4 ноября — День флага: его отмечают государственные учреждения и все школы, но для большинства частных компаний это не выходной."
+    },
+    "holidays.nov5": {"es": "5 de noviembre: Día de Colón (fiesta patria de la ciudad de Colón).", "ru": "5 ноября — День Colón (патриотический праздник города Colón)."},
+    "holidays.nov10": {
+      "es": "10 de noviembre: Primer Grito de Independencia en La Villa de Los Santos (las fuentes no coinciden en si es día libre en todo el país).",
+      "ru": "10 ноября — Первый клич независимости в La Villa de Los Santos (источники расходятся в том, выходной ли это день повсеместно)."
+    },
+    "holidays.nov28": {"es": "28 de noviembre: Independencia de España.", "ru": "28 ноября — День независимости от Испании."},
+    "holidays.dec8": {"es": "8 de diciembre: Día de la Madre, feriado nacional.", "ru": "8 декабря — День матери, национальный праздник."},
+    "holidays.dec20": {"es": "20 de diciembre: Día de Duelo Nacional.", "ru": "20 декабря — День национального траура."},
+    "holidays.dec25": {"es": "25 de diciembre: Navidad.", "ru": "25 декабря — Рождество."},
+    "holidays.holiday_rule": {
+      "es": "El gobierno fija por decreto la lista oficial de cada año y los días que se trasladan: confirma el calendario del año antes de organizarte en torno a un feriado.",
+      "ru": "Правительство каждый год указом утверждает официальный список праздников и все переносы — прежде чем строить планы вокруг праздника, проверьте календарь на текущий год."
+    },
+    "greetings_and_courtesy.greet_by_time": {
+      "es": "Primero saluda, luego pregunta: 'buenos días', 'buenas tardes', 'buenas noches' al entrar a una tienda, una oficina o una sala de espera. Saltarse el saludo se percibe como descortés.",
+      "ru": "Сначала поздоровайтесь, потом спрашивайте: «buenos días», «buenas tardes», «buenas noches», когда входите в магазин, офис или зал ожидания. Если пропустить приветствие, это воспринимается как грубость."
+    },
+    "greetings_and_courtesy.handshake_kiss": {
+      "es": "Un apretón de manos en ambientes formales; un beso ligero en la mejilla es común entre mujeres, y entre hombres y mujeres que son amigos.",
+      "ru": "В официальной обстановке — рукопожатие; лёгкий поцелуй в щёку обычен между женщинами, а также между мужчинами и женщинами, которые дружат."
+    },
+    "greetings_and_courtesy.titles": {
+      "es": "En el trabajo y en las oficinas a menudo se llama a las personas por su título, 'Licenciado/a', 'Ingeniero/a'; el nombre de pila llega después.",
+      "ru": "На работе и в учреждениях к людям часто обращаются по званию — «Licenciado/a», «Ingeniero/a»; по имени — уже позже."
+    },
+    "greetings_and_courtesy.please_thanks": {
+      "es": "Se valoran el 'por favor' y el 'gracias'; la paciencia y la calidez llegan más lejos que la insistencia.",
+      "ru": "«Por favor» и «gracias» здесь ценят; терпение и теплота помогают больше, чем настойчивость."
+    },
+    "greetings_and_courtesy.relationship_first": {
+      "es": "Primero un poco de conversación, luego el asunto: pregunta cómo está la persona antes de pasar a lo que necesitas.",
+      "ru": "Сначала немного поговорите, потом переходите к делу: спросите, как у человека дела, прежде чем излагать свою просьбу."
+    },
+    "greetings_and_courtesy.gestures": {
+      "es": "Mucha gente habla con las manos y con todo el cuerpo: es expresividad, no enojo.",
+      "ru": "Многие говорят руками и всем телом — это выразительность, а не гнев."
+    },
+    "greetings_and_courtesy.sovereignty": {
+      "es": "La soberanía de Panamá y el Canal son un tema de orgullo y delicado: nunca bromees con que Panamá es o fue parte de Estados Unidos.",
+      "ru": "Суверенитет Панамы и канал — предмет гордости и чувствительная тема: никогда не шутите, что Панама является или была частью США."
+    },
+    "time.ahorita": {
+      "es": "'Ahora' y 'ahorita' suelen significar 'dentro de un rato', no 'en este mismo momento'.",
+      "ru": "«Ahora» и «ahorita» обычно означают «чуть позже», а не «прямо сейчас»."
+    },
+    "time.hora_panamena": {
+      "es": "Los planes sociales empiezan tarde ('hora panameña'): 15-30 minutos es lo normal para una fiesta o una visita. Las oficinas, los médicos y las escuelas igual esperan que llegues a tiempo.",
+      "ru": "Встречи с друзьями начинаются поздно («hora panameña»): 15-30 минут — обычное дело для вечеринки или визита в гости. Но в учреждениях, у врача и в школе по-прежнему ждут, что вы придёте вовремя."
+    },
+    "time.tranque": {
+      "es": "Los embotellamientos son 'el tranque', y la razón que se suele dar para llegar tarde.",
+      "ru": "Пробки называют «el tranque» — и это обычное объяснение опоздания."
+    },
+    "family_and_friends.family_core": {
+      "es": "La familia es el centro: las familias extendidas suelen vivir cerca y reunirse a menudo; espera invitaciones a cumpleaños y celebraciones.",
+      "ru": "Семья — это центр: большие семьи часто живут рядом и часто собираются вместе; ждите приглашений на дни рождения и праздники."
+    },
+    "family_and_friends.friend_family": {
+      "es": "Un amigo panameño a menudo te integra a toda su familia, que te trata como a uno de los suyos: así suele empezar la pertenencia.",
+      "ru": "Друг-панамец часто вводит вас во всю свою семью, и там к вам относятся как к своему — так обычно и начинается ощущение, что вы здесь свой."
+    },
+    "family_and_friends.kids_parties": {
+      "es": "Los cumpleaños infantiles suelen ser fiestas grandes y temáticas.",
+      "ru": "Детские дни рождения часто бывают большими тематическими праздниками."
+    },
+    "family_and_friends.birthday_out": {
+      "es": "En el cumpleaños de un adulto, los amigos suelen invitarlo a cenar fuera y a celebrar.",
+      "ru": "На день рождения взрослого друзья часто ведут именинника поужинать и отпраздновать."
+    },
+    "school_life.school_year": {
+      "es": "El año escolar público empieza a inicios de marzo (2 de marzo en 2026, 10 de marzo en 2025) y se divide en tres trimestres con descansos cortos entre ellos; termina en diciembre. Confirma cada año el calendario del Meduca.",
+      "ru": "Учебный год в государственных школах начинается в начале марта (2 марта в 2026 году, 10 марта в 2025-м), делится на три триместра с короткими каникулами между ними и заканчивается в декабре. Каждый год сверяйтесь с календарём Meduca."
+    },
+    "school_life.school_parades": {
+      "es": "En noviembre las escuelas marchan en los desfiles patrios con sus bandas; los ensayos empiezan semanas antes. Un hijo en la banda o en el desfile es un momento de orgullo para la familia.",
+      "ru": "В ноябре школы со своими оркестрами маршируют на патриотических парадах («desfiles»); репетиции начинаются за несколько недель. Ребёнок в оркестре или на параде — повод для гордости всей семьи."
+    },
+    "food_and_table.rice": {
+      "es": "En la mayoría de los hogares hay arroz en el almuerzo y en la cena.",
+      "ru": "В большинстве домов рис подают и на обед, и на ужин."
+    },
+    "food_and_table.breakfast": {
+      "es": "Cuando hay tiempo, el desayuno puede ser abundante: carne o hígado, tortillas de maíz fritas, plátanos.",
+      "ru": "Когда есть время, завтрак бывает плотным: мясо или печень, жареные кукурузные лепёшки, плантаны."
+    },
+    "food_and_table.sancocho": {
+      "es": "El sancocho, la sopa de pollo, es la sopa tradicional.",
+      "ru": "Sancocho, куриный суп, — традиционный суп."
+    },
+    "everyday_life.landmarks": {
+      "es": "Para dar direcciones se usan puntos de referencia ('después de la gasolinera, la casa azul') más que nombres de calles y números.",
+      "ru": "Дорогу объясняют скорее по ориентирам («после заправки, синий дом»), чем по названиям улиц и номерам домов."
+    },
+    "everyday_life.taxi_ask": {
+      "es": "Con los taxis de la calle primero preguntas adónde va el conductor: los taxistas pueden escoger la carrera. Las apps son la alternativa habitual.",
+      "ru": "В уличном такси сначала спрашивают, куда едет водитель, — таксист может выбирать, кого везти. Обычная альтернатива — приложения."
+    },
+    "everyday_life.aircon_layers": {
+      "es": "El aire acondicionado es fuerte en oficinas, buses, cines y centros comerciales: lleva un suéter, también para los niños.",
+      "ru": "В офисах, автобусах, кинотеатрах и торговых центрах кондиционеры работают очень сильно: берите с собой кофту, и для детей тоже."
+    },
+    "everyday_life.rain_no_umbrella": {
+      "es": "Mucha gente no lleva paraguas: el aguacero es fuerte pero breve, así que espera a que pase.",
+      "ru": "Многие не носят зонт: ливень сильный, но короткий, поэтому его просто пережидают."
+    },
+    "local_expressions.xopa": {
+      "es": "'¿Qué xopá?' (suena como 'sopá'): '¿qué tal?', solo entre amigos, nunca con desconocidos ni en lugares formales.",
+      "ru": "«¿Qué xopá?» (звучит как «sopá») — «как дела?», «что нового?»; только между друзьями, никогда с незнакомыми и не в официальной обстановке."
+    },
+    "local_expressions.chuleta": {
+      "es": "'¡Chuleta!': una exclamación de sorpresa o fastidio ('¡guau!', '¡caramba!'), un reemplazo suave de una palabra más grosera.",
+      "ru": "«¡Chuleta!» — восклицание удивления или досады («ого!», «вот чёрт!»), мягкая замена более грубого слова."
+    },
+    "local_expressions.juega_vivo": {
+      "es": "'Juega vivo': aprovecharse, tomar atajos indebidos, desde una pequeña viveza hasta la deshonestidad real. Los propios panameños lo debaten como un hábito que hay que corregir; no es un cumplido ni significa 'ser listo'.",
+      "ru": "«Juega vivo» — пользоваться ситуацией, хитрить и срезать углы: от мелкой наглости до настоящей нечестности. Сами панамцы обсуждают это как привычку, которую нужно исправлять; это не комплимент и не значит «будь умным»."
+    },
+    "local_expressions.tranque_word": {"es": "'Tranque': embotellamiento.", "ru": "«Tranque» — пробка."},
+    "local_expressions.me_regalas": {
+      "es": "'¿Me regalas...?': una forma cortés de pedir algo en una tienda ('¿me regalas un agua?'); no se está pidiendo un regalo.",
+      "ru": "«¿Me regalas...?» — вежливый способ попросить что-то в магазине («¿me regalas un agua?»), а не просьба о подарке."
+    },
+    "local_expressions.a_la_orden": {
+      "es": "'A la orden': 'a su servicio'; lo dicen los empleados de las tiendas y también se usa como 'de nada'.",
+      "ru": "«A la orden» — «к вашим услугам»: так говорят продавцы, и так же отвечают на «спасибо» в значении «пожалуйста»."
+    },
+    "newcomers_find_hard.time_gap": {
+      "es": "La diferencia entre el horario de oficina (ser puntual) y el horario social (empezar tarde): los recién llegados a menudo sienten que fueron descorteses o que los dejaron plantados.",
+      "ru": "Разрыв между деловым временем (приходить вовремя) и временем для общения (начинать поздно): новички часто чувствуют, что либо сами повели себя невежливо, либо их подвели и не пришли."
+    },
+    "newcomers_find_hard.november_closed": {
+      "es": "Los feriados de noviembre detienen oficinas y trámites durante días seguidos: planifica el papeleo para octubre o diciembre.",
+      "ru": "Ноябрьские праздники на несколько дней подряд останавливают работу учреждений и любые дела — планируйте оформление документов на октябрь или декабрь."
+    },
+    "newcomers_find_hard.closeness": {
+      "es": "El espacio personal es más cercano, y la conversación más cálida y más alta, de lo que muchos recién llegados están acostumbrados.",
+      "ru": "Личная дистанция меньше, а разговор теплее и громче, чем привыкли многие новички."
+    },
+    "newcomers_find_hard.slang_barrier": {
+      "es": "Incluso con buen español, al principio las expresiones locales hacen difícil seguir a la gente; mejora con amigos que te traducen.",
+      "ru": "Даже при хорошем испанском поначалу из-за местных выражений людей трудно понять — становится легче, когда рядом друзья, которые переводят."
+    },
+    "folk_culture.pollera": {
+      "es": "La pollera es el traje nacional bordado de las mujeres, que se usa para bailar el tamborito y en los festivales; los hombres usan el montuno. El Festival de la Pollera se celebra en Las Tablas el 22 de julio.",
+      "ru": "Pollera — вышитый национальный женский костюм, его надевают для танца tamborito и на праздники; мужчины носят montuno. Festival de la Pollera проходит в Las Tablas 22 июля."
+    },
+    "folk_culture.mejorana": {
+      "es": "El Festival de la Mejorana en Guararé (finales de septiembre) es el gran festival folclórico: desfiles de carretas tiradas por bueyes, música y concursos de baile.",
+      "ru": "Festival de la Mejorana в Guararé (конец сентября) — главный фольклорный фестиваль: шествия повозок, запряжённых волами, музыка и танцевальные конкурсы."
+    }
+  },
+  "moments": {
+    "first_fiestas_patrias": {"es": "Tus primeras Fiestas Patrias", "ru": "Ваши первые Fiestas Patrias"},
+    "first_carnival": {"es": "Tu primer Carnaval", "ru": "Ваш первый карнавал"},
+    "school_parade": {"es": "Un desfile o una banda escolar", "ru": "Школьный парад или оркестр"},
+    "mothers_day": {"es": "Día de la Madre, 8 de diciembre", "ru": "День матери, 8 декабря"},
+    "rainy_season": {"es": "Tu primera estación lluviosa", "ru": "Ваш первый сезон дождей"},
+    "dry_season": {"es": "Tu primer verano", "ru": "Ваш первый verano"},
+    "local_food": {"es": "Comida local en tu mesa", "ru": "Местная еда на вашем столе"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "Приглашение от местной семьи"}
+  }
+}

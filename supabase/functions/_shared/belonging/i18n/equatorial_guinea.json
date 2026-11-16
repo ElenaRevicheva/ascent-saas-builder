@@ -1,0 +1,89 @@
+{
+  "name": {"es": "Guinea Ecuatorial", "ru": "Экваториальная Гвинея"},
+  "items": {
+    "rhythm_of_the_year.malabo_rain": {
+      "es": "En Malabo (isla de Bioko) la temporada más húmeda va más o menos de abril a noviembre, y de diciembre a marzo es relativamente más seco; llueve mucho, unos 2.000 mm al año.",
+      "ru": "В Малабо (остров Биоко) более влажный сезон длится примерно с апреля по ноябрь, а с декабря по март относительно суше; осадков много — около 2000 мм в год."
+    },
+    "rhythm_of_the_year.bata_rain": {
+      "es": "En el continente, alrededor de Bata, los meses más lluviosos son octubre y noviembre, y los más secos, julio y agosto.",
+      "ru": "На материке, в районе Баты, самые дождливые месяцы — октябрь и ноябрь, а самые сухие — июль и август."
+    },
+    "rhythm_of_the_year.balele_christmas": {
+      "es": "El baile balélé se interpreta en la costa durante todo el año, y en Bioko sobre todo alrededor de Navidad.",
+      "ru": "Танец балеле (balélé) исполняют на побережье круглый год, а на Биоко — особенно на Рождество."
+    },
+    "rhythm_of_the_year.school_year": {
+      "es": "El año escolar sigue un ritmo de septiembre/octubre a junio/julio, como en España: confírmalo con la escuela.",
+      "ru": "Учебный год идёт с сентября/октября по июнь/июль, как в Испании, — уточните в школе."
+    },
+    "holidays.list": {
+      "es": "Feriados: 1 de enero, Viernes Santo (marzo o abril; cambia cada año), 1 de mayo, 5 de junio, Corpus Christi (mayo o junio), 3 de agosto (Día de la Libertad), 15 de agosto (Día de la Constitución), 12 de octubre (Día de la Independencia), 8 de diciembre (Inmaculada Concepción), 25 de diciembre.",
+      "ru": "Государственные праздники: 1 января, Страстная пятница (март или апрель — дата меняется каждый год), 1 мая, 5 июня, Corpus Christi (май или июнь), 3 августа (День свободы), 15 августа (День конституции), 12 октября (День независимости), 8 декабря (Непорочное зачатие), 25 декабря."
+    },
+    "greetings_and_courtesy.languages": {
+      "es": "El español es lengua oficial (junto con el francés y el portugués); muchas familias también hablan en casa una lengua bantú local: el fang es la lengua nativa más hablada, y el bubi es la otra más usada.",
+      "ru": "Испанский — официальный язык (наряду с французским и португальским); многие семьи дома говорят также на местном языке банту: самый распространённый местный язык — фанг, второй по употребительности — буби."
+    },
+    "greetings_and_courtesy.spanish_variety": {
+      "es": "El español ecuatoguineano tiene sus propios sonidos y palabras, nacidos del contacto con las lenguas locales: escucha y pregunta; es una variedad del español con pleno derecho.",
+      "ru": "У экваториально-гвинейского испанского свои звуки и слова, появившиеся из-за контакта с местными языками, — слушайте и спрашивайте; это полноправный вариант испанского языка."
+    },
+    "greetings_and_courtesy.greet_elders": {
+      "es": "Se espera que saludes primero a las personas mayores y con respeto.",
+      "ru": "Принято первыми и с уважением приветствовать старших."
+    },
+    "time.rain_plans": {
+      "es": "En los meses húmedos, las lluvias fuertes marcan los planes del día: ten a mano paraguas y ropa de repuesto para los niños.",
+      "ru": "В дождливые месяцы сильные ливни определяют планы на день — держите наготове зонты и сменную одежду для детей."
+    },
+    "family_and_friends.faith": {
+      "es": "La mayoría de la gente es cristiana, sobre todo católica, a menudo junto con creencias tradicionales; la vida parroquial es un lugar natural para conocer a los vecinos.",
+      "ru": "Большинство людей — христиане, в основном католики, часто наряду с традиционными верованиями; приходская жизнь — естественное место, чтобы познакомиться с соседями."
+    },
+    "family_and_friends.extended_family": {
+      "es": "La familia extendida tiene un gran papel en la vida diaria y en las celebraciones.",
+      "ru": "Большая семья играет важную роль в повседневной жизни и в праздниках."
+    },
+    "school_life.spanish_school": {
+      "es": "La enseñanza es en español, así que un niño hispanohablante puede seguir las clases desde el principio, aunque sus compañeros hablen otra lengua en casa.",
+      "ru": "Обучение ведётся на испанском, поэтому ребёнок, говорящий по-испански, может с самого начала понимать уроки, — хотя одноклассники дома могут говорить на другом языке."
+    },
+    "food_and_table.food_unknown": {
+      "es": "El pescado, el plátano, la yuca y la malanga son alimentos básicos de todos los días; los platos a menudo llevan aceite de palma y maní.",
+      "ru": "Рыба, плантаны, маниок (yuca) и маланга — повседневные основные продукты; в блюда часто добавляют пальмовое масло и арахис."
+    },
+    "everyday_life.island_mainland": {
+      "es": "La influencia española y católica es más fuerte en la isla de Bioko que en el continente.",
+      "ru": "Испанское и католическое влияние на острове Биоко сильнее, чем на материке."
+    },
+    "local_expressions.loanwords": {
+      "es": "El español cotidiano de aquí incluye palabras tomadas de las lenguas locales y del pichi: pregunta qué significan las palabras nuevas.",
+      "ru": "Повседневный испанский здесь включает слова из местных языков и из пичи (Pichi) — спрашивайте, что означают незнакомые слова."
+    },
+    "newcomers_find_hard.rain": {
+      "es": "Temporadas de lluvia largas y muy húmedas.",
+      "ru": "Долгие и очень влажные сезоны дождей."
+    },
+    "newcomers_find_hard.two_languages": {
+      "es": "Conversaciones que pasan del español a una lengua local y viceversa, y un español con su propio acento y sus propias palabras.",
+      "ru": "Разговоры, в которых переходят с испанского на местный язык и обратно, и испанский со своим акцентом и словами."
+    },
+    "folk_culture.mvet": {
+      "es": "El mvet, un instrumento de cuerda con hasta quince cuerdas, es central en la música fang; gran parte de la música tradicional es de llamada y respuesta, con coro y tambores.",
+      "ru": "Мвет (mvet) — струнный инструмент, у которого бывает до пятнадцати струн, — занимает центральное место в музыке фанг; многие традиционные песни строятся по принципу «запев — ответ» с хором и барабанами."
+    },
+    "folk_culture.abira": {
+      "es": "El 'abira' es una de las celebraciones tradicionales más conocidas; se cree que limpia a la comunidad del mal.",
+      "ru": "«Abira» — одно из самых известных традиционных празднеств; считается, что оно очищает общину от зла."
+    }
+  },
+  "moments": {
+    "balele": {"es": "El balélé en Navidad", "ru": "Балеле (balélé) на Рождество"},
+    "independence": {"es": "Día de la Independencia, 12 de octubre", "ru": "День независимости, 12 октября"},
+    "rainy_season": {"es": "Tu primera temporada de lluvias", "ru": "Ваш первый сезон дождей"},
+    "parish": {"es": "Conocer gente en la parroquia", "ru": "Знакомства в приходе"},
+    "local_language": {"es": "Aprender algunas palabras de fang o bubi", "ru": "Несколько слов на фанг или буби"},
+    "local_friends": {"es": "Invitados por una familia local", "ru": "В гостях у местной семьи"}
+  }
+}

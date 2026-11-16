@@ -20,7 +20,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useLearningProgress } from '@/hooks/useLearningProgress';
-import { getLessonById, Lesson, Exercise } from '@/data/spanishLessons';
+import { getLessonById, Lesson, Exercise, lessonTitle, phraseMeaning, exerciseQuestion, exerciseExplanation, exerciseOption } from '@/data/spanishLessons';
+import { useTranslation } from 'react-i18next';
 import { loadCountryLesson } from '@/data/countryLessons';
 import { toast } from 'sonner';
 
@@ -28,6 +29,7 @@ export default function LearningModulePage() {
   const { moduleId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t, i18n } = useTranslation();
   const { trackProgress } = useLearningProgress();
   
   const [lesson, setLesson] = useState<Lesson | null>(null);
@@ -45,15 +47,15 @@ export default function LearningModulePage() {
         setLesson(foundLesson);
       } else if (moduleId.startsWith('country-')) {
         // 15 Nov 2026: "Living in <country>" lessons, built from the checked country guide (src/data/countryLessons.ts).
-        loadCountryLesson(moduleId).then((l) => {
-          if (l) setLesson(l); else { toast.error('Lesson not found'); navigate('/dashboard'); }
+        loadCountryLesson(moduleId, i18n.language).then((l) => {
+          if (l) setLesson(l); else { toast.error(t('lesson.notFound')); navigate('/dashboard'); }
         });
       } else {
-        toast.error('Lesson not found');
+        toast.error(t('lesson.notFound'));
         navigate('/dashboard');
       }
     }
-  }, [moduleId, navigate]);
+  }, [moduleId, navigate, i18n.language]);
 
   const totalSteps = lesson ? 3 : 0; // Vocabulary, Phrases, Exercises
   const progress = Math.round(((currentStep + 1) / totalSteps) * 100);
@@ -77,15 +79,15 @@ export default function LearningModulePage() {
       setCurrentStep(newStep);
 
       if (isCompleted) {
-        toast.success('¡Excelente! Lesson completed!');
+        toast.success(t('lesson.completed'));
         setTimeout(() => navigate('/dashboard'), 2000);
       } else {
-        toast.success('¡Muy bien! Moving to next section!');
+        toast.success(t('lesson.nextSection'));
       }
 
     } catch (error) {
       console.error('Error updating progress:', error);
-      toast.error('Failed to save progress');
+      toast.error(t('lesson.saveFailed'));
     }
   };
 
@@ -98,7 +100,7 @@ export default function LearningModulePage() {
     setShowAnswer(true);
     
     if (isCorrect) {
-      toast.success('¡Correcto! Correct!');
+      toast.success(t('lesson.correct'));
       // Add vocabulary from this exercise to completed list
       const newVocab = lesson.vocabulary.filter(word => 
         exercise.question.toLowerCase().includes(word) || 
@@ -106,7 +108,7 @@ export default function LearningModulePage() {
       );
       setCompletedVocabulary(prev => [...new Set([...prev, ...newVocab])]);
     } else {
-      toast.error('Not quite right. Keep trying!');
+      toast.error(t('lesson.notQuite'));
     }
   };
 
@@ -162,9 +164,9 @@ export default function LearningModulePage() {
       case 0: // Vocabulary
         return (
           <div className="space-y-6">
-            <h3 className="text-xl font-semibold mb-4">Vocabulary Learning</h3>
+            <h3 className="text-xl font-semibold mb-4">{t('lesson.vocabTitle')}</h3>
             {lesson.vocabulary.length === 0 && (
-              <p className="text-muted-foreground">This lesson is about how life works here - continue to the cards.</p>
+              <p className="text-muted-foreground">{t('lesson.noVocab')}</p>
             )}
             <div className="grid gap-4">
               {lesson.vocabulary.map((word, index) => (
@@ -175,7 +177,7 @@ export default function LearningModulePage() {
                         {word}
                       </span>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Spanish word #{index + 1}
+                        {t('lesson.wordN', { n: index + 1 })}
                       </p>
                     </div>
                     <Button
@@ -195,7 +197,7 @@ export default function LearningModulePage() {
       case 1: // Phrases
         return (
           <div className="space-y-6">
-            <h3 className="text-xl font-semibold mb-4">Key Phrases</h3>
+            <h3 className="text-xl font-semibold mb-4">{t('lesson.phrasesTitle')}</h3>
             <div className="grid gap-4">
               {lesson.phrases.map((phrase, index) => (
                 <div key={index} className="bg-background/50 rounded-lg p-4 border">
@@ -216,10 +218,10 @@ export default function LearningModulePage() {
                         </Button>
                       )}
                     </div>
-                    <p className={phrase.spanish ? 'text-muted-foreground' : 'text-foreground'}>{phrase.english}</p>
+                    <p className={phrase.spanish ? 'text-muted-foreground' : 'text-foreground'}>{phraseMeaning(lesson, index, t)}</p>
                     {phrase.pronunciation && (
                       <p className="text-sm text-muted-foreground italic">
-                        Pronunciation: {phrase.pronunciation}
+                        {t('lesson.pronunciation', { text: phrase.pronunciation })}
                       </p>
                     )}
                   </div>
@@ -235,8 +237,8 @@ export default function LearningModulePage() {
           return (
             <div className="text-center space-y-4">
               <Trophy className="h-16 w-16 text-[hsl(var(--espaluz-primary))] mx-auto" />
-              <h3 className="text-xl font-semibold">¡Felicidades! Congratulations!</h3>
-              <p>You've completed all exercises for this lesson!</p>
+              <h3 className="text-xl font-semibold">{t('lesson.congrats')}</h3>
+              <p>{t('lesson.allDone')}</p>
             </div>
           );
         }
@@ -244,14 +246,14 @@ export default function LearningModulePage() {
         return (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-xl font-semibold">Exercise {currentExercise + 1} of {lesson.exercises.length}</h3>
+              <h3 className="text-xl font-semibold">{t('lesson.exerciseN', { n: currentExercise + 1, of: lesson.exercises.length })}</h3>
               <Badge variant="outline">
-                {exercise.type.replace('_', ' ')}
+                {t(`lesson.type.${exercise.type}`, { defaultValue: exercise.type.replace('_', ' ') })}
               </Badge>
             </div>
 
             <div className="bg-background/50 rounded-lg p-6 border">
-              <p className="text-lg mb-4">{exercise.question}</p>
+              <p className="text-lg mb-4">{exerciseQuestion(lesson, exercise, t)}</p>
               
               {exercise.type === 'multiple_choice' && exercise.options ? (
                 <div className="space-y-2">
@@ -263,7 +265,7 @@ export default function LearningModulePage() {
                       onClick={() => setUserAnswer(option)}
                       disabled={showAnswer}
                     >
-                      {option}
+                      {exerciseOption(lesson, exercise, option, t)}
                     </Button>
                   ))}
                 </div>
@@ -273,7 +275,7 @@ export default function LearningModulePage() {
                     type="text"
                     value={userAnswer}
                     onChange={(e) => setUserAnswer(e.target.value)}
-                    placeholder="Type your answer..."
+                    placeholder={t('lesson.answerPh')}
                     className="w-full p-3 border rounded-lg"
                     disabled={showAnswer}
                   />
@@ -285,19 +287,19 @@ export default function LearningModulePage() {
                   onClick={checkExerciseAnswer}
                   className="mt-4 bg-[hsl(var(--espaluz-primary))]"
                 >
-                  Check Answer
+                  {t('lesson.check')}
                 </Button>
               )}
 
               {showAnswer && (
                 <div className="mt-4 p-4 border rounded-lg bg-muted/50">
-                  <p className="font-semibold">Correct Answer: {exercise.correctAnswer}</p>
-                  <p className="text-sm text-muted-foreground mt-2">{exercise.explanation}</p>
+                  <p className="font-semibold">{t('lesson.correctAnswer', { answer: exerciseOption(lesson, exercise, exercise.correctAnswer, t) })}</p>
+                  <p className="text-sm text-muted-foreground mt-2">{exerciseExplanation(lesson, exercise, t)}</p>
                   <Button 
                     onClick={nextExercise}
                     className="mt-3 bg-[hsl(var(--espaluz-primary))]"
                   >
-                    {currentExercise < lesson.exercises.length - 1 ? 'Next Exercise' : 'Complete Lesson'}
+                    {currentExercise < lesson.exercises.length - 1 ? t('lesson.nextExercise') : t('lesson.completeLesson')}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
@@ -311,7 +313,7 @@ export default function LearningModulePage() {
     }
   };
 
-  const stepTitles = ['Vocabulary', 'Phrases', 'Exercises'];
+  const stepTitles = [t('lesson.stepVocab'), t('lesson.stepPhrases'), t('lesson.stepExercises')];
 
   return (
     <div className="min-h-screen bg-background">
@@ -326,17 +328,17 @@ export default function LearningModulePage() {
                 onClick={() => navigate('/dashboard')}
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Dashboard
+                {t('connectBot.backToDashboard')}
               </Button>
               
               <div className="flex items-center gap-2">
                 {getCategoryIcon(lesson.category)}
-                <h1 className="text-xl font-bold">{lesson.title}</h1>
+                <h1 className="text-xl font-bold">{lessonTitle(lesson, t)}</h1>
                 <Badge 
                   variant="outline" 
                   className={`${getDifficultyColor(lesson.difficulty)} text-white border-0`}
                 >
-                  {lesson.difficulty}
+                  {t(`fam.levels.${lesson.difficulty}`, { defaultValue: lesson.difficulty })}
                 </Badge>
               </div>
             </div>
@@ -344,10 +346,10 @@ export default function LearningModulePage() {
             <div className="flex items-center gap-4">
               <div className="text-sm text-muted-foreground">
                 <Clock className="h-4 w-4 inline mr-1" />
-                {lesson.estimatedMinutes}min
+                {t('lm.minutes', { count: lesson.estimatedMinutes })}
               </div>
               <div className="text-sm font-medium">
-                {progress}% Complete
+                {t('lesson.pctComplete', { pct: progress })}
               </div>
             </div>
           </div>
@@ -382,7 +384,7 @@ export default function LearningModulePage() {
           <Card className="border-border/50 shadow-magical" style={{ background: 'var(--gradient-card)' }}>
             <CardHeader>
               <CardTitle>
-                {stepTitles[currentStep]} - Step {currentStep + 1} of {totalSteps}
+                {t('lesson.stepOf', { title: stepTitles[currentStep], n: currentStep + 1, of: totalSteps })}
               </CardTitle>
             </CardHeader>
             
@@ -395,7 +397,7 @@ export default function LearningModulePage() {
                     onClick={completeStep}
                     className="bg-[hsl(var(--espaluz-primary))] hover:bg-[hsl(var(--espaluz-primary))]/90"
                   >
-                    Next: {stepTitles[currentStep + 1]}
+                    {t('lesson.nextStep', { title: stepTitles[currentStep + 1] })}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
@@ -408,7 +410,7 @@ export default function LearningModulePage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Trophy className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
-                Your Progress
+                {t('lesson.yourProgress')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -417,21 +419,21 @@ export default function LearningModulePage() {
                   <p className="text-2xl font-bold text-[hsl(var(--espaluz-primary))]">
                     {completedVocabulary.length}
                   </p>
-                  <p className="text-sm text-muted-foreground">Words Learned</p>
+                  <p className="text-sm text-muted-foreground">{t('learningAnalysis.wordsLearned')}</p>
                 </div>
                 
                 <div className="text-center">
                   <p className="text-2xl font-bold text-[hsl(var(--espaluz-primary))]">
                     {Math.round((Date.now() - sessionStartTime) / 60000)}m
                   </p>
-                  <p className="text-sm text-muted-foreground">Time Spent</p>
+                  <p className="text-sm text-muted-foreground">{t('learningAnalysis.timeSpent')}</p>
                 </div>
                 
                 <div className="text-center">
                   <p className="text-2xl font-bold text-[hsl(var(--espaluz-primary))]">
                     {progress}%
                   </p>
-                  <p className="text-sm text-muted-foreground">Progress</p>
+                  <p className="text-sm text-muted-foreground">{t('lesson.progress')}</p>
                 </div>
               </div>
             </CardContent>
