@@ -146,6 +146,16 @@ serve(async (req) => {
         // 6 Nov 2026 (Elena: Telegram exactly like WhatsApp): a family that pays on one channel is paying on all of them.
         const { data: paidRows } = await db.from('user_subscriptions').select('id').eq('user_id', userId).eq('status', 'active')
           .gt('current_period_end', new Date().toISOString()).limit(1);
+        // 16 Nov 2026 (Elena: "fix it all"): the web's free days (14 days from sign-up, or a Google Play tester's
+        // access_until in play_testers) now count on WhatsApp and Telegram too - one clock, the same answer the dashboard
+        // shows (get_user_subscription_status). Before, the bots counted paid plans only, so a family in its web trial
+        // met "your journey is paused" on Telegram. The entry gates read family_access; family_paying stays PAID ONLY, because
+        // the bots' talking videos (Runway credits) read it.
+        let freeDays = false;
+        if (!paidRows?.length) {
+          const { data: st } = await db.rpc('get_user_subscription_status', { user_uuid: userId });
+          freeDays = !!(Array.isArray(st) ? st[0] : st)?.is_trial_active;
+        }
         // 8 Nov 2026: the family profile ("About your new life", web questionnaire or a bot's first-day answers) - the
         // same note for all three channels: country now, country of origin, native language, when they moved, ...
         const { data: prof } = await db.from('learning_sessions').select('content').eq('user_id', userId).eq('session_type', 'analytics')
@@ -159,7 +169,7 @@ serve(async (req) => {
         // 15 Nov 2026: "How did Alisa's first day back go?" - only when the bot asks while writing a reply (with_callback),
         // never on the link or payment checks, which also call facts_get and would use the moment up (_shared/memory_callback.ts).
         const callback = body.with_callback ? await memoryCallback(db, userId, platform) : '';
-        return json({ linked: true, family: famHash, family_paying: !!paidRows?.length, facts: visible.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean).slice(0, 15),
+        return json({ linked: true, family: famHash, family_paying: !!paidRows?.length, family_access: !!paidRows?.length || freeDays, facts: visible.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean).slice(0, 15),
           members, speaker, lessons, lesson_turns: les?.length ?? 0, profile, callback });
       }
       const words = (t: string) => new Set(t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/[a-z0-9]+/g) ?? []);

@@ -98,7 +98,11 @@
     "generating": "Generating...",
     "generateNew": "Generate New",
     "active": "Active",
-    "connected": "Connected:"
+    "connected": "Connected:",
+    "disconnect": "Disconnect",
+    "disconnectConfirm": "Disconnect {{who}} from this family? EspaLuz there will stop knowing your family. You can connect it again any time with a new code.",
+    "disconnected": "{{who}} disconnected",
+    "disconnectFailed": "Could not disconnect. Please try again."
   },
   "chat": {
     "title": "Chat with Espaluz",

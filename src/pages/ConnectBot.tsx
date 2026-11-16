@@ -15,7 +15,8 @@ import {
   CheckCircle, 
   Clock,
   MessageSquare,
-  ArrowLeft
+  ArrowLeft,
+  Unlink
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -67,6 +68,21 @@ const ConnectBot = () => {
     } finally {
       setFetchingBots(false);
     }
+  };
+
+  // 16 Nov 2026 (Elena linked her own Telegram to her test account by mistake and found no way back): unlink one channel.
+  // The row stays (is_active = false), so nothing is erased; every bot and function already ignores inactive links, so
+  // that Telegram or WhatsApp stops belonging to this family at once. Linking again with a new code turns it back on.
+  const [unlinking, setUnlinking] = useState<string | null>(null);
+  const disconnectBot = async (bot: ConnectedBot) => {
+    const who = bot.platform_username ? `@${bot.platform_username}` : bot.platform;
+    if (!window.confirm(t('connectBot.disconnectConfirm', { who }))) return;
+    setUnlinking(bot.id);
+    const { error } = await supabase.from('connected_bots').update({ is_active: false }).eq('id', bot.id).eq('user_id', user?.id);
+    setUnlinking(null);
+    if (error) { toast({ title: t('connectBot.disconnectFailed'), variant: 'destructive' }); return; }
+    toast({ title: t('connectBot.disconnected', { who }) });
+    setConnectedBots((list) => list.filter((b) => b.id !== bot.id));
   };
 
   // 31 Oct 2026 (Elena: "in LATAM WhatsApp is the winner"): the same one-time code links EspaLuz WhatsApp; the button
@@ -203,10 +219,17 @@ const ConnectBot = () => {
                           </p>
                         </div>
                       </div>
-                      <Badge variant="default" className="bg-green-500">
-                        <CheckCircle className="h-3 w-3 mr-1" />
-                        {t('connectBot.active')}
-                      </Badge>
+                      <div className="flex flex-col items-end gap-2">
+                        <Badge variant="default" className="bg-green-500">
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          {t('connectBot.active')}
+                        </Badge>
+                        <Button variant="ghost" size="sm" className="h-7 px-2 text-xs text-muted-foreground hover:text-destructive"
+                          disabled={unlinking === bot.id} onClick={() => disconnectBot(bot)}>
+                          <Unlink className="h-3 w-3 mr-1" />
+                          {t('connectBot.disconnect')}
+                        </Button>
+                      </div>
                     </div>
                   ))}
                 </div>
