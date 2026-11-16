@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { X, Cookie } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { replayRoute } from '@/lib/posthogReplay';
 
 export const CookieConsent = () => {
   const { t } = useTranslation();
@@ -20,6 +21,8 @@ export const CookieConsent = () => {
   const acceptCookies = () => {
     localStorage.setItem('cookie-consent', 'accepted');
     setShowBanner(false);
+    // 16 Nov 2026: PostHog starts only now (front page / sign-in page only), never before this click.
+    void replayRoute(window.location.pathname).catch(() => undefined);
   };
 
   const declineCookies = () => {

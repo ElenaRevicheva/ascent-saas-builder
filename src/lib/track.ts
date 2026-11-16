@@ -1,4 +1,5 @@
 import { insidePlayApp } from '@/lib/playBilling';
+import { replayEvent, replayRoute } from '@/lib/posthogReplay';
 
 /**
  * Counting for app.espaluz.lat (6 Nov 2026, Elena: "we can't see visits, first messages or where people stop").
@@ -85,6 +86,7 @@ export function track(name: string, params: Record<string, string | number | boo
     console.debug('[track]', name, params);
     return;
   }
+  replayEvent(name, params);
   if (!loaded || !window.gtag) return;
   window.gtag('event', name, { ...params, transport_type: 'beacon' });
 }
@@ -93,6 +95,8 @@ export function track(name: string, params: Record<string, string | number | boo
 export function trackRoute(pathname: string) {
   const disableFlag = `ga-disable-${GA_ID}` as const;
   if (new URLSearchParams(window.location.search).get('internal') === '1') store.set(INTERNAL_KEY, '1');
+  // 16 Nov 2026: PostHog front-page recordings (own rules in posthogReplay.ts: consent, Play app, two pages only).
+  void replayRoute(pathname).catch(() => undefined);
 
   if (isNoCountPath(pathname)) {
     if (pathname.startsWith('/classroom')) track('app_classroom_open');
