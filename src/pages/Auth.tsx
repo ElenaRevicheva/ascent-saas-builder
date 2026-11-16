@@ -240,7 +240,16 @@ const Auth = () => {
     setIsLoading(true);
     setError('');
     try {
-      const { error } = await signUp(formData.email.trim(), formData.password, formData.fullName.trim() || undefined);
+      const { error, user } = await signUp(formData.email.trim(), formData.password, formData.fullName.trim() || undefined);
+      // 16 Nov 2026 (Elena's second tester account): an email that ALREADY has an account gets no error and no mail from
+      // Supabase (auth log: user_repeated_signup) - it returns a user with no identities. The page used to say "we sent a
+      // confirmation link", so the person waited for a mail that never comes. Say the truth: sign in or reset.
+      if (!error && user && Array.isArray(user.identities) && user.identities.length === 0) {
+        track('app_signup_error', { kind: 'already_exists' });
+        setError(t('auth.errEmailTaken'));
+        setMode('signin');
+        return;
+      }
       if (error) {
         track('app_signup_error', { kind: signupErrorKind(error.message) });
         setError(/registered|exists/i.test(error.message)
