@@ -1,6 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Menu, Info, Shield, FileText, LogOut } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
 import familyLearningSpanish from '@/assets/family-learning-spanish.jpg';
@@ -63,9 +64,23 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
                 >
                    {t('hdr.addFamily')}
                 </Button>
-                <Button variant="ghost" size="sm" onClick={signOut}>
-                  {t('dashboard.signOut')}
-                </Button>
+                {/* 16 Nov 2026 (Elena): the Google Play app has no address bar (correct for a verified app), so a signed-in
+                    family had no way back to "what is EspaLuz". One menu: About (the front page, which shows "My EspaLuz"
+                    to come back), privacy, terms, sign out. Sign out moved in here - no duplicate button. */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="icon" className="rounded-full" aria-label={t('hdr.menu')}>
+                      <Menu className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuItem asChild><Link to="/"><Info className="mr-2 h-4 w-4" />{t('hdr.about')}</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/privacy-policy"><Shield className="mr-2 h-4 w-4" />{t('hdr.privacy')}</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild><Link to="/terms-of-service"><FileText className="mr-2 h-4 w-4" />{t('hdr.terms')}</Link></DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onSelect={() => signOut()}><LogOut className="mr-2 h-4 w-4" />{t('dashboard.signOut')}</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
           </div>

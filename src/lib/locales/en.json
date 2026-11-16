@@ -815,7 +815,11 @@
   },
   "hdr": {
     "kidsClassroom": "Kids classroom",
-    "addFamily": "Add your family"
+    "addFamily": "Add your family",
+    "menu": "Menu",
+    "about": "About EspaLuz",
+    "privacy": "Privacy policy",
+    "terms": "Terms of service"
   },
   "map": {
     "title": "Your EspaLuz map",

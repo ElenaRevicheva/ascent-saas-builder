@@ -710,7 +710,11 @@
   },
   "hdr": {
     "kidsClassroom": "Aula infantil",
-    "addFamily": "Agrega a tu familia"
+    "addFamily": "Agrega a tu familia",
+    "menu": "Menú",
+    "about": "Qué es EspaLuz",
+    "privacy": "Política de privacidad",
+    "terms": "Términos del servicio"
   },
   "map": {
     "title": "Tu mapa de EspaLuz",
