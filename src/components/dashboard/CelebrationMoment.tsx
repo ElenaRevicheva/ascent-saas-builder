@@ -23,7 +23,7 @@ function shrink(src: CanvasImageSource, w: number, h: number): string {
   return c.toDataURL('image/jpeg', 0.7);
 }
 
-async function grabFrames(file: File): Promise<string[]> {
+export async function grabFrames(file: File): Promise<string[]> {
   const url = URL.createObjectURL(file);
   try {
     if (file.type.startsWith('image/')) {

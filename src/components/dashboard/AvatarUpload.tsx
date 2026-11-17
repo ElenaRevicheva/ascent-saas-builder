@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Upload, Video, Trash2, Play, Pause } from 'lucide-react';
 import { CelebrationMoment } from './CelebrationMoment';
 import { PracticeMoment } from './PracticeMoment';
+import { IntroduceFamily } from './IntroduceFamily';
 import { useTranslation } from 'react-i18next';
 // 14 Nov 2026 (Elena): the old cartoon avatar is replaced by the photoreal EspaLuz hello; the section becomes "Video
 // moments with EspaLuz" (celebrations + face-to-face prep, part of EspaLuz Family, coming soon). The family's own upload stays.
@@ -207,6 +208,10 @@ export const AvatarUpload = () => {
               </div>
             </div>
             
+            {/* 17 Nov 2026 (Elena): "Add your family's video" only played the clip back here - no goal. A family without
+                their own clip now gets "Introduce your family to EspaLuz" (IntroduceFamily); a family that already
+                uploaded one keeps it, with replace and delete, exactly as before. */}
+            {!ownName ? <IntroduceFamily /> : (
             <div className="flex gap-2">
               <Button
                 variant="outline"
@@ -215,7 +220,7 @@ export const AvatarUpload = () => {
                 className="flex-1"
               >
                 <Upload className="h-4 w-4 mr-2" />
-                {ownName ? t('vm.replace') : t('vm.add')}
+                {t('vm.replace')}
               </Button>
               
               {ownName && (
@@ -228,7 +233,8 @@ export const AvatarUpload = () => {
                 </Button>
               )}
             </div>
-            
+            )}
+
             {/* Only what is true: EspaLuz's talking videos use her own face; nothing reads a family's upload yet. */}
             <p className="text-sm text-muted-foreground">
               {ownName ? t('vm.saved') : t('vm.hello')}

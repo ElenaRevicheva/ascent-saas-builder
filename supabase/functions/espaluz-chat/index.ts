@@ -1815,6 +1815,102 @@ async function practiceTurn(userId: string, p: any): Promise<Record<string, unkn
   return { done: true, well: t.well ?? '', fix: t.fix ?? '', phrase: t.phrase ?? '', spoken: t.spoken, sessionId: row?.id ?? null };
 }
 
+// 17 Nov 2026 (Elena: "not just phrases collected, but EspaLuz giving advice what to practise with these phrases - something
+// that leads further"). The dashboard sends the phrases EspaLuz really taught (WhatsApp, Telegram, the app); she answers
+// with ONE short tip in the family's language and a first message to practise it with her. Free models only, once a day
+// per set of phrases (saved as event phrase_tip). A tip that does not name one of those phrases is dropped: no tip beats
+// an invented one.
+const TIP_LANG: Record<string, string> = { en: 'English', es: 'Spanish', ru: 'Russian' };
+const PHRASE_TIP = `You are EspaLuz, a warm bilingual companion for a family settling in a Spanish-speaking country.
+You get the Spanish phrases you taught this family recently and a few things you know about them.
+Write ONE practice tip: at most 2 short sentences in LANGUAGE. Name 1 or 2 of the listed phrases exactly as written, in
+Spanish, in quotes. Suggest one concrete everyday moment this week to use them (use a known family fact only if it fits),
+and invite them to rehearse it with you first. Never invent names, places, dates or facts. No emojis.
+Also write "practise": the first message the parent could send you to start rehearsing, in LANGUAGE, first person, naming
+the same phrase(s). Return ONLY JSON: {"tip":"...","practise":"..."}`;
+async function freeAnswer(system: string, user: string, maxTokens = 300): Promise<string> {
+  const request = { max_tokens: maxTokens, temperature: 0.4, system, messages: [{ role: 'user', content: user }] };
+  const steps: [string | undefined, (k: string, r: any) => Promise<any>][] = [
+    [Deno.env.get('GEMINI_TTS_API_KEY'), callGemini], [Deno.env.get('GROQ_API_KEY'), (k, r) => callGroq(k, r)], [Deno.env.get('XAI_API_KEY'), callGrok],
+  ];
+  for (const [key, fn] of steps) {
+    if (!key) continue;
+    try { const t = String((await fn(key, request)).content?.[0]?.text ?? '').trim(); if (t) return t; } catch { /* next free model */ }
+  }
+  return '';
+}
+async function phraseTip(userId: string, p: any): Promise<Record<string, unknown>> {
+  const lang = TIP_LANG[String(p?.lang ?? '').slice(0, 2)] ? String(p.lang).slice(0, 2) : 'en';
+  const phrases = (Array.isArray(p?.phrases) ? p.phrases : []).slice(0, 12)
+    .map((x: any) => ({ es: String(x?.es ?? '').replace(/[<>{}\[\]"]/g, '').trim().slice(0, 90), en: String(x?.en ?? '').replace(/[<>{}\[\]"]/g, '').trim().slice(0, 90) }))
+    .filter((x: any) => x.es.length >= 4);
+  if (!phrases.length) return { tip: null };
+  const key = `${lang}:${phrases.slice(0, 6).map((x: any) => x.es.toLowerCase()).join('|')}`.slice(0, 500);
+  const db = notebook();
+  const today = new Date().toISOString().slice(0, 10);
+  const { data: cached } = await db.from('learning_sessions').select('content').eq('user_id', userId).eq('session_type', 'analytics')
+    .eq('content->>event', 'phrase_tip').eq('content->>key', key).gte('created_at', `${today}T00:00:00Z`).limit(1);
+  if (cached?.[0]?.content?.tip) return { tip: cached[0].content.tip, practise: cached[0].content.practise ?? '', cached: true };
+  const notes = await readFamilyNotes(userId);
+  const user = `PHRASES YOU TAUGHT:\n${phrases.map((x: any) => `- "${x.es}"${x.en ? ` = ${x.en}` : ''}`).join('\n')}\n` +
+    `FAMILY: ${notes.members.map((m) => `${m.name} (${m.role})`).join(', ') || 'unknown'}\n` +
+    `KNOWN FACTS:\n${notes.facts.slice(0, 8).map((f) => `- ${f}`).join('\n') || 'none'}`;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const o = practiceJson(await freeAnswer(PHRASE_TIP.replaceAll('LANGUAGE', TIP_LANG[lang]), user));
+    const tip = (o.tip ?? '').slice(0, 400), practise = (o.practise ?? '').slice(0, 300);
+    const named = phrases.some((x: any) => tip.toLowerCase().includes(x.es.toLowerCase()));
+    if (!tip || !named) { console.log(`[tip] attempt ${attempt + 1}: no listed phrase named, dropped`); continue; }
+    await db.from('learning_sessions').insert({ user_id: userId, session_type: 'analytics', source: 'web',
+      content: { event: 'phrase_tip', key, lang, tip, practise } });
+    console.log(`[tip] saved (${phrases.length} phrases, ${lang})`);
+    return { tip, practise };
+  }
+  return { tip: null };
+}
+
+// 17 Nov 2026 (Elena: the "Add your family's video" button served nothing - make it valuable). "Introduce your family to
+// EspaLuz": the browser joins 3 small stills from a home clip into ONE picture (the clip never leaves the phone); the free
+// photo readers list what is clearly visible and worth talking about; the parent ticks what is true; only ticked notes go
+// into the family notebook that the web chat, WhatsApp and Telegram already read. Nothing is saved without a tick.
+const LOOK_PROMPT = `This picture joins 3 stills from a short home video a parent shared so their family's language companion
+can get to know them. List 3 to 5 short notes about things CLEARLY visible that a family would enjoy talking about: pets,
+toys, hobbies, instruments, books, sport, the home (garden, balcony, the view), food, a celebration.
+Write each as a family fact of at most 12 words, e.g. "The family has a small brown dog."
+NEVER mention: names, ages, faces, skin, hair, body, beauty, clothes, ethnicity, religion, health, money, or anything you
+are not sure you see. One note per line, in this format: EN: <note in English> | XX: <the same note in LANGUAGE>
+If nothing like that is clearly visible, answer NONE.`;
+async function familyLook(p: any): Promise<Record<string, unknown>> {
+  const lang = TIP_LANG[String(p?.lang ?? '').slice(0, 2)] ? String(p.lang).slice(0, 2) : 'en';
+  const b64 = String(p?.image ?? '').replace(/^data:image\/\w+;base64,/, '');
+  if (b64.length < 1000 || b64.length > 1_200_000) return { error: 'no_picture' };
+  const out = await describePhoto(b64, LOOK_PROMPT.replace('LANGUAGE', TIP_LANG[lang]), 400);
+  if (/^\s*NONE/i.test(out)) return { notes: [] };
+  const notes = out.split('\n').map((l) => l.replace(/^[-•*\d.\s]+/, '').trim()).filter((l) => /^EN:/i.test(l)).map((l) => {
+    const [en, shown] = l.split('|').map((x) => x.replace(/^\s*(EN|XX|[A-Z]{2}):\s*/i, '').replace(/\*/g, '').trim());
+    return { fact: en, shown: lang === 'en' ? en : (shown || en) };
+  }).filter((n) => n.fact.length >= 8 && n.fact.length <= 120 && !/\b(face|skin|hair|weight|beautiful|pretty|race|religio|sick|money)\b/i.test(n.fact)).slice(0, 5);
+  console.log(`[look] ${notes.length} note(s) suggested`);
+  return { notes };
+}
+async function familyLookSave(userId: string, p: any): Promise<Record<string, unknown>> {
+  const facts = (Array.isArray(p?.facts) ? p.facts : []).map((f: any) => String(f ?? '').replace(/[<>{}\[\]]/g, '').trim())
+    .filter((f: string) => f.length >= 8 && f.length <= 120).slice(0, 5);
+  if (!facts.length) return { saved: 0 };
+  const notes = await readFamilyNotes(userId);
+  const known = notes.rows.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean);
+  const db = notebook();
+  let saved = 0;
+  for (const fact of facts) {
+    if (known.some((k) => sameFact(k, fact))) continue;
+    const { error } = await db.from('learning_sessions').insert({ user_id: userId, session_type: 'analytics', source: 'web',
+      content: { event: 'family_fact', fact, speaker: notes.speaker || undefined, via: 'family_video' } });
+    if (error) throw error;
+    known.push(fact); saved++;
+  }
+  console.log(`[look] parent kept ${saved} note(s)`);
+  return { saved };
+}
+
 async function familyStory(userId: string, body: any): Promise<Record<string, unknown>> {
   const db = notebook();
   if (body.memory === 'forget' || body.memory === 'restore') {
@@ -2058,6 +2154,13 @@ serve(async (req) => {
     if (body.practice) {
       if (fromBot || !userId) throw new Error('Unauthorized');
       return new Response(JSON.stringify(await practiceTurn(userId, body.practice)), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
+    // 17 Nov 2026: "Phrases you've collected" tip + "Introduce your family to EspaLuz" (dashboard, signed-in only).
+    if (body.phraseTip || body.familyLook || body.familyLookSave) {
+      if (fromBot || !userId) throw new Error('Unauthorized');
+      const out = body.phraseTip ? await phraseTip(userId, body.phraseTip) : body.familyLook ? await familyLook(body.familyLook) : await familyLookSave(userId, body.familyLookSave);
+      return new Response(JSON.stringify(out), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     // 8 Nov 2026: card 7 on the family map reads and corrects the family notebook here (signed-in parent only).

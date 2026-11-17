@@ -37,6 +37,7 @@ export default function LearningModulePage() {
   const [currentExercise, setCurrentExercise] = useState(0);
   const [userAnswer, setUserAnswer] = useState('');
   const [showAnswer, setShowAnswer] = useState(false);
+  const [finished, setFinished] = useState(false);
   const [sessionStartTime] = useState(Date.now());
   const [completedVocabulary, setCompletedVocabulary] = useState<string[]>([]);
 
@@ -58,7 +59,8 @@ export default function LearningModulePage() {
   }, [moduleId, navigate, i18n.language]);
 
   const totalSteps = lesson ? 3 : 0; // Vocabulary, Phrases, Exercises
-  const progress = Math.round(((currentStep + 1) / totalSteps) * 100);
+  // 17 Nov 2026: progress counts FINISHED steps (it said 100% on arrival at the exercises, before any answer).
+  const progress = finished ? 100 : Math.round((currentStep / Math.max(1, totalSteps)) * 100);
 
   const completeStep = async () => {
     if (!lesson || !user) return;
@@ -82,6 +84,7 @@ export default function LearningModulePage() {
       setCurrentStep(newStep);
 
       if (isCompleted) {
+        setFinished(true);
         toast.success(t('lesson.completed'));
         setTimeout(() => navigate('/dashboard'), 2000);
       } else {

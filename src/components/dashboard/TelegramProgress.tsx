@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { MessageSquare, BookOpen, Clock, Trophy, RefreshCw, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { MessageSquare, BookOpen, Clock, Trophy, RefreshCw, AlertCircle, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
@@ -43,6 +43,13 @@ export const TelegramProgress = () => {
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [links, setLinks] = useState<string | null>(null);
+  // 17 Nov 2026 (Elena: "not just November 17, November 15 - the phrases collected, and EspaLuz's advice what to practise
+  // with them, something that leads further"). The tip comes from espaluz-chat `phraseTip` (free models, once a day per set
+  // of phrases, dropped if it does not name one of them). Conversations stay, folded under the phrases.
+  const [tip, setTip] = useState<{ tip: string; practise: string } | null>(null);
+  const [tipState, setTipState] = useState<'idle' | 'loading' | 'done'>('idle');
+  const [allPhrases, setAllPhrases] = useState(false);
+  const [showTalks, setShowTalks] = useState(false);
 
   const load = useCallback(async (showLoading = true) => {
     if (!user) return;
@@ -103,6 +110,25 @@ export const TelegramProgress = () => {
     setLinks(line);
     toast.success(line);
   };
+
+  // Newest first, each phrase once, with where and when it was taught.
+  const collected: { es: string; en: string; channel: Channel; at: string }[] = [];
+  for (const x of talks) for (const p of x.phrases)
+    if (!collected.some((c) => c.es.toLowerCase() === p.es.toLowerCase())) collected.push({ ...p, channel: x.channel, at: x.start });
+  const tipKey = collected.slice(0, 8).map((c) => c.es).join('|');
+  useEffect(() => {
+    if (!user || !tipKey) return;
+    let gone = false;
+    setTipState('loading');
+    supabase.functions.invoke('espaluz-chat', { body: { phraseTip: { lang: (i18n.language || 'en').slice(0, 2),
+      phrases: tipKey.split('|').map((es) => ({ es, en: collected.find((c) => c.es === es)?.en ?? '' })) } } })
+      .then(({ data }) => { if (!gone) setTip(data?.tip ? { tip: String(data.tip), practise: String(data.practise ?? '') } : null); })
+      .catch(() => { if (!gone) setTip(null); })
+      .finally(() => { if (!gone) setTipState('done'); });
+    return () => { gone = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, tipKey, i18n.language]);
+  const practise = () => window.dispatchEvent(new CustomEvent('espaluz:ask', { detail: { text: tip?.practise || t('jr.practiseText', { phrases: collected.slice(0, 2).map((c) => c.es).join(', ') }) } }));
 
   const label = (ch: Channel) => (ch === 'whatsapp' ? 'WhatsApp' : ch === 'telegram' ? 'Telegram' : ch === 'app' ? t('jr.chApp') : t('jr.chClass'));
 
@@ -214,11 +240,39 @@ export const TelegramProgress = () => {
         <Card className="border-border/50 shadow-magical">
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
-              {t('jr.listTitle', { count: talks.length })}
+              <BookOpen className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
+              {collected.length ? t('jr.collectedTitle', { count: collected.length }) : t('jr.listTitle', { count: talks.length })}
             </CardTitle>
-            <p className="text-sm text-muted-foreground">{t('jr.listSub')}</p>
+            <p className="text-sm text-muted-foreground">{collected.length ? t('jr.collectedSub') : t('jr.listSub')}</p>
           </CardHeader>
+          {collected.length > 0 && (
+            <CardContent className="space-y-4 pt-0">
+              {tipState === 'loading' && <p className="text-sm text-muted-foreground">{t('jr.tipLoading')}</p>}
+              {tip && (
+                <div className="rounded-xl border border-[hsl(var(--espaluz-primary))]/30 bg-[hsl(var(--espaluz-primary))]/5 p-4">
+                  <p className="flex items-center gap-2 text-sm font-semibold text-[hsl(var(--espaluz-primary))]"><Sparkles className="h-4 w-4" />{t('jr.tipTitle')}</p>
+                  <p className="mt-2 text-base leading-relaxed text-foreground">{tip.tip}</p>
+                  <Button size="sm" className="mt-3" onClick={practise}>{t('jr.practise')}</Button>
+                </div>
+              )}
+              <div className="space-y-2">
+                {(allPhrases ? collected : collected.slice(0, 6)).map((c) => (
+                  <div key={c.es} className="rounded-lg bg-primary/5 p-3">
+                    <p className="font-medium text-foreground">{c.es}</p>
+                    {c.en && <p className="text-sm text-muted-foreground">{c.en}</p>}
+                    <p className="mt-1 text-xs text-muted-foreground/80">{label(c.channel)} · {new Date(c.at).toLocaleDateString(i18n.language || undefined, { month: 'short', day: 'numeric' })}</p>
+                  </div>
+                ))}
+                {collected.length > 6 && (
+                  <Button variant="ghost" size="sm" onClick={() => setAllPhrases(!allPhrases)}>{allPhrases ? t('jr.fewerPhrases') : t('jr.allPhrases', { count: collected.length })}</Button>
+                )}
+              </div>
+              <Button variant="outline" size="sm" className="w-full" onClick={() => setShowTalks(!showTalks)}>
+                {showTalks ? t('jr.hideTalks') : t('jr.showTalks', { count: talks.length })}
+              </Button>
+            </CardContent>
+          )}
+          {(showTalks || !collected.length) && (
           <CardContent className="space-y-3">
             {talks.slice(0, 8).map((x) => {
               const open = expanded.has(x.id);
@@ -267,6 +321,7 @@ export const TelegramProgress = () => {
               );
             })}
           </CardContent>
+          )}
         </Card>
       )}
     </div>

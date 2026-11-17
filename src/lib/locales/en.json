@@ -32,7 +32,7 @@
   "dashboard": {
     "title": "EspaLuz",
     "welcome": "Welcome to Your Spanish Journey!",
-    "subtitle": "Connect with EspaLuz and start practicing Spanish with your family in a fun, magical way",
+    "subtitle": "Connect with EspaLuz and practise Spanish with your family: in the chat, in class and in everyday life here",
     "greeting": "Hello",
     "signOut": "Sign Out"
   },
@@ -63,7 +63,7 @@
   },
   "features": {
     "title": "EspaLuz Features - Your Spanish Learning Toolkit",
-    "subtitle": "Discover what magical features are available for your family's Spanish journey",
+    "subtitle": "See what is ready for your family's Spanish: chats, the kids' class and your first year",
     "basic": "Basic Features",
     "advanced": "Advanced Features",
     "premium": "Part of EspaLuz Family",
@@ -524,7 +524,7 @@
   },
   "vm": {
     "title": "Video moments with EspaLuz",
-    "hello": "This is EspaLuz saying hello. Below it, you can also keep a short video of your family, shown here on your dashboard.",
+    "hello": "This is EspaLuz saying hello. Below it, you can introduce your family to her: she looks at a short clip from home and remembers only what you confirm.",
     "saved": "Your family's video is saved and shown here on your dashboard.",
     "add": "Add your family's video",
     "replace": "Replace your family's video",
@@ -647,7 +647,17 @@
     "talkPhrases_one": "{{count}} phrase",
     "talkPhrases_other": "{{count}} phrases",
     "classNote": "A class with Pere & Titi - its report is in the classroom.",
-    "noPhrases": "No new phrase in this one."
+    "noPhrases": "No new phrase in this one.",
+    "collectedTitle": "Phrases you've collected ({{count}})",
+    "collectedSub": "What EspaLuz taught you on WhatsApp, Telegram and here, newest first - and what to practise next.",
+    "tipTitle": "EspaLuz's tip",
+    "tipLoading": "EspaLuz is choosing what to practise next...",
+    "practise": "Practise with EspaLuz",
+    "practiseText": "Can we practise these phrases? {{phrases}}",
+    "allPhrases": "Show all {{count}} phrases",
+    "fewerPhrases": "Show fewer",
+    "showTalks": "Your conversations ({{count}})",
+    "hideTalks": "Hide conversations"
   },
   "fy": {
     "title": "Your first year in {{country}}",
@@ -976,7 +986,17 @@
       "beginner": "Beginner",
       "intermediate": "Intermediate",
       "advanced": "Advanced"
-    }
+    },
+    "button": "Introduce your family to EspaLuz",
+    "how": "Choose a short clip or photo from home. It stays on your phone: EspaLuz sees 3 small still pictures, tells you what she noticed, and remembers only what you tick.",
+    "looking": "EspaLuz is looking...",
+    "noticed": "EspaLuz noticed - tick what is true:",
+    "keep": "Remember {{count}}",
+    "cancel": "Not now",
+    "saved_one": "EspaLuz will remember {{count}} thing about your family - in this chat, on WhatsApp and on Telegram.",
+    "saved_other": "EspaLuz will remember {{count}} things about your family - in this chat, on WhatsApp and on Telegram.",
+    "nothing": "EspaLuz could not see anything clear to remember. Try a clip with your pet, a hobby or your home.",
+    "failed": "Something went wrong. Please try again."
   },
   "opts": {
     "title": "Choose Your Learning Experience",
