@@ -83,7 +83,7 @@ serve(async (req) => {
       console.log(`[classroom-link] made on ${platform}, ${found?.[0]?.user_id ? 'existing' : 'new'} family`);
       return json({ ok: true, url: gen.properties.action_link });
     }
-    if (mode === 'facts_get' || mode === 'facts_add' || mode === 'who_set' || mode === 'profile_fill') {
+    if (mode === 'facts_get' || mode === 'facts_add' || mode === 'who_set' || mode === 'profile_fill' || mode === 'learn_set') {
       const { facts, speaker: said } = body;
       const tg = telegram_user_id != null && telegram_user_id !== '';
       const platform = tg ? 'telegram' : 'whatsapp';
@@ -108,6 +108,20 @@ serve(async (req) => {
           content: { ...now, event: 'family_profile', ...fill } });
         console.log(`[profile] ${Object.keys(fill).join(',')} filled from ${platform}`);
         return json({ linked: true, filled: Object.keys(fill).length });
+      }
+      // 17 Nov 2026 (Elena: a family must never be stuck in English mode): what this family learns, chosen in a chat or
+      // a bot menu (/english /spanish /both). Unlike profile_fill, the newest choice WINS - it is the family's own decision.
+      if (mode === 'learn_set') {
+        const learn = String(body.learn ?? '');
+        if (!['English', 'Spanish', 'Both Spanish and English'].includes(learn)) return json({ linked: true, set: false });
+        const { data: cur } = await db.from('learning_sessions').select('content').eq('user_id', userId).eq('session_type', 'analytics')
+          .eq('content->>event', 'family_profile').order('created_at', { ascending: false }).limit(1);
+        const now = (cur?.[0]?.content ?? {}) as Record<string, unknown>;
+        if (now.learn !== learn)
+          await db.from('learning_sessions').insert({ user_id: userId, session_type: 'analytics', source: platform,
+            content: { ...now, event: 'family_profile', learn } });
+        console.log(`[profile] learn=${learn} from ${platform}`);
+        return json({ linked: true, set: true });
       }
       // Who this number belongs to: one row per link, no schema change. The newest answer wins.
       if (mode === 'who_set') {
