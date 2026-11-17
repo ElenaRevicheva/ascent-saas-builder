@@ -1,45 +1,95 @@
 import { useTranslation } from 'react-i18next';
-import classShot from '@/assets/demo/class.webp';
 import waShot from '@/assets/demo/wa.webp';
+import waMenu from '@/assets/demo/wa-menu.webp';
+import tgMenu from '@/assets/demo/tg-menu.webp';
+import chatEn from '@/assets/demo/chat-en.webp';
+import chatEs from '@/assets/demo/chat-es.webp';
+import chatRu from '@/assets/demo/chat-ru.webp';
+import classStart from '@/assets/demo/class-start.webp';
+import classShot from '@/assets/demo/class.webp';
+import classTools from '@/assets/demo/class-tools.webp';
 import yearEn from '@/assets/demo/year-en.webp';
 import yearEs from '@/assets/demo/year-es.webp';
 import yearRu from '@/assets/demo/year-ru.webp';
+import weekEn from '@/assets/demo/week-en.webp';
+import weekEs from '@/assets/demo/week-es.webp';
+import weekRu from '@/assets/demo/week-ru.webp';
+import lessonsEn from '@/assets/demo/lessons-en.webp';
+import lessonsEs from '@/assets/demo/lessons-es.webp';
+import lessonsRu from '@/assets/demo/lessons-ru.webp';
+import videoEn from '@/assets/demo/video-en.webp';
+import videoEs from '@/assets/demo/video-es.webp';
+import videoRu from '@/assets/demo/video-ru.webp';
 
 /*
- * 17 Nov 2026 - "How EspaLuz works": a 3-step roadmap, each step one REAL screen of the live app + one line (Elena chose
- * a roadmap for the page and a film for promotion; open, never folded). Andy's funnel guide: "Process - make it feel easy,
- * explain how it works in 3 simple steps". Every reader in every test asked "is it an app, a website or a chat?".
- * Screens: steps 2-3 taken 17 Nov 2026 with a temporary test family (parent "Ana", child "Sofi", 6, Panamá), deleted right
- * after - no real person in them. Step 1 = a real WhatsApp chat from Elena's phone (17 Nov), cropped to the question and
- * EspaLuz's Spanish/English translation - before her name and before the reply. Nothing is mocked up or edited inside.
+ * 17 Nov 2026 - "How EspaLuz works": a 3-step roadmap, each step a full-width row of REAL screens (Elena: "the roadmap
+ * should take its place all over the screen"; a roadmap for the page, a film for promotion; open, never folded).
+ * Andy's funnel guide: "Process - explain how it works in 3 simple steps".
+ * Real screens only, nothing mocked up or edited inside a picture:
+ *  - Elena's own WhatsApp + Telegram (17 Nov): her question with EspaLuz's Spanish/English translation (cropped before
+ *    her name and the reply), and both bot menus with the new English / Spanish / both line;
+ *  - the live web app with a temporary test family (parent "Ana", child "Sofi", 6, Panamá), created and deleted on
+ *    17 Nov (0 accounts left, checked): the chat reply, Pere & Titi's class, the first year, the family's week, the
+ *    country lessons and the video moments.
  */
+type Shot = { src: string; cap: string; alt: string; bg?: string; fill?: boolean };
+
+const SERIF = { fontFamily: '"Newsreader", "Iowan Old Style", Georgia, serif' };
+
 export const RealLessonDemo = () => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language?.startsWith('ru') ? 'ru' : i18n.language?.startsWith('es') ? 'es' : 'en';
-  const steps = [
-    { src: waShot, title: t('demo.s1'), line: t('demo.s1Line'), alt: t('demo.waAlt'), bg: '#f4f2ea' }, // WhatsApp's own wallpaper colour under the short real chat
-    { src: classShot, title: t('demo.s2'), line: t('demo.s2Line'), alt: t('demo.classAlt') },
-    { src: { en: yearEn, es: yearEs, ru: yearRu }[lang], title: t('demo.s3'), line: t('demo.s3Line'), alt: t('demo.yearAlt') },
+  const pick = (m: Record<'en' | 'es' | 'ru', string>) => m[lang];
+  const steps: { title: string; line: string; shots: Shot[] }[] = [
+    { title: t('demo.s1'), line: t('demo.s1Line'), shots: [
+      { src: waShot, cap: t('demo.c.wa'), alt: t('demo.waAlt'), bg: '#f4f2ea' },
+      { src: pick({ en: chatEn, es: chatEs, ru: chatRu }), cap: t('demo.c.reply'), alt: t('demo.chatAlt') },
+      { src: waMenu, cap: t('demo.c.waMenu'), alt: t('demo.c.waMenu'), bg: '#f4f2ea' },
+      { src: tgMenu, cap: t('demo.c.tgMenu'), alt: t('demo.c.tgMenu'), bg: '#cfe6c0' },
+    ] },
+    { title: t('demo.s2'), line: t('demo.s2Line'), shots: [
+      { src: classStart, cap: t('demo.c.start'), alt: t('demo.c.start'), fill: true },
+      { src: classShot, cap: t('demo.c.class'), alt: t('demo.classAlt') },
+      { src: classTools, cap: t('demo.c.tools'), alt: t('demo.c.tools'), fill: true },
+    ] },
+    { title: t('demo.s3'), line: t('demo.s3Line'), shots: [
+      { src: pick({ en: yearEn, es: yearEs, ru: yearRu }), cap: t('demo.c.year'), alt: t('demo.yearAlt') },
+      { src: pick({ en: weekEn, es: weekEs, ru: weekRu }), cap: t('demo.c.week'), alt: t('demo.c.week') },
+      { src: pick({ en: lessonsEn, es: lessonsEs, ru: lessonsRu }), cap: t('demo.c.lessons'), alt: t('demo.c.lessons') },
+      { src: pick({ en: videoEn, es: videoEs, ru: videoRu }), cap: t('demo.c.video'), alt: t('demo.c.video') },
+    ] },
   ];
   return (
-    <div className="mx-auto max-w-5xl">
-      <ol className="grid gap-10 md:grid-cols-3 md:gap-6">
+    <div className="mx-auto max-w-6xl">
+      <ol className="space-y-14 md:space-y-16">
         {steps.map((s, i) => (
-          <li key={i} className="flex flex-col items-center text-center">
-            <div className="mb-4 flex items-center gap-3 md:min-h-[3.5rem]">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-base font-bold text-primary-foreground shadow">{i + 1}</span>
-              <h3 className="text-left text-lg font-semibold leading-snug text-foreground md:text-xl">{s.title}</h3>
+          <li key={i} className="grid items-center gap-6 lg:grid-cols-[260px_1fr] lg:gap-10">
+            <div className="text-left">
+              <div className="flex items-end gap-3">
+                <span aria-hidden className="bg-gradient-to-br from-primary to-fuchsia-500 bg-clip-text pb-1 pt-2 text-6xl leading-[1.15] text-transparent md:text-7xl" style={SERIF}>
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-primary">{t('demo.step', { n: i + 1 })}</span>
+              </div>
+              <h3 className="mt-3 text-2xl leading-snug text-foreground md:text-[1.7rem]" style={SERIF}>{s.title}</h3>
+              <p className="mt-2 text-base leading-relaxed text-muted-foreground">{s.line}</p>
             </div>
-            {/* A phone-shaped window onto the real screen; the bottom fades out instead of cutting text mid-line. */}
-            <div className="relative w-[240px] overflow-hidden rounded-[2rem] border-[6px] border-foreground/85 bg-card shadow-xl md:w-[230px]" style={{ height: 380, background: (s as { bg?: string }).bg }}>
-              <img src={s.src} alt={s.alt} loading="lazy" decoding="async" className="block h-auto w-full" />
-              {!(s as { bg?: string }).bg && <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-card to-transparent" />}
+            {/* Phones: a row on wide screens, swipe sideways on a phone. */}
+            <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 lg:mx-0 lg:px-0">
+              {s.shots.map((sh, k) => (
+                <figure key={k} className="w-[180px] shrink-0 snap-start sm:w-[190px]">
+                  <div className="relative overflow-hidden rounded-[1.6rem] border-[5px] border-foreground/85 bg-card shadow-lg" style={{ height: 360, background: sh.bg }}>
+                    <img src={sh.src} alt={sh.alt} loading="lazy" decoding="async" className={sh.fill ? "block h-full w-full object-cover object-top" : "block h-auto w-full"} />
+                    {!sh.bg && <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-card to-transparent" />}
+                  </div>
+                  <figcaption className="mt-2 text-center text-sm font-medium text-foreground/80">{sh.cap}</figcaption>
+                </figure>
+              ))}
             </div>
-            <p className="mt-4 max-w-xs text-base leading-relaxed text-muted-foreground">{s.line}</p>
           </li>
         ))}
       </ol>
-      <p className="mt-8 text-center text-xs text-muted-foreground">{t('demo.note')}</p>
+      <p className="mt-10 text-center text-xs text-muted-foreground">{t('demo.note')}</p>
     </div>
   );
 };

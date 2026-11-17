@@ -1337,7 +1337,7 @@
   },
   "demo": {
     "title": "How EspaLuz works",
-    "note": "Real screens from the EspaLuz app and WhatsApp (names hidden; the class with a test family, no real child).",
+    "note": "Real screens: WhatsApp and Telegram from our own phones (names hidden); the app with a test family, no real child.",
     "classAlt": "Pere and Titi greet the child in Spanish with English below; the strip shows 1st grade, Unit 1 of 12, Me and my family",
     "chatAlt": "A parent asks how to tell the teacher her daughter will miss school; EspaLuz writes the note in Spanish with English",
     "yearAlt": "Your first year in Panamá: Fiestas Patrias, Mother's Day, Carnival and more, from the country guide",
@@ -1348,6 +1348,20 @@
     "s2Line": "Ages 5–8, kinder to 2nd grade: talk, read and draw, in Spanish and English.",
     "s3": "Feel at home, month by month",
     "s3Line": "Your first year in your new country - holidays, school and customs, from a checked guide.",
-    "waAlt": "A WhatsApp chat: a parent asks what to bring to lunch with Panamanian neighbours; EspaLuz shows the question in Spanish and English"
+    "waAlt": "A WhatsApp chat: a parent asks what to bring to lunch with Panamanian neighbours; EspaLuz shows the question in Spanish and English",
+    "step": "Step {{n}}",
+    "c": {
+      "wa": "WhatsApp",
+      "reply": "An answer",
+      "waMenu": "WhatsApp menu",
+      "tgMenu": "Telegram menu",
+      "start": "Pere & Titi say hi",
+      "class": "The class",
+      "tools": "Draw, trace, talk",
+      "year": "Your first year",
+      "week": "Your family's week",
+      "lessons": "Country lessons",
+      "video": "Video moments"
+    }
   }
 }

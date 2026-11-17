@@ -1337,7 +1337,7 @@
   },
   "demo": {
     "title": "Cómo funciona EspaLuz",
-    "note": "Pantallas reales de la app EspaLuz y de WhatsApp (sin nombres; la clase con una familia de prueba, ningún niño real).",
+    "note": "Pantallas reales: WhatsApp y Telegram desde nuestros propios teléfonos (sin nombres); la app con una familia de prueba, ningún niño real.",
     "classAlt": "Pere y Titi saludan a la niña en español con el inglés debajo; la barra muestra 1.º grado, Unidad 1 de 12, Yo y mi familia",
     "chatAlt": "Una madre pregunta cómo avisar a la maestra que su hija faltará; EspaLuz escribe la nota en español con el inglés",
     "yearAlt": "Tu primer año en Panamá: Fiestas Patrias, Día de la Madre, Carnaval y más, de la guía del país",
@@ -1348,6 +1348,20 @@
     "s2Line": "De 5 a 8 años, de kínder a 2.º grado: hablar, leer y dibujar, en español e inglés.",
     "s3": "Siéntete en casa, mes a mes",
     "s3Line": "Tu primer año en tu nuevo país: fiestas, escuela y costumbres, de una guía verificada.",
-    "waAlt": "Un chat de WhatsApp: una madre pregunta qué llevar a un almuerzo con vecinos panameños; EspaLuz muestra la pregunta en español e inglés"
+    "waAlt": "Un chat de WhatsApp: una madre pregunta qué llevar a un almuerzo con vecinos panameños; EspaLuz muestra la pregunta en español e inglés",
+    "step": "Paso {{n}}",
+    "c": {
+      "wa": "WhatsApp",
+      "reply": "Una respuesta",
+      "waMenu": "Menú de WhatsApp",
+      "tgMenu": "Menú de Telegram",
+      "start": "Pere y Titi saludan",
+      "class": "La clase",
+      "tools": "Dibujar, trazar, hablar",
+      "year": "Tu primer año",
+      "week": "La semana de tu familia",
+      "lessons": "Lecciones del país",
+      "video": "Momentos en video"
+    }
   }
 }
