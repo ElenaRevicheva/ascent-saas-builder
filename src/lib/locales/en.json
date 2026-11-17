@@ -1351,9 +1351,9 @@
     "waAlt": "A WhatsApp chat: a parent asks what to bring to lunch with Panamanian neighbours; EspaLuz shows the question in Spanish and English",
     "step": "Step {{n}}",
     "c": {
-      "wa": "WhatsApp",
+      "wa": "WhatsApp: you ask",
       "reply": "An answer",
-      "waMenu": "WhatsApp menu",
+      "waMenu": "Spanish, English or both",
       "tgMenu": "Telegram menu",
       "start": "Pere & Titi say hi",
       "class": "The class",
@@ -1361,7 +1361,10 @@
       "year": "Your first year",
       "week": "Your family's week",
       "lessons": "Country lessons",
-      "video": "Video moments"
+      "video": "Video moments",
+      "teacher": "A note for the teacher",
+      "tgWords": "Telegram: local words",
+      "photo": "A photo, read for you"
     }
   }
 }

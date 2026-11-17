@@ -1351,9 +1351,9 @@
     "waAlt": "Un chat de WhatsApp: una madre pregunta qué llevar a un almuerzo con vecinos panameños; EspaLuz muestra la pregunta en español e inglés",
     "step": "Paso {{n}}",
     "c": {
-      "wa": "WhatsApp",
+      "wa": "WhatsApp: tú preguntas",
       "reply": "Una respuesta",
-      "waMenu": "Menú de WhatsApp",
+      "waMenu": "Español, inglés o los dos",
       "tgMenu": "Menú de Telegram",
       "start": "Pere y Titi saludan",
       "class": "La clase",
@@ -1361,7 +1361,10 @@
       "year": "Tu primer año",
       "week": "La semana de tu familia",
       "lessons": "Lecciones del país",
-      "video": "Momentos en video"
+      "video": "Momentos en video",
+      "teacher": "Una nota para la maestra",
+      "tgWords": "Telegram: palabras locales",
+      "photo": "Una foto, leída para ti"
     }
   }
 }
