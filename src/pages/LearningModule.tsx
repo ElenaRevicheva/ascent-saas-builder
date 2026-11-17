@@ -65,7 +65,10 @@ export default function LearningModulePage() {
 
     const timeSpent = Math.round((Date.now() - sessionStartTime) / 60000);
     const newStep = Math.min(currentStep + 1, totalSteps - 1);
-    const isCompleted = newStep >= totalSteps - 1;
+    // 17 Nov 2026 (Elena on her phone: "I tried the exercises, it took me to Welcome"): "Next: Exercises" used to count
+    // ARRIVING at the exercises as finishing the lesson - marked it done and left for the dashboard after 2 s, so nobody
+    // ever saw an exercise. Done = leaving the exercise step (last "Complete Lesson"), or a lesson with no exercises.
+    const isCompleted = currentStep >= totalSteps - 1 || (newStep >= totalSteps - 1 && lesson.exercises.length === 0);
 
     try {
       await trackProgress(lesson.id, {
