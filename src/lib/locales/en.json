@@ -1365,7 +1365,15 @@
       "teacher": "A note for the teacher",
       "tgWords": "Telegram: local words",
       "photo": "A photo, read for you",
-      "oneTap": "One tap from the chat"
-    }
+      "oneTap": "One tap from the chat",
+      "waChat": "WhatsApp: ask, get the words",
+      "menuMap": "Menu, map and one-tap buttons",
+      "map": "Your EspaLuz map",
+      "quest": "About your new life · your family",
+      "connect": "Connect Telegram or WhatsApp",
+      "map2": "Invite, and your story together"
+    },
+    "s0": "Set up your family",
+    "s0Line": "A few questions about your new life, your family members, and WhatsApp or Telegram connected - this switches on EspaLuz's memory for all of you."
   }
 }

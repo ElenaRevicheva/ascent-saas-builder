@@ -1,10 +1,21 @@
 import { useTranslation } from 'react-i18next';
-import waQ from '@/assets/demo/wa-q2.webp';
-import waTeacher from '@/assets/demo/wa-teacher.webp';
-import tgAhorita from '@/assets/demo/tg-ahorita.webp';
-import tgPhoto from '@/assets/demo/tg-photo.webp';
+import setupMapEn from '@/assets/demo/setup-map-en.webp';
+import setupMapEs from '@/assets/demo/setup-map-es.webp';
+import setupMapRu from '@/assets/demo/setup-map-ru.webp';
+import setupQuestEn from '@/assets/demo/setup-quest-en.webp';
+import setupQuestEs from '@/assets/demo/setup-quest-es.webp';
+import setupQuestRu from '@/assets/demo/setup-quest-ru.webp';
+import setupConnectEn from '@/assets/demo/setup-connect-en.webp';
+import setupConnectEs from '@/assets/demo/setup-connect-es.webp';
+import setupConnectRu from '@/assets/demo/setup-connect-ru.webp';
+import setupMap2En from '@/assets/demo/setup-map2-en.webp';
+import setupMap2Es from '@/assets/demo/setup-map2-es.webp';
+import setupMap2Ru from '@/assets/demo/setup-map2-ru.webp';
+import s1WaChat from '@/assets/demo/s1-wa-chat.webp';
+import s1TgChat from '@/assets/demo/s1-tg-chat.webp';
+import s1TgPhoto from '@/assets/demo/s1-tg-photo.webp';
+import s1WaMenu from '@/assets/demo/s1-wa-menu.webp';
 import tgClassButtons from '@/assets/demo/tg-class-buttons.webp';
-import waMenu from '@/assets/demo/wa-menu.webp';
 import classStart from '@/assets/demo/class-start.webp';
 import classShot from '@/assets/demo/class.webp';
 import classTools from '@/assets/demo/class-tools.webp';
@@ -42,13 +53,21 @@ export const RealLessonDemo = () => {
   const lang = i18n.language?.startsWith('ru') ? 'ru' : i18n.language?.startsWith('es') ? 'es' : 'en';
   const pick = (m: Record<'en' | 'es' | 'ru', string>) => m[lang];
   const steps: { title: string; line: string; shots: Shot[] }[] = [
+    // 17 Nov 2026 (Elena: "the very first important step is completing the roadmap inside the dashboard - the
+    // questionnaire, the family members, connecting Telegram - that switches on the brain and the memory").
+    { title: t('demo.s0'), line: t('demo.s0Line'), shots: [
+      { src: pick({ en: setupMapEn, es: setupMapEs, ru: setupMapRu }), cap: t('demo.c.map'), alt: t('demo.c.map') },
+      { src: pick({ en: setupQuestEn, es: setupQuestEs, ru: setupQuestRu }), cap: t('demo.c.quest'), alt: t('demo.c.quest') },
+      { src: pick({ en: setupConnectEn, es: setupConnectEs, ru: setupConnectRu }), cap: t('demo.c.connect'), alt: t('demo.c.connect') },
+      { src: pick({ en: setupMap2En, es: setupMap2Es, ru: setupMap2Ru }), cap: t('demo.c.map2'), alt: t('demo.c.map2') },
+    ] },
     { title: t('demo.s1'), line: t('demo.s1Line'), shots: [
-      // 17 Nov 2026: Elena's own WhatsApp + Telegram chats from that afternoon, cropped so no name shows.
-      { src: waQ, cap: t('demo.c.wa'), alt: t('demo.waAlt'), bg: '#f4f2ea' },
-      { src: waTeacher, cap: t('demo.c.teacher'), alt: t('demo.c.teacher'), bg: '#f4f2ea' },
-      { src: tgAhorita, cap: t('demo.c.tgWords'), alt: t('demo.c.tgWords'), bg: '#bfe3c8' },
-      { src: tgPhoto, cap: t('demo.c.photo'), alt: t('demo.c.photo'), bg: '#bfe3c8' },
-      { src: waMenu, cap: t('demo.c.waMenu'), alt: t('demo.c.waMenu'), bg: '#f4f2ea' },
+      // 17 Nov 2026: Elena's own WhatsApp + Telegram chats, each conversation joined top to bottom in its real order into
+      // one phone screen; only the lines carrying a name are left out (a thin gap marks the join).
+      { src: s1WaChat, cap: t('demo.c.waChat'), alt: t('demo.waAlt'), bg: '#efeae0' },
+      { src: s1TgChat, cap: t('demo.c.tgWords'), alt: t('demo.c.tgWords'), bg: '#bfe3c8' },
+      { src: s1TgPhoto, cap: t('demo.c.photo'), alt: t('demo.c.photo'), bg: '#bfe3c8' },
+      { src: s1WaMenu, cap: t('demo.c.menuMap'), alt: t('demo.c.menuMap'), bg: '#efeae0' },
     ] },
     { title: t('demo.s2'), line: t('demo.s2Line'), shots: [
       { src: tgClassButtons, cap: t('demo.c.oneTap'), alt: t('demo.c.oneTap'), bg: '#bfe3c8' }, // Elena's Telegram: the class is one tap from the chat

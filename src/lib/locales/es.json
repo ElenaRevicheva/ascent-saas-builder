@@ -1365,7 +1365,15 @@
       "teacher": "Una nota para la maestra",
       "tgWords": "Telegram: palabras locales",
       "photo": "Una foto, leída para ti",
-      "oneTap": "Un toque desde el chat"
-    }
+      "oneTap": "Un toque desde el chat",
+      "waChat": "WhatsApp: pregunta y recibe las palabras",
+      "menuMap": "Menú, mapa y botones de un toque",
+      "map": "Tu mapa de EspaLuz",
+      "quest": "Sobre tu nueva vida · tu familia",
+      "connect": "Conecta Telegram o WhatsApp",
+      "map2": "Invita, y su historia juntos"
+    },
+    "s0": "Configura tu familia",
+    "s0Line": "Unas preguntas sobre tu nueva vida, los miembros de tu familia y WhatsApp o Telegram conectado: así se enciende la memoria de EspaLuz para todos."
   }
 }
