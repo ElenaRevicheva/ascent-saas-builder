@@ -1336,15 +1336,17 @@
     "cancel": "Cancela cuando quieras en Google Play."
   },
   "demo": {
-    "title": "Mira una clase real",
+    "title": "Cómo funciona EspaLuz",
     "note": "Pantallas reales de la app EspaLuz (una familia de prueba, ningún niño real).",
-    "class": "Los 10 minutos de tu hijo con Pere y Titi",
     "classAlt": "Pere y Titi saludan a la niña en español con el inglés debajo; la barra muestra 1.º grado, Unidad 1 de 12, Yo y mi familia",
-    "chat": "Tus preguntas, cuando quieras: una nota para la maestra, ayuda con el inglés",
     "chatAlt": "Una madre pregunta cómo avisar a la maestra que su hija faltará; EspaLuz escribe la nota en español con el inglés",
-    "year": "Tu primer año en tu nuevo país, momento a momento",
     "yearAlt": "Tu primer año en Panamá: Fiestas Patrias, Día de la Madre, Carnaval y más, de la guía del país",
-    "tag": "Demo",
-    "count": "3 pantallas"
+    "eyebrow": "Cómo funciona",
+    "s1": "Pregunta lo que quieras, cuando quieras",
+    "s1Line": "En WhatsApp, Telegram o la web: una nota para la escuela, el médico, el español de cada día, y también el inglés.",
+    "s2": "Los 10 minutos de tu hijo con Pere y Titi",
+    "s2Line": "De 5 a 8 años, de kínder a 2.º grado: hablar, leer y dibujar, en español e inglés.",
+    "s3": "Siéntete en casa, mes a mes",
+    "s3Line": "Tu primer año en tu nuevo país: fiestas, escuela y costumbres, de una guía verificada."
   }
 }

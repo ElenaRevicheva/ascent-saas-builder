@@ -227,14 +227,11 @@ const Index = () => {
 
 
 
-      {/* 17 Nov 2026 (Elena): "See a real lesson" after the three video cards, right before "Ways to start", folded like the
-          other parts - it opens on the + (same Part component). Real screens of the live app (RealLessonDemo). */}
-      <section id="real-lesson-part" className="container mx-auto scroll-mt-20 px-4 pb-2 pt-10">
-        <div className="mx-auto max-w-5xl">
-          <Part tag={t("demo.tag")} name={t("demo.title")} count={t("demo.count")}>
-            <RealLessonDemo bare />
-          </Part>
-        </div>
+      {/* 17 Nov 2026 (Elena): "How EspaLuz works" - 3 steps, a real screen + one line each, OPEN (not folded), after the
+          three video cards and right before "Ways to start". Andy's guide: Process in 3 simple steps. */}
+      <section id="how-it-works" className="container mx-auto scroll-mt-20 px-4 pb-4 pt-12">
+        <SectionHead eyebrow={t("demo.eyebrow")} title={t("demo.title")} />
+        <RealLessonDemo />
       </section>
 
       {/* Ways to start (tree): one part, three items - WhatsApp open first. Blocks moved here unchanged. */}

@@ -8,35 +8,40 @@ import yearEs from '@/assets/demo/year-es.webp';
 import yearRu from '@/assets/demo/year-ru.webp';
 
 /*
- * 17 Nov 2026 - "See a real lesson" (Andy's funnel guide: hero -> short demo; Elena approved with a temporary test family).
- * Every reader in every test asked "is it an app, a website or a chat?". These are REAL screens of the live app, taken
- * 17 Nov 2026 with a temporary test family (parent "Ana", child "Sofi", 6, Panamá) that was deleted right after - no
- * real person in them: Pere & Titi's first-grade class (Unit 1 of 12), a grown-up chat (a note to the teacher + an
- * English correction), and the family's first year in Panamá from the checked country guide. Nothing is mocked up.
- * Phones: swipe sideways; wider screens: three in a row.
+ * 17 Nov 2026 - "How EspaLuz works": a 3-step roadmap, each step one REAL screen of the live app + one line (Elena chose
+ * a roadmap for the page and a film for promotion; open, never folded). Andy's funnel guide: "Process - make it feel easy,
+ * explain how it works in 3 simple steps". Every reader in every test asked "is it an app, a website or a chat?".
+ * Screens: taken 17 Nov 2026 with a temporary test family (parent "Ana", child "Sofi", 6, Panamá), deleted right after -
+ * no real person in them. Step 1 shows the web chat (its line says "WhatsApp, Telegram or the web"); Elena's own
+ * WhatsApp/Telegram screenshots replace it when they arrive. Nothing is mocked up.
  */
-export const RealLessonDemo = ({ bare = false }: { bare?: boolean }) => {
+export const RealLessonDemo = () => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language?.startsWith('ru') ? 'ru' : i18n.language?.startsWith('es') ? 'es' : 'en';
-  const shots = [
-    { src: classShot, caption: t('demo.class'), alt: t('demo.classAlt') },
-    { src: { en: chatEn, es: chatEs, ru: chatRu }[lang], caption: t('demo.chat'), alt: t('demo.chatAlt') },
-    { src: { en: yearEn, es: yearEs, ru: yearRu }[lang], caption: t('demo.year'), alt: t('demo.yearAlt') },
+  const steps = [
+    { src: { en: chatEn, es: chatEs, ru: chatRu }[lang], title: t('demo.s1'), line: t('demo.s1Line'), alt: t('demo.chatAlt') },
+    { src: classShot, title: t('demo.s2'), line: t('demo.s2Line'), alt: t('demo.classAlt') },
+    { src: { en: yearEn, es: yearEs, ru: yearRu }[lang], title: t('demo.s3'), line: t('demo.s3Line'), alt: t('demo.yearAlt') },
   ];
   return (
-    <section aria-label={t('demo.title')} className={bare ? 'pt-1' : 'mx-auto mb-10 max-w-5xl px-4'}>
-      {!bare && <h2 className="mb-1 text-xl font-bold text-foreground md:text-2xl">{t('demo.title')}</h2>}
-      <p className="mb-4 text-sm text-muted-foreground">{t('demo.note')}</p>
-      <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0">
-        {shots.map((s) => (
-          <figure key={s.caption} className="w-[72%] shrink-0 snap-center md:w-auto">
-            <div className="h-[420px] overflow-hidden rounded-3xl border border-border bg-card shadow-md md:h-[480px]">
-              <img src={s.src} alt={s.alt} loading="lazy" decoding="async" className="h-full w-full object-cover object-top" />
+    <div className="mx-auto max-w-5xl">
+      <ol className="grid gap-10 md:grid-cols-3 md:gap-6">
+        {steps.map((s, i) => (
+          <li key={i} className="flex flex-col items-center text-center">
+            <div className="mb-4 flex items-center gap-3 md:min-h-[3.5rem]">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-base font-bold text-primary-foreground shadow">{i + 1}</span>
+              <h3 className="text-left text-lg font-semibold leading-snug text-foreground md:text-xl">{s.title}</h3>
             </div>
-            <figcaption className="mt-2 text-sm font-medium text-foreground">{s.caption}</figcaption>
-          </figure>
+            {/* A phone-shaped window onto the real screen; the bottom fades out instead of cutting text mid-line. */}
+            <div className="relative w-[240px] overflow-hidden rounded-[2rem] border-[6px] border-foreground/85 bg-card shadow-xl md:w-[230px]" style={{ height: 380 }}>
+              <img src={s.src} alt={s.alt} loading="lazy" decoding="async" className="block h-auto w-full" />
+              <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-card to-transparent" />
+            </div>
+            <p className="mt-4 max-w-xs text-base leading-relaxed text-muted-foreground">{s.line}</p>
+          </li>
         ))}
-      </div>
-    </section>
+      </ol>
+      <p className="mt-8 text-center text-xs text-muted-foreground">{t('demo.note')}</p>
+    </div>
   );
 };
