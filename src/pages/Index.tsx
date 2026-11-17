@@ -9,6 +9,7 @@ import SubscriptionFlow from "@/components/SubscriptionFlow";
 import { Part, Item, SectionHead } from "@/components/landing/Tree";
 import { HeroClip } from "@/components/landing/HeroClip";
 import { TalkingHello } from "@/components/landing/TalkingHello";
+import { RealLessonDemo } from '@/components/landing/RealLessonDemo';
 import { SkyBackground } from "@/components/landing/SkyBackground";
 import heroWeb from '@/assets/heroes/hero-web.mp4';
 import heroWebPoster from '@/assets/heroes/hero-web-poster.jpg';
@@ -188,6 +189,8 @@ const Index = () => {
             {t("hero4.preview")}
           </Link>
         </div>
+        {/* 17 Nov 2026: "See a real lesson" - real screens of the live app, right under the button (Andy's guide). */}
+        <RealLessonDemo />
         <div className="mx-auto mb-10 grid max-w-5xl gap-4 px-4 text-left md:grid-cols-3">
           {[
             // 14 Nov 2026 (Elena approved): order You -> Your child -> Your whole family, so the page is not "for kids only".

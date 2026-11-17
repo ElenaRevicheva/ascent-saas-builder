@@ -1334,5 +1334,15 @@
     "gateUpgrade": "Continue with EspaLuz Family",
     "gateGet": "Get EspaLuz Family",
     "gatePayNote": "$11/month by PayPal, cancel any time • or $11 for 30 days with PágueloFácil: type pagar in the EspaLuz WhatsApp chat"
+  },
+  "demo": {
+    "title": "See a real lesson",
+    "note": "Real screens from the EspaLuz app (a test family, no real child).",
+    "class": "Your child's 10 minutes with Pere & Titi",
+    "classAlt": "Pere and Titi greet the child in Spanish with English below; the strip shows 1st grade, Unit 1 of 12, Me and my family",
+    "chat": "Your questions, any time: a note for the teacher, help with English",
+    "chatAlt": "A parent asks how to tell the teacher her daughter will miss school; EspaLuz writes the note in Spanish with English",
+    "year": "Your first year in your new country, moment by moment",
+    "yearAlt": "Your first year in Panamá: Fiestas Patrias, Mother's Day, Carnival and more, from the country guide"
   }
 }

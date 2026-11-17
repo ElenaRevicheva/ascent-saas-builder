@@ -1334,5 +1334,15 @@
     "buy": "Suscribirme con Google Play",
     "fail": "No se completó. No se cobró nada extra.",
     "cancel": "Cancela cuando quieras en Google Play."
+  },
+  "demo": {
+    "title": "Mira una clase real",
+    "note": "Pantallas reales de la app EspaLuz (una familia de prueba, ningún niño real).",
+    "class": "Los 10 minutos de tu hijo con Pere y Titi",
+    "classAlt": "Pere y Titi saludan a la niña en español con el inglés debajo; la barra muestra 1.º grado, Unidad 1 de 12, Yo y mi familia",
+    "chat": "Tus preguntas, cuando quieras: una nota para la maestra, ayuda con el inglés",
+    "chatAlt": "Una madre pregunta cómo avisar a la maestra que su hija faltará; EspaLuz escribe la nota en español con el inglés",
+    "year": "Tu primer año en tu nuevo país, momento a momento",
+    "yearAlt": "Tu primer año en Panamá: Fiestas Patrias, Día de la Madre, Carnaval y más, de la guía del país"
   }
 }
