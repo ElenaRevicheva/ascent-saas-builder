@@ -1337,7 +1337,7 @@
   },
   "demo": {
     "title": "How EspaLuz works",
-    "note": "Real screens: WhatsApp and Telegram from our own phones (names hidden); the app with a test family, no real child.",
+    "note": "Real screens, captured 17 Nov 2026: WhatsApp and Telegram from our own phones (names hidden; long chats joined top to bottom, in their real order); the app with a test family, no real child.",
     "classAlt": "Pere and Titi greet the child in Spanish with English below; the strip shows 1st grade, Unit 1 of 12, Me and my family",
     "chatAlt": "A parent asks how to tell the teacher her daughter will miss school; EspaLuz writes the note in Spanish with English",
     "yearAlt": "Your first year in Panamá: Fiestas Patrias, Mother's Day, Carnival and more, from the country guide",
@@ -1347,7 +1347,7 @@
     "s2": "Your child's 10 minutes with Pere & Titi",
     "s2Line": "Ages 5–8, kinder to 2nd grade, inspired by international bilingual schools: talking, reading and counting games in Spanish and English. Pere and Titi praise every try and show the right sentence - and EspaLuz drops in with a short video.",
     "s3": "Feel at home, month by month",
-    "s3Line": "Your first year in your new country - holidays, school and customs from a checked guide - and you can rehearse a job interview or a school meeting face to face with EspaLuz.",
+    "s3Line": "Your first year in your new country - holidays, school and customs from a checked guide - and you can rehearse a job interview or a school meeting: EspaLuz plays the other person in Spanish, and you answer by voice or by typing.",
     "waAlt": "A WhatsApp chat: a parent asks what to bring to lunch with Panamanian neighbours; EspaLuz shows the question in Spanish and English",
     "step": "Step {{n}}",
     "c": {
