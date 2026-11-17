@@ -30,7 +30,7 @@ import lessonsEs from '@/assets/demo/lessons-es.webp';
 import lessonsRu from '@/assets/demo/lessons-ru.webp';
 
 /*
- * 17 Nov 2026 - "How EspaLuz works": a 3-step roadmap, each step a full-width row of REAL screens (Elena: "the roadmap
+ * 17 Nov 2026 - "How EspaLuz works": a 4-step roadmap, each step a full-width row of REAL screens (Elena: "the roadmap
  * should take its place all over the screen"; a roadmap for the page, a film for promotion; open, never folded).
  * Andy's funnel guide: "Process - explain how it works in 3 simple steps".
  * Real screens only, nothing mocked up or edited inside a picture:
