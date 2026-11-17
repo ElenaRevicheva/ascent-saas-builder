@@ -189,8 +189,6 @@ const Index = () => {
             {t("hero4.preview")}
           </Link>
         </div>
-        {/* 17 Nov 2026: "See a real lesson" - real screens of the live app, right under the button (Andy's guide). */}
-        <RealLessonDemo />
         <div className="mx-auto mb-10 grid max-w-5xl gap-4 px-4 text-left md:grid-cols-3">
           {[
             // 14 Nov 2026 (Elena approved): order You -> Your child -> Your whole family, so the page is not "for kids only".
@@ -228,6 +226,16 @@ const Index = () => {
       </section>
 
 
+
+      {/* 17 Nov 2026 (Elena): "See a real lesson" after the three video cards, right before "Ways to start", folded like the
+          other parts - it opens on the + (same Part component). Real screens of the live app (RealLessonDemo). */}
+      <section id="real-lesson-part" className="container mx-auto scroll-mt-20 px-4 pb-2 pt-10">
+        <div className="mx-auto max-w-5xl">
+          <Part tag={t("demo.tag")} name={t("demo.title")} count={t("demo.count")}>
+            <RealLessonDemo bare />
+          </Part>
+        </div>
+      </section>
 
       {/* Ways to start (tree): one part, three items - WhatsApp open first. Blocks moved here unchanged. */}
       <section id="start" className="container mx-auto scroll-mt-20 px-4 py-14">

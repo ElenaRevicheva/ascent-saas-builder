@@ -1343,6 +1343,8 @@
     "chat": "Tus preguntas, cuando quieras: una nota para la maestra, ayuda con el inglés",
     "chatAlt": "Una madre pregunta cómo avisar a la maestra que su hija faltará; EspaLuz escribe la nota en español con el inglés",
     "year": "Tu primer año en tu nuevo país, momento a momento",
-    "yearAlt": "Tu primer año en Panamá: Fiestas Patrias, Día de la Madre, Carnaval y más, de la guía del país"
+    "yearAlt": "Tu primer año en Panamá: Fiestas Patrias, Día de la Madre, Carnaval y más, de la guía del país",
+    "tag": "Demo",
+    "count": "3 pantallas"
   }
 }

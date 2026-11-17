@@ -15,7 +15,7 @@ import yearRu from '@/assets/demo/year-ru.webp';
  * English correction), and the family's first year in Panamá from the checked country guide. Nothing is mocked up.
  * Phones: swipe sideways; wider screens: three in a row.
  */
-export const RealLessonDemo = () => {
+export const RealLessonDemo = ({ bare = false }: { bare?: boolean }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language?.startsWith('ru') ? 'ru' : i18n.language?.startsWith('es') ? 'es' : 'en';
   const shots = [
@@ -24,8 +24,8 @@ export const RealLessonDemo = () => {
     { src: { en: yearEn, es: yearEs, ru: yearRu }[lang], caption: t('demo.year'), alt: t('demo.yearAlt') },
   ];
   return (
-    <section aria-labelledby="real-lesson" className="mx-auto mb-10 max-w-5xl px-4">
-      <h2 id="real-lesson" className="mb-1 text-xl font-bold text-foreground md:text-2xl">{t('demo.title')}</h2>
+    <section aria-label={t('demo.title')} className={bare ? 'pt-1' : 'mx-auto mb-10 max-w-5xl px-4'}>
+      {!bare && <h2 className="mb-1 text-xl font-bold text-foreground md:text-2xl">{t('demo.title')}</h2>}
       <p className="mb-4 text-sm text-muted-foreground">{t('demo.note')}</p>
       <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0">
         {shots.map((s) => (
