@@ -1345,9 +1345,9 @@
     "s1": "Ask anything, any time",
     "s1Line": "On WhatsApp, Telegram or the web: ask in your own language - EspaLuz shows it in Spanish and answers in both.",
     "s2": "Your child's 10 minutes with Pere & Titi",
-    "s2Line": "Ages 5–8, kinder to 2nd grade: talk, read and draw, in Spanish and English.",
+    "s2Line": "Ages 5–8, kinder to 2nd grade, inspired by international bilingual schools: talking, reading and counting games in Spanish and English. Pere and Titi praise every try and show the right sentence - and EspaLuz drops in with a short video.",
     "s3": "Feel at home, month by month",
-    "s3Line": "Your first year in your new country - holidays, school and customs, from a checked guide.",
+    "s3Line": "Your first year in your new country - holidays, school and customs from a checked guide - and you can rehearse a job interview or a school meeting face to face with EspaLuz.",
     "waAlt": "A WhatsApp chat: a parent asks what to bring to lunch with Panamanian neighbours; EspaLuz shows the question in Spanish and English",
     "step": "Step {{n}}",
     "c": {
@@ -1371,7 +1371,13 @@
       "map": "Your EspaLuz map",
       "quest": "About your new life · your family",
       "connect": "Connect Telegram or WhatsApp",
-      "map2": "Invite, and your story together"
+      "map2": "Invite, and your story together",
+      "webChat": "The web: a note and English help",
+      "espaluzClass": "EspaLuz drops into the class",
+      "titiGame": "Titi's mistake - your child fixes it",
+      "reading": "Reading corner: syllables",
+      "counting": "Counting with mangos",
+      "practice": "Rehearse an interview with EspaLuz"
     },
     "s0": "Set up your family",
     "s0Line": "A few questions about your new life, your family members, and WhatsApp or Telegram connected - this switches on EspaLuz's memory for all of you."

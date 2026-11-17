@@ -1345,9 +1345,9 @@
     "s1": "Pregunta lo que quieras, cuando quieras",
     "s1Line": "En WhatsApp, Telegram o la web: pregunta en tu idioma; EspaLuz te lo muestra en español y responde en los dos.",
     "s2": "Los 10 minutos de tu hijo con Pere y Titi",
-    "s2Line": "De 5 a 8 años, de kínder a 2.º grado: hablar, leer y dibujar, en español e inglés.",
+    "s2Line": "De 5 a 8 años, de kínder a 2.º grado, inspirado en las escuelas bilingües internacionales: juegos para hablar, leer y contar en español e inglés. Pere y Titi celebran cada intento y muestran la frase correcta, y EspaLuz se asoma con un video corto.",
     "s3": "Siéntete en casa, mes a mes",
-    "s3Line": "Tu primer año en tu nuevo país: fiestas, escuela y costumbres, de una guía verificada.",
+    "s3Line": "Tu primer año en tu nuevo país (fiestas, escuela y costumbres de una guía verificada) y puedes ensayar una entrevista de trabajo o una reunión en la escuela cara a cara con EspaLuz.",
     "waAlt": "Un chat de WhatsApp: una madre pregunta qué llevar a un almuerzo con vecinos panameños; EspaLuz muestra la pregunta en español e inglés",
     "step": "Paso {{n}}",
     "c": {
@@ -1371,7 +1371,13 @@
       "map": "Tu mapa de EspaLuz",
       "quest": "Sobre tu nueva vida · tu familia",
       "connect": "Conecta Telegram o WhatsApp",
-      "map2": "Invita, y su historia juntos"
+      "map2": "Invita, y su historia juntos",
+      "webChat": "La web: una nota y ayuda con el inglés",
+      "espaluzClass": "EspaLuz se asoma a la clase",
+      "titiGame": "El error de Titi: tu hijo lo corrige",
+      "reading": "Rincón de lectura: sílabas",
+      "counting": "Contar con mangos",
+      "practice": "Ensaya una entrevista con EspaLuz"
     },
     "s0": "Configura tu familia",
     "s0Line": "Unas preguntas sobre tu nueva vida, los miembros de tu familia y WhatsApp o Telegram conectado: así se enciende la memoria de EspaLuz para todos."
