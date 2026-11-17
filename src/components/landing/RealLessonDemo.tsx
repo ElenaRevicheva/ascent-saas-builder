@@ -3,6 +3,7 @@ import waQ from '@/assets/demo/wa-q2.webp';
 import waTeacher from '@/assets/demo/wa-teacher.webp';
 import tgAhorita from '@/assets/demo/tg-ahorita.webp';
 import tgPhoto from '@/assets/demo/tg-photo.webp';
+import tgClassButtons from '@/assets/demo/tg-class-buttons.webp';
 import waMenu from '@/assets/demo/wa-menu.webp';
 import classStart from '@/assets/demo/class-start.webp';
 import classShot from '@/assets/demo/class.webp';
@@ -50,6 +51,7 @@ export const RealLessonDemo = () => {
       { src: waMenu, cap: t('demo.c.waMenu'), alt: t('demo.c.waMenu'), bg: '#f4f2ea' },
     ] },
     { title: t('demo.s2'), line: t('demo.s2Line'), shots: [
+      { src: tgClassButtons, cap: t('demo.c.oneTap'), alt: t('demo.c.oneTap'), bg: '#bfe3c8' }, // Elena's Telegram: the class is one tap from the chat
       { src: classStart, cap: t('demo.c.start'), alt: t('demo.c.start'), fill: true },
       { src: classShot, cap: t('demo.c.class'), alt: t('demo.classAlt') },
       { src: classTools, cap: t('demo.c.tools'), alt: t('demo.c.tools'), fill: true },

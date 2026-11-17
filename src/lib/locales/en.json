@@ -1364,7 +1364,8 @@
       "video": "Video moments",
       "teacher": "A note for the teacher",
       "tgWords": "Telegram: local words",
-      "photo": "A photo, read for you"
+      "photo": "A photo, read for you",
+      "oneTap": "One tap from the chat"
     }
   }
 }
