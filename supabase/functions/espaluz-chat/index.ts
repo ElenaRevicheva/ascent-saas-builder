@@ -403,7 +403,7 @@ Bring up at most ONE, only when it truly fits, the way a friend would. Never lis
 THIS FAMILY: ${familyNotes.members.map((m: any) => `${m.name} (${m.role}${m.age ? `, ${m.age}` : ''})`).join('; ')}. Use these exact name spellings. These are ALL the members of this family's account. If asked who is in the family or about a member, ANSWER from this list first (name, role, age), then go on like a friend who remembers, not a lesson. Never invent a relative, spouse, surname or age and never merge two people. The account's name is only an account name: never give the person writing a family role (mother, father, grandparent) and never add them to the family unless this list or 'You are talking with' says so. The list says only adult or child: never name how members are related (partner, husband, wife, son, daughter) unless the list says so.${familyNotes.speaker ? ` You are talking with ${familyNotes.speaker}.` : ''}${familyNotes.lessons?.length ? `
 Recent classroom lessons with the child: ${familyNotes.lessons.join(' | ')}. If asked, say what was covered; a child's own words stay with the parent report.` : ''}
 ` : ''}
-${ESPALUZ_COMPANION_RULES}
+${familyNotes ? MESSAGE_FIRST : ''}${ESPALUZ_COMPANION_RULES}
 ${belongingBlock(familyNotes?.profile?.country_now || 'panama')}${familyNotes ? profileLine(familyNotes.profile) : ''}${familyNotes?.callback ?? ''}
 RESPONSE FORMAT - two parts:
 1️⃣ Your reply, following HOW YOU TALK above (their length; a short message gets a short answer). Never use asterisks.
@@ -1661,6 +1661,15 @@ async function callChain(request: any): Promise<{ result: any; provider: string 
 // 6 Nov 2026 (Elena: "firstly it is about memory, because it will follow the long road"): the web chat kept only its last
 // 8 turns and could not see what the bots knew. Now one notebook per family: rows in learning_sessions, shared with the
 // bots through kids-memory (facts_get / facts_add). FACTS_SYSTEM is the twin of _FACTS_SYSTEM in the bots' espaluz_memory.py.
+// 17 Nov 2026 (Elena's test: "my SON has a fever" got "tu hija Alisa"; "our PANAMANIAN neighbours" got "aquí en Cuba").
+// TWIN of MESSAGE_FIRST_RULE in both bots' espaluz_enhancements.py. This answer follows the message; ONE warm check at the
+// end; the remembered family stays as it is (FACTS_SYSTEM does not save a passing mention).
+const MESSAGE_FIRST = "\nTHE MESSAGE COMES FIRST: if THIS message names a family member, relation, age or country that differs from what you " +
+  "remember (they write 'my son' and you remember only a daughter; they say 'our Panamanian neighbours' and the notes say " +
+  "another country), answer THEIR question exactly as they wrote it - never swap in the remembered name, child or country. " +
+  "At the very end add ONE short warm check in both languages, e.g. 'Is this someone new? I have <remembered name> as your " +
+  "daughter.' or 'Are you in Panama now?'. Do not treat the new detail as settled and do not repeat it later unless they " +
+  "confirm it; the family you remember stays the same.\n";
 const FACTS_SYSTEM = "You keep a small private notebook about a family for their friendly assistant EspaLuz. From the USER MESSAGE " +
   "ONLY, write 0 to 3 LASTING facts about their life worth remembering next week: names and ages of family members, pets, their " +
   "city or neighbourhood, a child's school or grade, their job, an upcoming appointment, move or event (with its date if given), " +
@@ -1670,7 +1679,8 @@ const FACTS_SYSTEM = "You keep a small private notebook about a family for their
   "passport or cédula numbers, phone numbers, emails, street addresses, card or bank details; and no health details beyond 'has a " +
   "doctor's appointment'. If nothing lasting: reply NONE." +
   " Use the exact spellings in FAMILY NAMES: if a name sounds like one of them (Elisa for Alisa), write the family spelling. Write the SPEAKER's name, never 'the user'. If a fact has a natural end (this week's holiday, Monday's appointment), end its line with [until YYYY-MM-DD], working from TODAY. Start the line with [private] for any worry, money or health matter. If the message corrects a KNOWN FACT, write instead: REPLACES: <the known fact, exactly> => <the corrected fact>." +
-  " A question is not a fact. Never restate, combine or guess from KNOWN FACTS: write only what THIS message newly says, and never join two people into one name.";
+  " A question is not a fact. Never restate, combine or guess from KNOWN FACTS: write only what THIS message newly says, and never join two people into one name." +
+  " A detail mentioned in passing inside a question or a request for help (\"my son has a fever, what do I say?\") that differs from FAMILY NAMES or KNOWN FACTS is NOT a fact and NOT a REPLACES - EspaLuz asks first. Write REPLACES or a new family member only when the message itself states it plainly (\"yes, Igor is my son, he is 3\", \"we moved from Cuba to Panama\").";
 
 // 8 Nov 2026 (Elena's family test): she ASKED "Who is my family?" and the bots noted "Elena is a single parent" and "Alisa
 // Marshall, daughter" (two people merged) - restated from older notes, never said. Twins of has_statement / names_grounded
