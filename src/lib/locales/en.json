@@ -36,7 +36,8 @@
     "greeting": "Hello",
     "signOut": "Sign Out",
     "welcomeSettle": "Welcome to your life in {{country}}!",
-    "subtitleSettle": "EspaLuz helps your family feel at home here: this country's own words and ways, the kids' class, and English practice - on WhatsApp, Telegram and here."
+    "subtitleSettle": "EspaLuz helps your family feel at home here: this country's own words and ways, the kids' class, and English practice - on WhatsApp, Telegram and here.",
+    "yourNewCountry": "your new country"
   },
   "account": {
     "title": "Your Spanish Journey",
@@ -661,7 +662,8 @@
     "fewerPhrases": "Show fewer",
     "showTalks": "Your conversations ({{count}})",
     "hideTalks": "Hide conversations",
-    "listen": "Listen"
+    "listen": "Listen",
+    "titleSettle": "Your journey here"
   },
   "fy": {
     "title": "Your first year in {{country}}",
@@ -892,7 +894,8 @@
     "openWa": "Open WhatsApp",
     "openTg": "Open Telegram",
     "connect": "Connect",
-    "invite": "Invite"
+    "invite": "Invite",
+    "webChatTitleSettle": "English and your new country, here on the web"
   },
   "story": {
     "title": "Your life in {{country}}, with EspaLuz",
@@ -1001,7 +1004,8 @@
     "saved_one": "Done: EspaLuz will bring {{count}} thing from your family world into your Spanish - here, on WhatsApp and on Telegram.",
     "saved_other": "Done: EspaLuz will bring {{count}} things from your family world into your Spanish - here, on WhatsApp and on Telegram.",
     "nothing": "EspaLuz could not see anything clear to remember. Try a clip with your pet, a hobby or your home.",
-    "failed": "Something went wrong. Please try again."
+    "failed": "Something went wrong. Please try again.",
+    "nativeSpanish": "Spanish: native"
   },
   "opts": {
     "title": "Choose Your Learning Experience",
@@ -1144,7 +1148,8 @@
       "puerto_rico": "Puerto Rico",
       "venezuela": "Venezuela",
       "equatorial_guinea": "Equatorial Guinea"
-    }
+    },
+    "titleSettle": "Lessons for life in {{country}}"
   },
   "lesson": {
     "notFound": "Lesson not found",

@@ -12,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { familyMemberSchema } from '@/lib/validations';
+import { readFamilyProfile, settlesProfile } from './FamilyProfileDialog';
 
 interface FamilyMember {
   id: string;
@@ -55,6 +56,9 @@ const LEVEL_OPTIONS = [
 export const FamilyMembersManager = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  // 18 Nov 2026: a family that already speaks Spanish is not 'Beginner' in Spanish - its card says so (the stored level stays).
+  const [settling, setSettling] = useState(false);
+  useEffect(() => { if (user) readFamilyProfile(user.id).then((p) => setSettling(settlesProfile(p))).catch(() => undefined); }, [user]);
   const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<FamilyMember | null>(null);
@@ -399,7 +403,7 @@ export const FamilyMembersManager = () => {
                       {t(`fam.roles.${member.role}`, { defaultValue: member.role })}
                     </Badge>
                     <Badge variant="outline" className="text-xs">
-                      {t(`fam.levels.${member.learning_level}`, { defaultValue: member.learning_level })}
+                      {settling ? t('fam.nativeSpanish') : t(`fam.levels.${member.learning_level}`, { defaultValue: member.learning_level })}
                     </Badge>
                   </div>
                   <div className="text-sm text-muted-foreground">
@@ -407,7 +411,7 @@ export const FamilyMembersManager = () => {
                     <span className="mx-2">•</span>
                     <span>{t('fam.toneLine', { tone: t(`fam.tones.${member.tone}`, { defaultValue: member.tone }) })}</span>
                     <span className="mx-2">•</span>
-                    <span>{t('fam.spanishLine', { pct: Math.round(member.spanish_preference * 100) })}</span>
+                    {!settling && <span>{t('fam.spanishLine', { pct: Math.round(member.spanish_preference * 100) })}</span>}
                   </div>
                    {member.interests && (Array.isArray(member.interests) ? member.interests.length > 0 : member.interests.length > 0) && (
                      <div className="text-xs text-muted-foreground mt-1">

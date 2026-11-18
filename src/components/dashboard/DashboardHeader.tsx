@@ -29,7 +29,9 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
     if (!settleUser) return;
     readFamilyProfile(settleUser.id).then((p) => {
       if (!settlesProfile(p)) return;
-      setSettleIn(PACK_COUNTRIES.find(([k]) => k === String(p?.country_now ?? ''))?.[1] ?? '');
+      const key = String(p?.country_now ?? '');
+      const en = PACK_COUNTRIES.find(([k]) => k === key)?.[1] ?? '';
+      setSettleIn(en ? t(`lm.country.${key}`, { defaultValue: en }) : t('dashboard.yourNewCountry'));
     }).catch(() => undefined);
   }, [settleUser]);
   // 11 Nov 2026: greet by first name only ("Hello, Kira!"), the way a friend would. The email fallback is gone:

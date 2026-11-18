@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { insidePlayApp } from '@/lib/playBilling';
 import { OurStoryCard } from './OurStoryCard';
-import { FamilyProfileDialog, readFamilyProfile, PACK_COUNTRIES } from './FamilyProfileDialog';
+import { FamilyProfileDialog, readFamilyProfile, PACK_COUNTRIES, settlesProfile } from './FamilyProfileDialog';
 
 /*
  * 4 Nov 2026 (Elena): the roadmap stays visible for every family - trial or paying - and ticks the steps it has
@@ -51,6 +51,7 @@ export const FamilyRoadmap = () => {
   // 8 Nov 2026 (Elena): step 1 is "About your new life" - the questionnaire every family meets first.
   const [profileOpen, setProfileOpen] = useState(false);
   const [profileTick, setProfileTick] = useState(0);
+  const [settling, setSettling] = useState(false); // 18 Nov 2026: native Spanish speakers settling in
 
   useEffect(() => {
     if (!user) return;
@@ -74,6 +75,7 @@ export const FamilyRoadmap = () => {
         readFamilyProfile(uid),
       ]);
       if (cancelled) return;
+      setSettling(settlesProfile(profile));
 
       const memberRows = (members.data ?? []) as { role: string | null }[];
       const kids = memberRows.filter((m) => (m.role ?? '').toLowerCase() === 'child').length;
@@ -133,7 +135,7 @@ export const FamilyRoadmap = () => {
       action: t('map.familyMembers'), onClick: () => scrollToSelector('[data-family-members]', !facts?.family.done) },
     { key: 'classroom', title: t('map.classroomTitle'), who: t('map.kids58'), color: '--espaluz-yellow', icon: Smile,
       action: t('fw.openClass'), to: '/classroom' },
-    { key: 'webChat', title: t('map.webChatTitle'), who: t('map.parents'), color: '--espaluz-purple', icon: MessageCircle,
+    { key: 'webChat', title: settling ? t('map.webChatTitleSettle') : t('map.webChatTitle'), who: t('map.parents'), color: '--espaluz-purple', icon: MessageCircle,
       action: t('map.openChat'), onClick: () => scrollToSelector('#chat') },
     { key: 'whatsapp', title: t('map.waTitle'), who: t('map.kidsParents'), color: '--espaluz-green', icon: Phone,
       action: facts?.whatsapp.done ? t('map.openWa') : t('map.connect'), ...(facts?.whatsapp.done ? { href: WHATSAPP_URL } : { to: '/connect-bot' }) },

@@ -109,7 +109,7 @@ export const LearningModules = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Trophy className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
-          {t('lm.title')}
+          {settling && countryLessons.length ? t('lm.titleSettle', { country: countryKey ? t(`lm.country.${countryKey}`, { defaultValue: countryName }) : countryName }) : t('lm.title')}
         </CardTitle>
         {countryName && (
           <p className="text-sm text-muted-foreground">{t('lm.livingIn', { country: t(`lm.country.${countryKey}`, { defaultValue: countryName }) })}</p>

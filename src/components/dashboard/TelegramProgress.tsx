@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { phrasesIn } from '../../../supabase/functions/_shared/phrases';
+import { readFamilyProfile, settlesProfile } from './FamilyProfileDialog';
 
 /*
  * "Your Spanish journey" - the same block, layout and buttons as the old "Telegram Bot Learning Journey" (Elena, 15 Nov
@@ -50,6 +51,9 @@ export const TelegramProgress = () => {
   const [tipState, setTipState] = useState<'idle' | 'loading' | 'done'>('idle');
   const [allPhrases, setAllPhrases] = useState(false);
   const [showTalks, setShowTalks] = useState(false);
+  // 18 Nov 2026: a family settling in (already speaks Spanish) is not on a 'Spanish journey'.
+  const [settling, setSettling] = useState(false);
+  useEffect(() => { if (user) readFamilyProfile(user.id).then((p) => setSettling(settlesProfile(p))).catch(() => undefined); }, [user]);
 
   const load = useCallback(async (showLoading = true) => {
     if (!user) return;
@@ -174,7 +178,7 @@ export const TelegramProgress = () => {
                 <MessageSquare className="h-6 w-6 text-[hsl(var(--espaluz-primary))]" />
               </div>
               <div>
-                <h2 className="text-xl font-bold">{t('jr.title')}</h2>
+                <h2 className="text-xl font-bold">{settling ? t('jr.titleSettle') : t('jr.title')}</h2>
                 <p className="text-sm text-muted-foreground font-normal">{t('jr.sub')}</p>
               </div>
             </CardTitle>
