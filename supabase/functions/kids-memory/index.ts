@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { brainShare, brainShareText } from '../_shared/brain_share.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
 import { memoryCallback } from '../_shared/memory_callback.ts';
 
@@ -189,8 +190,13 @@ serve(async (req) => {
         // 15 Nov 2026: "How did Alisa's first day back go?" - only when the bot asks while writing a reply (with_callback),
         // never on the link or payment checks, which also call facts_get and would use the moment up (_shared/memory_callback.ts).
         const callback = body.with_callback ? await memoryCallback(db, userId, platform) : '';
+        // 18 Nov 2026: what the other parts learned (phrases taught, the child's class, the last rehearsal) - one reader and
+        // one rule text for web and both bots (_shared/brain_share.ts). A child on this phone gets none of the parent notes.
+        const speakerIsChild = !!speaker && members.some((m: any) => m.name === speaker && m.role === 'child');
+        const share = speakerIsChild ? null : await brainShare(db, userId).catch(() => null);
+        const share_text = share ? brainShareText(share) : '';
         return json({ linked: true, family: famHash, family_paying: !!paidRows?.length, family_access: !!paidRows?.length || freeDays, facts: ordered.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean).slice(0, 15),
-          world, members, speaker, lessons, lesson_turns: les?.length ?? 0, profile, callback });
+          world, share_text, members, speaker, lessons, lesson_turns: les?.length ?? 0, profile, callback });
       }
       const words = (t: string) => new Set(t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/[a-z0-9]+/g) ?? []);
       const same = (a: string, b: string) => { const A = words(a), B = words(b); if (!A.size || !B.size) return false;

@@ -3,6 +3,7 @@ import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
 import { kidsTidyReply, kidsClassDaysDone, kidsGreetedRecently } from './kids_tidy.ts';
+import { brainShare, brainShareText } from '../_shared/brain_share.ts';
 // 8 Nov 2026 (Elena: "what lasts is your new life"): the checked belonging pack, one file for web + WhatsApp + Telegram.
 import argentinaPack from '../_shared/belonging/argentina.json' with { type: 'json' };
 import boliviaPack from '../_shared/belonging/bolivia.json' with { type: 'json' };
@@ -406,7 +407,7 @@ THIS FAMILY: ${familyNotes.members.map((m: any) => `${m.name} (${m.role}${m.age 
 Recent classroom lessons with the child: ${familyNotes.lessons.join(' | ')}. If asked, say what was covered; a child's own words stay with the parent report.` : ''}
 ` : ''}
 ${familyNotes ? MESSAGE_FIRST : ''}${ESPALUZ_COMPANION_RULES}
-${belongingBlock(familyNotes?.profile?.country_now || 'panama')}${familyNotes ? profileLine(familyNotes.profile) : ''}${familyNotes?.callback ?? ''}
+${belongingBlock(familyNotes?.profile?.country_now || 'panama')}${familyNotes ? profileLine(familyNotes.profile) : ''}${familyNotes?.callback ?? ''}${familyNotes?.share ?? ''}
 RESPONSE FORMAT - two parts:
 1️⃣ Your reply, following HOW YOU TALK above (their length; a short message gets a short answer). Never use asterisks.
 2️⃣ A short spoken line for the video, 1-2 sentences in Spanish and English, no emojis:
@@ -1707,7 +1708,7 @@ function namesGrounded(fact: string, text: string, allowed: string[]): boolean {
   return true;
 }
 
-type FamilyNotes = { rows: any[]; facts: string[]; world?: string[]; members: { name: string; role: string; age: number | null }[]; speaker: string; lessons: string[]; profile: Record<string, any>; callback?: string };
+type FamilyNotes = { rows: any[]; facts: string[]; world?: string[]; share?: string; members: { name: string; role: string; age: number | null }[]; speaker: string; lessons: string[]; profile: Record<string, any>; callback?: string };
 const notebook = () => createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
 
 // The web account is the parent's window: it reads shared notes and the parent's private ones.
@@ -2307,6 +2308,8 @@ ${asked}` : ''}`;
     const familyNotes = !kids && !fromBot && userId ? await readFamilyNotes(userId) : null;
     // 15 Nov 2026: "How did Alisa's first day back go?" - the same follow-up rule as the bots (_shared/memory_callback.ts).
     if (familyNotes && userId) familyNotes.callback = await memoryCallback(notebook(), userId, 'web');
+    // 18 Nov 2026: what the other parts learned - the same reader and text the bots get (_shared/brain_share.ts).
+    if (familyNotes && userId) familyNotes.share = brainShareText(await brainShare(notebook(), userId).catch(() => ({ phrases: [], classRecent: null, practice: null })));
     // 16 Nov 2026: "Quiero aprender inglés" / "I want to improve my English" said in the chat switches the English coach
     // on (same note as the questionnaire), once - an answer already given on the web is never overwritten here.
     if (familyNotes && userId && !familyNotes.profile.learn && WANTS_ENGLISH_SAID.test(String(message ?? ''))) {
