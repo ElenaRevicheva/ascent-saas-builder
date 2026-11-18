@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { MessageSquare, BookOpen, Clock, Trophy, RefreshCw, AlertCircle, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
+import { MessageSquare, BookOpen, Clock, Trophy, RefreshCw, AlertCircle, ChevronDown, ChevronUp, Sparkles, Volume2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
@@ -258,7 +258,14 @@ export const TelegramProgress = () => {
               <div className="space-y-2">
                 {(allPhrases ? collected : collected.slice(0, 6)).map((c) => (
                   <div key={c.es} className="rounded-lg bg-primary/5 p-3">
-                    <p className="font-medium text-foreground">{c.es}</p>
+                    {/* 17 Nov 2026 (readers: "let me hear how to say it"): the browser's own Spanish voice, as in the lessons. */}
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="font-medium text-foreground">{c.es}</p>
+                      <button type="button" aria-label={t('jr.listen')} className="shrink-0 rounded-full p-1.5 text-[hsl(var(--espaluz-primary))] hover:bg-primary/10"
+                        onClick={() => { try { const u = new SpeechSynthesisUtterance(c.es); u.lang = 'es-ES'; u.rate = 0.85; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch { /* no voice on this device */ } }}>
+                        <Volume2 className="h-4 w-4" />
+                      </button>
+                    </div>
                     {c.en && <p className="text-sm text-muted-foreground">{c.en}</p>}
                     <p className="mt-1 text-xs text-muted-foreground/80">{label(c.channel)} · {new Date(c.at).toLocaleDateString(i18n.language || undefined, { month: 'short', day: 'numeric' })}</p>
                   </div>

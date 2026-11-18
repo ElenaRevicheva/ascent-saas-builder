@@ -550,7 +550,8 @@
     "allPhrases": "Ver las {{count}} frases",
     "fewerPhrases": "Ver menos",
     "showTalks": "Tus conversaciones ({{count}})",
-    "hideTalks": "Ocultar conversaciones"
+    "hideTalks": "Ocultar conversaciones",
+    "listen": "Escuchar"
   },
   "fy": {
     "title": "Tu primer año en {{country}}",

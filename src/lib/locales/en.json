@@ -657,7 +657,8 @@
     "allPhrases": "Show all {{count}} phrases",
     "fewerPhrases": "Show fewer",
     "showTalks": "Your conversations ({{count}})",
-    "hideTalks": "Hide conversations"
+    "hideTalks": "Hide conversations",
+    "listen": "Listen"
   },
   "fy": {
     "title": "Your first year in {{country}}",

@@ -99,7 +99,7 @@ export const IntroduceFamily = () => {
             })}
           </div>
           <div className="mt-3 flex gap-2">
-            <Button size="sm" onClick={save}>{t('fam.keep', { count: ticked.size })}</Button>
+            <Button size="sm" onClick={save} disabled={!ticked.size}>{t('fam.keep', { count: ticked.size })}</Button>
             <Button size="sm" variant="ghost" onClick={() => { setPhase('idle'); setNotes([]); }}>{t('fam.cancel')}</Button>
           </div>
         </div>

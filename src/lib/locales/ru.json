@@ -669,7 +669,8 @@
     "allPhrases": "Показать все {{count}} фраз",
     "fewerPhrases": "Показать меньше",
     "showTalks": "Ваши разговоры ({{count}})",
-    "hideTalks": "Скрыть разговоры"
+    "hideTalks": "Скрыть разговоры",
+    "listen": "Послушать"
   },
   "fy": {
     "title": "Ваш первый год: {{country}}",
