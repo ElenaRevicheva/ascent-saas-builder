@@ -578,7 +578,7 @@
     "nextTitle": "Your next step",
     "stepComing": "Coming up: {{fact}} Rehearse it with EspaLuz before the day.",
     "stepRehearse": "Rehearse a moment that is coming - an interview, a school meeting, a visit to the doctor - with EspaLuz playing the other person.",
-    "stepClass": "{{name}} has not had a class for 3 days. Ten minutes with Pere & Titi keeps the habit.",
+    "stepClass": "Time for {{name}}'s ten minutes with Pere & Titi - a short class every few days keeps the habit.",
     "practiseIt": "Practise it",
     "openClass": "Open the classroom",
     "phrasesTitle": "Phrases to keep",
@@ -616,7 +616,8 @@
       "rehearse": "a rehearsal",
       "class": "a class with Pere & Titi",
       "step": "a next step"
-    }
+    },
+    "allPhrases": "All {{count}} phrases, with EspaLuz's tip"
   },
   "jr": {
     "title": "Your Spanish journey",
@@ -828,7 +829,8 @@
     "step2Title": "They sign up",
     "step2Body": "Your friend creates an account with your link",
     "step3Title": "You both get a reward",
-    "step3Body": "You both get 1 month free when they subscribe"
+    "step3Body": "You both get 1 month free when they subscribe",
+    "fold": "Invite a friend: you both get a month free"
   },
   "hdr": {
     "kidsClassroom": "Kids classroom",

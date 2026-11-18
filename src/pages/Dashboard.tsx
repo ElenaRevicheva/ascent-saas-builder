@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSubscription } from '@/hooks/useSubscription';
@@ -24,6 +25,7 @@ import { insidePlayApp, restorePlayPurchases } from '@/lib/playBilling';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const Dashboard = () => {
+  const { t } = useTranslation();
   const { user, signOut } = useAuth();
   const { 
     planType, 
@@ -180,10 +182,12 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Referral System */}
-        <div className="mb-8" data-referrals>
-          <ReferralSystem />
-        </div>
+        {/* Referral System. 18 Nov 2026: whole-dashboard readers scored the two referral cards 1/5 in EN/ES/RU ("takes
+            prime screen space on day two") - folded into one line; card 7 of the map ("Invite") opens it. */}
+        <details className="mb-8 rounded-xl border border-border/60 bg-card" data-referrals>
+          <summary className="cursor-pointer select-none px-4 py-3 text-sm font-semibold text-foreground">🎁 {t('ref.fold')}</summary>
+          <div className="px-2 pb-2"><ReferralSystem /></div>
+        </details>
 
       </div>
 

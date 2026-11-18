@@ -255,7 +255,7 @@ export const FamilyNextSteps = () => {
             <p className="text-sm text-muted-foreground">{t('fw.phrasesEmpty')}</p>
           ) : (
             <ul className="space-y-2">
-              {phrases.map((p) => (
+              {phrases.slice(0, 2).map((p) => (
                 <li key={p.es} className="rounded-lg bg-primary/5 p-2 text-sm">
                   <p className="font-medium text-foreground">{p.es}</p>
                   {p.en && <p className="text-xs text-muted-foreground">{p.en}</p>}
@@ -263,6 +263,13 @@ export const FamilyNextSteps = () => {
                 </li>
               ))}
             </ul>
+          )}
+          {/* 18 Nov 2026: the full list (with EspaLuz's tip and the listen button) lives in "Phrases you've collected". */}
+          {phrases.length > 2 && (
+            <button type="button" className="text-sm font-semibold text-primary hover:underline"
+              onClick={() => document.getElementById('phrases')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}>
+              {t('fw.allPhrases', { count: phrases.length })} ↓
+            </button>
           )}
         </div>
       </CardContent>

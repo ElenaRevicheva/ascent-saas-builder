@@ -140,7 +140,7 @@ export const FamilyRoadmap = () => {
     { key: 'telegram', title: t('map.tgTitle'), who: t('map.kidsParents'), color: '--espaluz-sky', icon: Send,
       action: facts?.telegram.done ? t('map.openTg') : t('map.connect'), ...(facts?.telegram.done ? { href: TELEGRAM_URL } : { to: '/connect-bot' }) },
     { key: 'invite', title: t('map.inviteTitle'), who: t('map.everyone'), color: '--espaluz-orange', icon: Gift,
-      action: t('map.invite'), onClick: () => scrollToSelector('[data-referrals]') },
+      action: t('map.invite'), onClick: () => { const d = document.querySelector('[data-referrals]'); if (d instanceof HTMLDetailsElement) d.open = true; scrollToSelector('[data-referrals]'); } },
   ];
 
   const total = steps.length + 1;

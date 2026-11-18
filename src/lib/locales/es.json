@@ -471,7 +471,7 @@
     "nextTitle": "Tu próximo paso",
     "stepComing": "Se acerca: {{fact}} Practícalo con EspaLuz antes del día.",
     "stepRehearse": "Practica un momento que se acerca - una entrevista, una reunión en la escuela, una visita al médico - con EspaLuz haciendo de la otra persona.",
-    "stepClass": "{{name}} lleva 3 días sin clase. Diez minutos con Pere y Titi mantienen el hábito.",
+    "stepClass": "Es hora de los diez minutos de {{name}} con Pere y Titi: una clase corta cada pocos días mantiene el hábito.",
     "practiseIt": "Practicarlo",
     "openClass": "Abrir la clase",
     "phrasesTitle": "Frases para guardar",
@@ -509,7 +509,8 @@
       "rehearse": "una práctica",
       "class": "una clase con Pere y Titi",
       "step": "un próximo paso"
-    }
+    },
+    "allPhrases": "Las {{count}} frases, con el consejo de EspaLuz"
   },
   "jr": {
     "title": "Tu camino en español",
@@ -721,7 +722,8 @@
     "step2Title": "Se registran",
     "step2Body": "Tu amigo crea una cuenta con tu enlace",
     "step3Title": "Los dos reciben una recompensa",
-    "step3Body": "Cuando se suscribe, los dos reciben 1 mes gratis"
+    "step3Body": "Cuando se suscribe, los dos reciben 1 mes gratis",
+    "fold": "Invita a un amigo: los dos reciben un mes gratis"
   },
   "hdr": {
     "kidsClassroom": "Aula infantil",

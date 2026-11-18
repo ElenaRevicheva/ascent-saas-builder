@@ -89,7 +89,8 @@ export const ChatWithEspaluz = ({ onUpgradeClick }: ChatWithEspaluzProps) => {
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
   const [isRecording, setIsRecording] = useState(false);
-  const [recordingLanguage, setRecordingLanguage] = useState<'ru' | 'en' | 'es'>('en');
+  // 18 Nov 2026 (Russian reader: "the dropdown defaults to English"): start in the page's language.
+  const [recordingLanguage, setRecordingLanguage] = useState<'ru' | 'en' | 'es'>(() => (i18n.language?.startsWith('ru') ? 'ru' : i18n.language?.startsWith('es') ? 'es' : 'en'));
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const audioRefs = useRef<{[key: string]: HTMLAudioElement}>({});
   const videoRefs = useRef<{[key: string]: HTMLVideoElement}>({});

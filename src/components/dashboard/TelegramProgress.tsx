@@ -237,7 +237,7 @@ export const TelegramProgress = () => {
       </Card>
 
       {talks.length > 0 && (
-        <Card className="border-border/50 shadow-magical">
+        <Card id="phrases" className="border-border/50 shadow-magical scroll-mt-4">
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2">
               <BookOpen className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
