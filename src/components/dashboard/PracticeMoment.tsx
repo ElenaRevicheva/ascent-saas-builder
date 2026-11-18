@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { readFamilyProfile, settlesProfile } from './FamilyProfileDialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { MessagesSquare, Mic, Square, Send, Loader2, Download, Video, RotateCcw } from 'lucide-react';
@@ -23,6 +24,9 @@ const toUrl = (b64: string, mime: string) =>
 
 export const PracticeMoment = () => {
   const { user } = useAuth();
+  // 18 Nov 2026: a settling family's card says the rehearsal is in English (the server runs it in English).
+  const [settling, setSettling] = useState(false);
+  useEffect(() => { if (user) readFamilyProfile(user.id).then((p) => setSettling(settlesProfile(p))).catch(() => undefined); }, [user]);
   const { t, i18n } = useTranslation();
   const [scene, setScene] = useState('');
   const [lines, setLines] = useState<Line[]>([]);
@@ -60,6 +64,8 @@ export const PracticeMoment = () => {
     return () => { alive.current = false; audio.current?.pause(); rec.current?.stream.getTracks().forEach((x) => x.stop()); };
   }, []);
 
+  // 18 Nov 2026: a settling family rehearses in English - the server says which (data.lang); the page listens and speaks in it.
+  const practiceLang = useRef<'es' | 'en'>('es');
   const say = async (text: string) => {
     audio.current?.pause();
     setSpeaking(true);
@@ -75,7 +81,7 @@ export const PracticeMoment = () => {
       await new Promise<void>((done) => {
         try {
           const u = new SpeechSynthesisUtterance(text);
-          u.lang = 'es-ES';
+          u.lang = practiceLang.current === 'en' ? 'en-US' : 'es-ES';
           u.onend = () => done();
           u.onerror = () => done();
           speechSynthesis.speak(u);
@@ -94,6 +100,7 @@ export const PracticeMoment = () => {
         body: { practice: { scene: scene.trim(), history: history.map((l) => ({ who: l.who, text: l.text })), finish } },
       });
       if (error || data?.error) throw new Error(String(data?.error ?? error?.message));
+      if (data?.lang === 'en' || data?.lang === 'es') practiceLang.current = data.lang;
       if (data.done) {
         setTips({ well: data.well, fix: data.fix, phrase: data.phrase, spoken: data.spoken, sessionId: data.sessionId });
         setBusy(false);
@@ -134,7 +141,7 @@ export const PracticeMoment = () => {
         const blob = new Blob(chunks.current, { type: r.mimeType || 'audio/webm' });
         const b64 = await new Promise<string>((ok) => { const f = new FileReader(); f.onloadend = () => ok(String(f.result).split(',')[1] ?? ''); f.readAsDataURL(blob); });
         setBusy(true);
-        const { data } = await supabase.functions.invoke('voice-to-text', { body: { audio: b64, language: 'es' } });
+        const { data } = await supabase.functions.invoke('voice-to-text', { body: { audio: b64, language: practiceLang.current } });
         setBusy(false);
         if (data?.text) await answer(String(data.text));
         else setNote(data?.unavailable ? String(data.message) : t('vm.prepNotHeard'));
@@ -189,7 +196,7 @@ export const PracticeMoment = () => {
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary" aria-hidden><MessagesSquare className="h-4 w-4" /></span>
         <div className="min-w-0">
           <p className="font-semibold text-foreground">{t('vm.prepTitle')}</p>
-          <p className="text-sm text-muted-foreground">{t('vm.prepBody')}</p>
+          <p className="text-sm text-muted-foreground">{settling ? t('vm.prepBodySettle') : t('vm.prepBody')}</p>
         </div>
       </div>
 
@@ -201,7 +208,7 @@ export const PracticeMoment = () => {
             {busy ? <Loader2 className="mr-2 h-4 w-4 shrink-0 animate-spin" /> : <Mic className="mr-2 h-4 w-4 shrink-0" />}
             {t('vm.prepStart')}
           </Button>
-          <p className="text-xs text-muted-foreground">{t('vm.prepHow')}</p>
+          <p className="text-xs text-muted-foreground">{settling ? t('vm.prepHowSettle') : t('vm.prepHow')}</p>
         </div>
       ) : (
         <div className="space-y-3">

@@ -468,7 +468,9 @@
     "prepFailed": "Algo salió mal. Inténtalo de nuevo.",
     "prepNotPaid": "El video de consejos es parte de EspaLuz Family. Se abre cuando tu plan está activo.",
     "prepCap": "Los videos de consejos de este mes ya están hechos. Los próximos estarán listos el {{date}}.",
-    "prepRole": "EspaLuz hace de: {{role}}"
+    "prepRole": "EspaLuz hace de: {{role}}",
+    "prepBodySettle": "Una entrevista de trabajo, una reunión, una llamada en inglés: cuéntale a EspaLuz qué viene y ella hace de la otra persona en inglés. Respondes con la voz, ella te ayuda y luego te da sus consejos.",
+    "prepHowSettle": "6 preguntas cortas en inglés, con el español debajo de cada una. Responde con la voz o escribiendo."
   },
   "fw": {
     "title": "La semana de tu familia con EspaLuz",

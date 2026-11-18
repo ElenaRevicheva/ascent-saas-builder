@@ -1844,6 +1844,20 @@ const PRACTICE_TIPS = "You are EspaLuz, a warm bilingual companion. The newcomer
   "did well, English, quote their Spanish>\", \"fix\": \"<the one most useful correction, English, with the better Spanish>\", " +
   "\"phrase\": \"<one Spanish phrase to keep for the real day> - <English>\", \"spoken\": \"<what you say aloud to them: the " +
   "three tips warmly, Spanish first then the same in English, under 70 words, no emojis, no quotes, no labels>\"}";
+// 18 Nov 2026 (professional reader Carlos, a native Spanish speaker settling in Panama: "I asked to practise ENGLISH and the
+// rehearsal is in Spanish"). For a settling family (settles(): the 4th learn answer or a Spanish native language) the
+// rehearsal runs in ENGLISH with the Spanish below, and the feedback corrects their English. Everyone else: unchanged.
+const PRACTICE_ROLE_EN = PRACTICE_ROLE
+  .replace("helping a newcomer rehearse a real moment in their new Spanish-speaking country", "helping a native Spanish speaker rehearse a real moment IN ENGLISH (a job interview with an international company, a meeting, a call)")
+  .replace("Speak natural, clear Spanish a learner can follow", "Speak natural, clear professional ENGLISH, the way a real interviewer or colleague would")
+  .replace("the person the newcomer will really have to talk to in Spanish in that place", "the person they will really have to talk to in English there")
+  .replace("\"say\": \"<your Spanish line>\", \"en\": \"<the same in English>\"", "\"say\": \"<your ENGLISH line>\", \"en\": \"<the same in Spanish>\"")
+  .replace("if their LAST answer had a clear Spanish mistake: one gentle English sentence with the better Spanish in it", "if their LAST answer had a clear English mistake: one gentle Spanish sentence with the better English in it");
+const PRACTICE_TIPS_EN = "You are EspaLuz, a warm bilingual companion. A native Spanish speaker just rehearsed the SCENE with you IN ENGLISH " +
+  "(TRANSCRIPT). Give honest, kind, practical feedback based ONLY on what they actually said. Output ONLY JSON: {\"well\": \"<one thing " +
+  "they did well, Spanish, quote their English>\", \"fix\": \"<the one most useful correction to their English, Spanish, with the better " +
+  "English>\", \"phrase\": \"<one English phrase to keep for the real day> - <Spanish>\", \"spoken\": \"<what you say aloud to them: the " +
+  "three tips warmly, English first then the same in Spanish, under 70 words, no emojis, no quotes, no labels>\"}";
 function practiceJson(text: string): Record<string, string> {
   const m = String(text ?? '').match(/\{[\s\S]*\}/);
   if (!m) return {};
@@ -1862,6 +1876,10 @@ async function practiceTurn(userId: string, p: any): Promise<Record<string, unkn
   const { data: fam } = await db.from('family_members').select('name').eq('user_id', userId).eq('is_active', true)
     .eq('role', 'parent').order('created_at', { ascending: false }).limit(1);
   const transcript = history.map((h: any) => `${h.who === 'me' ? 'THEM' : 'YOU'}: ${h.text}`).join('\n');
+  // 18 Nov 2026: a settling family rehearses in ENGLISH (see PRACTICE_ROLE_EN).
+  const { data: prof } = await db.from('learning_sessions').select('content').eq('user_id', userId).eq('session_type', 'analytics')
+    .eq('content->>event', 'family_profile').order('created_at', { ascending: false }).limit(1);
+  const english = settles((prof?.[0]?.content ?? {}) as Record<string, any>);
   const ask = async (system: string, user: string) => {
     const { result } = await callChain({ model: CLAUDE_MODELS[0], max_tokens: 600, temperature: 0.5, system, messages: [{ role: 'user', content: user }] });
     return practiceJson(String(result?.content?.[0]?.text ?? ''));
@@ -1869,19 +1887,19 @@ async function practiceTurn(userId: string, p: any): Promise<Record<string, unkn
   if (!p?.finish && asked < PRACTICE_TURNS) {
     const last = asked === PRACTICE_TURNS - 1 ? '\nThis is your LAST line: close the scene naturally and kindly (you may still ask nothing).' : '';
     const first = asked === 0 ? '\nThis is the START: greet them as the other person would and ask your first question.' : '';
-    const o = await ask(PRACTICE_ROLE + first + last, `SCENE: ${scene}\nFAMILY: ${fam?.[0]?.name ? `the person practising is ${fam[0].name}` : 'not given'}\nTRANSCRIPT SO FAR:\n${transcript || '(none yet)'}`);
+    const o = await ask((english ? PRACTICE_ROLE_EN : PRACTICE_ROLE) + first + last, `SCENE: ${scene}\nFAMILY: ${fam?.[0]?.name ? `the person practising is ${fam[0].name}` : 'not given'}\nTRANSCRIPT SO FAR:\n${transcript || '(none yet)'}`);
     if (!o.say) return { error: 'no_answer' };
     console.log(`[practice] turn ${asked + 1}/${PRACTICE_TURNS}`);
-    return { say: o.say, en: o.en ?? '', role: String(o.role ?? '').slice(0, 40), fix: asked === 0 ? '' : (o.fix ?? ''), turn: asked + 1, turns: PRACTICE_TURNS, last: asked + 1 >= PRACTICE_TURNS };
+    return { say: o.say, en: o.en ?? '', role: String(o.role ?? '').slice(0, 40), fix: asked === 0 ? '' : (o.fix ?? ''), turn: asked + 1, turns: PRACTICE_TURNS, last: asked + 1 >= PRACTICE_TURNS, lang: english ? 'en' : 'es' };
   }
   if (!history.some((h: any) => h.who === 'me')) return { error: 'nothing_said' };
-  const t = await ask(PRACTICE_TIPS, `SCENE: ${scene}\nTRANSCRIPT:\n${transcript}`);
+  const t = await ask(english ? PRACTICE_TIPS_EN : PRACTICE_TIPS, `SCENE: ${scene}\nTRANSCRIPT:\n${transcript}`);
   if (!t.spoken) return { error: 'no_answer' };
   const { data: row } = await db.from('learning_sessions').insert({ user_id: userId, session_type: 'analytics', source: 'web',
-    content: { event: 'practice_session', scene, turns: asked, well: t.well, fix: t.fix, phrase: t.phrase, tips: t.spoken.slice(0, 600) } })
+    content: { event: 'practice_session', scene, turns: asked, well: t.well, fix: t.fix, phrase: t.phrase, tips: t.spoken.slice(0, 600), lang: english ? 'en' : 'es' } })
     .select('id').single();
   console.log(`[practice] tips saved turns=${asked}`);
-  return { done: true, well: t.well ?? '', fix: t.fix ?? '', phrase: t.phrase ?? '', spoken: t.spoken, sessionId: row?.id ?? null };
+  return { done: true, well: t.well ?? '', fix: t.fix ?? '', phrase: t.phrase ?? '', spoken: t.spoken, sessionId: row?.id ?? null, lang: english ? 'en' : 'es' };
 }
 
 // 17 Nov 2026 (Elena: "not just phrases collected, but EspaLuz giving advice what to practise with these phrases - something

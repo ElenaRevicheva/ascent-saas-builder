@@ -575,7 +575,9 @@
     "prepFailed": "Something went wrong. Please try again.",
     "prepNotPaid": "The tips video is part of EspaLuz Family. It opens when your plan is active.",
     "prepCap": "This month's tips videos are used. The next ones are ready on {{date}}.",
-    "prepRole": "EspaLuz plays: {{role}}"
+    "prepRole": "EspaLuz plays: {{role}}",
+    "prepBodySettle": "A job interview, a meeting, a call in English: tell EspaLuz what is coming, and she plays the other person in English. You answer by voice, she helps you along, then gives you her tips.",
+    "prepHowSettle": "6 short questions in English, with Spanish under each one. Answer by voice or by typing."
   },
   "fw": {
     "title": "Your family's week with EspaLuz",

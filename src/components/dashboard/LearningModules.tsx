@@ -97,7 +97,15 @@ export const LearningModules = () => {
   };
 
   // 18 Nov 2026: a family that already speaks Spanish gets its country lessons only - never the beginner Spanish ones.
-  const filteredLessons = [...countryLessons, ...(settling && countryLessons.length ? [] : spanishLessons)].filter(lesson => lesson.difficulty === selectedDifficulty);
+  // 18 Nov 2026 (professional reader Carlos, native Spanish speaker: "Principiante + 'Buenos días' treats me as a learner"):
+  // the guide's levels mean how long a family has been here, not Spanish level. A settling family sees ALL its country
+  // lessons in one list, no level tabs, no badge - the most useful for a native speaker first, greetings last.
+  const SETTLE_ORDER = ['local_expressions', 'time', 'newcomers_find_hard', 'school_life', 'family_and_friends', 'rhythm_of_the_year', 'folk_culture', 'everyday_life', 'food_and_table', 'greetings_and_courtesy'];
+  const settleRank = (id: string) => { const i = SETTLE_ORDER.findIndex((k) => id.includes(k)); return i < 0 ? 99 : i; };
+  const settleList = settling && countryLessons.length > 0;
+  const filteredLessons = settleList
+    ? [...countryLessons].sort((a, b) => settleRank(a.id) - settleRank(b.id))
+    : [...countryLessons, ...spanishLessons].filter(lesson => lesson.difficulty === selectedDifficulty);
 
   const startLesson = (lesson: Lesson) => {
     // 15 Nov 2026: the page lives at /learning/:moduleId - "/learning-module/" opened "page not found" for every lesson.
@@ -115,7 +123,8 @@ export const LearningModules = () => {
           <p className="text-sm text-muted-foreground">{t(settling ? 'lm.livingInSettle' : 'lm.livingIn', { country: t(`lm.country.${countryKey}`, { defaultValue: countryName }) })}</p>
         )}
         
-        {/* Difficulty Filter */}
+        {/* Difficulty Filter (not for a settling family - see settleList) */}
+        {!settleList && (
         <div className="flex flex-wrap gap-2 mt-4">
           {(['beginner', 'intermediate', 'advanced'] as const).map((difficulty) => (
             <Button
@@ -129,6 +138,7 @@ export const LearningModules = () => {
             </Button>
           ))}
         </div>
+        )}
       </CardHeader>
       
       <CardContent className="space-y-4">
@@ -140,12 +150,14 @@ export const LearningModules = () => {
                 <div className="mb-2 flex flex-wrap items-center gap-2">
                   {getCategoryIcon(lesson.category)}
                   <h3 className="font-semibold">{lessonTitle(lesson, t)}</h3>
+                  {!settleList && (
                   <Badge 
                     variant="outline" 
                     className={`${getDifficultyColor(lesson.difficulty)} border-0`}
                   >
                     {t(`fam.levels.${lesson.difficulty}`, { defaultValue: lesson.difficulty })}
                   </Badge>
+                  )}
                 </div>
                 
                 <p className="text-sm text-muted-foreground mb-3">
