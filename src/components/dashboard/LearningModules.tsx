@@ -112,7 +112,7 @@ export const LearningModules = () => {
           {settling && countryLessons.length ? t('lm.titleSettle', { country: countryKey ? t(`lm.country.${countryKey}`, { defaultValue: countryName }) : countryName }) : t('lm.title')}
         </CardTitle>
         {countryName && (
-          <p className="text-sm text-muted-foreground">{t('lm.livingIn', { country: t(`lm.country.${countryKey}`, { defaultValue: countryName }) })}</p>
+          <p className="text-sm text-muted-foreground">{t(settling ? 'lm.livingInSettle' : 'lm.livingIn', { country: t(`lm.country.${countryKey}`, { defaultValue: countryName }) })}</p>
         )}
         
         {/* Difficulty Filter */}

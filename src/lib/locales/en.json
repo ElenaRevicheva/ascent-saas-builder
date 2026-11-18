@@ -114,7 +114,8 @@
     "placeholder": "Type your message in Spanish, English, or Russian...",
     "emotionDetected": "Emotion detected",
     "errorSending": "Error sending message. Please try again.",
-    "loading": "Thinking..."
+    "loading": "Thinking...",
+    "placeholderSettle": "Type your message in Spanish or English..."
   },
   "common": {
     "loading": "Loading...",
@@ -1150,7 +1151,8 @@
       "venezuela": "Venezuela",
       "equatorial_guinea": "Equatorial Guinea"
     },
-    "titleSettle": "Lessons for life in {{country}}"
+    "titleSettle": "Lessons for life in {{country}}",
+    "livingInSettle": "You live in {{country}}: your country's checked lessons - its own words, customs and everyday life."
   },
   "lesson": {
     "notFound": "Lesson not found",

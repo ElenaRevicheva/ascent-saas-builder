@@ -18,6 +18,7 @@ import { ReportReply } from '@/components/ReportReply';
 import { useLearningProgress } from '@/hooks/useLearningProgress';
 import { useFreeMessages } from '@/hooks/useFreeMessages';
 import { track, trackChatMessage } from '@/lib/track';
+import { readFamilyProfile, settlesProfile } from './FamilyProfileDialog';
 import SubscriptionFlow from '@/components/SubscriptionFlow';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import avatarImage from '@/assets/avatar-teacher.jpg';
@@ -57,6 +58,9 @@ const shownText = (raw: string) => raw
 export const ChatWithEspaluz = ({ onUpgradeClick }: ChatWithEspaluzProps) => {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
+  // 18 Nov 2026: a family settling in writes in Spanish or English - the box does not suggest Russian to them.
+  const [settlingChat, setSettlingChat] = useState(false);
+  useEffect(() => { if (user) readFamilyProfile(user.id).then((p) => setSettlingChat(settlesProfile(p))).catch(() => undefined); }, [user]);
   const { isSubscriptionActive } = useSubscription();
   const isPaying = !!user && isSubscriptionActive;
   const { recordChatLearning } = useLearningProgress();
@@ -1141,7 +1145,7 @@ The video script will be used to generate an avatar video with synchronized audi
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder={t('chat.placeholder')}
+            placeholder={settlingChat ? t('chat.placeholderSettle') : t('chat.placeholder')}
             className="resize-none"
             rows={2}
             disabled={loading || isRecording}

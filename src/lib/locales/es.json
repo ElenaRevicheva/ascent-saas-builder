@@ -114,7 +114,8 @@
     "placeholder": "Escribe tu mensaje en español, inglés o ruso...",
     "emotionDetected": "Emoción detectada",
     "errorSending": "Error al enviar mensaje. Inténtalo de nuevo.",
-    "loading": "Pensando..."
+    "loading": "Pensando...",
+    "placeholderSettle": "Escribe tu mensaje en español o en inglés..."
   },
   "common": {
     "loading": "Cargando...",
@@ -1043,7 +1044,8 @@
       "venezuela": "Venezuela",
       "equatorial_guinea": "Guinea Ecuatorial"
     },
-    "titleSettle": "Lecciones para vivir en {{country}}"
+    "titleSettle": "Lecciones para vivir en {{country}}",
+    "livingInSettle": "Vives en {{country}}: las lecciones de la guía verificada de tu país - sus palabras, costumbres y vida diaria."
   },
   "lesson": {
     "notFound": "No encontramos la lección",
