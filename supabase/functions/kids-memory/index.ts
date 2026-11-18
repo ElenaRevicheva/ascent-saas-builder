@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { brainShare, brainShareText } from '../_shared/brain_share.ts';
+import { weekPlan, weekPlanText } from '../_shared/week_plan.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
 import { memoryCallback } from '../_shared/memory_callback.ts';
 
@@ -99,7 +100,7 @@ serve(async (req) => {
       console.log(`[classroom-link] made on ${platform}, ${found?.[0]?.user_id ? 'existing' : 'new'} family`);
       return json({ ok: true, url: gen.properties.action_link });
     }
-    if (mode === 'facts_get' || mode === 'facts_add' || mode === 'who_set' || mode === 'profile_fill' || mode === 'learn_set') {
+    if (mode === 'facts_get' || mode === 'facts_add' || mode === 'who_set' || mode === 'profile_fill' || mode === 'learn_set' || mode === 'plan_get') {
       const { facts, speaker: said } = body;
       const tg = telegram_user_id != null && telegram_user_id !== '';
       const platform = tg ? 'telegram' : 'whatsapp';
@@ -109,6 +110,12 @@ serve(async (req) => {
         .order('connected_at', { ascending: false }).limit(1);
       const userId = link?.[0]?.user_id;
       if (!userId) return json({ linked: false, facts: [] });
+      // 18 Nov 2026: /plan on WhatsApp and Telegram - the SAME weekly plan as the dashboard (_shared/week_plan.ts), read-only.
+      if (mode === 'plan_get') {
+        const plan = await weekPlan(db, userId, String(body.lang ?? 'es').slice(0, 2));
+        console.log(`[plan] ${platform}: ${plan.steps.filter((s) => s.done).length}/${plan.steps.length}`);
+        return json({ linked: true, text: weekPlanText(plan) });
+      }
       // 8 Nov 2026: what a bot learned at its first-day questions (Telegram onboarding, WhatsApp country answer) joins
       // the family profile - only fields still empty, so the family's own answers on the web are never overwritten.
       if (mode === 'profile_fill') {

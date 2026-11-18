@@ -113,7 +113,7 @@ export const LearningModules = () => {
   };
 
   return (
-    <Card className="border-border/50 shadow-magical" style={{ background: 'var(--gradient-card)' }}>
+    <Card id="lessons" className="border-border/50 shadow-magical scroll-mt-4" style={{ background: 'var(--gradient-card)' }}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Trophy className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />

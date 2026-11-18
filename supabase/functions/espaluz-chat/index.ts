@@ -4,6 +4,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
 import { kidsTidyReply, kidsClassDaysDone, kidsGreetedRecently } from './kids_tidy.ts';
 import { brainShare, brainShareText } from '../_shared/brain_share.ts';
+import { weekPlan } from '../_shared/week_plan.ts';
 // 8 Nov 2026 (Elena: "what lasts is your new life"): the checked belonging pack, one file for web + WhatsApp + Telegram.
 import argentinaPack from '../_shared/belonging/argentina.json' with { type: 'json' };
 import boliviaPack from '../_shared/belonging/bolivia.json' with { type: 'json' };
@@ -2302,6 +2303,12 @@ serve(async (req) => {
     }
 
     // 17 Nov 2026: "Phrases you've collected" tip + "Introduce your family to EspaLuz" (dashboard, signed-in only).
+    // 18 Nov 2026: "Your plan this week" (signed-in parent only) - read-only over what the brain already saves (_shared/week_plan.ts).
+    if (body.weekPlan) {
+      if (fromBot || !userId) throw new Error('Unauthorized');
+      return new Response(JSON.stringify(await weekPlan(notebook(), userId, String(body.weekPlan?.lang ?? 'en').slice(0, 2))), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
     // 18 Nov 2026: the dashboard's class card (signed-in parent only) - the class's own numbers, read-only.
     if (body.classCard) {
       if (fromBot || !userId) throw new Error('Unauthorized');

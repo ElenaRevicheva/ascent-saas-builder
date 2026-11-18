@@ -1436,5 +1436,40 @@
       "first": "1.º grado",
       "second": "2.º grado"
     }
+  },
+  "wp": {
+    "title": "Tu plan esta semana",
+    "score": "{{done}} de {{of}} ✓",
+    "weekOf": "Semana de inglés {{n}} de 4",
+    "go": "Ir",
+    "moments": "Esta semana lograste",
+    "note": "Solo se marca lo que de verdad hiciste esta semana: aquí, en WhatsApp, Telegram y en la clase. También en WhatsApp y Telegram: escribe /plan",
+    "askEnglish": "Practiquemos mi inglés esta semana: {{topic}}",
+    "step": {
+      "spanish_moment": "Español para un momento real",
+      "english_step": "Tu paso de inglés",
+      "english_week": "Inglés de la semana",
+      "rehearse": "Ensaya un momento que viene",
+      "rehearse_en": "Ensáyalo en inglés",
+      "child_class": "La clase de tu hijo/a",
+      "family_note": "Cuéntale a EspaLuz algo nuevo de tu familia",
+      "belong": "Pertenecer: una lección de tu país"
+    },
+    "how": {
+      "spanish_moment": "2 frases nuevas de EspaLuz, en cualquier canal",
+      "english_step": "escríbele a EspaLuz en inglés o ensaya en inglés",
+      "english_week": "2 frases de este tema, en cualquier canal",
+      "rehearse": "unos 10 minutos, EspaLuz hace de la otra persona",
+      "rehearse_en": "unos 10 minutos, EspaLuz hace de la otra persona en inglés",
+      "child_class": "2 días de clase con Pere y Titi (o Мишка & Лиса)",
+      "family_note": "una persona, una mascota, un plan: lo recuerda en todos lados",
+      "belong": "unos 8 minutos"
+    },
+    "moment": {
+      "rehearsed": "Ensayaste: {{text}}",
+      "phrase": "Aprendiste «{{text}}»",
+      "child": "Tu hijo/a dijo «{{text}}»",
+      "lesson": "Terminaste la lección «{{text}}»"
+    }
   }
 }

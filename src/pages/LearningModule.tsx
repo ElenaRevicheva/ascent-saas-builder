@@ -19,6 +19,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import { useLearningProgress } from '@/hooks/useLearningProgress';
 import { getLessonById, Lesson, Exercise, lessonTitle, phraseMeaning, exerciseQuestion, exerciseExplanation, exerciseOption } from '@/data/spanishLessons';
 import { useTranslation } from 'react-i18next';
@@ -71,6 +72,16 @@ export default function LearningModulePage() {
     // ARRIVING at the exercises as finishing the lesson - marked it done and left for the dashboard after 2 s, so nobody
     // ever saw an exercise. Done = leaving the exercise step (last "Complete Lesson"), or a lesson with no exercises.
     const isCompleted = currentStep >= totalSteps - 1 || (newStep >= totalSteps - 1 && lesson.exercises.length === 0);
+
+    // 18 Nov 2026 ("Your plan this week" - its Belong step): a finished lesson is ALSO noted in the family's record book
+    // (learning_sessions, event lesson_done), because the old save below (user_module_progress) refuses these text lesson
+    // ids - the table holds 2 rows, the newest from July 2025. The old save is left exactly as it was.
+    if (isCompleted) {
+      try {
+        await supabase.from('learning_sessions').insert({ user_id: user.id, session_type: 'analytics', source: 'web',
+          content: { event: 'lesson_done', lesson_id: lesson.id, title: lesson.title } });
+      } catch { /* the plan's tick only - never blocks the lesson */ }
+    }
 
     try {
       await trackProgress(lesson.id, {

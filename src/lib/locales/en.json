@@ -1436,5 +1436,40 @@
       "first": "1st grade",
       "second": "2nd grade"
     }
+  },
+  "wp": {
+    "title": "Your plan this week",
+    "score": "{{done}} of {{of}} ✓",
+    "weekOf": "English week {{n}} of 4",
+    "go": "Go",
+    "moments": "This week you handled",
+    "note": "Ticks only from what you really did this week - here, on WhatsApp, Telegram and in class. Also on WhatsApp and Telegram: type /plan",
+    "askEnglish": "Let's practise my English this week: {{topic}}",
+    "step": {
+      "spanish_moment": "Spanish for a real moment",
+      "english_step": "Your English step",
+      "english_week": "English of the week",
+      "rehearse": "Rehearse a moment that is coming",
+      "rehearse_en": "Rehearse it in English",
+      "child_class": "Your child's class",
+      "family_note": "Tell EspaLuz one new thing about your family",
+      "belong": "Belong: one lesson about your country"
+    },
+    "how": {
+      "spanish_moment": "2 new phrases from EspaLuz, on any channel",
+      "english_step": "write to EspaLuz in English, or rehearse in English",
+      "english_week": "2 phrases on this topic, on any channel",
+      "rehearse": "about 10 minutes, EspaLuz plays the other person",
+      "rehearse_en": "about 10 minutes, EspaLuz plays the other person in English",
+      "child_class": "2 class days with Pere & Titi (or Мишка & Лиса)",
+      "family_note": "a person, a pet, a plan - she remembers it everywhere",
+      "belong": "about 8 minutes"
+    },
+    "moment": {
+      "rehearsed": "Rehearsed: {{text}}",
+      "phrase": "Learned «{{text}}»",
+      "child": "Your child said «{{text}}»",
+      "lesson": "Finished the lesson «{{text}}»"
+    }
   }
 }

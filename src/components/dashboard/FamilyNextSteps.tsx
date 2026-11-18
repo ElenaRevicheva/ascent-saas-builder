@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { phrasesIn } from '../../../supabase/functions/_shared/phrases';
+import { WeeklyPlan } from './WeeklyPlan';
 
 /*
  * "Your family's week with EspaLuz" - the family's ONE memory across every channel (Elena, 15 Nov 2026: "the app is the
@@ -197,6 +198,8 @@ export const FamilyNextSteps = () => {
         <p className="text-sm text-muted-foreground">{t('fw.sub')}</p>
       </CardHeader>
       <CardContent className="space-y-5">
+        {/* 18 Nov 2026: "Your plan this week" on top (WeeklyPlan); everything below is unchanged. */}
+        <WeeklyPlan />
         <div className="flex flex-wrap gap-2" aria-label={t('fw.heardTitle')}>
           <span className="text-xs font-semibold text-foreground self-center">{t('fw.heardTitle')}</span>
           {heard.map((h) => (
