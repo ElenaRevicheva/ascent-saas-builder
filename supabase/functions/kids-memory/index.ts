@@ -147,6 +147,12 @@ serve(async (req) => {
       // the phone it was said on - saying "Soy Ana" on another phone never opens Ana's private notes. Older notes: speaker only.
       const visible = live.filter((r: any) => !r.content?.private || (speaker && r.content?.speaker === speaker
         && (!r.content?.number || r.content.number === platformId)));
+      // 18 Nov 2026 (Elena: "if I tick it, it must be IRONCLAD in the brain - WhatsApp, Telegram, the kids' class - and used
+      // in learning, not sitting still"). Notes the parent ticked in "Show EspaLuz your family's world" (via family_video)
+      // go FIRST, so the bots' 8-note window never pushes them out, and travel apart as `world` for the learning rule.
+      const isWorld = (r: any) => r.content?.via === 'family_video';
+      const ordered = [...visible.filter(isWorld), ...visible.filter((r: any) => !isWorld(r))];
+      const world = visible.filter(isWorld).map((r: any) => String(r.content?.fact ?? '')).filter(Boolean).slice(0, 6);
       if (mode === 'facts_get') {
         const { data: fam } = await db.from('family_members').select('name, role, age, created_at').eq('user_id', userId)
           .eq('is_active', true).order('created_at', { ascending: false });
@@ -183,8 +189,8 @@ serve(async (req) => {
         // 15 Nov 2026: "How did Alisa's first day back go?" - only when the bot asks while writing a reply (with_callback),
         // never on the link or payment checks, which also call facts_get and would use the moment up (_shared/memory_callback.ts).
         const callback = body.with_callback ? await memoryCallback(db, userId, platform) : '';
-        return json({ linked: true, family: famHash, family_paying: !!paidRows?.length, family_access: !!paidRows?.length || freeDays, facts: visible.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean).slice(0, 15),
-          members, speaker, lessons, lesson_turns: les?.length ?? 0, profile, callback });
+        return json({ linked: true, family: famHash, family_paying: !!paidRows?.length, family_access: !!paidRows?.length || freeDays, facts: ordered.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean).slice(0, 15),
+          world, members, speaker, lessons, lesson_turns: les?.length ?? 0, profile, callback });
       }
       const words = (t: string) => new Set(t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/[a-z0-9]+/g) ?? []);
       const same = (a: string, b: string) => { const A = words(a), B = words(b); if (!A.size || !B.size) return false;

@@ -399,6 +399,8 @@ ${familyFacts.length ? `
 WHAT YOU REMEMBER ABOUT THIS FAMILY (from earlier talks on any channel; true notes, newest first):
 ${familyFacts.map((f) => `- ${f}`).join('\n')}
 Bring up at most ONE, only when it truly fits, the way a friend would. Never list them, never add to them.
+` : ''}${familyNotes?.world?.length ? `
+THEIR WORLD - things this family showed you from their home (true, the parent confirmed each one): ${familyNotes.world.join('; ')}. Their Spanish is learned best around their own life: when you teach a phrase or give an example, build it around ONE of these whenever it fits the question - never list them, never invent details beyond them.
 ` : ''}${familyNotes?.members?.length ? `
 THIS FAMILY: ${familyNotes.members.map((m: any) => `${m.name} (${m.role}${m.age ? `, ${m.age}` : ''})`).join('; ')}. Use these exact name spellings. These are ALL the members of this family's account. If asked who is in the family or about a member, ANSWER from this list first (name, role, age), then go on like a friend who remembers, not a lesson. Never invent a relative, spouse, surname or age and never merge two people. The account's name is only an account name: never give the person writing a family role (mother, father, grandparent) and never add them to the family unless this list or 'You are talking with' says so. The list says only adult or child: never name how members are related (partner, husband, wife, son, daughter) unless the list says so.${familyNotes.speaker ? ` You are talking with ${familyNotes.speaker}.` : ''}${familyNotes.lessons?.length ? `
 Recent classroom lessons with the child: ${familyNotes.lessons.join(' | ')}. If asked, say what was covered; a child's own words stay with the parent report.` : ''}
@@ -1705,7 +1707,7 @@ function namesGrounded(fact: string, text: string, allowed: string[]): boolean {
   return true;
 }
 
-type FamilyNotes = { rows: any[]; facts: string[]; members: { name: string; role: string; age: number | null }[]; speaker: string; lessons: string[]; profile: Record<string, any>; callback?: string };
+type FamilyNotes = { rows: any[]; facts: string[]; world?: string[]; members: { name: string; role: string; age: number | null }[]; speaker: string; lessons: string[]; profile: Record<string, any>; callback?: string };
 const notebook = () => createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
 
 // The web account is the parent's window: it reads shared notes and the parent's private ones.
@@ -1730,8 +1732,12 @@ async function readFamilyNotes(userId: string): Promise<FamilyNotes> {
   const today = new Date().toISOString().slice(0, 10);
   const live = (rows ?? []).filter((r: any) => !r.content?.retired && r.content?.fact !== '[object Object]' && (!r.content?.until || String(r.content.until) >= today));
   const visible = live.filter((r: any) => !r.content?.private || (speaker && r.content?.speaker === speaker));
+  // 18 Nov 2026: family-world notes (ticked in "Show EspaLuz your family's world") first - twin of kids-memory facts_get.
+  const isWorld = (r: any) => r.content?.via === 'family_video';
+  visible.sort((a: any, b: any) => Number(isWorld(b)) - Number(isWorld(a)));
+  const world = visible.filter(isWorld).map((r: any) => String(r.content?.fact ?? '')).filter(Boolean).slice(0, 6);
   const lessons = [...new Set((les ?? []).map((r: any) => String(r.content?.class_label ?? '').slice(0, 120)).filter(Boolean))].slice(0, 3) as string[];
-  return { rows: live, facts: visible.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean), members, speaker, lessons, profile };
+  return { rows: live, facts: visible.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean), world, members, speaker, lessons, profile };
 }
 
 const factWords = (t: string) => new Set(t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/[a-z0-9]+/g) ?? []);
@@ -2084,9 +2090,16 @@ const KIDS_UNSAFE_NOTE = /worr|money|debt|bank|visa|migraci|doctor|sick|hospital
 async function kidsFamilyNotes(userId: string): Promise<string> {
   try {
     const notes = await readFamilyNotes(userId);
-    const safe = notes.rows.filter((r: any) => !r.content?.private).map((r: any) => String(r.content?.fact ?? ''))
-      .filter((f: string) => KIDS_SAFE_NOTE.test(f) && !KIDS_UNSAFE_NOTE.test(f)).slice(0, 4);
-    return safe.length ? `\n\nFAMILY NOTES a parent shared (true; use at most one, lightly, only if it fits; never say a parent told you):\n${safe.map((f: string) => `- ${f}`).join('\n')}` : '';
+    // 18 Nov 2026 (Elena: "it must reach the kids' classroom and be USED"): the family-world notes the parent ticked are
+    // checked by the photo reader (no faces, health, money) and by the parent - they always come to class, first, and
+    // Pere & Titi make one of them part of the lesson. Other notes still pass the happy-topics filter as before.
+    const open = notes.rows.filter((r: any) => !r.content?.private && !r.content?.retired);
+    const world = open.filter((r: any) => r.content?.via === 'family_video').map((r: any) => String(r.content?.fact ?? ''))
+      .filter((f: string) => f && !KIDS_UNSAFE_NOTE.test(f)).slice(0, 3);
+    const safe = open.filter((r: any) => r.content?.via !== 'family_video').map((r: any) => String(r.content?.fact ?? ''))
+      .filter((f: string) => KIDS_SAFE_NOTE.test(f) && !KIDS_UNSAFE_NOTE.test(f)).slice(0, 4 - Math.min(world.length, 2));
+    const worldLine = world.length ? `\n\nTHE CHILD'S WORLD - things this family showed from home (true): ${world.join('; ')}. Make ONE of them part of today's class: a word to learn, a sentence to say back, or something to count or draw - in Spanish with the English below, joyfully, as if Pere and Titi already know it. Never say a parent told you.` : '';
+    return worldLine + (safe.length ? `\n\nFAMILY NOTES a parent shared (true; use at most one, lightly, only if it fits; never say a parent told you):\n${safe.map((f: string) => `- ${f}`).join('\n')}` : '');
   } catch { return ''; }
 }
 
