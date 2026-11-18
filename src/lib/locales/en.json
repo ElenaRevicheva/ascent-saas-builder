@@ -524,7 +524,7 @@
   },
   "vm": {
     "title": "Video moments with EspaLuz",
-    "hello": "This is EspaLuz saying hello. Below it, you can introduce your family to her: she looks at a short clip from home and remembers only what you confirm.",
+    "hello": "This is EspaLuz saying hello. Below it, show her your family's world - a pet, a hobby, your home - so she can talk about it with you.",
     "saved": "Your family's video is saved and shown here on your dashboard.",
     "add": "Add your family's video",
     "replace": "Replace your family's video",
@@ -990,14 +990,14 @@
       "intermediate": "Intermediate",
       "advanced": "Advanced"
     },
-    "button": "Introduce your family to EspaLuz",
-    "how": "Choose a short clip or photo from home. It stays on your phone: EspaLuz sees 3 small still pictures, tells you what she noticed, and remembers only what you tick.",
+    "button": "Show EspaLuz your family's world",
+    "how": "A pet, a hobby, your home: choose a short clip or photo, and EspaLuz will bring it into your Spanish - in your chats, and Pere & Titi in the kids' class. The clip stays on your phone; she keeps only what you tick.",
     "looking": "EspaLuz is looking...",
-    "noticed": "EspaLuz noticed - tick what is true:",
+    "noticed": "EspaLuz noticed - tick what she may remember:",
     "keep": "Remember {{count}}",
     "cancel": "Not now",
-    "saved_one": "EspaLuz will remember {{count}} thing about your family - in this chat, on WhatsApp and on Telegram.",
-    "saved_other": "EspaLuz will remember {{count}} things about your family - in this chat, on WhatsApp and on Telegram.",
+    "saved_one": "Done: EspaLuz will bring {{count}} thing from your family world into your Spanish - here, on WhatsApp and on Telegram.",
+    "saved_other": "Done: EspaLuz will bring {{count}} things from your family world into your Spanish - here, on WhatsApp and on Telegram.",
     "nothing": "EspaLuz could not see anything clear to remember. Try a clip with your pet, a hobby or your home.",
     "failed": "Something went wrong. Please try again."
   },

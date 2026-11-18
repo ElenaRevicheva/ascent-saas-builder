@@ -417,7 +417,7 @@
   },
   "vm": {
     "title": "Momentos en video con EspaLuz",
-    "hello": "Esta es EspaLuz saludando. Debajo puedes presentarle a tu familia: mira un video corto de casa y recuerda solo lo que tú confirmes.",
+    "hello": "Esta es EspaLuz saludando. Debajo, muéstrale el mundo de tu familia - una mascota, un pasatiempo, tu casa - para que pueda hablar de ello contigo.",
     "saved": "El video de tu familia está guardado y se muestra aquí en tu panel.",
     "add": "Agregar el video de tu familia",
     "replace": "Cambiar el video de tu familia",
@@ -883,14 +883,14 @@
       "intermediate": "Intermedio",
       "advanced": "Avanzado"
     },
-    "button": "Presenta tu familia a EspaLuz",
-    "how": "Elige un video corto o una foto de casa. Se queda en tu teléfono: EspaLuz ve 3 imágenes pequeñas, te cuenta lo que notó y recuerda solo lo que marques.",
+    "button": "Muéstrale a EspaLuz el mundo de tu familia",
+    "how": "Una mascota, un pasatiempo, tu casa: elige un video corto o una foto y EspaLuz lo traerá a tu español - en tus chats, y Pere y Titi en la clase de los niños. El video se queda en tu teléfono; ella guarda solo lo que marques.",
     "looking": "EspaLuz está mirando...",
-    "noticed": "EspaLuz notó esto, marca lo que es cierto:",
+    "noticed": "EspaLuz notó esto - marca lo que puede recordar:",
     "keep": "Recordar {{count}}",
     "cancel": "Ahora no",
-    "saved_one": "EspaLuz recordará {{count}} cosa de tu familia, en este chat, en WhatsApp y en Telegram.",
-    "saved_other": "EspaLuz recordará {{count}} cosas de tu familia, en este chat, en WhatsApp y en Telegram.",
+    "saved_one": "Listo: EspaLuz traerá {{count}} cosa del mundo de tu familia a tu español - aquí, en WhatsApp y en Telegram.",
+    "saved_other": "Listo: EspaLuz traerá {{count}} cosas del mundo de tu familia a tu español - aquí, en WhatsApp y en Telegram.",
     "nothing": "EspaLuz no vio nada claro que recordar. Prueba con un video de tu mascota, un pasatiempo o tu casa.",
     "failed": "Algo salió mal. Inténtalo de nuevo."
   },
