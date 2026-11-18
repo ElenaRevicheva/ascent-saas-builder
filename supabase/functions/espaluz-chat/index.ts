@@ -423,7 +423,7 @@ RESPONSE FORMAT - two parts:
 
 ${BILINGUAL_LAST}
 
-${familyNotes ? messageFirstLast(familyNotes.members.map((m: any) => m.name)) : ''}`;
+${familyNotes ? messageFirstLast([...familyNotes.members.map((m: any) => m.name), ...(familyNotes.circle ?? [])]) : ''}`;
 
   const messages = [
     ...conversationHistory.slice(-8),
@@ -1707,6 +1707,7 @@ const FACTS_SYSTEM = "You keep a small private notebook about a family for their
   "passport or cédula numbers, phone numbers, emails, street addresses, card or bank details; and no health details beyond 'has a " +
   "doctor's appointment'. If nothing lasting: reply NONE." +
   " Use the exact spellings in FAMILY NAMES: if a name sounds like one of them (Elisa for Alisa), write the family spelling. Write the SPEAKER's name, never 'the user'. If a fact has a natural end (this week's holiday, Monday's appointment), end its line with [until YYYY-MM-DD], working from TODAY. Start the line with [private] for any worry, money or health matter. If the message corrects a KNOWN FACT, write instead: REPLACES: <the known fact, exactly> => <the corrected fact>." +
+  " A person the user names as family OR as someone close to the family (their pediatrician or doctor, a teacher, a therapist, a nanny, a close friend, 'like family') IS a lasting fact: write who they are to the family, e.g. 'Kevin is Elena's nephew', 'Dra. Ana is the family's pediatrician, a trusted person'. If the USER MESSAGE answers a question in ESPALUZ JUST ASKED about who someone is ('sí, es mi hija'), write that person with the name from the question ('Alisa is Elena's daughter')." +
   " A question is not a fact. Never restate, combine or guess from KNOWN FACTS: write only what THIS message newly says, and never join two people into one name." +
   " A detail mentioned in passing inside a question or a request for help (\"my son has a fever, what do I say?\") that differs from FAMILY NAMES or KNOWN FACTS is NOT a fact and NOT a REPLACES - EspaLuz asks first. Write REPLACES or a new family member only when the message itself states it plainly (\"yes, Igor is my son, he is 3\", \"we moved from Cuba to Panama\").";
 
@@ -1725,15 +1726,33 @@ const hasStatement = (text: string) => (String(text ?? '').match(/[^.!?\n]+[.!?]
   .some((p) => p && !p.endsWith('?') && p.split(/\s+/).length >= 2);
 // 18 Nov 2026: twin of stranger_unstated() in both bots - a note naming someone not on the family list is kept only when the
 // message says who they are ('my daughter Alisa'); a forwarded school note saved 'Alisa is graduating' into a family without Alisa.
-const RELATION_SAID = /\b(my|our|mi|mis|nuestr[oa]s?|мо[йяи]|наш[аи]?)\s+(daughter|son|kids?|child(ren)?|wife|husband|partner|mom|mother|dad|father|grand\w*|hij[oa]s?|niñ[oa]s?|esposa|esposo|pareja|mam[aá]|madre|pap[aá]|padre|abuel[oa]s?|дочь|дочка|сын|жена|муж|мама|папа|бабушка|дедушка)(?![\p{L}])/iu;
-function strangerUnstated(fact: string, text: string, allowed: string[]): boolean {
+// 18 Nov 2026 (Elena): family OR someone close (pediatrician, teacher, therapist, close friend, 'like family'), in ES/EN/RU,
+// and a yes to EspaLuz's own question - the SAME vocabulary as stranger_unstated() in both bots.
+const RELATION_NOUNS = String.raw`(?:daughters?|sons?|kids?|child(?:ren)?|wife|husband|partner|mom|mum|mother|dad|father|grand\w*|nephews?|nieces?|cousins?|aunts?|uncles?|godmother|godfather|godson|goddaughter|step\w+|\w+-in-law|babysitter|nanny|pediatrician|paediatrician|doctor|dentist|teacher|tutor|therapist|psychologist|coach|friends?|best friend|neighbou?rs?|hij[oa]s?|niñ[oa]s?|esposa|esposo|pareja|mam[aá]|madre|pap[aá]|padre|abuel[oa]s?|niet[oa]s?|sobrin[oa]s?|prim[oa]s?|t[ií][oa]s?|madrina|padrino|ahijad[oa]|suegr[oa]|cuñad[oa]|niñera|pediatra|m[eé]dic[oa]|doctora|dentista|maestr[oa]|profesor[a]?|terapeuta|psic[oó]log[oa]|amig[oa]s?|vecin[oa]s?|дочь|дочка|сын|жена|муж|мама|папа|бабушка|дедушка|внук|внучка|племянни\w+|двоюродн\w+|тётя|тетя|дядя|крёстн\w+|крестн\w+|няня|педиатр|врач|учитель\w*|терапевт|психолог|подруга|друг|сосед\w*)`;
+const RELATION_SAID = new RegExp(String.raw`(?<![\p{L}\p{N}])(?:my|our|mi|mis|nuestr[oa]s?|мо[йяи]|наш[аи]?)\s+(?:[\p{L}]+\s+)?` + RELATION_NOUNS + String.raw`(?![\p{L}\p{N}])|(?<![\p{L}\p{N}])(?:like family|close to (?:us|the family|our family)|como de la familia|muy cercan[oa]|de confianza|как родн\w+|близк\w+ (?:друг|подруга|человек))(?![\p{L}\p{N}])`, 'iu');
+const RELATION_ASKED = new RegExp(String.raw`(?<![\p{L}\p{N}])(?:your|tu|tus|su|sus|tuy[oa]|тво[йяи]|ваш[аи]?)\s+(?:[\p{L}]+\s+)?` + RELATION_NOUNS + String.raw`(?![\p{L}\p{N}])|(?<![\p{L}\p{N}])(?:like family|close to (?:us|the family|our family)|como de la familia|muy cercan[oa]|de confianza|как родн\w+|близк\w+ (?:друг|подруга|человек))(?![\p{L}\p{N}])`, 'iu');
+const SAID_YES = /^[^\p{L}]*(s[ií]|yes|yeah|yep|claro|exacto|correcto|así es|asi es|да|ага|конечно|верно)(?![\p{L}])/iu;
+const RELATION_IN_FACT = new RegExp(String.raw`(?<![\p{L}\p{N}])(?:` + RELATION_NOUNS + String.raw`|close to the family|like family|trusted)(?![\p{L}\p{N}])`, 'iu');
+function strangerUnstated(fact: string, text: string, allowed: string[], asked = ''): boolean {
   const ok = new Set(allowed.filter(Boolean).map(foldWord));
   for (const tok of String(fact ?? '').match(/\b[A-ZÁÉÍÓÚÑ][A-Za-zÁÉÍÓÚÑáéíóúñü'-]+/g) ?? []) {
     const w = foldWord(tok).split("'")[0];
     if (ok.has(w) || PLAIN_WORDS.has(w)) continue;
-    return !RELATION_SAID.test(text);
+    return !(RELATION_SAID.test(text) || (SAID_YES.test(text) && RELATION_ASKED.test(asked)));
   }
   return false;
+}
+// 18 Nov 2026: twin of circle_names() in both bots - names in notes that say who someone is to the family count as KNOWN.
+function circleNames(facts: string[]): string[] {
+  const out: string[] = [];
+  for (const f of facts) {
+    if (!RELATION_IN_FACT.test(String(f ?? ''))) continue;
+    for (const tok of String(f).match(/\b[A-ZÁÉÍÓÚÑ][A-Za-zÁÉÍÓÚÑáéíóúñü'-]+/g) ?? []) {
+      const w = tok.split("'")[0];
+      if (!PLAIN_WORDS.has(foldWord(w)) && w.length >= 3 && !out.includes(w)) out.push(w);
+    }
+  }
+  return out;
 }
 function namesGrounded(fact: string, text: string, allowed: string[]): boolean {
   const said = new Set(foldWord(text).match(/[a-z0-9]+/g) ?? []);
@@ -1745,7 +1764,7 @@ function namesGrounded(fact: string, text: string, allowed: string[]): boolean {
   return true;
 }
 
-type FamilyNotes = { rows: any[]; facts: string[]; world?: string[]; share?: string; members: { name: string; role: string; age: number | null }[]; speaker: string; lessons: string[]; profile: Record<string, any>; callback?: string };
+type FamilyNotes = { rows: any[]; facts: string[]; world?: string[]; share?: string; circle?: string[]; members: { name: string; role: string; age: number | null }[]; speaker: string; lessons: string[]; profile: Record<string, any>; callback?: string };
 const notebook = () => createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
 
 // The web account is the parent's window: it reads shared notes and the parent's private ones.
@@ -1775,7 +1794,8 @@ async function readFamilyNotes(userId: string): Promise<FamilyNotes> {
   visible.sort((a: any, b: any) => Number(isWorld(b)) - Number(isWorld(a)));
   const world = visible.filter(isWorld).map((r: any) => String(r.content?.fact ?? '')).filter(Boolean).slice(0, 6);
   const lessons = [...new Set((les ?? []).map((r: any) => String(r.content?.class_label ?? '').slice(0, 120)).filter(Boolean))].slice(0, 3) as string[];
-  return { rows: live, facts: visible.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean), world, members, speaker, lessons, profile };
+  const factTexts = visible.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean);
+  return { rows: live, facts: factTexts, world, circle: circleNames(factTexts), members, speaker, lessons, profile };
 }
 
 const factWords = (t: string) => new Set(t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/[a-z0-9]+/g) ?? []);
@@ -2118,14 +2138,17 @@ async function familyStory(userId: string, body: any): Promise<Record<string, un
 }
 
 // Free models only (Claude excluded, like the bots). A notebook failure never touches the reply.
-async function rememberFamilyFacts(userId: string, text: string, notes: FamilyNotes): Promise<void> {
+async function rememberFamilyFacts(userId: string, text: string, notes: FamilyNotes, asked = ''): Promise<void> {
   try {
     const said = text.trim();
-    if (said.length < 15 || said.startsWith('/')) return;
+    // 18 Nov 2026: "Sí, es mi hija" answers EspaLuz's "¿Alisa es tu hija?" - short, and the name is in her question.
+    const answering = !!asked && asked.includes('?') && SAID_YES.test(said);
+    if ((said.length < 15 && !answering) || said.startsWith('/')) return;
     if (!hasStatement(said)) return; // 8 Nov 2026: a question gives no notes
     const today = new Date().toISOString().slice(0, 10);
     const user = `TODAY: ${today}\nSPEAKER: ${notes.speaker || 'unknown'}\nFAMILY NAMES: ${notes.members.map((m) => m.name).join(', ') || 'unknown'}\n` +
-      `KNOWN FACTS:\n${notes.facts.slice(0, 20).map((f) => `- ${f}`).join('\n') || 'none'}\nUSER MESSAGE:\n${said.slice(0, 1200)}`;
+      `KNOWN FACTS:\n${notes.facts.slice(0, 20).map((f) => `- ${f}`).join('\n') || 'none'}\n` +
+      (asked ? `ESPALUZ JUST ASKED:\n${asked.slice(-600)}\n` : '') + `USER MESSAGE:\n${said.slice(0, 1200)}`;
     const request = { max_tokens: 220, temperature: 0.2, system: FACTS_SYSTEM, messages: [{ role: 'user', content: user }] };
     const steps: [string | undefined, (k: string, r: any) => Promise<any>][] = [
       [Deno.env.get('GEMINI_TTS_API_KEY'), callGemini], [Deno.env.get('GROQ_API_KEY'), (k, r) => callGroq(k, r)], [Deno.env.get('XAI_API_KEY'), callGrok],
@@ -2149,8 +2172,8 @@ async function rememberFamilyFacts(userId: string, text: string, notes: FamilyNo
       const until = body.match(/\[until (\d{4}-\d{2}-\d{2})\]\s*$/i)?.[1];
       const fact = body.replace(/\s*\[until \d{4}-\d{2}-\d{2}\]\s*$/i, '').trim();
       if (fact.length < 8 || fact.length > 160 || /^none/i.test(fact)) continue;
-      if (!namesGrounded(fact, said, [...notes.members.map((m) => m.name), notes.speaker])) { console.log('[memory] note dropped: names someone the message did not'); continue; }
-      if (strangerUnstated(fact, said, [...notes.members.map((m) => m.name), notes.speaker])) { console.log('[memory] note dropped: names someone not in the family - EspaLuz asks first'); continue; }
+      if (!namesGrounded(fact, said + ' ' + asked, [...notes.members.map((m) => m.name), notes.speaker])) { console.log('[memory] note dropped: names someone the message did not'); continue; }
+      if (strangerUnstated(fact, said, [...notes.members.map((m) => m.name), ...(notes.circle ?? []), notes.speaker], asked)) { console.log('[memory] note dropped: names someone not in the family - EspaLuz asks first'); continue; }
       if (replaces) {
         const old = notes.rows.find((r: any) => String(r.content?.fact ?? '').toLowerCase() === replaces.toLowerCase());
         if (old) { await db.from('learning_sessions').update({ content: { ...old.content, retired: true } }).eq('id', old.id); corrected++; }
@@ -2591,7 +2614,8 @@ ${asked}` : ''}`;
     }
 
     if (!kids && !fromBot && userId && !body.image) {
-      const noting = rememberFamilyFacts(userId, message, familyNotes ?? { rows: [], facts: [], members: [], speaker: '', lessons: [], profile: {} });
+      const lastAsked = String([...conversationHistory].reverse().find((m: any) => m.role === 'assistant')?.content ?? '').slice(-600);
+      const noting = rememberFamilyFacts(userId, message, familyNotes ?? { rows: [], facts: [], members: [], speaker: '', lessons: [], profile: {} }, lastAsked);
       const runtime = (globalThis as any).EdgeRuntime;
       if (runtime?.waitUntil) runtime.waitUntil(noting); else await noting;
     }

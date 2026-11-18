@@ -33,6 +33,21 @@ const TOGETHER = [
   "Manos calientitas: rub your hands together until warm, rest them on your child's cheeks, then she does it for you - and both rub your ears softly from top to bottom, saying \"tranquilo / calm\".",
   "Estatua y gelatina: squeeze the whole body tight like a statue while you count \"uno, dos, tres\" in Spanish, then go soft like jelly - 3 times, then each says how the body feels.",
 ];
+// 18 Nov 2026: twin of circle_names() (bots) / circleNames() (espaluz-chat): people the family told EspaLuz about.
+const RELATION_NOUNS = String.raw`(?:daughters?|sons?|kids?|child(?:ren)?|wife|husband|partner|mom|mum|mother|dad|father|grand\w*|nephews?|nieces?|cousins?|aunts?|uncles?|godmother|godfather|godson|goddaughter|step\w+|\w+-in-law|babysitter|nanny|pediatrician|paediatrician|doctor|dentist|teacher|tutor|therapist|psychologist|coach|friends?|best friend|neighbou?rs?|hij[oa]s?|niñ[oa]s?|esposa|esposo|pareja|mam[aá]|madre|pap[aá]|padre|abuel[oa]s?|niet[oa]s?|sobrin[oa]s?|prim[oa]s?|t[ií][oa]s?|madrina|padrino|ahijad[oa]|suegr[oa]|cuñad[oa]|niñera|pediatra|m[eé]dic[oa]|doctora|dentista|maestr[oa]|profesor[a]?|terapeuta|psic[oó]log[oa]|amig[oa]s?|vecin[oa]s?|дочь|дочка|сын|жена|муж|мама|папа|бабушка|дедушка|внук|внучка|племянни\w+|двоюродн\w+|тётя|тетя|дядя|крёстн\w+|крестн\w+|няня|педиатр|врач|учитель\w*|терапевт|психолог|подруга|друг|сосед\w*)`;
+const RELATION_IN_FACT = new RegExp(String.raw`(?<![\p{L}\p{N}])(?:` + RELATION_NOUNS + String.raw`|close to the family|like family|trusted)(?![\p{L}\p{N}])`, 'iu');
+const NOT_A_NAME = new Set(['the', 'she', 'he', 'her', 'his', 'their', 'they', 'family', 'dr', 'dra', 'mr', 'mrs', 'ms', 'and', 'with']);
+function circleNames(facts: string[]): string[] {
+  const out: string[] = [];
+  for (const f of facts) {
+    if (!RELATION_IN_FACT.test(String(f ?? ''))) continue;
+    for (const tok of String(f).match(/\b[A-ZÁÉÍÓÚÑ][A-Za-zÁÉÍÓÚÑáéíóúñü'-]+/g) ?? []) {
+      const w = tok.split("'")[0];
+      if (!NOT_A_NAME.has(w.toLowerCase()) && w.length >= 3 && !out.includes(w)) out.push(w);
+    }
+  }
+  return out;
+}
 const panamaDay = (offset = 0): number => Math.floor((Date.now() - 5 * 3600 * 1000) / 86400000) + offset; // UTC-5, no DST
 
 const json = (body: unknown, status = 200) =>
@@ -196,7 +211,7 @@ serve(async (req) => {
         const share = speakerIsChild ? null : await brainShare(db, userId).catch(() => null);
         const share_text = share ? brainShareText(share) : '';
         return json({ linked: true, family: famHash, family_paying: !!paidRows?.length, family_access: !!paidRows?.length || freeDays, facts: ordered.map((r: any) => String(r.content?.fact ?? '')).filter(Boolean).slice(0, 15),
-          world, share_text, members, speaker, lessons, lesson_turns: les?.length ?? 0, profile, callback });
+          world, share_text, circle: circleNames(visible.map((r: any) => String(r.content?.fact ?? ''))), members, speaker, lessons, lesson_turns: les?.length ?? 0, profile, callback });
       }
       const words = (t: string) => new Set(t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/[a-z0-9]+/g) ?? []);
       const same = (a: string, b: string) => { const A = words(a), B = words(b); if (!A.size || !B.size) return false;
