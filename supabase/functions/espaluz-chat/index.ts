@@ -423,7 +423,7 @@ RESPONSE FORMAT - two parts:
 
 ${BILINGUAL_LAST}
 
-${familyNotes ? MESSAGE_FIRST_LAST : ''}`;
+${familyNotes ? messageFirstLast(familyNotes.members.map((m: any) => m.name)) : ''}`;
 
   const messages = [
     ...conversationHistory.slice(-8),
@@ -1604,6 +1604,12 @@ const MESSAGE_FIRST_LAST = `ANSWER THIS MESSAGE: if it is a note someone else wr
 that they forwarded or pasted, it is THEIRS: explain what it says and what is being asked, then give a short reply they can
 send. If an earlier reply of yours in this chat called such a note a wrong chat or not theirs, that was a mistake - do not
 repeat it; answer the note now. Ask about anyone you do not know only at the very end, in one warm line.`;
+// 18 Nov 2026: twin of message_first_last() in both bots - the final line carries the family list; an unknown name gets one question.
+const messageFirstLast = (names: string[]): string => {
+  const known = names.filter(Boolean);
+  const lst = known.length ? `THE FAMILY LIST (the people you really know): ${known.join(', ')}. ` : 'THE FAMILY LIST is empty so far. ';
+  return MESSAGE_FIRST_LAST + '\n' + lst + "If THIS message names a person who is NOT on this list (a note or an earlier chat does not count as knowing them), your LAST line MUST be ONE warm question in both languages about who they are, e.g. 'Alisa no está en tu lista familiar todavía, ¿es tu hija? Así la recuerdo. / Alisa is not on your family list yet - is she your daughter? Then I will remember her.'";
+};
 const BILINGUAL_LAST = `LAST AND MOST IMPORTANT - THE FORM OF THIS REPLY:
 - Both languages, always, even if everything above is in Spanish: each idea in Spanish, and right after it the same idea in English, in short pairs.
 - 2 to 4 emojis across the reply where they fit: the opening, a phrase to learn, the closing. Never zero, never one on every line.
@@ -1717,6 +1723,18 @@ const PLAIN_WORDS = new Set(('the a an her his their she he they i family daught
 const foldWord = (t: string) => [...String(t ?? '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')].map((c) => CYR[c] ?? c).join('');
 const hasStatement = (text: string) => (String(text ?? '').match(/[^.!?\n]+[.!?]?/g) ?? []).map((p) => p.trim())
   .some((p) => p && !p.endsWith('?') && p.split(/\s+/).length >= 2);
+// 18 Nov 2026: twin of stranger_unstated() in both bots - a note naming someone not on the family list is kept only when the
+// message says who they are ('my daughter Alisa'); a forwarded school note saved 'Alisa is graduating' into a family without Alisa.
+const RELATION_SAID = /\b(my|our|mi|mis|nuestr[oa]s?|мо[йяи]|наш[аи]?)\s+(daughter|son|kids?|child(ren)?|wife|husband|partner|mom|mother|dad|father|grand\w*|hij[oa]s?|niñ[oa]s?|esposa|esposo|pareja|mam[aá]|madre|pap[aá]|padre|abuel[oa]s?|дочь|дочка|сын|жена|муж|мама|папа|бабушка|дедушка)(?![\p{L}])/iu;
+function strangerUnstated(fact: string, text: string, allowed: string[]): boolean {
+  const ok = new Set(allowed.filter(Boolean).map(foldWord));
+  for (const tok of String(fact ?? '').match(/\b[A-ZÁÉÍÓÚÑ][A-Za-zÁÉÍÓÚÑáéíóúñü'-]+/g) ?? []) {
+    const w = foldWord(tok).split("'")[0];
+    if (ok.has(w) || PLAIN_WORDS.has(w)) continue;
+    return !RELATION_SAID.test(text);
+  }
+  return false;
+}
 function namesGrounded(fact: string, text: string, allowed: string[]): boolean {
   const said = new Set(foldWord(text).match(/[a-z0-9]+/g) ?? []);
   const ok = new Set(allowed.filter(Boolean).map(foldWord));
@@ -2132,6 +2150,7 @@ async function rememberFamilyFacts(userId: string, text: string, notes: FamilyNo
       const fact = body.replace(/\s*\[until \d{4}-\d{2}-\d{2}\]\s*$/i, '').trim();
       if (fact.length < 8 || fact.length > 160 || /^none/i.test(fact)) continue;
       if (!namesGrounded(fact, said, [...notes.members.map((m) => m.name), notes.speaker])) { console.log('[memory] note dropped: names someone the message did not'); continue; }
+      if (strangerUnstated(fact, said, [...notes.members.map((m) => m.name), notes.speaker])) { console.log('[memory] note dropped: names someone not in the family - EspaLuz asks first'); continue; }
       if (replaces) {
         const old = notes.rows.find((r: any) => String(r.content?.fact ?? '').toLowerCase() === replaces.toLowerCase());
         if (old) { await db.from('learning_sessions').update({ content: { ...old.content, retired: true } }).eq('id', old.id); corrected++; }
