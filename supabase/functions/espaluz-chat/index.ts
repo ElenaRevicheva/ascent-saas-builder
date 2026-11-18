@@ -2098,6 +2098,7 @@ async function kidsFamilyNotes(userId: string): Promise<string> {
       .filter((f: string) => f && !KIDS_UNSAFE_NOTE.test(f)).slice(0, 3);
     const safe = open.filter((r: any) => r.content?.via !== 'family_video').map((r: any) => String(r.content?.fact ?? ''))
       .filter((f: string) => KIDS_SAFE_NOTE.test(f) && !KIDS_UNSAFE_NOTE.test(f)).slice(0, 4 - Math.min(world.length, 2));
+    if (world.length) console.log(`[class] child's world: ${world.length} note(s) in this turn`);
     const worldLine = world.length ? `\n\nTHE CHILD'S WORLD - things this family showed from home (true): ${world.join('; ')}. Make ONE of them part of today's class: a word to learn, a sentence to say back, or something to count or draw - in Spanish with the English below, joyfully, as if Pere and Titi already know it. Never say a parent told you.` : '';
     return worldLine + (safe.length ? `\n\nFAMILY NOTES a parent shared (true; use at most one, lightly, only if it fits; never say a parent told you):\n${safe.map((f: string) => `- ${f}`).join('\n')}` : '');
   } catch { return ''; }
