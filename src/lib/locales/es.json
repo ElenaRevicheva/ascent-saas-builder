@@ -1404,5 +1404,24 @@
     },
     "s0": "Configura tu familia",
     "s0Line": "Unas preguntas sobre tu nueva vida, los miembros de tu familia y WhatsApp o Telegram conectado: así se enciende la memoria de EspaLuz para todos."
+  },
+  "cc": {
+    "title": "La clase de {{name}}",
+    "unitOf": "Unidad {{unit}} de {{of}}",
+    "lastTitle": "Última clase",
+    "turns_one": "{{name}} habló {{count}} vez",
+    "turns_other": "{{name}} habló {{count}} veces",
+    "said": "Lo último que dijo {{name}}:",
+    "words": "Palabras practicadas:",
+    "noClass": "{{name}} aún no ha tenido clase. La primera está lista: unos diez minutos con Pere y Titi.",
+    "nextTitle": "Próxima clase",
+    "dayInUnit": "día de clase {{day}} de 2",
+    "how": "Directo de la clase: un día cuenta cuando {{name}} de verdad habló en él, y la unidad avanza cada 2 días de clase.",
+    "open": "Abrir la clase",
+    "level": {
+      "kinder": "Kínder",
+      "first": "1.º grado",
+      "second": "2.º grado"
+    }
   }
 }

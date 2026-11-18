@@ -1404,5 +1404,24 @@
     },
     "s0": "Set up your family",
     "s0Line": "A few questions about your new life, your family members, and WhatsApp or Telegram connected - this switches on EspaLuz's memory for all of you."
+  },
+  "cc": {
+    "title": "{{name}}'s class",
+    "unitOf": "Unidad {{unit}} de {{of}}",
+    "lastTitle": "Last class",
+    "turns_one": "{{name}} spoke {{count}} time",
+    "turns_other": "{{name}} spoke {{count}} times",
+    "said": "Last thing {{name}} said:",
+    "words": "Words practised:",
+    "noClass": "{{name}} hasn't had a class yet. The first one is ready - about ten minutes with Pere & Titi.",
+    "nextTitle": "Next class",
+    "dayInUnit": "class day {{day}} of 2",
+    "how": "Straight from the class: a day counts once {{name}} has really talked in it, and the unit moves on every 2 class days.",
+    "open": "Open the classroom",
+    "level": {
+      "kinder": "Kinder",
+      "first": "1st grade",
+      "second": "2nd grade"
+    }
   }
 }

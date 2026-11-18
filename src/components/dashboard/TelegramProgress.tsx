@@ -98,7 +98,12 @@ export const TelegramProgress = () => {
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'learning_sessions', filter: `user_id=eq.${user.id}` },
         (payload) => { if (['conversation', 'dashboard_chat', 'classroom', 'classroom_ru'].includes(String(payload.new.session_type))) load(false); })
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+    // 18 Nov 2026: the project's supabase_realtime publication holds no tables, so the subscription above never fires
+    // (proven with the class card). Ask again every 45 s while the page is open and when it comes back into view.
+    const back = () => { if (document.visibilityState === 'visible') load(false); };
+    document.addEventListener('visibilitychange', back);
+    const tick = window.setInterval(() => { if (document.visibilityState === 'visible') load(false); }, 45000);
+    return () => { supabase.removeChannel(channel); document.removeEventListener('visibilitychange', back); window.clearInterval(tick); };
   }, [user, load]);
 
   const checkBotConnection = async () => {

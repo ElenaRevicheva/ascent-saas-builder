@@ -1919,6 +1919,50 @@ async function familyLookSave(userId: string, p: any): Promise<Record<string, un
   return { saved };
 }
 
+// 18 Nov 2026 (Elena: "the class card must be ironclad - always actual, only the true state of things"). The dashboard's
+// "<child>'s class" card asks HERE, so it can never disagree with the class: the next unit comes from the SAME rule the
+// class uses on its next "start class" (kidsClassDaysDone + the chosen level or the child's age, exactly as in serve);
+// "last class" shows only what that class SAVED (its class_label, the vocabulary it taught, the child's own last words).
+// Nothing is generated. No class yet -> it says so.
+async function classCard(userId: string, p: any): Promise<Record<string, unknown>> {
+  const db = notebook();
+  const { data: kidsRows } = await db.from('family_members').select('name, age').eq('user_id', userId).eq('role', 'child').eq('is_active', true)
+    .order('created_at', { ascending: true });
+  const kids = (kidsRows ?? []) as { name: string; age: number | null }[];
+  if (!kids.length) return { child: null };
+  const want = String(p?.child ?? '').trim().toLowerCase();
+  const child = kids.find((k) => want && String(k.name).toLowerCase() === want) ?? kids[0];
+  // the next unit - twin of serve (kids.mode === 'class'): class days done, then the level (chosen in the class, or by age)
+  const { data: classRows } = await db.from('learning_sessions').select('created_at, said:content->>user_message')
+    .eq('user_id', userId).eq('session_type', 'classroom').not('content->>class_unit', 'is', null)
+    .order('created_at', { ascending: false }).limit(2000);
+  const days = kidsClassDaysDone((classRows ?? []).map((r: any) => ({ at: Date.parse(r.created_at), said: String(r.said ?? '') })), Date.now());
+  const level: KidsLevel = KIDS_LEVELS.includes(p?.level) ? p.level : kidsLevelForAge(child.age ?? null);
+  const next = KIDS_LEVELS.indexOf(level) * KIDS_PER_LEVEL + (Math.floor(Math.max(0, days) / 2) % KIDS_PER_LEVEL);
+  const nextUnit = { unit: (next % KIDS_PER_LEVEL) + 1, of: KIDS_PER_LEVEL, level, theme: kidsUnit(next).theme,
+    dayInUnit: (Math.max(0, days) % 2) + 1, practise: { es: kidsUnit(next).es, en: kidsUnit(next).en, num: kidsUnit(next).num } };
+  // the last class, as it was saved
+  const { data: last } = await db.from('learning_sessions')
+    .select('created_at, said:content->>user_message, speaker:content->>speaker, label:content->>class_label, words:content->vocabulary_taught')
+    .eq('user_id', userId).eq('session_type', 'classroom').order('created_at', { ascending: false }).limit(60);
+  const rows = (last ?? []) as { created_at: string; said: string | null; speaker: string | null; label: string | null; words: unknown }[];
+  if (!rows.length) return { child: child.name, next: nextUnit, last: null, classDays: days };
+  const day = (iso: string) => panamaDay(Date.parse(iso)); // the class's own day
+  // "Last class" = the latest day the child really spoke (a class only opened today, with nothing said yet, is not it).
+  const spoke = (r: any) => r.speaker !== 'parent' && r.said && !KIDS_STARTER.test(r.said);
+  const lastDay = day((rows.find(spoke) ?? rows[0]).created_at);
+  const thatDay = rows.filter((r) => day(r.created_at) === lastDay);
+  if (!thatDay.some(spoke)) return { child: child.name, next: nextUnit, last: null, classDays: days };
+  const own = thatDay.filter((r) => r.speaker !== 'parent' && r.said && !KIDS_STARTER.test(r.said)
+    && !/^\s*(📷|✏️|🎨)/.test(r.said) && r.said.trim().split(/\s+/).length >= 2);
+  const words = [...new Set(thatDay.flatMap((r) => (Array.isArray(r.words) ? r.words : [])).map((w) => String(w).trim()).filter((w) => w.length >= 2))].slice(0, 6);
+  return {
+    child: child.name, next: nextUnit, classDays: days,
+    last: { at: thatDay[0].created_at, label: thatDay.find((r) => r.label)?.label ?? null, turns: thatDay.filter((r) => r.speaker !== 'parent' && r.said && !KIDS_STARTER.test(r.said)).length,
+      said: own.length ? String(own[0].said).replace(/\s+/g, ' ').trim().slice(0, 140) : null, words },
+  };
+}
+
 async function familyStory(userId: string, body: any): Promise<Record<string, unknown>> {
   const db = notebook();
   if (body.memory === 'forget' || body.memory === 'restore') {
@@ -2173,6 +2217,11 @@ serve(async (req) => {
     }
 
     // 17 Nov 2026: "Phrases you've collected" tip + "Introduce your family to EspaLuz" (dashboard, signed-in only).
+    // 18 Nov 2026: the dashboard's class card (signed-in parent only) - the class's own numbers, read-only.
+    if (body.classCard) {
+      if (fromBot || !userId) throw new Error('Unauthorized');
+      return new Response(JSON.stringify(await classCard(userId, body.classCard)), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
     if (body.phraseTip || body.familyLook || body.familyLookSave) {
       if (fromBot || !userId) throw new Error('Unauthorized');
       const out = body.phraseTip ? await phraseTip(userId, body.phraseTip) : body.familyLook ? await familyLook(body.familyLook) : await familyLookSave(userId, body.familyLookSave);

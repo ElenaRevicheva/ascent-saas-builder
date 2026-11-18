@@ -19,6 +19,7 @@ import { TelegramProgress } from '@/components/dashboard/TelegramProgress';
 import { LearningModules } from '@/components/dashboard/LearningModules';
 import { LearningOptions } from '@/components/dashboard/LearningOptions';
 import { FamilyRoadmap } from '@/components/dashboard/FamilyRoadmap';
+import { ClassCard } from '@/components/dashboard/ClassCard';
 import SubscriptionFlow from '@/components/SubscriptionFlow';
 import SubscriptionRecovery from '@/components/SubscriptionRecovery';
 import { insidePlayApp, restorePlayPurchases } from '@/lib/playBilling';
@@ -141,6 +142,10 @@ const Dashboard = () => {
         {/* 15 Nov 2026 (Elena: one memory across all channels, no duplicates): the family's week - last heard per channel,
             the timeline from WhatsApp / Telegram / the app / the classroom, next steps with Done / Not now, phrases to keep.
             It replaces LearningAnalytics here (its week dots and talk counts now live inside it; the file stays). */}
+        {/* 18 Nov 2026: "<child>'s class" - the class's own numbers (ClassCard); after the chat, per the 8 Nov order. */}
+        <div className="mb-8">
+          <ClassCard />
+        </div>
         {/* 15 Nov 2026 (Elena): "Your first year in <country>" - the heart of the dashboard (BelongingPath). */}
         <div className="mb-8">
           <BelongingPath />
