@@ -556,7 +556,8 @@
     "showTalks": "Tus conversaciones ({{count}})",
     "hideTalks": "Ocultar conversaciones",
     "listen": "Escuchar",
-    "titleSettle": "Tu camino aquí"
+    "titleSettle": "Tu camino aquí",
+    "phrasesSettle": "Frases que EspaLuz te enseñó"
   },
   "fy": {
     "title": "Tu primer año en {{country}}",

@@ -663,7 +663,8 @@
     "showTalks": "Your conversations ({{count}})",
     "hideTalks": "Hide conversations",
     "listen": "Listen",
-    "titleSettle": "Your journey here"
+    "titleSettle": "Your journey here",
+    "phrasesSettle": "Phrases EspaLuz taught you"
   },
   "fy": {
     "title": "Your first year in {{country}}",

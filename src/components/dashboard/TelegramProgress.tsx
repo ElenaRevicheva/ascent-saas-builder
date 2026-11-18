@@ -205,7 +205,7 @@ export const TelegramProgress = () => {
         </CardHeader>
 
         <CardContent>
-          <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
+          <div className={`grid gap-4 grid-cols-2 ${settling ? 'md:grid-cols-3' : 'md:grid-cols-4'}`}>
             <div className="text-center p-4 bg-gradient-to-br from-blue-500/10 to-blue-600/5 rounded-xl border border-blue-500/20">
               <div className="flex items-center justify-center mb-2">
                 <MessageSquare className="h-5 w-5 text-blue-500 mr-2" />
@@ -220,10 +220,12 @@ export const TelegramProgress = () => {
                 <BookOpen className="h-5 w-5 text-[hsl(var(--espaluz-primary))] mr-2" />
                 <div className="text-2xl font-bold text-[hsl(var(--espaluz-primary))]">{phraseSet.size}</div>
               </div>
-              <div className="text-sm text-muted-foreground">{t('jr.phrases')}</div>
+              <div className="text-sm text-muted-foreground">{settling ? t('jr.phrasesSettle') : t('jr.phrases')}</div>
               <div className="text-xs text-[hsl(var(--espaluz-primary))] mt-1">{t('jr.phrasesNote')}</div>
             </div>
 
+            {/* 18 Nov 2026 (Elena): a family that already speaks Spanish does not count Spanish words - this tile is for the others. */}
+            {!settling && (
             <div className="text-center p-4 bg-gradient-to-br from-yellow-500/10 to-yellow-600/5 rounded-xl border border-yellow-500/20">
               <div className="flex items-center justify-center mb-2">
                 <Trophy className="h-5 w-5 text-yellow-600 mr-2" />
@@ -232,6 +234,7 @@ export const TelegramProgress = () => {
               <div className="text-sm text-muted-foreground">{t('jr.words')}</div>
               <div className="text-xs text-yellow-600 mt-1">{t('jr.wordsNote')}</div>
             </div>
+            )}
 
             <div className="text-center p-4 bg-gradient-to-br from-green-500/10 to-green-600/5 rounded-xl border border-green-500/20">
               <div className="flex items-center justify-center mb-2">

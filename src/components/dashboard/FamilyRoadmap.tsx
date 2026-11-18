@@ -42,7 +42,7 @@ function scrollToSelector(selector: string, openAddMember = false) {
 
 export const FamilyRoadmap = () => {
   const { user } = useAuth();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [facts, setFacts] = useState<Facts | null>(null);
   // Polish (4 Nov): when every step is done the map stays visible as ONE slim row; 'Show map' opens it.
   const [expanded, setExpanded] = useState(false);
@@ -52,6 +52,7 @@ export const FamilyRoadmap = () => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [profileTick, setProfileTick] = useState(0);
   const [settling, setSettling] = useState(false); // 18 Nov 2026: native Spanish speakers settling in
+  const [russianHome, setRussianHome] = useState(false); // 18 Nov 2026: who the Russian class is for
 
   useEffect(() => {
     if (!user) return;
@@ -76,6 +77,7 @@ export const FamilyRoadmap = () => {
       ]);
       if (cancelled) return;
       setSettling(settlesProfile(profile));
+      setRussianHome(/russ|рус/i.test(String((profile as Record<string, unknown> | null)?.native_language ?? '')));
 
       const memberRows = (members.data ?? []) as { role: string | null }[];
       const kids = memberRows.filter((m) => (m.role ?? '').toLowerCase() === 'child').length;
@@ -253,8 +255,10 @@ export const FamilyRoadmap = () => {
                   <button type="button" onClick={s.onClick}>{button}</button>
                 )}
                 {/* 12 Nov 2026 (Elena): the Russian classroom sits HERE, in step 3, on the website only - never in the
-                    site header and never inside the Google Play app (Spanish only there). */}
-                {s.key === 'classroom' && !insidePlayApp() && (
+                    site header and never inside the Google Play app (Spanish only there).
+                    18 Nov 2026 (Elena: "move it to a reasonable place, never wipe it"): here only for a Russian-speaking
+                    family (page in Russian or Russian native language); everyone else finds it at the foot of /classroom. */}
+                {s.key === 'classroom' && !insidePlayApp() && (russianHome || (i18n.language ?? '').startsWith('ru')) && (
                   <Link to="/classroom-ru"
                     className="inline-flex items-center gap-1 rounded-full border-2 px-4 py-1.5 text-sm font-semibold"
                     style={{ borderColor: tint, color: 'hsl(var(--foreground))' }}>

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { insidePlayApp } from '@/lib/playBilling';
 import { Mic, Square, Star, Play, Camera } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -978,6 +979,13 @@ const Classroom = () => {
         </div>
         </div>
         </>
+      )}
+      {/* 18 Nov 2026 (Elena): the Russian class is never wiped - off the dashboards of families it is not for, it lives here,
+          quietly, for anyone who wants it. Website only, never inside the Google Play app (12 Nov rule). */}
+      {!insidePlayApp() && (
+        <Link to="/classroom-ru" className="mt-2 rounded-full bg-white/80 px-4 py-1.5 text-sm text-slate-700 shadow hover:bg-white">
+          Также: Мишка &amp; Лиса · Russian class · beta
+        </Link>
       )}
     </div>
   );

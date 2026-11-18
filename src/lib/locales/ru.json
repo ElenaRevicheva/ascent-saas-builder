@@ -675,7 +675,8 @@
     "showTalks": "Ваши разговоры ({{count}})",
     "hideTalks": "Скрыть разговоры",
     "listen": "Послушать",
-    "titleSettle": "Ваш путь здесь"
+    "titleSettle": "Ваш путь здесь",
+    "phrasesSettle": "Фразы от EspaLuz"
   },
   "fy": {
     "title": "Ваш первый год: {{country}}",
