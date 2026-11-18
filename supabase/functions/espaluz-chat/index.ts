@@ -421,7 +421,9 @@ RESPONSE FORMAT - two parts:
 (one warm sentence that fits this reply)
 [VIDEO SCRIPT END]
 
-${BILINGUAL_LAST}`;
+${BILINGUAL_LAST}
+
+${familyNotes ? MESSAGE_FIRST_LAST : ''}`;
 
   const messages = [
     ...conversationHistory.slice(-8),
@@ -1597,6 +1599,11 @@ function meter(provider: string, result: any): void {
 
 // 7 Nov 2026 (Elena's incognito test: a grown-up web reply came back in Spanish only). Same fix as the bots on 6 Nov:
 // the rule goes last, the finished reply is checked, and a failed check gets one rewrite; if that fails too, the original goes out.
+// 18 Nov 2026: twin of MESSAGE_FIRST_LAST in both bots - goes LAST, so an earlier "wrong chat" answer in the history is not copied.
+const MESSAGE_FIRST_LAST = `ANSWER THIS MESSAGE: if it is a note someone else wrote to them (a school, a teacher, a doctor, a landlord, an office)
+that they forwarded or pasted, it is THEIRS: explain what it says and what is being asked, then give a short reply they can
+send. If an earlier reply of yours in this chat called such a note a wrong chat or not theirs, that was a mistake - do not
+repeat it; answer the note now. Ask about anyone you do not know only at the very end, in one warm line.`;
 const BILINGUAL_LAST = `LAST AND MOST IMPORTANT - THE FORM OF THIS REPLY:
 - Both languages, always, even if everything above is in Spanish: each idea in Spanish, and right after it the same idea in English, in short pairs.
 - 2 to 4 emojis across the reply where they fit: the opening, a phrase to learn, the closing. Never zero, never one on every line.
