@@ -15,6 +15,7 @@ import { grabFrames } from './CelebrationMoment';
  *    hobbies, the home - never faces, bodies, names or ages;
  *  - the parent TICKS what is true; only ticked notes go into the family notebook (`familyLookSave`), the same notebook the
  *    web chat, WhatsApp and Telegram read. Nothing is saved without a tick.
+ *  - only notes about what the family DOES or LOVES (a pet, a hobby, a shared meal); furniture and decoration are never noted.
  */
 type Note = { fact: string; shown: string };
 
