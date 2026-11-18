@@ -10,6 +10,9 @@ import familyLearningSpanish from '@/assets/family-learning-spanish.jpg';
 import espaluzFace from '@/assets/heroes/hello-poster.jpg';
 import { LearningRoadmap } from './LearningRoadmap';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { readFamilyProfile, PACK_COUNTRIES, settlesProfile } from './FamilyProfileDialog';
 
 interface DashboardHeaderProps {
   user: any;
@@ -19,6 +22,16 @@ interface DashboardHeaderProps {
 
 export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHeaderProps) => {
   const { t } = useTranslation();
+  // 18 Nov 2026: a family settling in (already speaks Spanish) is welcomed to its life in the country, not a Spanish course.
+  const { user: settleUser } = useAuth();
+  const [settleIn, setSettleIn] = useState('');
+  useEffect(() => {
+    if (!settleUser) return;
+    readFamilyProfile(settleUser.id).then((p) => {
+      if (!settlesProfile(p)) return;
+      setSettleIn(PACK_COUNTRIES.find(([k]) => k === String(p?.country_now ?? ''))?.[1] ?? '');
+    }).catch(() => undefined);
+  }, [settleUser]);
   // 11 Nov 2026: greet by first name only ("Hello, Kira!"), the way a friend would. The email fallback is gone:
   // "Hello, kiravelerevich!" reads like a login, not a person. No name -> plain "Hello!".
   const firstName = String(user?.user_metadata?.full_name ?? '').trim().split(/\s+/)[0] || '';
@@ -89,10 +102,10 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
         <div className="container mx-auto px-4 py-8">
             <div className="text-center mb-8">
               <h2 className="text-4xl font-bold text-purple-700 mb-4">
-                {t('dashboard.welcome')}
+                {settleIn ? t('dashboard.welcomeSettle', { country: settleIn }) : t('dashboard.welcome')}
               </h2>
               <p className="text-lg text-orange-700 max-w-2xl mx-auto mb-6">
-                {t('dashboard.subtitle')}
+                {settleIn ? t('dashboard.subtitleSettle') : t('dashboard.subtitle')}
               </p>
               <LearningRoadmap />
             </div>

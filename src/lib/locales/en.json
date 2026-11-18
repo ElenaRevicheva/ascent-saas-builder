@@ -34,7 +34,9 @@
     "welcome": "Welcome to Your Spanish Journey!",
     "subtitle": "Connect with EspaLuz and practise Spanish with your family: in the chat, in class and in everyday life here",
     "greeting": "Hello",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "welcomeSettle": "Welcome to your life in {{country}}!",
+    "subtitleSettle": "EspaLuz helps your family feel at home here: this country's own words and ways, the kids' class, and English practice - on WhatsApp, Telegram and here."
   },
   "account": {
     "title": "Your Spanish Journey",

@@ -21,7 +21,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { loadCountryLessons } from '@/data/countryLessons';
-import { readFamilyProfile, PACK_COUNTRIES } from './FamilyProfileDialog';
+import { readFamilyProfile, PACK_COUNTRIES, settlesProfile } from './FamilyProfileDialog';
 
 export const LearningModules = () => {
   const navigate = useNavigate();
@@ -35,9 +35,11 @@ export const LearningModules = () => {
   const [countryLessons, setCountryLessons] = useState<Lesson[]>([]);
   const [countryName, setCountryName] = useState('');
   const [countryKey, setCountryKey] = useState('');
+  const [settling, setSettling] = useState(false);
   useEffect(() => {
     if (!user) return;
     readFamilyProfile(user.id).then(async (p) => {
+      setSettling(settlesProfile(p));
       const c = String(p?.country_now ?? '');
       if (!PACK_COUNTRIES.some(([k]) => k === c)) return;
       setCountryName(PACK_COUNTRIES.find(([k]) => k === c)?.[1] ?? '');
@@ -94,7 +96,8 @@ export const LearningModules = () => {
     }
   };
 
-  const filteredLessons = [...countryLessons, ...spanishLessons].filter(lesson => lesson.difficulty === selectedDifficulty);
+  // 18 Nov 2026: a family that already speaks Spanish gets its country lessons only - never the beginner Spanish ones.
+  const filteredLessons = [...countryLessons, ...(settling && countryLessons.length ? [] : spanishLessons)].filter(lesson => lesson.difficulty === selectedDifficulty);
 
   const startLesson = (lesson: Lesson) => {
     // 15 Nov 2026: the page lives at /learning/:moduleId - "/learning-module/" opened "page not found" for every lesson.

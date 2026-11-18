@@ -259,8 +259,13 @@ const FOCUS_RULES: Record<string, string> = {
 // espaluz_enhancements.py - change one, change all three.
 // Said in a chat, in Spanish, English or Russian: "quiero aprender / mejorar / practicar inglés", "I want to learn English".
 export const WANTS_ENGLISH_SAID = /\b(quiero|quisiera|me gustar[ií]a|necesito|deseo)\s+(aprender|mejorar|practicar|hablar)(\s+(mi|el))?\s+ingl[eé]s|\b(want|need|would like)\s+to\s+(learn|improve|practi[cs]e)\s+(my\s+)?english|хочу\s+(выучить|учить|подтянуть|улучшить)\s+английский/i;
-const wantsEnglish = (p: Record<string, any>) => /english|ingl[eé]s|англ/i.test(String(p.learn ?? ''));
-const englishOnly = (p: Record<string, any>) => wantsEnglish(p) && !/spanish|espa[nñ]ol|испан|both|ambos|оба/i.test(String(p.learn ?? ''));
+// 18 Nov 2026 (Elena: native Spanish speakers moving between Latin American countries get NO beginner Spanish - the Spanish
+// half carries this country's own words and ways, the English half is real English practice; replies stay bilingual).
+// Twin of _settles in both bots' espaluz_enhancements.py. On from the questionnaire's 4th answer or a Spanish native language.
+const settles = (p: Record<string, any>) => /already speak spanish|ya hablo espa[nñ]ol|уже говорю по-испански/i.test(String(p.learn ?? ''))
+  || /^(spanish|espa[nñ]ol|castellano|испанский)$/i.test(String(p.native_language ?? '').trim());
+const wantsEnglish = (p: Record<string, any>) => settles(p) || /english|ingl[eé]s|англ/i.test(String(p.learn ?? ''));
+const englishOnly = (p: Record<string, any>) => settles(p) || (wantsEnglish(p) && !/spanish|espa[nñ]ol|испан|both|ambos|оба/i.test(String(p.learn ?? '')));
 const ENGLISH_LEVEL: Record<string, string> = {
   "I'm just starting": 'short, clear English sentences in the present tense; at most 2 new phrases per reply, each with its meaning in Spanish and a simple way to say it.',
   'I get by': 'natural everyday English; 2-3 new phrases per reply; explain phrasal verbs and the difference between similar words when they come up.',
@@ -304,6 +309,7 @@ function englishRules(p: Record<string, any>): string[] {
 }
 function profileRules(p: Record<string, any>): string {
   const out: string[] = [];
+  if (settles(p)) out.push(`SETTLING IN - this family already speaks Spanish natively and is moving between Spanish-speaking countries. Never teach beginner Spanish and never explain ordinary Spanish words (this overrides YOU TEACH IN EVERY REPLY above: the phrases they get are this country's own words and English phrases, never basic Spanish). In the Spanish half of every reply, bring what THIS country does differently: its own words and expressions from the country facts (each explained in plain Spanish, with its English meaning), its customs, rhythm and mentality - and, when it fits, the bridge to how it is said or done in ${p.country_from || 'their home country'}. The English half stays real English practice at their level (the ENGLISH COACH below). The reply keeps both languages, as always.`);
   const lang = String(p.native_language ?? '').trim();
   if (lang && !/^(english|spanish|español|espanol)$/i.test(lang))
     out.push(`HEART LANGUAGE - ${lang}: when a Spanish word or grammar point is hard, add ONE short gloss in ${lang} for that word only ` +

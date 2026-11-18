@@ -125,7 +125,10 @@ const QUESTIONS: Q[] = [
   { key: 'learn',
     ask: { en: 'What do you want to learn with EspaLuz?', ru: 'Что вы хотите учить с EspaLuz?', es: '¿Qué quieres aprender con EspaLuz?' },
     why: { en: 'Spanish for your new life, English for work and the world - or both.', ru: 'Испанский для новой жизни, английский для работы и мира - или оба.', es: 'Español para tu nueva vida, inglés para el trabajo y el mundo, o los dos.' },
-    options: [['Spanish', 'Испанский', 'Español'], ['English', 'Английский', 'Inglés'], ['Both Spanish and English', 'И испанский, и английский', 'Español e inglés']],
+    options: [['Spanish', 'Испанский', 'Español'], ['English', 'Английский', 'Inglés'], ['Both Spanish and English', 'И испанский, и английский', 'Español e inglés'],
+      // 18 Nov 2026 (Elena): native Spanish speakers moving between countries - no beginner Spanish; this country's own words
+      // and ways + real English practice, replies stay bilingual. The brain reads it with settles() (web) / _settles() (bots).
+      ['I already speak Spanish - help us settle in, and practise English', 'Я уже говорю по-испански - помогите обжиться и подтянуть английский', 'Ya hablo español: ayúdanos a instalarnos y a practicar inglés']],
     free: { en: 'Or say it in your own words', ru: 'Или скажите своими словами', es: 'O dilo con tus palabras' } },
   { key: 'english_feel', onlyIf: learnsEnglish,
     ask: { en: 'How does English feel today?', ru: 'Как вам английский сегодня?', es: '¿Cómo te sientes hoy con el inglés?' },
@@ -170,6 +173,12 @@ const UI: Record<string, Txt> = {
   openFamily: { en: 'Open your family list →', ru: 'Открыть список семьи →', es: 'Abrir tu lista de familia →' },
   wait: { en: 'Your answers wait for you: press "Start here" again and you continue from this question.', ru: 'Ваши ответы сохранятся: нажмите «Начать здесь» снова, и вы продолжите с этого вопроса.', es: 'Tus respuestas te esperan: pulsa "Empieza aquí" otra vez y sigues desde esta pregunta.' },
 };
+
+// 18 Nov 2026: the page's twin of settles() in espaluz-chat and _settles() in both bots - a native Spanish speaker settling
+// into another Spanish-speaking country (4th 'learn' answer, or native language Spanish).
+export const settlesProfile = (p: Partial<FamilyProfile> | null | undefined): boolean =>
+  !!p && (/already speak spanish|ya hablo espa[nñ]ol|уже говорю по-испански/i.test(String(p.learn ?? ''))
+    || /^(spanish|espa[nñ]ol|castellano|испанский)$/i.test(String((p as Record<string, unknown>).native_language ?? '').trim()));
 
 export async function readFamilyProfile(userId: string): Promise<FamilyProfile | null> {
   const { data } = await supabase.from('learning_sessions').select('content').eq('user_id', userId)

@@ -34,7 +34,9 @@
     "welcome": "¡Bienvenido a Tu Viaje en Español!",
     "subtitle": "Conéctate con EspaLuz y practica español con tu familia: en el chat, en la clase y en la vida diaria aquí",
     "greeting": "¡Hola",
-    "signOut": "Cerrar Sesión"
+    "signOut": "Cerrar Sesión",
+    "welcomeSettle": "¡Bienvenidos a su vida en {{country}}!",
+    "subtitleSettle": "EspaLuz ayuda a tu familia a sentirse en casa aquí: las palabras y costumbres propias de este país, la clase de los niños y práctica de inglés, en WhatsApp, Telegram y aquí."
   },
   "account": {
     "title": "Tu Viaje en Español",
