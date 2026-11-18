@@ -115,7 +115,8 @@
     "emotionDetected": "Emoción detectada",
     "errorSending": "Error al enviar mensaje. Inténtalo de nuevo.",
     "loading": "Pensando...",
-    "placeholderSettle": "Escribe tu mensaje en español o en inglés..."
+    "placeholderSettle": "Escribe tu mensaje en español o en inglés...",
+    "startConversationSettle": "Pregunta por la vida aquí - sus palabras, costumbres y trámites - o practica tu inglés"
   },
   "common": {
     "loading": "Cargando...",

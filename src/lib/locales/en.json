@@ -115,7 +115,8 @@
     "emotionDetected": "Emotion detected",
     "errorSending": "Error sending message. Please try again.",
     "loading": "Thinking...",
-    "placeholderSettle": "Type your message in Spanish or English..."
+    "placeholderSettle": "Type your message in Spanish or English...",
+    "startConversationSettle": "Ask about life here - its words, customs and offices - or practise your English"
   },
   "common": {
     "loading": "Loading...",

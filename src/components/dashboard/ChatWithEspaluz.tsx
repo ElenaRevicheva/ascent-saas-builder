@@ -847,7 +847,7 @@ The video script will be used to generate an avatar video with synchronized audi
               <div className="text-center text-muted-foreground py-8">
                 <Bot className="h-12 w-12 mx-auto mb-3 text-[hsl(var(--espaluz-primary))]" />
                 <p>{t('chat.welcome')}</p>
-                <p className="text-sm mt-1">{t('chat.startConversation')}</p>
+                <p className="text-sm mt-1">{settlingChat ? t('chat.startConversationSettle') : t('chat.startConversation')}</p>
                 <TalkingHello variant="chat" />
               </div>
             )}

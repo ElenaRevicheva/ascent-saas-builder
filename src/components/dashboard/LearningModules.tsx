@@ -104,7 +104,7 @@ export const LearningModules = () => {
   const settleRank = (id: string) => { const i = SETTLE_ORDER.findIndex((k) => id.includes(k)); return i < 0 ? 99 : i; };
   const settleList = settling && countryLessons.length > 0;
   const filteredLessons = settleList
-    ? [...countryLessons].sort((a, b) => settleRank(a.id) - settleRank(b.id))
+    ? [...countryLessons].filter((l) => !l.id.includes('greetings_and_courtesy')).sort((a, b) => settleRank(a.id) - settleRank(b.id)) // a native speaker does not need the greetings lesson
     : [...countryLessons, ...spanishLessons].filter(lesson => lesson.difficulty === selectedDifficulty);
 
   const startLesson = (lesson: Lesson) => {
