@@ -111,7 +111,7 @@
     "title": "Chat with Espaluz",
     "welcome": "¡Hola! I'm your bilingual AI tutor",
     "startConversation": "Start a conversation to practice Spanish and English together",
-    "placeholder": "Type your message in Spanish, English, or Russian...",
+    "placeholder": "Type your message in Spanish or English...",
     "emotionDetected": "Emotion detected",
     "errorSending": "Error sending message. Please try again.",
     "loading": "Thinking...",

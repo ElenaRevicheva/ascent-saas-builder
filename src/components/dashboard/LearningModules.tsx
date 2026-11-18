@@ -157,10 +157,13 @@ export const LearningModules = () => {
                     <Clock className="h-3 w-3" />
                     <span>{t('lm.minutes', { count: lesson.estimatedMinutes })}</span>
                   </div>
+                  {/* 18 Nov 2026 (professional readers: "0 words makes the lesson look broken"): shown only when there are words. */}
+                  {lesson.vocabulary.length > 0 && (
                   <div className="flex items-center gap-1">
                     <BookOpen className="h-3 w-3" />
                     <span>{t('lm.words', { count: lesson.vocabulary.length })}</span>
                   </div>
+                  )}
                   <div className="flex items-center gap-1">
                     <MessageSquare className="h-3 w-3" />
                     <span>{t('lm.phrases', { count: lesson.phrases.length })}</span>
