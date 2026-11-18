@@ -1824,7 +1824,8 @@ const TIP_LANG: Record<string, string> = { en: 'English', es: 'Spanish', ru: 'Ru
 const PHRASE_TIP = `You are EspaLuz, a warm bilingual companion for a family settling in a Spanish-speaking country.
 You get the Spanish phrases you taught this family recently and a few things you know about them.
 Write ONE practice tip: at most 2 short sentences in LANGUAGE. Name 1 or 2 of the listed phrases exactly as written, in
-Spanish, in quotes. Suggest one concrete everyday moment this week to use them (use a known family fact only if it fits),
+Spanish, in quotes. Suggest one concrete everyday moment this week to use them (use a known family fact only if it is about
+what a person in the family does or loves - never furniture, lights or decoration),
 and invite them to rehearse it with you first. Never invent names, places, dates or facts. No emojis.
 Also write "practise": the first message the parent could send you to start rehearsing, in LANGUAGE, first person, naming
 the same phrase(s). Return ONLY JSON: {"tip":"...","practise":"..."}`;
@@ -1873,8 +1874,9 @@ async function phraseTip(userId: string, p: any): Promise<Record<string, unknown
 // photo readers list what is clearly visible and worth talking about; the parent ticks what is true; only ticked notes go
 // into the family notebook that the web chat, WhatsApp and Telegram already read. Nothing is saved without a tick.
 const LOOK_PROMPT = `This picture joins 3 stills from a short home video a parent shared so their family's language companion
-can get to know them. List 3 to 5 short notes about things CLEARLY visible that a family would enjoy talking about: pets,
-toys, hobbies, instruments, books, sport, the home (garden, balcony, the view), food, a celebration.
+can get to know them. List up to 5 short notes about what this family DOES or LOVES, clearly visible: a pet, toys, a hobby,
+an instrument, books, a sport, a garden or the view they live with, a food they are sharing, a celebration.
+Never list furniture, lamps, walls, decoration or ordinary household objects: they say nothing about the family.
 Write each as a family fact of at most 12 words, e.g. "The family has a small brown dog."
 NEVER mention: names, ages, faces, skin, hair, body, beauty, clothes, ethnicity, religion, health, money, or anything you
 are not sure you see. One note per line, in this format: EN: <note in English> | XX: <the same note in LANGUAGE>
