@@ -114,7 +114,7 @@ serve(async (req) => {
       // a bot menu (/english /spanish /both). Unlike profile_fill, the newest choice WINS - it is the family's own decision.
       if (mode === 'learn_set') {
         const learn = String(body.learn ?? '');
-        if (!['English', 'Spanish', 'Both Spanish and English'].includes(learn)) return json({ linked: true, set: false });
+        if (!['English', 'Spanish', 'Both Spanish and English', 'I already speak Spanish - help us settle in, and practise English'].includes(learn)) return json({ linked: true, set: false }); // 18 Nov 2026: + settling in (/settle)
         const { data: cur } = await db.from('learning_sessions').select('content').eq('user_id', userId).eq('session_type', 'analytics')
           .eq('content->>event', 'family_profile').order('created_at', { ascending: false }).limit(1);
         const now = (cur?.[0]?.content ?? {}) as Record<string, unknown>;
