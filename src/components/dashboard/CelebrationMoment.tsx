@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { PartyPopper, ImagePlus, Download, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -146,7 +147,8 @@ export const CelebrationMoment = () => {
       <div className="flex items-start gap-3">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary" aria-hidden><PartyPopper className="h-4 w-4" /></span>
         <div className="min-w-0">
-          <p className="font-semibold text-foreground">{t('vm.celebTitle')}</p>
+          {/* 19 Nov 2026 (strict feature readers, all 6: "it lets me fill everything, THEN says it's locked"): say it upfront. */}
+          <p className="font-semibold text-foreground">{t('vm.celebTitle')} <span className="ml-1 rounded-full bg-primary/10 px-2 py-0.5 align-middle text-xs font-medium text-primary">{t('vm.celebBadge')}</span></p>
           <p className="text-sm text-muted-foreground">{t('vm.celebBody')}</p>
         </div>
       </div>
@@ -184,6 +186,9 @@ export const CelebrationMoment = () => {
           </div>
           <input ref={fileRef} type="file" accept="video/*,image/*" className="hidden" onChange={pick} />
           {note && <p className="text-sm text-destructive">{note}</p>}
+          {note === t('vm.celebNotPaid') && (
+            <Link to="/#pricing" className="inline-flex text-sm font-semibold text-primary underline-offset-2 hover:underline">{t('vm.celebSeePlan')}</Link>
+          )}
           <p className="text-xs text-muted-foreground">{t('vm.celebPrivacy')}</p>
         </div>
       )}

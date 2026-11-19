@@ -545,7 +545,7 @@
     "celebPick": "Choose a clip or photo",
     "celebRepick": "Choose another",
     "celebMake": "Make EspaLuz's wish",
-    "celebPrivacy": "Your clip stays on your device: EspaLuz looks only at 3 still pictures from it. One celebration a month is included in EspaLuz Family.",
+    "celebPrivacy": "Your clip or photo stays on your device: EspaLuz looks only at up to 3 still pictures from it. One celebration a month is included in EspaLuz Family.",
     "celebWorking": "EspaLuz is recording your wish. It takes 1-2 minutes; keep this page open.",
     "celebDone": "Your celebration from EspaLuz",
     "celebDownload": "Download",
@@ -578,7 +578,9 @@
     "prepCap": "This month's tips videos are used. The next ones are ready on {{date}}.",
     "prepRole": "EspaLuz plays: {{role}}",
     "prepBodySettle": "A job interview, a meeting, a call in English: tell EspaLuz what is coming, and she plays the other person in English. You answer by voice, she helps you along, then gives you her tips.",
-    "prepHowSettle": "6 short questions in English, with Spanish under each one. Answer by voice or by typing."
+    "prepHowSettle": "6 short questions in English, with Spanish under each one. Answer by voice or by typing.",
+    "celebBadge": "Part of EspaLuz Family",
+    "celebSeePlan": "See EspaLuz Family - $11 a month →"
   },
   "fw": {
     "title": "Your family's week with EspaLuz",

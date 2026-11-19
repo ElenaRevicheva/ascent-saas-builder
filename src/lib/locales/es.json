@@ -438,7 +438,7 @@
     "celebPick": "Elegir un video o una foto",
     "celebRepick": "Elegir otro",
     "celebMake": "Grabar el saludo de EspaLuz",
-    "celebPrivacy": "Tu video se queda en tu dispositivo: EspaLuz mira solo 3 imágenes fijas de él. Un saludo al mes está incluido en EspaLuz Family.",
+    "celebPrivacy": "Tu video o foto se queda en tu dispositivo: EspaLuz mira solo hasta 3 imágenes fijas. Un saludo al mes está incluido en EspaLuz Family.",
     "celebWorking": "EspaLuz está grabando tu saludo. Tarda 1-2 minutos; deja esta página abierta.",
     "celebDone": "Tu saludo de EspaLuz",
     "celebDownload": "Descargar",
@@ -471,7 +471,9 @@
     "prepCap": "Los videos de consejos de este mes ya están hechos. Los próximos estarán listos el {{date}}.",
     "prepRole": "EspaLuz hace de: {{role}}",
     "prepBodySettle": "Una entrevista de trabajo, una reunión, una llamada en inglés: cuéntale a EspaLuz qué viene y ella hace de la otra persona en inglés. Respondes con la voz, ella te ayuda y luego te da sus consejos.",
-    "prepHowSettle": "6 preguntas cortas en inglés, con el español debajo de cada una. Responde con la voz o escribiendo."
+    "prepHowSettle": "6 preguntas cortas en inglés, con el español debajo de cada una. Responde con la voz o escribiendo.",
+    "celebBadge": "Parte de EspaLuz Family",
+    "celebSeePlan": "Ver EspaLuz Family - $11 al mes →"
   },
   "fw": {
     "title": "La semana de tu familia con EspaLuz",
