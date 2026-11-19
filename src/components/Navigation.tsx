@@ -11,8 +11,8 @@ import { ChevronDown, Compass, CreditCard, GraduationCap, Mail, Menu, MessageCir
 const GROUPS = [
   { label: "menu.gStart", items: [
     // 19 Nov 2026: the menu follows the page - "Find your family's path" and "How EspaLuz works" added, in page order.
-    { href: "#path", icon: Signpost, title: "menu.path", desc: "menu.pathDesc" },
     { href: "#start", icon: MessageCircle, title: "menu.start", desc: "menu.startDesc" },
+    { href: "#path", icon: Signpost, title: "menu.path", desc: "menu.pathDesc" },
     { href: "#how-it-works", icon: ListOrdered, title: "menu.how", desc: "menu.howDesc" },
     { to: "/classroom", icon: GraduationCap, title: "menu.classroom", desc: "menu.classroomDesc" },
   ] },
