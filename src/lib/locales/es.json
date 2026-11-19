@@ -1462,7 +1462,7 @@
       "english_week": "2 frases de este tema, en cualquier canal",
       "rehearse": "unos 10 minutos, EspaLuz hace de la otra persona",
       "rehearse_en": "unos 10 minutos, EspaLuz hace de la otra persona en inglés",
-      "child_class": "2 días de clase con Pere y Titi (o Мишка & Лиса)",
+      "child_class": "2 días de clase con Pere y Titi",
       "family_note": "una persona, una mascota, un plan: lo recuerda en todos lados",
       "belong": "unos 8 minutos"
     },
@@ -1472,5 +1472,10 @@
       "child": "Tu hijo/a dijo «{{text}}»",
       "lesson": "Terminaste la lección «{{text}}»"
     }
+  },
+  "badge": {
+    "standard": "Estándar",
+    "trial": "Prueba · {{count}} días",
+    "free": "Gratis"
   }
 }

@@ -102,7 +102,10 @@ export const LearningModules = () => {
   // lessons in one list, no level tabs, no badge - the most useful for a native speaker first, greetings last.
   const SETTLE_ORDER = ['local_expressions', 'time', 'newcomers_find_hard', 'school_life', 'family_and_friends', 'rhythm_of_the_year', 'folk_culture', 'everyday_life', 'food_and_table', 'greetings_and_courtesy'];
   const settleRank = (id: string) => { const i = SETTLE_ORDER.findIndex((k) => id.includes(k)); return i < 0 ? 99 : i; };
-  const settleList = settling && countryLessons.length > 0;
+  // 19 Nov 2026 (strict readers Carlos + Valentina): a settling family with no country yet (e.g. 'settle' typed on WhatsApp
+  // before the questionnaire) saw the BEGINNER Spanish list - Table 2 'must not happen'. Settling = never that list; with no
+  // country the list is empty and the existing line asks where home is now.
+  const settleList = settling;
   const filteredLessons = settleList
     ? [...countryLessons].filter((l) => !l.id.includes('greetings_and_courtesy')).sort((a, b) => settleRank(a.id) - settleRank(b.id)) // a native speaker does not need the greetings lesson
     : [...countryLessons, ...spanishLessons].filter(lesson => lesson.difficulty === selectedDifficulty);

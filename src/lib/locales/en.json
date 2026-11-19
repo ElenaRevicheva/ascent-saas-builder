@@ -1462,7 +1462,7 @@
       "english_week": "2 phrases on this topic, on any channel",
       "rehearse": "about 10 minutes, EspaLuz plays the other person",
       "rehearse_en": "about 10 minutes, EspaLuz plays the other person in English",
-      "child_class": "2 class days with Pere & Titi (or Мишка & Лиса)",
+      "child_class": "2 class days with Pere & Titi",
       "family_note": "a person, a pet, a plan - she remembers it everywhere",
       "belong": "about 8 minutes"
     },
@@ -1472,5 +1472,10 @@
       "child": "Your child said «{{text}}»",
       "lesson": "Finished the lesson «{{text}}»"
     }
+  },
+  "badge": {
+    "standard": "Standard",
+    "trial": "Trial · {{count}} days",
+    "free": "Free"
   }
 }

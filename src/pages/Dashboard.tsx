@@ -103,12 +103,12 @@ const Dashboard = () => {
 
   const getStatusBadge = () => {
     if (isSubscriptionActive) {
-      return <Badge variant="default" className="bg-green-500"><Crown className="h-3 w-3 mr-1" />Standard</Badge>;
+      return <Badge variant="default" className="bg-green-500"><Crown className="h-3 w-3 mr-1" />{t('badge.standard')}</Badge>;
     }
     if (isTrialActive) {
-      return <Badge variant="secondary"><Clock className="h-3 w-3 mr-1" />{trialDaysLeft} days trial</Badge>;
+      return <Badge variant="secondary"><Clock className="h-3 w-3 mr-1" />{t('badge.trial', { count: trialDaysLeft })}</Badge>;
     }
-    return <Badge variant="outline">Free</Badge>;
+    return <Badge variant="outline">{t('badge.free')}</Badge>; // 19 Nov 2026: the header badge was English on ES/RU dashboards
   };
 
   return (
