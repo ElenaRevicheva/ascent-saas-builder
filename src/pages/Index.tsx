@@ -371,7 +371,16 @@ const Index = () => {
         <div id="path" className="mx-auto mb-10 max-w-5xl scroll-mt-24 px-4 text-left">
           <FindYourPath />
         </div>
-        <p className="mx-auto mb-8 max-w-3xl px-4 text-lg font-semibold text-foreground">{t("hero4.promiseTitle")}</p>
+        {/* 19 Nov 2026 (Elena: "too modest - more attractive, stylish, expressive"): same words, now a statement line -
+            the headline serif in italic, a violet-to-sun gradient, and fine lines tapering out like a road to the horizon. */}
+        <div className="mx-auto mb-12 mt-2 flex max-w-4xl items-center gap-4 px-4 md:gap-6">
+          <span aria-hidden className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/30 to-primary/60" />
+          <p className="bg-gradient-to-r from-[#6d28d9] via-[#9333ea] to-[#d97706] bg-clip-text text-center text-2xl italic leading-snug [text-wrap:balance] text-transparent md:text-4xl"
+            style={{ fontFamily: '"Newsreader", "Iowan Old Style", Georgia, serif', fontWeight: 500 }}>
+            {t("hero4.promiseTitle")}
+          </p>
+          <span aria-hidden className="h-px flex-1 bg-gradient-to-l from-transparent via-primary/30 to-primary/60" />
+        </div>
 
       </section>
 

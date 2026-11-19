@@ -94,9 +94,22 @@
     }
     </script>
     <style>
-      .el-shell{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;max-width:720px;margin:0 auto;padding:32px 20px;color:#2a2340;line-height:1.55}
-      .el-shell h1{font-size:1.9rem;line-height:1.2;margin:.2em 0 .4em}.el-shell h2{font-size:1.2rem;margin:1.4em 0 .3em}
-      .el-shell a{color:#5b3fd1}.el-shell img{width:56px;height:56px}.el-shell footer{margin-top:2em;font-size:.9rem;color:#6b6385}
+      /* 19 Nov 2026 (Elena: "on reload a plain text page shows for a second"). That text is the static shell for search
+         engines and AI answers (A+ 100 since 4 Nov) and must stay readable - never hidden (cloaking). Only its LOOK changes:
+         the landing's own background, fonts and colours, so the first second is an EspaLuz welcome. Not one word changed. */
+      #root:has(.el-shell){min-height:100vh;background:linear-gradient(180deg,#fdf8ef 0%,#f6efff 55%,#fdf3e7 100%)}
+      .el-shell{font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;max-width:760px;margin:0 auto;padding:40px 20px 56px;color:#2a2340;line-height:1.6;animation:elFade .6s ease-out both}
+      .el-shell>*{position:relative}
+      .el-shell main,.el-shell>section{background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.8);border-radius:24px;padding:28px 26px;box-shadow:0 24px 60px -30px rgba(91,63,209,.35)}
+      .el-shell header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+      .el-shell h1{font-family:"Newsreader","Iowan Old Style",Georgia,serif;font-weight:600;font-size:clamp(1.9rem,4.5vw,2.6rem);line-height:1.15;color:#1f1640;margin:.2em 0 .5em;letter-spacing:-.01em}
+      .el-shell h2{font-family:"Newsreader","Iowan Old Style",Georgia,serif;font-weight:600;font-size:1.35rem;color:#6d28d9;margin:1.5em 0 .35em}
+      .el-shell p,.el-shell li{color:#4a4366}.el-shell ul{padding-left:1.1em}.el-shell li{margin:.25em 0}.el-shell li::marker{color:#6d28d9}
+      .el-shell a{color:#6d28d9;font-weight:600;text-decoration:none;border-bottom:1px solid rgba(109,40,217,.3)}
+      .el-shell img{width:56px;height:56px;border-radius:50%;box-shadow:0 6px 18px -6px rgba(91,63,209,.45)}
+      .el-shell footer{margin-top:2em;font-size:.9rem;color:#6b6385;text-align:center}
+      @keyframes elFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+      @media (prefers-reduced-motion:reduce){.el-shell{animation:none}}
     </style>
   </head>
 
