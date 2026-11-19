@@ -39,6 +39,13 @@ export function phrasesIn(text: string, max = 6): FoundPhrase[] {
     const english = !PRON.test(inBrackets) && !/\w-\w+-\w/.test(inBrackets) && ENGLISH.test(inBrackets) ? inBrackets : m[3].startsWith('[') ? '' : m[3];
     add(m[1], english, true);
   }
-  const seen = new Set<string>();
-  return out.filter((p) => { const k = p.es.toLowerCase(); if (seen.has(k)) return false; seen.add(k); return true; }).slice(0, max);
+  // 19 Nov 2026 (Telegram /review: 140 of 141 saved words had no meaning): the most common Telegram shape on 200 real
+  // replies (29) was never read -  "Quedo pendiente" = I'll be watching for it.  ·  "Por duelo" [por DWEH-loh] = "Due to
+  // mourning". An English-first pair ("Dear families" = "Apreciadas familias") fails the Spanish test and is skipped.
+  // Same day: "Un café, por favor." (oon kah-FEH) - "A coffee, please." - pronunciation in ROUND brackets, then the English.
+  for (const m of body.matchAll(/[“"]([^”"\n]{4,90})[”"]\*{0,2}\s*(?:[\[(][^\])\n]{2,90}[\])]\s*)?(?:=|[-–])\s*[“"]?([^”"\n.!?]{3,90}[!?]?)/g)) add(m[1], m[2]);
+  // A phrase found twice keeps the copy WITH its English (the first pattern may have read only its pronunciation).
+  const best = new Map<string, FoundPhrase>();
+  for (const p of out) { const k = p.es.toLowerCase(); if (!best.has(k) || (!best.get(k)!.en && p.en)) best.set(k, p); }
+  return [...best.values()].slice(0, max);
 }

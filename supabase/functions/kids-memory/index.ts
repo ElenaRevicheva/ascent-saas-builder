@@ -114,7 +114,8 @@ serve(async (req) => {
       if (mode === 'plan_get') {
         const plan = await weekPlan(db, userId, String(body.lang ?? 'es').slice(0, 2));
         console.log(`[plan] ${platform}: ${plan.steps.filter((s) => s.done).length}/${plan.steps.length}`);
-        return json({ linked: true, text: weekPlanText(plan) });
+        // 19 Nov 2026: + the plan itself, for the opt-in morning reminder (it names the first step not done yet)
+        return json({ linked: true, text: weekPlanText(plan), plan });
       }
       // 8 Nov 2026: what a bot learned at its first-day questions (Telegram onboarding, WhatsApp country answer) joins
       // the family profile - only fields still empty, so the family's own answers on the web are never overwritten.
