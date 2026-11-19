@@ -203,6 +203,12 @@ const Index = () => {
         <h1 className="mx-auto mb-5 max-w-4xl px-4 text-3xl font-extrabold leading-tight text-foreground sm:text-4xl md:text-5xl">
           {t("hero4.headline")}
         </h1>
+        {/* 19 Nov 2026 (Elena: "lift 'Find your family's path' onto the first screen - just lift, wipe nothing"): MOVED here
+            from the top of the features section, unchanged - right under the headline, so each family sees its own door
+            before the rest of the page (Andy's first-minute test: native Spanish speakers closed the tab before reaching it). */}
+        <div className="mx-auto mb-8 max-w-3xl px-4 text-left">
+          <FindYourPath />
+        </div>
         <p className="mx-auto mb-8 max-w-3xl px-4 text-lg leading-relaxed text-muted-foreground md:text-xl">
           {t("hero4.sub")}
         </p>
@@ -393,8 +399,6 @@ const Index = () => {
         </div>
 
         <div className="mx-auto max-w-6xl space-y-4">
-          {/* 19 Nov 2026 (Elena): every category finds its own path first - Tables 1 + 2 (FindYourPath). */}
-          <FindYourPath />
           <Part tag={t("tree.featTag")} name={t("tree.strengths")} count={t("tree.count4")}>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="text-center border-2 border-red-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm">
