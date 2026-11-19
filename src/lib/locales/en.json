@@ -1373,7 +1373,7 @@
   },
   "demo": {
     "title": "How EspaLuz works",
-    "note": "Real screens, captured 17 Nov 2026: WhatsApp and Telegram from our own phones (names hidden; long chats joined top to bottom, in their real order); the app with a test family, no real child.",
+    "note": "Real screens, captured 17-19 Nov 2026: WhatsApp and Telegram from our own phones (names hidden; long chats joined top to bottom, in their real order); the app with a test family, no real child.",
     "classAlt": "Pere and Titi greet the child in Spanish with English below; the strip shows 1st grade, Unit 1 of 12, Me and my family",
     "chatAlt": "A parent asks how to tell the teacher her daughter will miss school; EspaLuz writes the note in Spanish with English",
     "yearAlt": "Your first year in Panamá: Fiestas Patrias, Mother's Day, Carnival and more, from the country guide",
@@ -1413,7 +1413,8 @@
       "titiGame": "Titi's mistake - your child fixes it",
       "reading": "Reading corner: syllables",
       "counting": "Counting with mangos",
-      "practice": "Rehearse an interview with EspaLuz"
+      "practice": "Rehearse an interview with EspaLuz",
+      "plan": "Your plan this week"
     },
     "s0": "Set up your family",
     "s0Line": "A few questions about your new life, your family members, and WhatsApp or Telegram connected - this switches on EspaLuz's memory for all of you."

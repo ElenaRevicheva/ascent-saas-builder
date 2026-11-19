@@ -18,6 +18,10 @@ import setupQuestRu from '@/assets/demo/setup-quest-ru.webp';
 import setupConnectEn from '@/assets/demo/setup-connect-en.webp';
 import setupConnectEs from '@/assets/demo/setup-connect-es.webp';
 import setupConnectRu from '@/assets/demo/setup-connect-ru.webp';
+// 19 Nov 2026 (Elena): Step 1 ends with what the setup gives back - the live "Your plan this week" of a test family per language.
+import setupPlanEn from '@/assets/demo/setup-plan-en.webp';
+import setupPlanEs from '@/assets/demo/setup-plan-es.webp';
+import setupPlanRu from '@/assets/demo/setup-plan-ru.webp';
 import s1WaChat from '@/assets/demo/s1-wa-chat.webp';
 import s1TgChat from '@/assets/demo/s1-tg-chat.webp';
 import s1TgPhoto from '@/assets/demo/s1-tg-photo.webp';
@@ -61,6 +65,7 @@ export const RealLessonDemo = () => {
       { src: pick({ en: setupMapEn, es: setupMapEs, ru: setupMapRu }), cap: t('demo.c.map'), alt: t('demo.c.map') },
       { src: pick({ en: setupQuestEn, es: setupQuestEs, ru: setupQuestRu }), cap: t('demo.c.quest'), alt: t('demo.c.quest') },
       { src: pick({ en: setupConnectEn, es: setupConnectEs, ru: setupConnectRu }), cap: t('demo.c.connect'), alt: t('demo.c.connect') },
+      { src: pick({ en: setupPlanEn, es: setupPlanEs, ru: setupPlanRu }), cap: t('demo.c.plan'), alt: t('demo.c.plan') },
     ] },
     { title: t('demo.s1'), line: t('demo.s1Line'), shots: [
       // 17 Nov 2026: Elena's own WhatsApp + Telegram chats, each conversation joined top to bottom in its real order into
