@@ -140,7 +140,9 @@ const Pricing = () => {
                       {plan.paypal && (
                         <>
                           <div className="text-sm font-medium text-green-700 mt-2">{noEmoji(t("pr.secure", { by: insidePlayApp() ? "Google Play" : "PayPal" }))}</div>
-                          {!insidePlayApp() && <div className="text-xs text-green-600">{t("pr.merchant")}: {plan.merchantId}</div>}
+                          {/* 19 Nov 2026 (Elena): the "Merchant ID" line is no longer shown - it meant nothing to families, and it
+                              showed P8TXABNT28ZXG, the id PayPal used BEFORE 6 Aug 2025 (commit 813cdc7 switched the real setup to
+                              the id in src/config/paypal.ts, which PayPal checkout still uses, untouched). */}
                           {plan.bonus && (
                             <div className="mt-2 px-3 py-1 bg-gradient-to-r from-green-100 to-blue-100 rounded-full">
                               <span className="text-sm font-bold text-green-700">{noEmoji(plan.bonus)}</span>
