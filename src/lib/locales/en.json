@@ -1490,8 +1490,8 @@
     "wa": "WhatsApp",
     "tg": "Telegram",
     "expat": {
-      "title": "We moved here and are learning Spanish",
-      "learn": "Spanish for your life here, always explained in English.",
+      "title": "We moved to a Spanish-speaking country and are learning Spanish",
+      "learn": "the Spanish of the country you live in now - its own words, customs and everyday practicalities - always explained in English.",
       "get": "school notes, neighbours and the doctor in short, practical steps · your child's 10-minute class with Pere & Titi · a plan for your week.",
       "calm": "Reminders only if you ask - mornings only, never in the evening, no streak guilt.",
       "option": "Spanish"
@@ -1505,14 +1505,14 @@
     },
     "settle": {
       "title": "We already speak Spanish",
-      "learn": "English as your main track - Spanish only for this country's own words and ways.",
+      "learn": "English as your main track - Spanish only for the words, customs and ways of the country you live in now.",
       "get": "a 4-week English path in your weekly plan · rehearse calls and interviews in English · your child learns English with Pere & Titi.",
       "calm": "No beginner Spanish.",
       "option": "I already speak Spanish"
     },
     "russian": {
       "title": "We are a Russian-speaking family",
-      "learn": "Spanish for life here and English - with Russian beside them.",
+      "learn": "the Spanish of the country you live in now - its own words, customs and everyday practicalities - and English, with Russian beside them.",
       "get": "the whole app in Russian · Мишка & Лиса, a Russian-English class for your child (beta), and Pere & Titi for Spanish and English · your first year in your new country.",
       "calm": "Hard words get a short Russian explanation.",
       "option": "Both Spanish and English"
