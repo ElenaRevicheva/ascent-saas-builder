@@ -1113,9 +1113,9 @@ The video script will be used to generate an avatar video with synchronized audi
             className="text-xs px-2 py-1 rounded border bg-background"
             disabled={isRecording}
           >
-            <option value="en">🇺🇸 {t('chatx.langEn')}</option>
-            <option value="es">🇪🇸 {t('chatx.langEs')}</option>
-            <option value="ru">🇷🇺 {t('chatx.langRu')}</option>
+            <option value="en">{t('chatx.langEn')}</option>
+            <option value="es">{t('chatx.langEs')}</option>
+            <option value="ru">{t('chatx.langRu')}</option>
           </select>
           
           <Button

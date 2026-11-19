@@ -4,9 +4,10 @@ import { Languages } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const languages = [
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
-  { code: 'ru', name: 'Русский', flag: '🇷🇺' }
+  // 19 Nov 2026: Windows cannot draw flag emojis (it printed "usEnglish") - short codes show everywhere.
+  { code: 'en', name: 'English', flag: 'EN' },
+  { code: 'es', name: 'Español', flag: 'ES' },
+  { code: 'ru', name: 'Русский', flag: 'RU' }
 ];
 
 interface LanguageSwitcherProps {
@@ -34,7 +35,7 @@ export const LanguageSwitcher = ({ variant = 'select', size = 'default' }: Langu
             onClick={() => handleLanguageChange(language.code)}
             className="px-2"
           >
-            <span className="mr-1">{language.flag}</span>
+            <span className="mr-1 text-xs font-semibold tracking-wide">{language.flag}</span>
             <span className="hidden sm:inline">{language.name}</span>
           </Button>
         ))}
@@ -49,7 +50,7 @@ export const LanguageSwitcher = ({ variant = 'select', size = 'default' }: Langu
           <Languages className="h-4 w-4" />
           <SelectValue>
             <span className="flex items-center gap-1">
-              {currentLanguage.flag}
+              <span className="text-xs font-semibold tracking-wide">{currentLanguage.flag}</span>
               <span className="hidden sm:inline">{currentLanguage.name}</span>
             </span>
           </SelectValue>

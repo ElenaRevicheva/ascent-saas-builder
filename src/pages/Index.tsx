@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -30,7 +30,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Brain, Heart, Sparkles, Globe, MessageSquare, Bot, Rocket, Shield, Users, ArrowRight, Play, Star, TrendingUp, Crown, Zap, Briefcase, Plane, Lightbulb, MessageCircle, PenLine, Camera, Video, MapPin, RefreshCw, Mic, Languages, MessagesSquare, Mail, Volume2, Compass, CalendarDays, Smile, NotebookPen, School, Shapes, Check } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { feedbackSchema } from "@/lib/validations";
 
@@ -145,6 +145,32 @@ const Index = () => {
     : "https://aideazz.xyz/Elena_Revicheva_Professional_Outlook_2026.pdf";
   const [showDemoModal, setShowDemoModal] = useState(false);
   const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false);
+
+  // 19 Nov 2026 (strict feature test: "Continue for $11 a month" landed mid-page, the prices 3,683 px below, off screen).
+  // Four in-app links go to "/#pricing" (dashboard $11 card, progress card, feature gate, PayPal cancel). The browser
+  // jumps to a #anchor only once, before the long page has loaded, so it never arrived. Now the page goes to the anchor
+  // when it exists and again while late content still moves it - then stops (max ~6 s, or as soon as the visitor scrolls).
+  const { hash } = useLocation();
+  useEffect(() => {
+    if (!hash || hash.length < 2) return;
+    const id = decodeURIComponent(hash.slice(1));
+    let tries = 0; let lastTop: number | null = null; let stop = false;
+    const quit = () => { stop = true; };
+    window.addEventListener('wheel', quit, { once: true, passive: true });
+    window.addEventListener('touchmove', quit, { once: true, passive: true });
+    const tick = window.setInterval(() => {
+      tries += 1;
+      const el = document.getElementById(id);
+      if (el && !stop) {
+        const top = Math.round(el.getBoundingClientRect().top);
+        if (Math.abs(top) > 4) el.scrollIntoView({ behavior: tries === 1 ? 'auto' : 'smooth', block: 'start' });
+        if (lastTop !== null && Math.abs(top) <= 4 && tries > 4) stop = true;
+        lastTop = top;
+      }
+      if (stop || tries >= 15) window.clearInterval(tick);
+    }, 400);
+    return () => { window.clearInterval(tick); window.removeEventListener('wheel', quit); window.removeEventListener('touchmove', quit); };
+  }, [hash]);
 
   const handleStartDemo = () => {
     setShowDemoModal(true);
