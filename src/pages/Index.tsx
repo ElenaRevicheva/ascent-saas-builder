@@ -203,12 +203,6 @@ const Index = () => {
         <h1 className="mx-auto mb-5 max-w-4xl px-4 text-3xl font-extrabold leading-tight text-foreground sm:text-4xl md:text-5xl">
           {t("hero4.headline")}
         </h1>
-        {/* 19 Nov 2026 (Elena: "lift 'Find your family's path' onto the first screen - just lift, wipe nothing"): MOVED here
-            from the top of the features section, unchanged - right under the headline, so each family sees its own door
-            before the rest of the page (Andy's first-minute test: native Spanish speakers closed the tab before reaching it). */}
-        <div className="mx-auto mb-8 max-w-3xl px-4 text-left">
-          <FindYourPath />
-        </div>
         <p className="mx-auto mb-8 max-w-3xl px-4 text-lg leading-relaxed text-muted-foreground md:text-xl">
           {t("hero4.sub")}
         </p>
@@ -253,6 +247,12 @@ const Index = () => {
               <p className="leading-relaxed text-muted-foreground">{c.body}</p>
             </div>
           ))}
+        </div>
+        {/* 19 Nov 2026 (Elena: "lift it - located BELOW the three short videos"): MOVED here unchanged from the top of the
+            features section - right after the three video cards (you / your child / your whole family), so each family
+            finds its own door in the opening part of the page. */}
+        <div className="mx-auto mb-10 max-w-3xl px-4 text-left">
+          <FindYourPath />
         </div>
         <p className="mx-auto mb-8 max-w-3xl px-4 text-lg font-semibold text-foreground">{t("hero4.promiseTitle")}</p>
 
