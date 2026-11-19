@@ -1477,5 +1477,41 @@
     "standard": "Standard",
     "trial": "Trial · {{count}} days",
     "free": "Free"
+  },
+  "path": {
+    "tag": "Your path",
+    "title": "Find your family's path",
+    "count": "4 paths",
+    "lede": "Pick the one that sounds like your family - each one opens the right start.",
+    "learnLabel": "You practise:",
+    "getLabel": "First you get:",
+    "startFree": "Start free - 14 days, no card",
+    "wa": "WhatsApp",
+    "tg": "Telegram",
+    "settleNote": "WhatsApp and Telegram open with this path already switched on. On the web: the family map → \"About your new life\" → \"What do you want to learn?\" → \"I already speak Spanish\".",
+    "expat": {
+      "title": "We moved here and are learning Spanish",
+      "learn": "Spanish for your life here, always explained in English.",
+      "get": "school notes, neighbours and the doctor in short, practical steps · your child's 10-minute class with Pere & Titi · a plan for your week.",
+      "calm": "Reminders only if you ask - mornings only, never in the evening, no streak guilt."
+    },
+    "nomads": {
+      "title": "We travel and are still searching for our place",
+      "learn": "the Spanish of each country you pass through - and English, if it isn't your first language.",
+      "get": "guides for 21 Spanish-speaking countries (change country any time) · help in a new city from day one · your child's class wherever you are.",
+      "calm": "Nothing assumes a year in one country: tell EspaLuz how long you stay and she plans for that."
+    },
+    "settle": {
+      "title": "We already speak Spanish",
+      "learn": "English as your main track - Spanish only for this country's own words and ways.",
+      "get": "a 4-week English path in your weekly plan · rehearse calls and interviews in English · your child learns English with Pere & Titi.",
+      "calm": "No beginner Spanish."
+    },
+    "russian": {
+      "title": "We are a Russian-speaking family",
+      "learn": "Spanish for life here and English - with Russian beside them.",
+      "get": "the whole app in Russian · Мишка & Лиса, a Russian-English class for your child (beta) · your first year in your new country.",
+      "calm": "Hard words get a short Russian explanation."
+    }
   }
 }

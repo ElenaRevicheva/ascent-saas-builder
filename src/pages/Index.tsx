@@ -7,6 +7,7 @@ import { CookieConsent } from "@/components/CookieConsent";
 import { ChatWithEspaluz } from "@/components/dashboard/ChatWithEspaluz";
 import SubscriptionFlow from "@/components/SubscriptionFlow";
 import { Part, Item, SectionHead } from "@/components/landing/Tree";
+import { FindYourPath } from "@/components/landing/FindYourPath";
 import { HeroClip } from "@/components/landing/HeroClip";
 import { TalkingHello } from "@/components/landing/TalkingHello";
 import { RealLessonDemo } from '@/components/landing/RealLessonDemo';
@@ -366,6 +367,8 @@ const Index = () => {
         </div>
 
         <div className="mx-auto max-w-6xl space-y-4">
+          {/* 19 Nov 2026 (Elena): every category finds its own path first - Tables 1 + 2 (FindYourPath). */}
+          <FindYourPath />
           <Part tag={t("tree.featTag")} name={t("tree.strengths")} count={t("tree.count4")}>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card className="text-center border-2 border-red-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 bg-white/80 backdrop-blur-sm">
