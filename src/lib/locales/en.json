@@ -254,7 +254,11 @@
     "about": "About the creator",
     "aboutDesc": "Who built EspaLuz, and why.",
     "feedback": "Feedback",
-    "feedbackDesc": "Tell us what to improve."
+    "feedbackDesc": "Tell us what to improve.",
+    "path": "Find your family's path",
+    "pathDesc": "Four paths - pick the one like yours.",
+    "how": "How EspaLuz works",
+    "howDesc": "Four steps, with real screens."
   },
   "lp": {
     "fbTitle": "We value your feedback!",

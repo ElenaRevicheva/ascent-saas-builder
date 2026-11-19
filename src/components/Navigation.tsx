@@ -4,13 +4,16 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useAuth } from "@/hooks/useAuth";
-import { ChevronDown, Compass, CreditCard, GraduationCap, Mail, Menu, MessageCircle, Sparkles, UserRound, X } from "lucide-react";
+import { ChevronDown, Compass, CreditCard, GraduationCap, Mail, Menu, MessageCircle, Sparkles, UserRound, X, Signpost, ListOrdered } from "lucide-react";
 
 /* Menu tree (Elena 5 Nov 2026) - same shape as aideazz.xyz/sop-ai-ops.html: grouped labels, each item = icon + title +
    one line. Laptop: "This page" dropdown next to the old links (kept). Phone: the burger opens the same tree + the old links. */
 const GROUPS = [
   { label: "menu.gStart", items: [
+    // 19 Nov 2026: the menu follows the page - "Find your family's path" and "How EspaLuz works" added, in page order.
+    { href: "#path", icon: Signpost, title: "menu.path", desc: "menu.pathDesc" },
     { href: "#start", icon: MessageCircle, title: "menu.start", desc: "menu.startDesc" },
+    { href: "#how-it-works", icon: ListOrdered, title: "menu.how", desc: "menu.howDesc" },
     { to: "/classroom", icon: GraduationCap, title: "menu.classroom", desc: "menu.classroomDesc" },
   ] },
   { label: "menu.gDoes", items: [

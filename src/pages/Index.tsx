@@ -251,8 +251,127 @@ const Index = () => {
         {/* 19 Nov 2026 (Elena: "lift it - located BELOW the three short videos"): MOVED here unchanged from the top of the
             features section - right after the three video cards (you / your child / your whole family), so each family
             finds its own door in the opening part of the page. */}
-        <div className="mx-auto mb-10 max-w-3xl px-4 text-left">
-          <FindYourPath />
+        {/* 19 Nov 2026 (Elena: "put Ways to start nearby the family's path - the screen space is not rationally used"):
+            the two "how do I begin" blocks side by side on a computer, one under the other on a phone. "Ways to start"
+            MOVED here unchanged from its own section further down (it kept its id "start", so every link still works). */}
+        <div className="mx-auto mb-10 grid max-w-6xl gap-6 px-4 text-left lg:grid-cols-2 lg:items-start">
+          <div id="path" className="scroll-mt-24">
+            <FindYourPath />
+          </div>
+          <div id="start" className="scroll-mt-24">
+            <SectionHead eyebrow={t("tree.startEyebrow")} title={t("tree.startTitle")} lede={t("tree.startLede")} />
+            <div className="mx-auto max-w-5xl">
+              <Part tag={t("tree.startTag")} name={t("tree.startPart")} count={t("tree.count5")}>
+                <Item group="start" defaultOpen title={<h3 className="text-lg font-semibold text-foreground">{t("tree.wa")}</h3>}>
+                <div className="bg-gradient-to-br from-green-50/80 via-white/80 to-emerald-50/80 backdrop-blur-sm rounded-2xl p-5 border border-green-200">
+              <div className="text-center space-y-6">
+                {/* 14 Nov 2026 (Elena approved): the "Now LIVE!" title, the twice-"instantly" lines and the repeated scan
+                    sentence are gone - one sentence under the QR, one button, the number for typing it in. */}
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
+                  <div className="flex flex-col items-center space-y-4 order-2 lg:order-1">
+                    <div className="hero-seat w-40 md:w-48" style={{ aspectRatio: "540 / 804" }}>
+                      <HeroClip src={heroWhatsapp} poster={heroWhatsappPoster} label={t("land.waLabel")} className="block h-full w-full object-cover" />
+                    </div>
+                    <a 
+                      href="https://bit.ly/EspaLuz" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                    >
+                      <Button size="lg" className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                        <MessageSquare className="mr-3 h-5 w-5" />
+                        {t("lp.waButton")}
+                      </Button>
+                    </a>
+                    <a href="https://wa.me/50766623757" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-green-700 hover:underline">{t("lp.waUser")} <span className="font-bold">@espaluz</span></a>
+                  </div>
+              
+                  <div className="flex flex-col items-center space-y-3 order-1 lg:order-2">
+                    <div className="relative">
+                      <div className="absolute -inset-2 bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 rounded-3xl blur opacity-30 animate-pulse"></div>
+                      {/* 5 Nov 2026 (Elena): her "Warm Smile in Nine Frames" GIF moves in the centre of the QR, laid exactly over the
+                          still face (square 414-724 px of the 1138 px QR = 36.38 % / 27.24 %). All 9 frames scan to bit.ly/EspaLuz at
+                          1138, 256, 192 and 140 px. The wrapper scales on hover so the GIF stays aligned. */}
+                      <span className="relative block transition-transform duration-300 hover:scale-105">
+                        <img 
+                          src={whatsappQr} 
+                          alt={t("land.waQrAlt")} 
+                          className="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 object-contain rounded-2xl shadow-magical border-4 border-green-400 hover:border-green-500 hover:shadow-vibrant transition-all duration-300 bg-white/95 backdrop-blur-sm ring-2 ring-green-200 hover:ring-green-300" 
+                        />
+                        <span aria-hidden className="pointer-events-none absolute inset-[4px]">
+                          <img src={whatsappQrFace} alt="" className="absolute" style={{ left: "36.38%", top: "36.38%", width: "27.24%", height: "27.24%" }} />
+                        </span>
+                      </span>
+                    </div>
+                    <p className="max-w-xs text-sm text-green-700 font-semibold bg-green-50 px-4 py-2 rounded-2xl border border-green-200 text-center">{t("lp.waScan")}</p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+                </Item>
+                <Item group="start" title={<h3 className="text-lg font-semibold text-foreground">{t("tree.tg")}</h3>}>
+                  <div className="text-center">
+            <div className="bg-gradient-to-br from-blue-50/80 via-white/80 to-purple-50/80 backdrop-blur-sm rounded-2xl p-5 border border-blue-200">
+              <div className="flex flex-col items-center space-y-6">
+                <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
+                <div className="hero-seat w-40 md:w-48" style={{ aspectRatio: "540 / 804" }}>
+                  <HeroClip src={heroTelegram} poster={heroTelegramPoster} label={t("land.tgLabel")} className="block h-full w-full object-cover" />
+                </div>
+                <div className="relative">
+                  <div className="absolute -inset-2 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl blur opacity-30 animate-pulse"></div>
+                  {/* 5 Nov 2026 (Elena): Telegram QR in the WhatsApp QR's style, Telegram blue (scripts/make-telegram-qr.py),
+                      t.me/EspaLuzFamily_bot. Her mother-and-daughter video plays muted in the centre square (36.38 % / 27.24 %);
+                      20 sampled frames all scan at 1138/288/224/160 px. Old espaluz-qr.jpg kept (sidebar still uses it). */}
+                  <span className="relative block transition-transform duration-300 hover:scale-105">
+                    <img 
+                      src={telegramQr} 
+                      alt={t("land.tgQrAlt")} 
+                      className="relative w-56 h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain rounded-2xl shadow-magical border-4 border-blue-400 hover:border-blue-500 hover:shadow-vibrant transition-all duration-300 bg-white/95 backdrop-blur-sm ring-2 ring-blue-200 hover:ring-blue-300" 
+                    />
+                    <span aria-hidden className="pointer-events-none absolute inset-[4px]">
+                      <video src={telegramQrVideo} autoPlay muted loop playsInline preload="metadata" className="absolute object-cover"
+                        style={{ left: "36.38%", top: "36.38%", width: "27.24%", height: "27.24%" }} />
+                    </span>
+                  </span>
+                </div>
+                </div>
+            
+                <div className="space-y-4">
+                  <p className="mx-auto max-w-xs text-sm text-blue-700 font-semibold bg-blue-50 px-4 py-2 rounded-2xl border border-blue-200 text-center">{t("lp.tgScan")}</p>
+                  <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer">
+                    <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                      <MessageSquare className="mr-3 h-5 w-5" />
+                      {t("lp.tgButton")}
+                    </Button>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+                </Item>
+                <Item group="start" title={<h3 className="text-lg font-semibold text-foreground">{t("tree.demo")}</h3>}>
+                  {/* 14 Nov 2026 (Elena approved, merged with ChatGPT's notes): one honest preview - no "AI coach", no
+                      "learn naturally", no "saved forever"; "20 messages, no signup" lives only in the title above. */}
+                  <div className="mx-auto max-w-2xl space-y-5 rounded-2xl border border-border bg-card p-6 text-center" style={{ boxShadow: "var(--shadow-card)" }}>
+                    <p className="text-xl font-semibold text-foreground">{t("lp.demoLead")}</p>
+                    <p className="leading-relaxed text-muted-foreground">{t("lp.demoIntro")}</p>
+                    <ul className="mx-auto max-w-md space-y-3 text-left">
+                      {[{ icon: Mic, text: t("lp.demoL1") }, { icon: Camera, text: t("lp.demoL2") }, { icon: Languages, text: t("lp.demoL3") }].map((l) => (
+                        <li key={l.text} className="flex items-center gap-3">
+                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary" aria-hidden><l.icon className="h-4 w-4" /></span>
+                          <span className="text-foreground">{l.text}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <Button onClick={handleStartDemo} size="lg" className="h-auto w-full whitespace-normal rounded-full py-3 font-semibold">
+                      {t("lp.demoStart")}
+                    </Button>
+                    <p className="text-sm text-muted-foreground">{t("lp.demoNote")}</p>
+                  </div>
+                </Item>
+              </Part>
+            </div>
+          </div>
         </div>
         <p className="mx-auto mb-8 max-w-3xl px-4 text-lg font-semibold text-foreground">{t("hero4.promiseTitle")}</p>
 
@@ -267,121 +386,6 @@ const Index = () => {
         <RealLessonDemo />
       </section>
 
-      {/* Ways to start (tree): one part, three items - WhatsApp open first. Blocks moved here unchanged. */}
-      <section id="start" className="container mx-auto scroll-mt-20 px-4 py-14">
-        <SectionHead eyebrow={t("tree.startEyebrow")} title={t("tree.startTitle")} lede={t("tree.startLede")} />
-        <div className="mx-auto max-w-5xl">
-          <Part tag={t("tree.startTag")} name={t("tree.startPart")} count={t("tree.count5")}>
-            <Item group="start" defaultOpen title={<h3 className="text-lg font-semibold text-foreground">{t("tree.wa")}</h3>}>
-            <div className="bg-gradient-to-br from-green-50/80 via-white/80 to-emerald-50/80 backdrop-blur-sm rounded-2xl p-5 border border-green-200">
-          <div className="text-center space-y-6">
-            {/* 14 Nov 2026 (Elena approved): the "Now LIVE!" title, the twice-"instantly" lines and the repeated scan
-                sentence are gone - one sentence under the QR, one button, the number for typing it in. */}
-            <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
-              <div className="flex flex-col items-center space-y-4 order-2 lg:order-1">
-                <div className="hero-seat w-40 md:w-48" style={{ aspectRatio: "540 / 804" }}>
-                  <HeroClip src={heroWhatsapp} poster={heroWhatsappPoster} label={t("land.waLabel")} className="block h-full w-full object-cover" />
-                </div>
-                <a 
-                  href="https://bit.ly/EspaLuz" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                >
-                  <Button size="lg" className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
-                    <MessageSquare className="mr-3 h-5 w-5" />
-                    {t("lp.waButton")}
-                  </Button>
-                </a>
-                <a href="https://wa.me/50766623757" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-green-700 hover:underline">{t("lp.waUser")} <span className="font-bold">@espaluz</span></a>
-              </div>
-              
-              <div className="flex flex-col items-center space-y-3 order-1 lg:order-2">
-                <div className="relative">
-                  <div className="absolute -inset-2 bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 rounded-3xl blur opacity-30 animate-pulse"></div>
-                  {/* 5 Nov 2026 (Elena): her "Warm Smile in Nine Frames" GIF moves in the centre of the QR, laid exactly over the
-                      still face (square 414-724 px of the 1138 px QR = 36.38 % / 27.24 %). All 9 frames scan to bit.ly/EspaLuz at
-                      1138, 256, 192 and 140 px. The wrapper scales on hover so the GIF stays aligned. */}
-                  <span className="relative block transition-transform duration-300 hover:scale-105">
-                    <img 
-                      src={whatsappQr} 
-                      alt={t("land.waQrAlt")} 
-                      className="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 object-contain rounded-2xl shadow-magical border-4 border-green-400 hover:border-green-500 hover:shadow-vibrant transition-all duration-300 bg-white/95 backdrop-blur-sm ring-2 ring-green-200 hover:ring-green-300" 
-                    />
-                    <span aria-hidden className="pointer-events-none absolute inset-[4px]">
-                      <img src={whatsappQrFace} alt="" className="absolute" style={{ left: "36.38%", top: "36.38%", width: "27.24%", height: "27.24%" }} />
-                    </span>
-                  </span>
-                </div>
-                <p className="max-w-xs text-sm text-green-700 font-semibold bg-green-50 px-4 py-2 rounded-2xl border border-green-200 text-center">{t("lp.waScan")}</p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-            </Item>
-            <Item group="start" title={<h3 className="text-lg font-semibold text-foreground">{t("tree.tg")}</h3>}>
-              <div className="text-center">
-        <div className="bg-gradient-to-br from-blue-50/80 via-white/80 to-purple-50/80 backdrop-blur-sm rounded-2xl p-5 border border-blue-200">
-          <div className="flex flex-col items-center space-y-6">
-            <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
-            <div className="hero-seat w-40 md:w-48" style={{ aspectRatio: "540 / 804" }}>
-              <HeroClip src={heroTelegram} poster={heroTelegramPoster} label={t("land.tgLabel")} className="block h-full w-full object-cover" />
-            </div>
-            <div className="relative">
-              <div className="absolute -inset-2 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 rounded-3xl blur opacity-30 animate-pulse"></div>
-              {/* 5 Nov 2026 (Elena): Telegram QR in the WhatsApp QR's style, Telegram blue (scripts/make-telegram-qr.py),
-                  t.me/EspaLuzFamily_bot. Her mother-and-daughter video plays muted in the centre square (36.38 % / 27.24 %);
-                  20 sampled frames all scan at 1138/288/224/160 px. Old espaluz-qr.jpg kept (sidebar still uses it). */}
-              <span className="relative block transition-transform duration-300 hover:scale-105">
-                <img 
-                  src={telegramQr} 
-                  alt={t("land.tgQrAlt")} 
-                  className="relative w-56 h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain rounded-2xl shadow-magical border-4 border-blue-400 hover:border-blue-500 hover:shadow-vibrant transition-all duration-300 bg-white/95 backdrop-blur-sm ring-2 ring-blue-200 hover:ring-blue-300" 
-                />
-                <span aria-hidden className="pointer-events-none absolute inset-[4px]">
-                  <video src={telegramQrVideo} autoPlay muted loop playsInline preload="metadata" className="absolute object-cover"
-                    style={{ left: "36.38%", top: "36.38%", width: "27.24%", height: "27.24%" }} />
-                </span>
-              </span>
-            </div>
-            </div>
-            
-            <div className="space-y-4">
-              <p className="mx-auto max-w-xs text-sm text-blue-700 font-semibold bg-blue-50 px-4 py-2 rounded-2xl border border-blue-200 text-center">{t("lp.tgScan")}</p>
-              <a href="https://t.me/EspaLuzFamily_bot" target="_blank" rel="noopener noreferrer">
-                <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
-                  <MessageSquare className="mr-3 h-5 w-5" />
-                  {t("lp.tgButton")}
-                </Button>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-            </Item>
-            <Item group="start" title={<h3 className="text-lg font-semibold text-foreground">{t("tree.demo")}</h3>}>
-              {/* 14 Nov 2026 (Elena approved, merged with ChatGPT's notes): one honest preview - no "AI coach", no
-                  "learn naturally", no "saved forever"; "20 messages, no signup" lives only in the title above. */}
-              <div className="mx-auto max-w-2xl space-y-5 rounded-2xl border border-border bg-card p-6 text-center" style={{ boxShadow: "var(--shadow-card)" }}>
-                <p className="text-xl font-semibold text-foreground">{t("lp.demoLead")}</p>
-                <p className="leading-relaxed text-muted-foreground">{t("lp.demoIntro")}</p>
-                <ul className="mx-auto max-w-md space-y-3 text-left">
-                  {[{ icon: Mic, text: t("lp.demoL1") }, { icon: Camera, text: t("lp.demoL2") }, { icon: Languages, text: t("lp.demoL3") }].map((l) => (
-                    <li key={l.text} className="flex items-center gap-3">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary" aria-hidden><l.icon className="h-4 w-4" /></span>
-                      <span className="text-foreground">{l.text}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Button onClick={handleStartDemo} size="lg" className="h-auto w-full whitespace-normal rounded-full py-3 font-semibold">
-                  {t("lp.demoStart")}
-                </Button>
-                <p className="text-sm text-muted-foreground">{t("lp.demoNote")}</p>
-              </div>
-            </Item>
-          </Part>
-        </div>
-      </section>
 
       {/* Features Section */}
       <section id="features" className="container mx-auto scroll-mt-20 px-4 py-20 bg-white/30 backdrop-blur-[2px] border border-white/50 rounded-3xl shadow-[0_24px_60px_-30px_rgba(91,63,209,.35)]">

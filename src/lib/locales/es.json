@@ -254,7 +254,11 @@
     "about": "Sobre la creadora",
     "aboutDesc": "Quién creó EspaLuz y por qué.",
     "feedback": "Opinión",
-    "feedbackDesc": "Dinos qué mejorar."
+    "feedbackDesc": "Dinos qué mejorar.",
+    "path": "Encuentra el camino de tu familia",
+    "pathDesc": "Cuatro caminos: elige el que se parece al tuyo.",
+    "how": "Cómo funciona EspaLuz",
+    "howDesc": "Cuatro pasos, con pantallas reales."
   },
   "lp": {
     "contactCount": "Perfil · YouTube · AIdeazz",
