@@ -120,7 +120,7 @@ export const LearningModules = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Trophy className="h-5 w-5 text-[hsl(var(--espaluz-primary))]" />
-          {settling && countryLessons.length ? t('lm.titleSettle', { country: countryKey ? t(`lm.country.${countryKey}`, { defaultValue: countryName }) : countryName }) : t('lm.title')}
+          {settling && countryLessons.length ? t('lm.titleSettle', { country: countryKey ? t(`lm.country.${countryKey}`, { defaultValue: countryName }) : countryName }) : settling ? t('lm.titleSettleNoCountry') /* 19 Nov 2026: never 'Spanish modules' for a native speaker */ : t('lm.title')}
         </CardTitle>
         {countryName && (
           <p className="text-sm text-muted-foreground">{t(settling ? 'lm.livingInSettle' : 'lm.livingIn', { country: t(`lm.country.${countryKey}`, { defaultValue: countryName }) })}</p>

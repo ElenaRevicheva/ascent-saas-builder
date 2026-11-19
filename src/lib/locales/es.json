@@ -1048,7 +1048,8 @@
       "equatorial_guinea": "Guinea Ecuatorial"
     },
     "titleSettle": "Lecciones para vivir en {{country}}",
-    "livingInSettle": "Vives en {{country}}: las lecciones de la guía verificada de tu país - sus palabras, costumbres y vida diaria."
+    "livingInSettle": "Vives en {{country}}: las lecciones de la guía verificada de tu país - sus palabras, costumbres y vida diaria.",
+    "titleSettleNoCountry": "Las lecciones de tu país"
   },
   "lesson": {
     "notFound": "No encontramos la lección",
@@ -1510,7 +1511,7 @@
     "russian": {
       "title": "Somos una familia de habla rusa",
       "learn": "español para la vida aquí e inglés, con el ruso al lado.",
-      "get": "toda la app en ruso · Мишка & Лиса, una clase ruso-inglés para tu hijo/a (beta) · tu primer año en tu nuevo país.",
+      "get": "toda la app en ruso · Мишка & Лиса, una clase ruso-inglés para tu hijo/a (beta), y Pere y Titi para español e inglés · tu primer año en tu nuevo país.",
       "calm": "Las palabras difíciles llevan una breve explicación en ruso."
     }
   }
