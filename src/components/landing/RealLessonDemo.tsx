@@ -2,7 +2,9 @@ import { useTranslation } from 'react-i18next';
 import chatEn from '@/assets/demo/chat-en.webp';
 import chatEs from '@/assets/demo/chat-es.webp';
 import chatRu from '@/assets/demo/chat-ru.webp';
-import classEspaluz from '@/assets/demo/class-espaluz.webp';
+// 19 Nov 2026 (Elena): the class step talks about Pere and Titi, so the picture shows THEM opening the class (live classroom,
+// 19 Nov; the frame holds the duo-hello clip that was playing). The EspaLuz drop-in picture stays in the repo.
+import classEspaluz from '@/assets/demo/class-pere-titi.webp';
 import classTiti from '@/assets/demo/class-titi.webp';
 import classReading from '@/assets/demo/class-reading.webp';
 import classCounting from '@/assets/demo/class-counting.webp';
