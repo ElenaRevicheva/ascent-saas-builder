@@ -116,7 +116,7 @@ const Pricing = () => {
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <div className="bg-gradient-primary text-primary-foreground px-4 py-2 rounded-full text-sm font-medium flex items-center gap-1">
+                  <div className="bg-gradient-primary text-primary-foreground px-4 py-2 rounded-full text-sm font-medium flex items-center gap-1 whitespace-nowrap">
                     <Star className="h-4 w-4" />
                     {t("pr.popular")}
                   </div>
@@ -169,6 +169,8 @@ const Pricing = () => {
               <CardContent className="pt-0">
                 {plan.paypal && !plan.comingSoon ? (
                   <div className="mb-6">
+                    {/* 19 Nov 2026 (readers: "how does this fit with the 14 free days?"): one added line, nothing removed. */}
+                    <p className="mb-3 rounded-lg bg-emerald-50 px-3 py-2 text-center text-sm text-emerald-800">{t("pr.trialFirst")}</p>
                     <SubscriptionFlow 
                       planType="standard"
                       onSuccess={(subscriptionId) => {

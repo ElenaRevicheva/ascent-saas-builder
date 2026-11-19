@@ -318,7 +318,7 @@
     "holaText2": "or click the link to Telegram",
     "holaSay": "Say \"¡Hola!\" and watch the magic begin",
     "joinTg": "Join Telegram",
-    "featBadge": "Living Proof of Concept",
+    "featBadge": "Living proof - working today",
     "featTitle": "EspaLuz - AI Family Tutor",
     "featLede": "Your companion for a new life in a Spanish-speaking country — she <b1>remembers your whole family</b1>, <b2>knows your country</b2>, and teaches your child and you, right inside WhatsApp, Telegram and the web. For families settling in, and for nomads and travelers looking for a safer, warmer, more affordable place to live.",
     "s1": "One friend, one memory, for the whole family",
@@ -465,7 +465,8 @@
     "secure": "Secure payment powered by {{by}}",
     "merchant": "Merchant ID",
     "startTrial": "Start Free Trial",
-    "included": "What's included ({{n}})"
+    "included": "What's included ({{n}})",
+    "trialFirst": "Want to try first? Start with the 14 free days, no card needed. This is for when your family decides to stay."
   },
   "sf": {
     "ppError": "PayPal Error",

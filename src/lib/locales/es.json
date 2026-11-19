@@ -1327,7 +1327,8 @@
     "secure": "Pago seguro con {{by}}",
     "merchant": "ID de comercio",
     "startTrial": "Empezar la prueba gratis",
-    "included": "Qué incluye ({{n}})"
+    "included": "Qué incluye ({{n}})",
+    "trialFirst": "¿Quieres probar primero? Empieza con los 14 días gratis, sin tarjeta. Esto es para cuando tu familia decida quedarse."
   },
   "sf": {
     "ppError": "Error de PayPal",
