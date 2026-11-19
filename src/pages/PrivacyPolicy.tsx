@@ -56,6 +56,11 @@ const PrivacyPolicy = () => (
             (for example, a first chat message or the WhatsApp button), so we can see where people get stuck. It receives
             page addresses and event names only, never what you write or say, and it is switched off in the kids classroom.
             Advertising features are turned off.</li>
+          {/* 19 Nov 2026: PostHog has run since 16 Nov (src/lib/posthogReplay.ts) but was not named here - now it is, exactly as the code works. */}
+          <li><strong>How the front page is read:</strong> PostHog, only after you press "Accept" on the cookie banner, and only
+            on the front page and the sign-in page - never in the dashboard, the kids classroom or the chat, and never in the
+            Android app. It records how the page is scrolled and tapped, with everything you type hidden, so we can make the
+            page clearer. No personal profiles are built.</li>
         </ul>
         <p>We also share information if the law requires it.</p>
 
@@ -102,7 +107,8 @@ const PrivacyPolicy = () => (
           <strong>En español, en breve:</strong> EspaLuz es una IA. Guardamos tu cuenta, tus conversaciones, notas cortas de
           tu familia y lo que tu peque hace en la clase, para seguir donde lo dejaron. No vendemos tus datos, no hay anuncios y
           no entrenamos modelos con tus conversaciones. Google Analytics cuenta visitas y botones (nunca lo que escribes ni
-          lo que dices) y está apagado en la clase de los peques. Los servicios de IA, mensajería, alojamiento y pago listados arriba
+          lo que dices) y está apagado en la clase de los peques. PostHog, solo si aceptas las cookies y solo en la portada y la
+          página de inicio de sesión, registra cómo se recorre la página (con todo lo que escribes oculto) para hacerla más clara. Los servicios de IA, mensajería, alojamiento y pago listados arriba
           procesan lo necesario para responderte. Para borrar todo, escribe a aipa@aideazz.xyz con el asunto "Borrar mis datos".
         </p>
       </div>
