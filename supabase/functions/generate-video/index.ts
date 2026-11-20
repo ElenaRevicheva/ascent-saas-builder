@@ -24,6 +24,9 @@ const CELEBRATION_MONTHLY_CAP = Number(Deno.env.get('CELEBRATION_MONTHLY_CAP') |
 // 15 Nov 2026: face-to-face practice ends with EspaLuz's tips as a lip-synced clip. The tips are read from the family's
 // saved practice_session row (written by espaluz-chat), never from the browser.
 const PRACTICE_MONTHLY_CAP = Number(Deno.env.get('PRACTICE_MONTHLY_CAP') || 2);
+// 20 Nov 2026 (Elena): Pro English (separate layer) - the coach's last English reply as a lip-synced clip, 2 a month
+// included in the paid plan so they see how it works. Same Runway pipeline, guards and wallet floor as every clip.
+const PRO_ENGLISH_MONTHLY_CAP = Number(Deno.env.get('PRO_ENGLISH_MONTHLY_CAP') || 2);
 
 // 6 Nov 2026 (Elena: "they should bring something special... lips moving and repeating the same message is not precious").
 // A clip never repeats the reply. TWIN of espaluz_talking.py on the bots. Free models only; no true note, no clip.
@@ -200,9 +203,10 @@ async function realEspaLuz(req: Request, body: any): Promise<Response> {
 
   const celebrate = body.mode === 'celebrate';
   const practice = body.mode === 'practice_tips';
-  if ((celebrate || practice) && !user) return no('not_signed_in');
-  const event = celebrate ? 'celebration_video' : practice ? 'practice_video' : 'talking_video';
-  const cap = celebrate ? CELEBRATION_MONTHLY_CAP : practice ? PRACTICE_MONTHLY_CAP : TALKING_MONTHLY_CAP;
+  const pro = body.mode === 'pro_english';
+  if ((celebrate || practice || pro) && !user) return no('not_signed_in');
+  const event = celebrate ? 'celebration_video' : practice ? 'practice_video' : pro ? 'pro_english_video' : 'talking_video';
+  const cap = celebrate ? CELEBRATION_MONTHLY_CAP : practice ? PRACTICE_MONTHLY_CAP : pro ? PRO_ENGLISH_MONTHLY_CAP : TALKING_MONTHLY_CAP;
   const db = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
   const nowIso = new Date().toISOString();
   let count: number | null = 0;
@@ -232,6 +236,11 @@ async function realEspaLuz(req: Request, body: any): Promise<Response> {
     const { data: rows } = await db.from('learning_sessions').select('content').eq('id', String(body.sessionId ?? ''))
       .eq('user_id', user.id).eq('session_type', 'analytics').eq('content->>event', 'practice_session').limit(1);
     text = cleanTextForTTS(String(rows?.[0]?.content?.tips ?? '')).trim().slice(0, TALKING_MAX_CHARS);
+    if (!text) return no('no_text');
+  } else if (pro) {
+    const { data: rows } = await db.from('learning_sessions').select('content').eq('user_id', user.id).eq('session_type', 'analytics')
+      .eq('content->>event', 'pro_english_turn').not('content->>reply', 'is', null).order('created_at', { ascending: false }).limit(1);
+    text = cleanTextForTTS(String(rows?.[0]?.content?.reply ?? '')).trim().slice(0, TALKING_MAX_CHARS);
     if (!text) return no('no_text');
   } else {
   const raw = String(body.videoScript ?? '');
@@ -285,7 +294,9 @@ async function realEspaLuz(req: Request, body: any): Promise<Response> {
     avatar: { type: 'custom', avatarId: ESPALUZ_AVATAR_ID }, speech: { type: 'audio', audio: up.runwayUri } }) })).json();
   if (!task.id) { console.error('[talking] create', JSON.stringify(task).slice(0, 300)); return no('create'); }
   if (user) await db.from('learning_sessions').insert({ user_id: user.id, session_type: 'analytics', source: 'web',
-    content: practice
+    content: pro
+      ? { event: 'pro_english_video', chars: text.length, task: task.id, voice: v.spokenBy }
+      : practice
       ? { event: 'practice_video', session: String(body.sessionId), chars: text.length, task: task.id, voice: v.spokenBy }
       : celebrate
       ? { event: 'celebration_video', occasion: wish.occasion, seen: wish.seen.slice(0, 400), wish: text, chars: text.length, task: task.id, voice: v.spokenBy }
@@ -303,7 +314,7 @@ serve(async (req) => {
     const body = await req.json();
     // 5 Nov 2026: the real talking EspaLuz (Runway Characters) for paying families only. Old callers send no `mode`
     // and get the old answer below, so a page not yet published keeps working.
-    if (['real', 'real_status', 'celebrate', 'practice_tips'].includes(body.mode)) return await realEspaLuz(req, body);
+    if (['real', 'real_status', 'celebrate', 'practice_tips', 'pro_english'].includes(body.mode)) return await realEspaLuz(req, body);
     const { videoScript, voice = "es", userId } = body;
     
     // 5 Nov 2026: userId was only checked, never used (fixed avatar, free Google voice) - and the anonymous web free

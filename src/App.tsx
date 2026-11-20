@@ -21,6 +21,7 @@ import NotFound from "./pages/NotFound";
 import Classroom from "./pages/Classroom";
 import ClassroomRu from "./pages/ClassroomRu";
 import OnTheRoad from "./pages/OnTheRoad";
+import ProEnglish from "./pages/ProEnglish"; // 20 Nov 2026: Pro English, a separate layer
 import { useOnline } from "@/lib/carMode";
 
 // 13 Nov 2026 - car mode: an app that STARTS with no signal goes to "On the road"; if the signal drops mid-use, a small
@@ -89,6 +90,7 @@ const App = () => (
         <Route path="/classroom" element={<Classroom />} />
         <Route path="/classroom-ru" element={<ClassroomRu />} />
         <Route path="/road" element={<OnTheRoad />} />
+        <Route path="/pro-english" element={<ProEnglish />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
