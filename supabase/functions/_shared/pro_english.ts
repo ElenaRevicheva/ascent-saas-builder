@@ -11,7 +11,7 @@
 // the classroom never read this file; this layer never reads their rules. The door is its own (`start`).
 
 type Msg = { role: 'user' | 'assistant'; content: string };
-export type ProState = { phase?: 'check' | 'menu' | 'scene' | 'free'; step?: number; level?: string; goal?: string; scene?: string; history?: Msg[] };
+export type ProState = { phase?: 'check' | 'menu' | 'scene' | 'free'; step?: number; level?: string; goal?: string; work?: string; scene?: string; history?: Msg[] };
 export type ProAsk = (system: string, messages: Msg[], maxTokens: number) => Promise<string>;
 export type ProInput = {
   db: any; userId: string | null; platform: 'web' | 'whatsapp' | 'telegram'; ask: ProAsk;
@@ -38,7 +38,9 @@ const CHECK_QUESTIONS = [
 
 const COACH = `You are EspaLuz Pro English, a professional English coach for NATIVE Spanish speakers in Latin America who use English to earn
 money: English-speaking clients, remote jobs, business travel. Warm, direct, encouraging, never childish.
-LEVEL: {LEVEL}. GOAL: {GOAL}. {SCENE}
+LEVEL: {LEVEL}. GOAL: {GOAL}. THEIR WORK: {WORK}. {SCENE}
+Adapt every scene to THEIR real work (a client of a tour agency asks about tours, not websites).
+Length: A2 = 1-2 short sentences with simple words; B1 = up to 2; B2/C1 = up to 3.
 For THEIR LAST MESSAGE return ONLY JSON {"better":"","why":"","reply":"","es_help":""}:
 - "better": if their message has a mistake, sounds unnatural or is a word-for-word Spanish construction, the natural professional
   English version of THEIR sentence, keeping their meaning. If they wrote in Spanish: how to say it in English. If it is already
@@ -51,7 +53,7 @@ Never invent facts about them. Never add anything outside the JSON.`;
 
 const LEVEL_JUDGE = `You assess the English of a native Spanish speaker from three short answers (TRANSCRIPT). Return ONLY JSON
 {"level":"A2|B1|B2|C1","goal":"clients|remote_job|travel|other","strong_es":"<one thing they do well, Spanish, max 15 words>",
-"focus_es":"<the one thing to work on first, Spanish, max 15 words>"}. Judge only what they actually wrote.`;
+"focus_es":"<the one thing to work on first, Spanish, max 15 words>","work":"<what they do for work, English, max 12 words, or empty>"}. Judge only what they actually wrote.`;
 
 const OFF = /^\s*\/?(salir|exit|stop|adios|adiós|bye|terminar|fin|end)\s*[!.]?\s*$/i;
 const MENU = /^\s*\/?(menu|men[uú]|escenas|scenes|opciones)\s*[!.]?\s*$/i;
@@ -157,7 +159,7 @@ export async function proEnglish(inp: ProInput): Promise<ProOutput> {
   if (state.phase !== 'check' && /^\s*\d\s*[.)]?\s*$/.test(said) && n >= 1 && n <= PRO_SCENES.length) {
     const sc = PRO_SCENES[n - 1];
     state = { ...state, phase: 'scene', scene: sc.key };
-    const first = json(await ask(COACH.replace('{LEVEL}', state.level ?? 'B1').replace('{GOAL}', state.goal ?? 'other')
+    const first = json(await ask(COACH.replace('{LEVEL}', state.level ?? 'B1').replace('{GOAL}', state.goal ?? 'other').replace('{WORK}', state.work || 'not given')
       .replace('{SCENE}', `SCENE - you play: ${sc.role}. This is the START: "better" and "why" stay empty; greet them in your role and ask your first question.`),
       [{ role: 'user', content: '(start the scene)' }], 400));
     const reply = first.reply || 'Hi, thanks for taking my call. Could you tell me a bit about what you do?';
@@ -177,7 +179,7 @@ export async function proEnglish(inp: ProInput): Promise<ProOutput> {
     const answers = [...history.filter((h) => h.role === 'user').slice(-2).map((h) => h.content), said];
     const j = json(await ask(LEVEL_JUDGE, [{ role: 'user', content: `TRANSCRIPT:\n${answers.map((a, i) => `${i + 1}. ${a}`).join('\n')}` }], 300));
     const level = /^(A2|B1|B2|C1)$/.test(j.level ?? '') ? j.level : 'B1';
-    state = { phase: 'menu', level, goal: j.goal || 'other' };
+    state = { phase: 'menu', level, goal: j.goal || 'other', work: (j.work ?? '').slice(0, 120) };
     console.log(`[pro-english] level ${level} goal=${state.goal} ${platform}`);
     return out(`✅ *Listo.*${j.strong_es ? `\n👍 ${j.strong_es}` : ''}${j.focus_es ? `\n🎯 Vamos a trabajar: ${j.focus_es}` : ''}\n\n${menuText(level)}`,
       `Thank you! Your level is ${level}. Choose a scene.`, { said, level, reply: `Level ${level}` });
@@ -187,7 +189,7 @@ export async function proEnglish(inp: ProInput): Promise<ProOutput> {
   const sc = PRO_SCENES.find((s) => s.key === state.scene);
   if (!state.phase || state.phase === 'menu') state = { ...state, phase: 'free' };
   const pronP = inp.audio ? pronounce(inp.audio, said) : Promise.resolve(null);
-  const j = json(await ask(COACH.replace('{LEVEL}', state.level ?? 'B1').replace('{GOAL}', state.goal ?? 'other')
+  const j = json(await ask(COACH.replace('{LEVEL}', state.level ?? 'B1').replace('{GOAL}', state.goal ?? 'other').replace('{WORK}', state.work || 'not given')
     .replace('{SCENE}', sc ? `SCENE - you play: ${sc.role}.` : 'FREE TALK about their work and plans.'),
     [...history.slice(-12), { role: 'user', content: said }], 500));
   const pron = await pronP;
@@ -199,5 +201,5 @@ export async function proEnglish(inp: ProInput): Promise<ProOutput> {
     pron ? `🎙️ Pronunciation *${pron.score}/100*${pron.worst.length ? ` · practise: ${pron.worst.map((w) => `*${w.word}* (${w.score})`).join(', ')}` : ''}` : '',
   ].filter(Boolean);
   console.log(`[pro-english] turn ${platform} scene=${state.scene ?? 'free'} better=${j.better ? 1 : 0} pron=${pron?.score ?? '-'}`);
-  return out(lines.join('\n\n'), `${j.better ? `Better: ${j.better}. ` : ''}${reply}`, { said, better: j.better ?? '', reply, pron }, { pron });
+  return out(lines.join('\n\n'), `${j.better ? `Better: ${j.better.replace(/[.!?\s]+$/, '')}. ` : ''}${reply}`, { said, better: j.better ?? '', reply, pron }, { pron });
 }
