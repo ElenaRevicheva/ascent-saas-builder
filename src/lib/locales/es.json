@@ -255,7 +255,7 @@
     "aboutDesc": "Quién creó EspaLuz y por qué.",
     "feedback": "Opinión",
     "feedbackDesc": "Dinos qué mejorar.",
-    "path": "Encuentra el camino de tu familia",
+    "path": "Encuentra tu camino",
     "pathDesc": "Cuatro caminos: elige el que se parece al tuyo.",
     "how": "Cómo funciona EspaLuz",
     "howDesc": "Cuatro pasos, con pantallas reales."
@@ -1322,7 +1322,7 @@
     "p7": "Nuevas aventuras de Pere y Titi en lugares reales de Panamá",
     "title1": "Elige tu",
     "title2": "plan de aprendizaje",
-    "lede": "Empieza hoy el camino de tu familia: español, inglés o los dos. Elige el plan ideal para ti y tu familia. Cancela cuando quieras, sin compromiso.",
+    "lede": "Empieza hoy tu camino: español, inglés o los dos. Elige el plan ideal para ti, solo o con tu familia. Cancela cuando quieras, sin compromiso.",
     "popular": "El más elegido",
     "secure": "Pago seguro con {{by}}",
     "merchant": "ID de comercio",
@@ -1488,41 +1488,49 @@
   },
   "path": {
     "tag": "Tu camino",
-    "title": "Encuentra el camino de tu familia",
-    "count": "4 caminos",
-    "lede": "Elige el que se parece a tu familia: cada uno abre el comienzo adecuado.",
+    "title": "Encuentra tu camino",
+    "count": "5 caminos",
+    "lede": "Solo o con tu familia: elige el que se parece a ti. Cada uno abre el comienzo adecuado.",
     "learnLabel": "Practicas:",
     "getLabel": "Primero recibes:",
     "startFree": "Empieza gratis: 14 días, sin tarjeta",
     "wa": "WhatsApp",
     "tg": "Telegram",
     "expat": {
-      "title": "Nos mudamos a un país hispanohablante y aprendemos español",
+      "title": "Te mudaste a un país hispanohablante y aprendes español",
       "learn": "el español del país donde vives ahora: sus propias palabras, costumbres y trámites del día a día, siempre explicado en inglés.",
       "get": "notas de la escuela, vecinos y el médico en pasos cortos y prácticos · la clase de 10 minutos de tu hijo/a con Pere y Titi · un plan para tu semana.",
       "calm": "Recordatorios solo si los pides: solo por la mañana, nunca de noche, sin culpas por rachas.",
       "option": "Español"
     },
     "nomads": {
-      "title": "Viajamos y aún buscamos nuestro lugar",
+      "title": "Viajas y aún buscas tu lugar",
       "learn": "el español de cada país por el que pasas, e inglés si no es tu primera lengua.",
       "get": "guías de 21 países hispanohablantes (cambia de país cuando quieras) · ayuda en una ciudad nueva desde el primer día · la clase de tu hijo/a estés donde estés.",
       "calm": "Nada da por hecho un año en un país: dile a EspaLuz cuánto te quedas y planifica para eso.",
       "option": "Español e inglés"
     },
     "settle": {
-      "title": "Ya hablamos español",
+      "title": "Ya hablas español",
       "learn": "inglés como camino principal; el español, solo para las palabras, costumbres y formas del país donde vives ahora.",
       "get": "un camino de inglés de 4 semanas en tu plan semanal · ensaya llamadas y entrevistas en inglés · tu hijo/a aprende inglés con Pere y Titi.",
       "calm": "Nada de español básico.",
       "option": "Ya hablo español"
     },
     "russian": {
-      "title": "Somos una familia de habla rusa",
+      "title": "Hablas ruso, solo o con tu familia",
       "learn": "el español del país donde vives ahora: sus propias palabras, costumbres y trámites del día a día, e inglés, con el ruso al lado.",
       "get": "toda la app en ruso · Мишка & Лиса, una clase ruso-inglés para tu hijo/a (beta), y Pere y Titi para español e inglés · tu primer año en tu nuevo país.",
       "calm": "Las palabras difíciles llevan una breve explicación en ruso.",
       "option": "Español e inglés"
+    },
+    "pro": {
+      "title": "El español es tu idioma y necesitas inglés profesional para trabajar",
+      "learn": "el inglés del trabajo - clientes, precios, entrevistas, reuniones y emails - con tus propias frases corregidas y explicadas en español.",
+      "get": "un test de nivel corto y luego 7 escenas de trabajo para practicar · notas de voz con puntuación de pronunciación · tu progreso cada semana",
+      "calm": "Los errores son bienvenidos: una corrección a la vez, explicada en español.",
+      "open": "Abrir el coach de inglés",
+      "note": "WhatsApp y Telegram abren el coach de inglés directamente. Es un coach aparte: todo lo demás de EspaLuz sigue igual."
     },
     "note": "WhatsApp y Telegram se abren con este camino ya activado. En la web: el mapa de la familia → «Sobre tu nueva vida» → «¿Qué quieres aprender?» → «{{option}}»."
   }

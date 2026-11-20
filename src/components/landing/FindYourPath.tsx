@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { Home, Compass, Languages, Users, Check, Info } from "lucide-react";
+import { Home, Compass, Languages, Users, Check, Info, Briefcase } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Part, Item } from "./Tree";
 
@@ -18,18 +18,21 @@ const WA = "https://wa.me/50766623757?text=";
 const TG = "https://t.me/EspaLuzFamily_bot";
 // 19 Nov 2026 (Elena: "ugly, toyish emojis - enhance the text formatting"): line icons in soft round badges - the same
 // pattern as the landing's "Moments EspaLuz helps with" rows - and a structured, readable inside.
-type Row = { key: "expat" | "nomads" | "settle" | "russian"; icon: LucideIcon; wa: string; tg: string; ruClass?: boolean };
+type Row = { key: "expat" | "nomads" | "settle" | "russian" | "pro"; icon: LucideIcon; wa: string; tg: string; ruClass?: boolean; web?: string };
 const ROWS: Record<Row["key"], Row> = {
   // 19 Nov 2026 (Elena: "other categories open with Hola and the user is stuck"): every row switches ITS path on.
   expat: { key: "expat", icon: Home, wa: "spanish", tg: `${TG}?start=spanish` },
   nomads: { key: "nomads", icon: Compass, wa: "both", tg: `${TG}?start=both` },
   settle: { key: "settle", icon: Languages, wa: "settle", tg: `${TG}?start=settle` },
   russian: { key: "russian", icon: Users, wa: "both", tg: `${TG}?start=both`, ruClass: true },
+  // 20 Nov 2026 (Elena): Pro English, a SEPARATE layer for native Spanish speakers who need English for work. Its own doors:
+  // the web coach (/pro-english), WhatsApp "pro english", Telegram ?start=proen-landing. The four rows above are unchanged.
+  pro: { key: "pro", icon: Briefcase, wa: "pro english", tg: `${TG}?start=proen-landing`, web: "/pro-english" },
 };
 const ORDER: Record<string, Row["key"][]> = {
-  en: ["expat", "nomads", "settle", "russian"],
-  es: ["settle", "nomads", "expat", "russian"],
-  ru: ["russian", "expat", "nomads", "settle"],
+  en: ["expat", "nomads", "settle", "russian", "pro"],
+  es: ["settle", "pro", "nomads", "expat", "russian"],
+  ru: ["russian", "expat", "nomads", "settle", "pro"],
 };
 
 const btn = "inline-flex min-h-[40px] items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition-colors";
@@ -70,7 +73,7 @@ export function FindYourPath() {
                 <Check aria-hidden className="mt-0.5 h-4 w-4 shrink-0" />{t(`path.${k}.calm`)}
               </p>
               <div className="flex flex-wrap gap-2 pt-1">
-                <Link to="/auth" className={`${btn} bg-primary text-primary-foreground hover:bg-primary/90`}>{t("path.startFree")}</Link>
+                <Link to={r.web ?? "/auth"} className={`${btn} bg-primary text-primary-foreground hover:bg-primary/90`}>{r.web ? t(`path.${k}.open`) : t("path.startFree")}</Link>
                 <a href={WA + encodeURIComponent(r.wa)} target="_blank" rel="noopener noreferrer"
                    className={`${btn} border border-green-600/40 text-green-700 hover:bg-green-50`}>{t("path.wa")}</a>
                 <a href={r.tg} target="_blank" rel="noopener noreferrer"
@@ -78,7 +81,7 @@ export function FindYourPath() {
                 {r.ruClass && <Link to="/classroom-ru" className={`${btn} border border-amber-600/40 text-amber-800 hover:bg-amber-50`}>Мишка & Лиса</Link>}
               </div>
               <p className="flex items-start gap-2 rounded-xl bg-muted/50 px-3 py-2 text-xs leading-relaxed text-muted-foreground">
-                <Info aria-hidden className="mt-0.5 h-3.5 w-3.5 shrink-0" />{t("path.note", { option: t(`path.${k}.option`) })}
+                <Info aria-hidden className="mt-0.5 h-3.5 w-3.5 shrink-0" />{r.web ? t(`path.${k}.note`) : t("path.note", { option: t(`path.${k}.option`) })}
               </p>
             </div>
           </Item>
