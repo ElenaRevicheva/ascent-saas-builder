@@ -1511,10 +1511,10 @@
       "option": "Both Spanish and English"
     },
     "settle": {
-      "title": "You already speak Spanish",
-      "learn": "English as your main track - Spanish only for the words, customs and ways of the country you live in now.",
+      "title": "You already speak Spanish and are moving within Latin America",
+      "learn": "A bilingual everyday companion: English as your main track, for daily life and what comes next - plus the words, customs and ways of the country you are settling in (a Costa Rican in Panama learns what Panamanians say and do).",
       "get": "a 4-week English path in your weekly plan · rehearse calls and interviews in English · your child learns English with Pere & Titi.",
-      "calm": "No beginner Spanish.",
+      "calm": "No beginner Spanish. Replies stay bilingual, with English as your track. Need English for work? See the professional English path.",
       "option": "I already speak Spanish"
     },
     "russian": {
@@ -1526,11 +1526,11 @@
     },
     "pro": {
       "title": "Spanish is your language and you need English for work",
-      "learn": "the English of work - clients, prices, interviews, meetings and emails - with your own sentences corrected and explained in Spanish.",
+      "learn": "An English-only coach for work: speak or write in English - or in Spanish when you're stuck - and get the correct, natural English back. Clients, prices, interviews, meetings and emails.",
       "get": "a short level check, then 7 work scenes to practise · voice notes with a pronunciation score · your progress every week",
-      "calm": "Mistakes are welcome: one correction at a time, explained in Spanish.",
+      "calm": "Mistakes are welcome: one correction at a time, in simple English.",
       "open": "Open the English coach",
-      "note": "WhatsApp and Telegram open the English coach straight away. It is its own coach: everything else in EspaLuz stays as it is."
+      "note": "Different from \"You already speak Spanish\": there EspaLuz answers bilingually for everyday life; here the coach speaks English with you, for work. WhatsApp and Telegram open the coach straight away."
     },
     "note": "WhatsApp and Telegram open with this path already switched on. On the web: the family map → \"About your new life\" → \"What do you want to learn?\" → \"{{option}}\"."
   }

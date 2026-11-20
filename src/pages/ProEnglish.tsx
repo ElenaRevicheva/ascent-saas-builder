@@ -157,15 +157,16 @@ export default function ProEnglish() {
       <div className="mx-auto max-w-xl space-y-4">
         <header className="space-y-1 text-center">
           <h1 className="text-2xl font-bold text-foreground">🇺🇸 EspaLuz Pro English</h1>
-          <p className="text-sm text-muted-foreground">Inglés profesional para clientes, trabajo remoto y viajes de negocios. Habla o escribe; tu coach corrige y responde en inglés.</p>
+          <p className="text-sm text-muted-foreground">Professional English for clients, remote jobs and business trips. Speak or write in English - or in Spanish when you're stuck - and your coach answers in English.</p>
+          <p className="text-xs text-muted-foreground">Para hispanohablantes: inglés de inmersión, el español solo cuando te trabas.</p>
         </header>
 
         {!loading && !user && (
           <section className="space-y-3 rounded-2xl border border-border p-5 text-sm">
-            <p className="text-foreground">✍️ Corrige tu frase · 💬 conversa en inglés · 🎙️ puntuación de pronunciación · 📈 progreso semanal</p>
-            <p className="text-muted-foreground">Escenas reales: llamada con un cliente, cotizar un precio, atención al cliente, entrevista para trabajo remoto, small talk con inversionistas, viaje de negocios, email profesional.</p>
+            <p className="text-foreground">✍️ Your sentence, corrected · 💬 real conversations in English · 🎙️ pronunciation score · 📈 weekly progress</p>
+            <p className="text-muted-foreground">Real work scenes: a call with a new client, quoting a price, customer service, a remote job interview, small talk with investors, a business trip, a professional email.</p>
             <Link to="/auth" className="block w-full rounded-xl px-5 py-3 text-center font-semibold text-white" style={{ background: 'hsl(var(--espaluz-purple))' }}>
-              Empieza gratis · 14 días, sin tarjeta
+              Start free · 14 days, no card
             </Link>
             <div className="flex gap-2">
               <a href={WA} className="flex-1 rounded-xl border border-border px-4 py-2 text-center font-medium">WhatsApp</a>
@@ -196,7 +197,7 @@ export default function ProEnglish() {
                 <Send className="h-5 w-5" />
               </button>
             </div>
-            <p className="text-center text-xs text-muted-foreground">menu · libre · progreso · level · salir</p>
+            <p className="text-center text-xs text-muted-foreground">menu · free · progress · level · exit</p>
             {coached && (
               <button type="button" onClick={seeIt} disabled={clipBusy} className="flex w-full items-center justify-center gap-2 rounded-xl border border-border px-4 py-2 text-sm disabled:opacity-50">
                 {clipBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Video className="h-4 w-4" />}

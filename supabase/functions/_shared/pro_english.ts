@@ -20,20 +20,20 @@ export type ProInput = {
 export type ProOutput = { text: string; speak: string; state: ProState; off?: boolean; pron?: Pron | null; saved: boolean };
 type Pron = { score: number; accuracy: number; fluency: number; worst: { word: string; score: number }[] };
 
-export const PRO_SCENES: { key: string; es: string; role: string }[] = [
-  { key: 'client_call', es: 'Llamada con un cliente nuevo', role: 'a new English-speaking client calling about their service; you want to understand what they do and what they need' },
-  { key: 'price_quote', es: 'Cotizar un precio', role: 'a client asking for a quote; ask what is included, the timeline, and push back once with "that is a bit expensive"' },
-  { key: 'customer_service', es: 'Atención al cliente', role: 'a polite but unhappy customer with a real problem (a late delivery, a wrong booking, a bug); you want it solved' },
-  { key: 'job_interview', es: 'Entrevista para trabajo remoto', role: 'an interviewer from a US or Canadian company hiring for a remote role; ask about experience, a hard situation, availability and time zones' },
-  { key: 'investor_talk', es: 'Small talk con inversionistas', role: 'a foreign investor at a business event in Panama City; friendly small talk that turns to what they do and how they could work together' },
-  { key: 'business_trip', es: 'Viaje de negocios', role: 'airport, hotel and meeting staff on a business trip (check-in, a problem with the room, meeting a partner at reception)' },
-  { key: 'email', es: 'Email profesional', role: 'EMAIL MODE: they paste or dictate an email or message for a client; you rewrite it as a clear, warm, professional email' },
+export const PRO_SCENES: { key: string; en: string; es: string; role: string }[] = [
+  { key: 'client_call', en: 'Call with a new client', es: 'Llamada con un cliente nuevo', role: 'a new English-speaking client calling about their service; you want to understand what they do and what they need' },
+  { key: 'price_quote', en: 'Quoting a price', es: 'Cotizar un precio', role: 'a client asking for a quote; ask what is included, the timeline, and push back once with "that is a bit expensive"' },
+  { key: 'customer_service', en: 'Customer service', es: 'Atención al cliente', role: 'a polite but unhappy customer with a real problem (a late delivery, a wrong booking, a bug); you want it solved' },
+  { key: 'job_interview', en: 'Remote job interview', es: 'Entrevista para trabajo remoto', role: 'an interviewer from a US or Canadian company hiring for a remote role; ask about experience, a hard situation, availability and time zones' },
+  { key: 'investor_talk', en: 'Small talk with investors', es: 'Small talk con inversionistas', role: 'a foreign investor at a business event in Panama City; friendly small talk that turns to what they do and how they could work together' },
+  { key: 'business_trip', en: 'Business trip', es: 'Viaje de negocios', role: 'airport, hotel and meeting staff on a business trip (check-in, a problem with the room, meeting a partner at reception)' },
+  { key: 'email', en: 'Professional email', es: 'Email profesional', role: 'EMAIL MODE: they paste or dictate an email or message for a client; you rewrite it as a clear, warm, professional email' },
 ];
 
 const CHECK_QUESTIONS = [
-  { en: "Hi! I'm your EspaLuz English coach. Let's start with a quick level check - three questions. What do you do for work?", es: '¿A qué te dedicas? Responde en inglés como puedas; también puedes enviar una nota de voz.' },
-  { en: 'Great. Tell me about a client, a customer or a problem you solved recently.', es: 'Cuéntame de un cliente o un problema que resolviste. Errores = bienvenidos.' },
-  { en: 'Last one: why do you need English - clients, a remote job, travel, or something else?', es: '¿Para qué necesitas el inglés?' },
+  { en: "Hi! I'm your EspaLuz English coach. Let's start with a quick level check - three questions. What do you do for work?", es: 'Tip: si no sabes cómo decir algo, escríbelo en español y te doy el inglés correcto.' },
+  { en: 'Great. Tell me about a client, a customer or a problem you solved recently. Mistakes are welcome.', es: '' },
+  { en: 'Last one: why do you need English - clients, a remote job, travel, or something else?', es: '' },
 ];
 
 const COACH = `You are EspaLuz Pro English, a professional English coach for NATIVE Spanish speakers in Latin America who use English to earn
@@ -45,15 +45,16 @@ For THEIR LAST MESSAGE return ONLY JSON {"better":"","why":"","reply":"","es_hel
 - "better": if their message has a mistake, sounds unnatural or is a word-for-word Spanish construction, the natural professional
   English version of THEIR sentence, keeping their meaning. If they wrote in Spanish: how to say it in English. If it is already
   good: "". Fix only what matters most for sounding professional - never rewrite a good sentence.
-- "why": only when "better" is not empty: ONE short reason in Spanish, max 15 words ("En inglés no se dice 'make a question', se dice 'ask'").
+- "why": only when "better" is not empty: ONE short reason in simple ENGLISH, max 12 words ("We say 'ask a question', not 'make a question'.").
 - "reply": YOUR answer, ONLY IN ENGLISH, 1 to 3 short sentences pitched at their level, staying in your role, ending with a question
   that moves the conversation forward. Use real professional English people use today, never textbook English.
-- "es_help": ONE short Spanish line ONLY if they wrote mostly in Spanish or said they do not understand; otherwise "".
+- "es_help": ONE short Spanish line ONLY if they say they do not understand or are clearly stuck; otherwise "". Aim for 90% English:
+  this is an English-immersion coach (Loora-style), not the bilingual family companion.
 Never invent facts about them. Never add anything outside the JSON.`;
 
 const LEVEL_JUDGE = `You assess the English of a native Spanish speaker from three short answers (TRANSCRIPT). Return ONLY JSON
-{"level":"A2|B1|B2|C1","goal":"clients|remote_job|travel|other","strong_es":"<one thing they do well, Spanish, max 15 words>",
-"focus_es":"<the one thing to work on first, Spanish, max 15 words>","work":"<what they do for work, English, max 12 words, or empty>"}. Judge only what they actually wrote.`;
+{"level":"A2|B1|B2|C1","goal":"clients|remote_job|travel|other","strong_es":"<one thing they do well, simple English, max 12 words>",
+"focus_es":"<the one thing to work on first, simple English, max 12 words>","work":"<what they do for work, English, max 12 words, or empty>"}. Judge only what they actually wrote.`;
 
 const OFF = /^\s*\/?(salir|exit|stop|adios|adiós|bye|terminar|fin|end)\s*[!.]?\s*$/i;
 const MENU = /^\s*\/?(menu|men[uú]|escenas|scenes|opciones)\s*[!.]?\s*$/i;
@@ -68,9 +69,9 @@ function json(text: string): Record<string, string> {
 }
 
 function menuText(level?: string): string {
-  return `${level ? `📊 Nivel: *${level}*\n\n` : ''}🎯 *Elige una escena* (escribe el número):\n` +
-    PRO_SCENES.map((s, i) => `${i + 1}. ${s.es}`).join('\n') +
-    `\n\n💬 *libre* = conversación libre · 📈 *progreso* · 🚪 *salir*\nResponde en inglés, por texto o nota de voz 🎙️`;
+  return `${level ? `📊 Your level: *${level}*\n\n` : ''}🎯 *Choose a scene* (send the number):\n` +
+    PRO_SCENES.map((s, i) => `${i + 1}. ${s.en}`).join('\n') +
+    `\n\n💬 *free* = free talk · 📈 *progress* · 🚪 *exit*\nAnswer in English, by text or voice note 🎙️ - stuck? Write it in Spanish.`;
 }
 
 // Azure Pronunciation Assessment, short-audio REST (max ~60 s). The reference text is the transcript the client already
@@ -109,7 +110,7 @@ async function lastState(db: any, userId: string): Promise<{ state: ProState; hi
 }
 
 async function progressText(db: any, userId: string | null): Promise<string> {
-  if (!userId) return '📈 Para guardar tu progreso en la web, WhatsApp y Telegram a la vez, conecta tu cuenta EspaLuz (app.espaluz.lat → Dashboard → Conectar).';
+  if (!userId) return '📈 To keep your progress on the web, WhatsApp and Telegram together, connect your EspaLuz account (app.espaluz.lat → Dashboard → Connect).';
   const since = new Date(Date.now() - 14 * 86400000).toISOString();
   const { data } = await db.from('learning_sessions').select('content, created_at').eq('user_id', userId).eq('session_type', 'analytics')
     .eq('content->>event', 'pro_english_turn').gte('created_at', since).limit(1000);
@@ -121,11 +122,11 @@ async function progressText(db: any, userId: string | null): Promise<string> {
       pron: scores.length ? Math.round(scores.reduce((a: number, b: number) => a + b, 0) / scores.length) : null };
   };
   const now = sum(pick(true)), before = sum(pick(false));
-  if (!now.turns) return '📈 Esta semana todavía no practicamos. Escribe *menu* y elige una escena.';
+  if (!now.turns) return '📈 No practice yet this week. Send *menu* and choose a scene.';
   const pct = (s: any) => Math.round((100 * s.clean) / Math.max(1, s.turns));
-  return `📈 *Tu semana*\n• Mensajes en inglés: ${now.turns}${before.turns ? ` (antes: ${before.turns})` : ''}\n` +
-    `• Sin corrección: ${pct(now)}%${before.turns ? ` (antes: ${pct(before)}%)` : ''}\n• Escenas practicadas: ${now.scenes}\n` +
-    (now.pron !== null ? `• Pronunciación media: ${now.pron}/100${before.pron !== null ? ` (antes: ${before.pron})` : ''}\n` : '');
+  return `📈 *Your week*\n• Messages in English: ${now.turns}${before.turns ? ` (week before: ${before.turns})` : ''}\n` +
+    `• No correction needed: ${pct(now)}%${before.turns ? ` (week before: ${pct(before)}%)` : ''}\n• Scenes practised: ${now.scenes}\n` +
+    (now.pron !== null ? `• Average pronunciation: ${now.pron}/100${before.pron !== null ? ` (week before: ${before.pron})` : ''}\n` : '');
 }
 
 export async function proEnglish(inp: ProInput): Promise<ProOutput> {
@@ -149,9 +150,9 @@ export async function proEnglish(inp: ProInput): Promise<ProOutput> {
     if (state.level && !LEVEL.test(said)) { state = { ...state, phase: 'menu' }; console.log(`[pro-english] start ${platform} returning level=${state.level}`); return out(`👋 Welcome back!\n\n${menuText(state.level)}`, 'Welcome back! Choose a scene.'); }
     state = { phase: 'check', step: 0 };
     console.log(`[pro-english] start ${platform} level-check`);
-    return out(`🇺🇸 *EspaLuz Pro English*\n\n💬 ${CHECK_QUESTIONS[0].en}\n\n🇪🇸 _${CHECK_QUESTIONS[0].es}_`, CHECK_QUESTIONS[0].en, { reply: CHECK_QUESTIONS[0].en });
+    return out(`🇺🇸 *EspaLuz Pro English*\n\n💬 ${CHECK_QUESTIONS[0].en}\n\n_${CHECK_QUESTIONS[0].es}_`, CHECK_QUESTIONS[0].en, { reply: CHECK_QUESTIONS[0].en });
   }
-  if (OFF.test(said)) { console.log(`[pro-english] off ${platform}`); return out('👋 See you soon! Pro English en pausa. Escribe *pro english* para volver.', 'See you soon!', {}, { off: true }); }
+  if (OFF.test(said)) { console.log(`[pro-english] off ${platform}`); return out('👋 See you soon! Send *pro english* any time to continue.', 'See you soon!', {}, { off: true }); }
   if (PROGRESS.test(said)) return out(await progressText(db, userId), 'Here is your week.');
   if (MENU.test(said)) { state = { ...state, phase: 'menu' }; return out(menuText(state.level), 'Choose a scene.'); }
   if (FREE.test(said)) { state = { ...state, phase: 'free', scene: undefined }; return out("💬 Free talk. Tell me about your day at work - what's on your plate this week?", "Free talk. Tell me about your day at work. What's on your plate this week?", { reply: "Tell me about your day at work - what's on your plate this week?" }); }
@@ -164,7 +165,7 @@ export async function proEnglish(inp: ProInput): Promise<ProOutput> {
       [{ role: 'user', content: '(start the scene)' }], 400));
     const reply = first.reply || 'Hi, thanks for taking my call. Could you tell me a bit about what you do?';
     console.log(`[pro-english] scene ${sc.key} ${platform}`);
-    return out(`🎬 *${sc.es}*\n\n💬 ${reply}\n\n_(menu · progreso · salir)_`, reply, { reply });
+    return out(`🎬 *${sc.en}*\n\n💬 ${reply}\n\n_(menu · progress · exit)_`, reply, { reply });
   }
   if (!said) return out(menuText(state.level), 'Choose a scene.');
 
@@ -174,14 +175,14 @@ export async function proEnglish(inp: ProInput): Promise<ProOutput> {
     if (step < CHECK_QUESTIONS.length) {
       state = { ...state, step };
       const q = CHECK_QUESTIONS[step];
-      return out(`💬 ${q.en}\n\n🇪🇸 _${q.es}_`, q.en, { said, reply: q.en });
+      return out(`💬 ${q.en}${q.es ? `\n\n_${q.es}_` : ''}`, q.en, { said, reply: q.en });
     }
     const answers = [...history.filter((h) => h.role === 'user').slice(-2).map((h) => h.content), said];
     const j = json(await ask(LEVEL_JUDGE, [{ role: 'user', content: `TRANSCRIPT:\n${answers.map((a, i) => `${i + 1}. ${a}`).join('\n')}` }], 300));
     const level = /^(A2|B1|B2|C1)$/.test(j.level ?? '') ? j.level : 'B1';
     state = { phase: 'menu', level, goal: j.goal || 'other', work: (j.work ?? '').slice(0, 120) };
     console.log(`[pro-english] level ${level} goal=${state.goal} ${platform}`);
-    return out(`✅ *Listo.*${j.strong_es ? `\n👍 ${j.strong_es}` : ''}${j.focus_es ? `\n🎯 Vamos a trabajar: ${j.focus_es}` : ''}\n\n${menuText(level)}`,
+    return out(`✅ *Done!*${j.strong_es ? `\n👍 ${j.strong_es}` : ''}${j.focus_es ? `\n🎯 We'll work on: ${j.focus_es}` : ''}\n\n${menuText(level)}`,
       `Thank you! Your level is ${level}. Choose a scene.`, { said, level, reply: `Level ${level}` });
   }
 
