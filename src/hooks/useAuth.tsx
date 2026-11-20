@@ -2,6 +2,7 @@ import { useState, useEffect, createContext, useContext } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useAnalytics } from '@/hooks/useAnalytics';
+import { firstTouch } from '@/lib/track';
 
 interface AuthContextType {
   user: User | null;
@@ -59,7 +60,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       options: {
         emailRedirectTo: redirectUrl,
         data: {
-          full_name: fullName || email
+          full_name: fullName || email,
+          // 20 Nov 2026: which film / post brought this family (first touch, see track.ts) - read in auth.users.
+          ...(firstTouch() ? { first_touch: firstTouch() } : {}),
         }
       }
     });

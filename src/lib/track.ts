@@ -91,10 +91,36 @@ export function track(name: string, params: Record<string, string | number | boo
   window.gtag('event', name, { ...params, transport_type: 'beacon' });
 }
 
+// 20 Nov 2026 (promo audit, Elena: "know exactly who clicks"): GA4 counts a film's visits anonymously, so a family that
+// signed up from a film was marked nowhere. The FIRST campaign tag a browser arrives with is kept here (first touch, 90 days)
+// and saved on the account at sign-up (user_metadata.first_touch). Only the tags we put in our own links - no address, no text.
+const FIRST_TOUCH_KEY = 'espaluz-first-touch';
+const FIRST_TOUCH_DAYS = 90;
+function keepFirstTouch() {
+  const q = new URLSearchParams(window.location.search);
+  const campaign = q.get('utm_campaign');
+  if (!campaign) return;
+  try {
+    const had = JSON.parse(store.get(FIRST_TOUCH_KEY) || 'null');
+    if (had && Date.now() - Date.parse(had.at) < FIRST_TOUCH_DAYS * 86400000) return;
+  } catch { /* unreadable: replace it */ }
+  const clip = (v: string | null) => (v ?? '').replace(/[^\w.-]/g, '').slice(0, 40);
+  store.set(FIRST_TOUCH_KEY, JSON.stringify({ campaign: clip(campaign), source: clip(q.get('utm_source')),
+    content: clip(q.get('utm_content')), at: new Date().toISOString() }));
+}
+/** The first campaign this browser arrived from, or null. */
+export function firstTouch(): Record<string, string> | null {
+  try {
+    const had = JSON.parse(store.get(FIRST_TOUCH_KEY) || 'null');
+    return had && Date.now() - Date.parse(had.at) < FIRST_TOUCH_DAYS * 86400000 ? had : null;
+  } catch { return null; }
+}
+
 /** Call on every route change. */
 export function trackRoute(pathname: string) {
   const disableFlag = `ga-disable-${GA_ID}` as const;
   if (new URLSearchParams(window.location.search).get('internal') === '1') store.set(INTERNAL_KEY, '1');
+  keepFirstTouch();
   // 16 Nov 2026: PostHog front-page recordings (own rules in posthogReplay.ts: consent, Play app, two pages only).
   void replayRoute(pathname).catch(() => undefined);
 
