@@ -290,3 +290,18 @@ All colors MUST be HSL.
 /* 14 Nov 2026 (Elena: buttons 'eaten' on phones): one long written-out link (t.me/...) could not wrap and made the whole page
    ~480px wide inside a 360-412px phone, pushing the header buttons off the screen. Long words and links may break anywhere. */
 main a, section a, p, li { overflow-wrap: break-word; }
+
+/* 20 Nov 2026 (Elena: "running colours, exactly like aideazz.xyz/api"): the same recipe as the Lab API page's az-flow -
+   a palindromic gradient (violet -> gold -> violet) twice the text's width, sliding one way on a loop, so the tile joins
+   violet-to-violet with no seam; mixed in oklab so the crossing never sags into pink. Deeper violets and a warm gold
+   (not the API page's pale yellow) because this sits on a light sky. "Luz" keeps its own gold (.luz-gold). */
+@keyframes flow-violet { 100% { background-position: 220% center; } }
+.flow-violet {
+  /* a narrow gold beam (44-56%) with violet on both sides: violet and gold are opposites, so any long blend between them greys out */
+  background-image: linear-gradient(115deg in oklab, #5b21b6, #7c3aed 36%, #8b5cf6 42%, #e5a50a 47%, #f2b705 50%, #e5a50a 53%, #8b5cf6 58%, #7c3aed 64%, #5b21b6);
+  background-size: 220%;
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+  animation: flow-violet 6s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) { .flow-violet { animation: none; background-position: 40% center; } }

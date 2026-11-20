@@ -373,17 +373,19 @@ const Index = () => {
         </div>
         {/* 19 Nov 2026 (Elena: "too modest - more attractive, stylish, expressive"): same words, now a statement line -
             the headline serif in italic, a violet-to-sun gradient, and fine lines tapering out like a road to the horizon. */}
-        <div className="mx-auto mb-12 mt-2 flex max-w-4xl items-center gap-4 px-4 md:gap-6">
-          <span aria-hidden className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/30 to-primary/60" />
+        {/* 20 Nov 2026 (Elena: "it should gain more space" + "running colours like my API page"): the line gets the
+            whole width (short road lines, hidden on phones) and air above and below; the colours flow (.flow-violet). */}
+        <div className="mx-auto mb-20 mt-16 flex max-w-6xl items-center gap-4 px-4 md:mb-24 md:mt-20 md:gap-8">
+          <span aria-hidden className="hidden h-px w-16 shrink-0 bg-gradient-to-r from-transparent via-primary/30 to-primary/60 md:block lg:w-28" />
           {/* 20 Nov 2026 (Elena: "generic AI palette - no rose; violet that only slightly shifts, and Luz in our yellow"):
               violet-only gradient, and "Luz" in the logo's own gold (.luz-gold = .brand-wordmark b). */}
-          <p className="bg-gradient-to-r from-[#5b21b6] via-[#7c3aed] to-[#6d28d9] bg-clip-text text-center text-2xl italic leading-snug [text-wrap:balance] text-transparent md:text-4xl"
+          <p className="flow-violet flex-1 text-center text-3xl italic leading-tight [text-wrap:balance] md:text-5xl lg:text-6xl"
             style={{ fontFamily: '"Newsreader", "Iowan Old Style", Georgia, serif', fontWeight: 500 }}>
             {t("hero4.promiseTitle").split("EspaLuz").map((part, i) => (
               <span key={i}>{i > 0 && <>Espa<b className="luz-gold" style={{ fontWeight: 500, fontSize: "inherit" }}>Luz</b></>}{part}</span>
             ))}
           </p>
-          <span aria-hidden className="h-px flex-1 bg-gradient-to-l from-transparent via-primary/30 to-primary/60" />
+          <span aria-hidden className="hidden h-px w-16 shrink-0 bg-gradient-to-l from-transparent via-primary/30 to-primary/60 md:block lg:w-28" />
         </div>
 
       </section>
