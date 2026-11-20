@@ -5,6 +5,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
 import { kidsTidyReply, kidsClassDaysDone, kidsGreetedRecently } from './kids_tidy.ts';
 import { brainShare, brainShareText } from '../_shared/brain_share.ts';
 import { weekPlan } from '../_shared/week_plan.ts';
+import { proEnglish } from '../_shared/pro_english.ts'; // 20 Nov 2026: Pro English, a separate layer (see that file)
 // 8 Nov 2026 (Elena: "what lasts is your new life"): the checked belonging pack, one file for web + WhatsApp + Telegram.
 import argentinaPack from '../_shared/belonging/argentina.json' with { type: 'json' };
 import boliviaPack from '../_shared/belonging/bolivia.json' with { type: 'json' };
@@ -2269,13 +2270,13 @@ serve(async (req) => {
     let userId: string | null;
     let anonTrial = false;
     if (fromBot) {
-      if (!body.kids || !botPlatform) throw new Error('Unauthorized');
+      if ((!body.kids && !body.proEnglish) || !botPlatform) throw new Error('Unauthorized');
       supabase = createClient(supabaseUrl, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
       const { data: link } = await supabase.from('connected_bots').select('user_id')
         .eq('platform', botPlatform).eq('platform_user_id', botPlatform === 'telegram' ? body.telegram_user_id : body.whatsapp_user_id)
         .eq('is_active', true).order('connected_at', { ascending: false }).limit(1);
       userId = link?.[0]?.user_id ?? null;
-      if (!userId && !body.guest) {
+      if (!userId && !body.guest && !body.proEnglish) {
         return new Response(JSON.stringify({ error: 'not linked' }), { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
       }
     } else {
@@ -2300,6 +2301,17 @@ serve(async (req) => {
     if (body.practice) {
       if (fromBot || !userId) throw new Error('Unauthorized');
       return new Response(JSON.stringify(await practiceTurn(userId, body.practice)), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
+    // 20 Nov 2026: Pro English (separate layer, _shared/pro_english.ts). Web signed-in or a bot; a bot guest keeps its own state.
+    if (body.proEnglish) {
+      if (!fromBot && !userId) throw new Error('Unauthorized');
+      const p = body.proEnglish ?? {};
+      const ask = async (system: string, messages: any[], maxTokens: number) => String((await callChain({ model: CLAUDE_MODELS[0],
+        max_tokens: maxTokens, temperature: 0.5, system, messages })).result?.content?.[0]?.text ?? '');
+      const r = await proEnglish({ db: createClient(supabaseUrl, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!), userId,
+        platform: botPlatform ?? 'web', ask, said: p.said, start: !!p.start, state: p.state, audio: p.audio ?? null });
+      return new Response(JSON.stringify(r), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     // 17 Nov 2026: "Phrases you've collected" tip + "Introduce your family to EspaLuz" (dashboard, signed-in only).
