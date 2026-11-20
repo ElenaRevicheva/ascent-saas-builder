@@ -216,7 +216,7 @@
     "count5": "3 formas",
     "startEyebrow": "Empieza con un toque",
     "startTitle": "Formas de empezar",
-    "startLede": "Elige el canal que tu familia ya usa.",
+    "startLede": "Elige el canal que ya usas.",
     "startTag": "Empezar",
     "startPart": "WhatsApp, Telegram o la web",
     "count3": "3 formas",
@@ -707,7 +707,7 @@
     "includes": "Qué incluye tu plan",
     "inc1": "El aula de Pere y Titi para tu hijo o hija",
     "inc2": "EspaLuz para adultos aquí en la web, en WhatsApp y en Telegram",
-    "inc3": "Una sola memoria familiar en todos ellos: puedes verla y corregirla en la tarjeta 7 de tu mapa",
+    "inc3": "Una sola memoria familiar en todos ellos: puedes verla y corregirla en la tarjeta 8 de tu mapa",
     "inc4": "La vida en tu nuevo país: costumbres, fiestas y palabras locales de fuentes verificadas",
     "inc5": "Respuestas por voz y, con el plan de pago, algunos videos cortos de EspaLuz hablando cada mes",
     "inc6": "Tu resumen semanal: los días que practicaste y en qué trabajó tu hijo o hija",
@@ -1512,7 +1512,7 @@
     },
     "settle": {
       "title": "Ya hablas español y te mudas dentro de Latinoamérica",
-      "learn": "Una compañera bilingüe para el día a día: inglés como tu camino principal, para la vida diaria y lo que viene - y las palabras, costumbres y formas del país donde te instalas (un costarricense en Panamá aprende lo que dicen y hacen los panameños).",
+      "learn": "Una compañera bilingüe para el día a día: inglés como tu camino principal, para la vida diaria y lo que viene - y las palabras, costumbres y formas del país donde te instalas (por ejemplo, un costarricense en Panamá aprende lo que dicen y hacen los panameños).",
       "get": "un camino de inglés de 4 semanas en tu plan semanal · ensaya llamadas y entrevistas en inglés · tu hijo/a aprende inglés con Pere y Titi.",
       "calm": "Nada de español para principiantes. Las respuestas siguen siendo bilingües, con el inglés como tu camino. ¿Necesitas inglés para trabajar? Mira el camino de inglés profesional.",
       "option": "Ya hablo español"
@@ -1526,7 +1526,7 @@
     },
     "pro": {
       "title": "El español es tu idioma y necesitas inglés profesional para trabajar",
-      "learn": "Un coach solo en inglés para el trabajo: habla o escribe en inglés - o en español cuando te trabes - y recibe el inglés correcto y natural. Clientes, precios, entrevistas, reuniones y emails.",
+      "learn": "Un coach que te habla solo en inglés, para el trabajo: tú hablas o escribes en inglés - o en español cuando te trabes - y siempre recibes el inglés correcto y natural. Clientes, precios, entrevistas, reuniones y emails.",
       "get": "un test de nivel corto y luego 7 escenas de trabajo para practicar · notas de voz con puntuación de pronunciación · tu progreso cada semana",
       "calm": "Los errores son bienvenidos: una corrección a la vez, en inglés sencillo.",
       "open": "Abrir el coach de inglés",
