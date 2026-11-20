@@ -305,3 +305,7 @@ main a, section a, p, li { overflow-wrap: break-word; }
   animation: flow-violet 6s linear infinite;
 }
 @media (prefers-reduced-motion: reduce) { .flow-violet { animation: none; background-position: 40% center; } }
+/* 20 Nov 2026 (Elena: "a little violet piece in Luz - Luz is all yellow"): the heading is italic, so the slanted "z" leans
+   past its own box; the gold is painted only inside the box, and the running violet underneath showed through the tail.
+   Widen the gold box on both sides and pull the margins back by the same amount: gold covers the slant, spacing unchanged. */
+.flow-violet .luz-gold { padding: 0 .18em 0 .06em; margin: 0 -.18em 0 -.06em; }
