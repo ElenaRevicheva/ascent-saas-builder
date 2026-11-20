@@ -97,7 +97,7 @@ export const PracticeMoment = () => {
     setNote('');
     try {
       const { data, error } = await supabase.functions.invoke('espaluz-chat', {
-        body: { practice: { scene: scene.trim(), history: history.map((l) => ({ who: l.who, text: l.text })), finish } },
+        body: { practice: { scene: scene.trim(), history: history.map((l) => ({ who: l.who, text: l.text })), finish, ui: i18n.language } },
       });
       if (error || data?.error) throw new Error(String(data?.error ?? error?.message));
       if (data?.lang === 'en' || data?.lang === 'es') practiceLang.current = data.lang;

@@ -1860,6 +1860,21 @@ const PRACTICE_TIPS_EN = "You are EspaLuz, a warm bilingual companion. A native 
   "they did well, Spanish, quote their English>\", \"fix\": \"<the one most useful correction to their English, Spanish, with the better " +
   "English>\", \"phrase\": \"<one English phrase to keep for the real day> - <Spanish>\", \"spoken\": \"<what you say aloud to them: the " +
   "three tips warmly, English first then the same in Spanish, under 70 words, no emojis, no quotes, no labels>\"}";
+// 20 Nov 2026 (strict reader Marina, a Russian mother: "the help under each Spanish line is in English, not Russian"). A
+// Russian-speaking family (native_language Russian, or the page open in Russian) rehearses in Spanish exactly as before, but the
+// help line, the corrections and the written feedback come in RUSSIAN. The spoken tips stay Spanish only (a Spanish voice reads
+// them). English and Spanish families: unchanged.
+const PRACTICE_ROLE_RU = PRACTICE_ROLE
+  .replace("in 2-5 English words, e.g. 'the box-office clerk'", "in 2-5 RUSSIAN words, e.g. 'кассир театра'")
+  .replace("\"en\": \"<the same in English>\"", "\"en\": \"<the same in RUSSIAN>\"")
+  .replace("one gentle English sentence with the better Spanish in it", "one gentle RUSSIAN sentence with the better Spanish in it");
+const PRACTICE_TIPS_RU = "You are EspaLuz, a warm bilingual companion. A Russian-speaking newcomer just rehearsed the SCENE with you in " +
+  "Spanish (TRANSCRIPT). Give honest, kind, practical feedback based ONLY on what they actually said. Output ONLY JSON: {\"well\": " +
+  "\"<one thing they did well, in RUSSIAN, quote their Spanish>\", \"fix\": \"<the one most useful correction, in RUSSIAN, with the " +
+  "better Spanish>\", \"phrase\": \"<one Spanish phrase to keep for the real day> - <RUSSIAN>\", \"spoken\": \"<what you say aloud to " +
+  "them: the three tips warmly in simple, slow SPANISH only (a Spanish voice reads it), under 50 words, no emojis, no quotes, no labels>\"}";
+const speaksRussian = (prof: Record<string, any>, ui: unknown) =>
+  /^(russian|русский|ruso|rus)$/i.test(String(prof?.native_language ?? '').trim()) || /^ru/i.test(String(ui ?? ''));
 function practiceJson(text: string): Record<string, string> {
   const m = String(text ?? '').match(/\{[\s\S]*\}/);
   if (!m) return {};
@@ -1882,6 +1897,7 @@ async function practiceTurn(userId: string, p: any): Promise<Record<string, unkn
   const { data: prof } = await db.from('learning_sessions').select('content').eq('user_id', userId).eq('session_type', 'analytics')
     .eq('content->>event', 'family_profile').order('created_at', { ascending: false }).limit(1);
   const english = settles((prof?.[0]?.content ?? {}) as Record<string, any>);
+  const russian = !english && speaksRussian((prof?.[0]?.content ?? {}) as Record<string, any>, p?.ui);
   const ask = async (system: string, user: string) => {
     const { result } = await callChain({ model: CLAUDE_MODELS[0], max_tokens: 600, temperature: 0.5, system, messages: [{ role: 'user', content: user }] });
     return practiceJson(String(result?.content?.[0]?.text ?? ''));
@@ -1889,18 +1905,18 @@ async function practiceTurn(userId: string, p: any): Promise<Record<string, unkn
   if (!p?.finish && asked < PRACTICE_TURNS) {
     const last = asked === PRACTICE_TURNS - 1 ? '\nThis is your LAST line: close the scene naturally and kindly (you may still ask nothing).' : '';
     const first = asked === 0 ? '\nThis is the START: greet them as the other person would and ask your first question.' : '';
-    const o = await ask((english ? PRACTICE_ROLE_EN : PRACTICE_ROLE) + first + last, `SCENE: ${scene}\nFAMILY: ${fam?.[0]?.name ? `the person practising is ${fam[0].name}` : 'not given'}\nTRANSCRIPT SO FAR:\n${transcript || '(none yet)'}`);
+    const o = await ask((english ? PRACTICE_ROLE_EN : russian ? PRACTICE_ROLE_RU : PRACTICE_ROLE) + first + last, `SCENE: ${scene}\nFAMILY: ${fam?.[0]?.name ? `the person practising is ${fam[0].name}` : 'not given'}\nTRANSCRIPT SO FAR:\n${transcript || '(none yet)'}`);
     if (!o.say) return { error: 'no_answer' };
-    console.log(`[practice] turn ${asked + 1}/${PRACTICE_TURNS}`);
+    console.log(`[practice] turn ${asked + 1}/${PRACTICE_TURNS}${russian ? ' help=ru' : ''}`);
     return { say: o.say, en: o.en ?? '', role: String(o.role ?? '').slice(0, 40), fix: asked === 0 ? '' : (o.fix ?? ''), turn: asked + 1, turns: PRACTICE_TURNS, last: asked + 1 >= PRACTICE_TURNS, lang: english ? 'en' : 'es' };
   }
   if (!history.some((h: any) => h.who === 'me')) return { error: 'nothing_said' };
-  const t = await ask(english ? PRACTICE_TIPS_EN : PRACTICE_TIPS, `SCENE: ${scene}\nTRANSCRIPT:\n${transcript}`);
+  const t = await ask(english ? PRACTICE_TIPS_EN : russian ? PRACTICE_TIPS_RU : PRACTICE_TIPS, `SCENE: ${scene}\nTRANSCRIPT:\n${transcript}`);
   if (!t.spoken) return { error: 'no_answer' };
   const { data: row } = await db.from('learning_sessions').insert({ user_id: userId, session_type: 'analytics', source: 'web',
     content: { event: 'practice_session', scene, turns: asked, well: t.well, fix: t.fix, phrase: t.phrase, tips: t.spoken.slice(0, 600), lang: english ? 'en' : 'es' } })
     .select('id').single();
-  console.log(`[practice] tips saved turns=${asked}`);
+  console.log(`[practice] tips saved turns=${asked}${russian ? ' help=ru' : ''}`);
   return { done: true, well: t.well ?? '', fix: t.fix ?? '', phrase: t.phrase ?? '', spoken: t.spoken, sessionId: row?.id ?? null, lang: english ? 'en' : 'es' };
 }
 
