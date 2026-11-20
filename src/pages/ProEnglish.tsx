@@ -197,14 +197,21 @@ export default function ProEnglish() {
                 <Send className="h-5 w-5" />
               </button>
             </div>
-            <p className="text-center text-xs text-muted-foreground">menu · free · progress · level · exit</p>
+            <p className="text-center text-xs text-muted-foreground">Talk about anything · menu · progress · level · exit</p>
             {coached && (
               <button type="button" onClick={seeIt} disabled={clipBusy} className="flex w-full items-center justify-center gap-2 rounded-xl border border-border px-4 py-2 text-sm disabled:opacity-50">
                 {clipBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Video className="h-4 w-4" />}
-                Ver a EspaLuz decir la última respuesta · See it said (video)
+                See EspaLuz say the last answer (video · 2 a month in the paid plan)
               </button>
             )}
             {clip && <video src={clip} controls autoPlay playsInline className="w-full rounded-2xl" />}
+            {/* 20 Nov 2026 (Elena): a full live session with lips matching every word is PREMIUM and has no price yet - by
+                request, to the address the site already publishes. Competitors include animated tutors in a ~$10-15/month plan;
+                live lip-synced avatars cost us roughly $0.35-3 a minute (cto-aipa docs/espaluz/PRO_ENGLISH_COACH_PLAN_2026-11-20.md). */}
+            <p className="rounded-xl bg-muted/50 px-3 py-2 text-center text-xs text-muted-foreground">
+              🎥 Premium: a full live session with EspaLuz on video, her lips moving with every word - by request.{' '}
+              <a href="mailto:aipa@aideazz.xyz?subject=EspaLuz%20Pro%20English%20-%20premium%20video%20session" className="font-medium underline">Write to us</a>
+            </p>
           </>
         )}
         {note && <p className="text-center text-sm text-muted-foreground">{note}</p>}
