@@ -164,6 +164,7 @@ export default function ProEnglish() {
         {!loading && !user && (
           <section className="space-y-3 rounded-2xl border border-border p-5 text-sm">
             <p className="text-foreground">✍️ Your sentence, corrected · 💬 real conversations in English · 🎙️ pronunciation score · 📈 weekly progress</p>
+            <p className="font-medium text-foreground">Included in the 14 free days and in the $11 EspaLuz plan - no separate plan. / Incluido en los 14 días gratis y en el plan de $11.</p>
             <p className="text-muted-foreground">Real work scenes: a call with a new client, quoting a price, customer service, a remote job interview, small talk with investors, a business trip, a professional email.</p>
             <Link to="/auth" className="block w-full rounded-xl px-5 py-3 text-center font-semibold text-white" style={{ background: 'hsl(var(--espaluz-purple))' }}>
               Start free · 14 days, no card

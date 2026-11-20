@@ -466,7 +466,8 @@
     "merchant": "Merchant ID",
     "startTrial": "Start Free Trial",
     "included": "What's included ({{n}})",
-    "trialFirst": "Want to try first? Start with the 14 free days, no card needed. This is for when your family decides to stay."
+    "trialFirst": "Want to try first? Start with the 14 free days, no card needed. This is for when your family decides to stay.",
+    "fam8": "Pro English: an English-only coach for work - included in the 14 free days and in this plan, no extra plan"
   },
   "sf": {
     "ppError": "PayPal Error",
@@ -820,7 +821,8 @@
     "inc5": "Voice replies, and a few short videos of EspaLuz speaking each month on the paid plan",
     "inc6": "Your weekly overview: the days you practised and what your child worked on",
     "continue11": "Continue for $11 a month",
-    "choosePlan": "Choose your plan"
+    "choosePlan": "Choose your plan",
+    "inc7": "Pro English: an English-only coach for work, on the web, WhatsApp and Telegram"
   },
   "ref": {
     "newCodeToast": "New referral code created",
@@ -1527,7 +1529,7 @@
     "pro": {
       "title": "Spanish is your language and you need English for work",
       "learn": "A coach who speaks only English with you, for work: you speak or write in English - or in Spanish when you're stuck - and always get the correct, natural English back. Clients, prices, interviews, meetings and emails.",
-      "get": "a short level check, then 7 work scenes to practise · voice notes with a pronunciation score · your progress every week",
+      "get": "Included in the 14 free days and in the $11 plan - no separate plan. a short level check, then 7 work scenes to practise · voice notes with a pronunciation score · your progress every week",
       "calm": "Mistakes are welcome: one correction at a time, in simple English.",
       "open": "Open the English coach",
       "note": "Different from \"You already speak Spanish\": there EspaLuz answers bilingually for everyday life; here the coach speaks English with you, for work. WhatsApp and Telegram open the coach straight away."

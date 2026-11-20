@@ -28,6 +28,7 @@ const INCLUDES = [
   'acct.inc4',
   'acct.inc5',
   'acct.inc6',
+  'acct.inc7',
 ];
 
 export const AccountStatusCard = ({ planType, isTrialActive, trialDaysLeft, isSubscriptionActive }: AccountStatusCardProps) => {

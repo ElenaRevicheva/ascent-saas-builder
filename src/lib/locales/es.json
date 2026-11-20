@@ -712,7 +712,8 @@
     "inc5": "Respuestas por voz y, con el plan de pago, algunos videos cortos de EspaLuz hablando cada mes",
     "inc6": "Tu resumen semanal: los días que practicaste y en qué trabajó tu hijo o hija",
     "continue11": "Continuar por $11 al mes",
-    "choosePlan": "Elige tu plan"
+    "choosePlan": "Elige tu plan",
+    "inc7": "Pro English: un coach que te habla solo en inglés, para el trabajo, en la web, WhatsApp y Telegram"
   },
   "ref": {
     "newCodeToast": "Nuevo código de referido creado",
@@ -1328,7 +1329,8 @@
     "merchant": "ID de comercio",
     "startTrial": "Empezar la prueba gratis",
     "included": "Qué incluye ({{n}})",
-    "trialFirst": "¿Quieres probar primero? Empieza con los 14 días gratis, sin tarjeta. Esto es para cuando tu familia decida quedarse."
+    "trialFirst": "¿Quieres probar primero? Empieza con los 14 días gratis, sin tarjeta. Esto es para cuando tu familia decida quedarse.",
+    "fam8": "Pro English: un coach que te habla solo en inglés, para el trabajo - incluido en los 14 días gratis y en este plan, sin plan aparte"
   },
   "sf": {
     "ppError": "Error de PayPal",
@@ -1527,7 +1529,7 @@
     "pro": {
       "title": "El español es tu idioma y necesitas inglés profesional para trabajar",
       "learn": "Un coach que te habla solo en inglés, para el trabajo: tú hablas o escribes en inglés - o en español cuando te trabes - y siempre recibes el inglés correcto y natural. Clientes, precios, entrevistas, reuniones y emails.",
-      "get": "un test de nivel corto y luego 7 escenas de trabajo para practicar · notas de voz con puntuación de pronunciación · tu progreso cada semana",
+      "get": "Incluido en los 14 días gratis y en el plan de $11 - sin plan aparte. un test de nivel corto y luego 7 escenas de trabajo para practicar · notas de voz con puntuación de pronunciación · tu progreso cada semana",
       "calm": "Los errores son bienvenidos: una corrección a la vez, en inglés sencillo.",
       "open": "Abrir el coach de inglés",
       "note": "Distinto de \"Ya hablas español\": allí EspaLuz responde en los dos idiomas para el día a día; aquí el coach te habla en inglés, para el trabajo. WhatsApp y Telegram abren el coach directamente."

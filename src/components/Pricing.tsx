@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Part } from "@/components/landing/Tree";
-import { Check, Star, Heart, Brain, Users, Gift, MessagesSquare, Languages, Globe, Volume2, Mic, Shapes, NotebookPen, Smartphone, Infinity as InfinityIcon, Camera, Wallet, FileText, Baby, HeartHandshake, Clapperboard, MapPin, type LucideIcon } from "lucide-react";
+import { Check, Star, Heart, Brain, Users, Gift, MessagesSquare, Languages, Globe, Volume2, Mic, Shapes, NotebookPen, Smartphone, Infinity as InfinityIcon, Camera, Wallet, FileText, Baby, HeartHandshake, Clapperboard, MapPin, Briefcase, type LucideIcon } from "lucide-react";
 
 // 14 Nov 2026 (Elena: generic emojis look toyish): the purple check already marks each line, so the leading emoji is
 // dropped when the line is drawn - English and Russian texts stay as they are in the locale files.
@@ -61,6 +61,8 @@ const Pricing = () => {
         { icon: InfinityIcon, text: t("pr.fam4") },
         { icon: Camera, text: t("pr.fam5") },
         { icon: Users, text: t("pr.fam6") },
+        // 20 Nov 2026 (Elena): Pro English is part of the same trial and plan - no separate plan while we seek early traction.
+        { icon: Briefcase, text: t("pr.fam8") },
         // 11 Nov 2026: no other way to pay is named inside the Play app (Google Payments policy).
         ...(insidePlayApp() ? [] : [{ icon: Wallet, text: t("pr.fam7") }])
       ],
