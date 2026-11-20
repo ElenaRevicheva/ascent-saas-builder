@@ -69,7 +69,9 @@ const QUESTIONS: Q[] = [
   { key: 'native_language',
     ask: { en: 'Which language does your heart speak?', ru: 'На каком языке говорит ваше сердце?', es: '¿Qué idioma habla tu corazón?' },
     why: { en: 'So when Spanish gets too hard, she can explain a word in your language.', ru: 'Чтобы, когда испанский слишком сложен, она могла объяснить слово на вашем языке.', es: 'Para que, cuando el español se ponga difícil, pueda explicarte una palabra en tu idioma.' },
-    options: [['English', 'Английский', 'Inglés'], ['Russian', 'Русский', 'Ruso'], ['Ukrainian', 'Украинский', 'Ucraniano'], ['Portuguese', 'Португальский', 'Portugués'],
+    // 20 Nov 2026 (Elena): a native Spanish speaker had no button for their own heart language - typing "I already speak Spanish"
+    // here matched nothing. Saved value 'Spanish' is exactly what settles() / settlesProfile() / bots' _settles() already read.
+    options: [['English', 'Английский', 'Inglés'], ['Spanish', 'Испанский', 'Español'], ['Russian', 'Русский', 'Ruso'], ['Ukrainian', 'Украинский', 'Ucraniano'], ['Portuguese', 'Португальский', 'Portugués'],
       ['French', 'Французский', 'Francés'], ['German', 'Немецкий', 'Alemán'], ['Italian', 'Итальянский', 'Italiano'], ['Chinese', 'Китайский', 'Chino'],
       ['Arabic', 'Арабский', 'Árabe'], ['Hindi', 'Хинди', 'Hindi']],
     free: { en: 'Another language', ru: 'Другой язык', es: 'Otro idioma' } },
