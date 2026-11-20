@@ -141,7 +141,8 @@ export default function ProEnglish() {
       }
       for (let i = 0; i < 40 && alive.current; i++) {
         await new Promise((ok) => setTimeout(ok, 8000));
-        const s = await supabase.functions.invoke('generate-video', { body: { mode: 'real_status', taskId: data.taskId, keep: 'practice' } });
+        // No `keep`: the keep-a-copy step only knows family clips (celebration/practice); the coach's clip is watched now.
+        const s = await supabase.functions.invoke('generate-video', { body: { mode: 'real_status', taskId: data.taskId } });
         if (s.data?.status === 'done' && s.data?.url) { setClip(String(s.data.url)); return; }
         if (!s.data?.real) break;
       }
