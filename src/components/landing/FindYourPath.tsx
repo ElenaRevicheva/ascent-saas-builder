@@ -30,9 +30,10 @@ const ROWS: Record<Row["key"], Row> = {
   pro: { key: "pro", icon: Briefcase, wa: "pro english", tg: `${TG}?start=proen-landing`, web: "/pro-english" },
 };
 const ORDER: Record<string, Row["key"][]> = {
-  en: ["expat", "nomads", "settle", "russian", "pro"],
+  // 20 Nov 2026 (Elena): the Russian row is LAST in every language - Мишка & Лиса are still in beta.
+  en: ["expat", "nomads", "settle", "pro", "russian"],
   es: ["settle", "pro", "nomads", "expat", "russian"],
-  ru: ["russian", "expat", "nomads", "settle", "pro"],
+  ru: ["expat", "nomads", "settle", "pro", "russian"],
 };
 
 const btn = "inline-flex min-h-[40px] items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition-colors";
