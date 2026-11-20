@@ -31,7 +31,7 @@ export const PRO_SCENES: { key: string; en: string; es: string; role: string }[]
 ];
 
 const CHECK_QUESTIONS = [
-  { en: "Hi! I'm your EspaLuz English coach. Let's start with a quick level check - three questions. What do you do for work?", es: 'Tip: si no sabes cómo decir algo, escríbelo en español y te doy el inglés correcto.' },
+  { en: "Hi! I'm your EspaLuz English coach. Let's start with a quick level check - three questions. What do you do for work?", es: 'Escribe o habla, en inglés o en español: siempre te respondo en inglés correcto.' },
   { en: 'Great. Tell me about a client, a customer or a problem you solved recently. Mistakes are welcome.', es: '' },
   { en: 'Last one: why do you need English - clients, a remote job, travel, or something else?', es: '' },
 ];
@@ -40,14 +40,17 @@ const COACH = `You are EspaLuz Pro English, a professional English coach for NAT
 money: English-speaking clients, remote jobs, business travel. Warm, direct, encouraging, never childish.
 LEVEL: {LEVEL}. GOAL: {GOAL}. THEIR WORK: {WORK}. {SCENE}
 Adapt every scene to THEIR real work (a client of a tour agency asks about tours, not websites).
+YOU ARE A CONVERSATION PARTNER, NOT A SCRIPT (Elena, 20 Nov): they may talk about or ask ANYTHING - life, news, a word, grammar,
+a plan, a worry. If they change topic or ask you something, even in the middle of a scene, follow them: answer it truly and
+helpfully in English, then keep the conversation going. Scenes are only suggestions.
 Length: A2 = 1-2 short sentences with simple words; B1 = up to 2; B2/C1 = up to 3.
 For THEIR LAST MESSAGE return ONLY JSON {"better":"","why":"","reply":"","es_help":""}:
 - "better": if their message has a mistake, sounds unnatural or is a word-for-word Spanish construction, the natural professional
   English version of THEIR sentence, keeping their meaning. If they wrote in Spanish: how to say it in English. If it is already
   good: "". Fix only what matters most for sounding professional - never rewrite a good sentence.
 - "why": only when "better" is not empty: ONE short reason in simple ENGLISH, max 12 words ("We say 'ask a question', not 'make a question'.").
-- "reply": YOUR answer, ONLY IN ENGLISH, 1 to 3 short sentences pitched at their level, staying in your role, ending with a question
-  that moves the conversation forward. Use real professional English people use today, never textbook English.
+- "reply": YOUR answer, ONLY IN ENGLISH, 1 to 3 short sentences pitched at their level (a real question may need a bit more),
+  in your role if a scene is on and they stay in it, ending with a question that moves the conversation forward. Use real professional English people use today, never textbook English.
 - "es_help": ONE short Spanish line ONLY if they say they do not understand or are clearly stuck; otherwise "". Aim for 90% English:
   this is an English-immersion coach (Loora-style), not the bilingual family companion.
 Never invent facts about them. Never add anything outside the JSON.`;
@@ -71,7 +74,8 @@ function json(text: string): Record<string, string> {
 function menuText(level?: string): string {
   return `${level ? `📊 Your level: *${level}*\n\n` : ''}🎯 *Choose a scene* (send the number):\n` +
     PRO_SCENES.map((s, i) => `${i + 1}. ${s.en}`).join('\n') +
-    `\n\n💬 *free* = free talk · 📈 *progress* · 🚪 *exit*\nAnswer in English, by text or voice note 🎙️ - stuck? Write it in Spanish.`;
+    `\n\n💬 Or just talk to me about anything - in English or Spanish, by text or voice note 🎙️. I always answer in English.` +
+    `\n📈 *progress* · 🚪 *exit*`;
 }
 
 // Azure Pronunciation Assessment, short-audio REST (max ~60 s). The reference text is the transcript the client already
@@ -155,7 +159,7 @@ export async function proEnglish(inp: ProInput): Promise<ProOutput> {
   if (OFF.test(said)) { console.log(`[pro-english] off ${platform}`); return out('👋 See you soon! Send *pro english* any time to continue.', 'See you soon!', {}, { off: true }); }
   if (PROGRESS.test(said)) return out(await progressText(db, userId), 'Here is your week.');
   if (MENU.test(said)) { state = { ...state, phase: 'menu' }; return out(menuText(state.level), 'Choose a scene.'); }
-  if (FREE.test(said)) { state = { ...state, phase: 'free', scene: undefined }; return out("💬 Free talk. Tell me about your day at work - what's on your plate this week?", "Free talk. Tell me about your day at work. What's on your plate this week?", { reply: "Tell me about your day at work - what's on your plate this week?" }); }
+  if (FREE.test(said)) { state = { ...state, phase: 'free', scene: undefined }; return out("💬 Free talk - anything you like. What's on your mind today?", "Free talk. Anything you like. What's on your mind today?", { reply: "Free talk - anything you like. What's on your mind today?" }); }
   const n = Number(said.replace(/[^\d]/g, ''));
   if (state.phase !== 'check' && /^\s*\d\s*[.)]?\s*$/.test(said) && n >= 1 && n <= PRO_SCENES.length) {
     const sc = PRO_SCENES[n - 1];
@@ -191,7 +195,7 @@ export async function proEnglish(inp: ProInput): Promise<ProOutput> {
   if (!state.phase || state.phase === 'menu') state = { ...state, phase: 'free' };
   const pronP = inp.audio ? pronounce(inp.audio, said) : Promise.resolve(null);
   const j = json(await ask(COACH.replace('{LEVEL}', state.level ?? 'B1').replace('{GOAL}', state.goal ?? 'other').replace('{WORK}', state.work || 'not given')
-    .replace('{SCENE}', sc ? `SCENE - you play: ${sc.role}.` : 'FREE TALK about their work and plans.'),
+    .replace('{SCENE}', sc ? `SCENE - you play: ${sc.role}.` : 'FREE CONVERSATION about whatever they bring - any topic, any question.'),
     [...history.slice(-12), { role: 'user', content: said }], 500));
   const pron = await pronP;
   const reply = j.reply || "Sorry, could you say that again in another way?";
