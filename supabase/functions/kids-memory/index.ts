@@ -73,7 +73,7 @@ serve(async (req) => {
     // where it came from are kept.
     if (mode === 'beta_tester') {
       const email = String(body.email ?? '').trim().toLowerCase();
-      if (!/^[^s@]{1,64}@[^s@]{1,190}.[a-z]{2,24}$/.test(email)) return json({ ok: false, reason: 'bad_email' });
+      if (!/^[^\s@]{1,64}@[^\s@]{1,190}\.[a-z]{2,24}$/.test(email)) return json({ ok: false, reason: 'bad_email' });
       const until = '2026-12-31T23:59:00Z';
       const { data: had } = await db.from('play_testers').select('access_until').eq('email', email).limit(1);
       if (had?.[0]) return json({ ok: true, already: true });
