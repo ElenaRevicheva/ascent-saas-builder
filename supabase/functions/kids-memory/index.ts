@@ -67,6 +67,22 @@ serve(async (req) => {
     // 6 Nov 2026 (Elena: free inside the same 14 days): one tap from a bot chat into the classroom, already signed in. A family
     // with no web account gets one under an internal address built from the hashed id: no phone number, nothing emailed. Its
     // trial end is the bot's (app_metadata.trial_until, read by get_user_subscription_status). An account that exists is untouched.
+    // 20 Nov 2026 (Elena: "know exactly who clicks and how to catch them"): a family that writes ANDROID to a bot after a film
+    // gives the Google account it will use on Google Play. That address joins play_testers with the same free period every
+    // tester has (to 31 Dec 2026, never shortened), so the app opens unlocked when they sign in with it. Only the email and
+    // where it came from are kept.
+    if (mode === 'beta_tester') {
+      const email = String(body.email ?? '').trim().toLowerCase();
+      if (!/^[^s@]{1,64}@[^s@]{1,190}.[a-z]{2,24}$/.test(email)) return json({ ok: false, reason: 'bad_email' });
+      const until = '2026-12-31T23:59:00Z';
+      const { data: had } = await db.from('play_testers').select('access_until').eq('email', email).limit(1);
+      if (had?.[0]) return json({ ok: true, already: true });
+      const note = `bot ${String(body.platform ?? '').slice(0, 10)} ${String(body.film ?? '').replace(/[^a-z0-9-]/gi, '').slice(0, 24)}`.trim();
+      const { error } = await db.from('play_testers').insert({ email, access_until: until, note });
+      if (error) throw error;
+      console.log(`[beta-tester] added from ${note}`);
+      return json({ ok: true, already: false });
+    }
     if (mode === 'classroom_link') {
       const tgLink = telegram_user_id != null && telegram_user_id !== '';
       const platform = tgLink ? 'telegram' : 'whatsapp';
