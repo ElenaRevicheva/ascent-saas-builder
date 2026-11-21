@@ -1496,6 +1496,7 @@
     "learnLabel": "You practise:",
     "getLabel": "First you get:",
     "startFree": "Start free - 14 days, no card",
+    "on": "Your path is on: {{path}}",
     "wa": "WhatsApp",
     "tg": "Telegram",
     "expat": {
@@ -1534,6 +1535,6 @@
       "open": "Open the English coach",
       "note": "Different from \"You already speak Spanish\": there EspaLuz answers bilingually for everyday life; here the coach speaks English with you, for work. WhatsApp and Telegram open the coach straight away."
     },
-    "note": "WhatsApp and Telegram open with this path already switched on. On the web: the family map → \"About your new life\" → \"What do you want to learn?\" → \"{{option}}\"."
+    "note": "WhatsApp and Telegram open with this path already switched on. On the web, this button switches it on for you after sign-up (\"{{option}}\"); change it any time in \"About your new life\"."
   }
 }

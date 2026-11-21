@@ -74,7 +74,8 @@ export function FindYourPath() {
                 <Check aria-hidden className="mt-0.5 h-4 w-4 shrink-0" />{t(`path.${k}.calm`)}
               </p>
               <div className="flex flex-wrap gap-2 pt-1">
-                <Link to={r.web ?? "/auth"} className={`${btn} bg-primary text-primary-foreground hover:bg-primary/90`}>{r.web ? t(`path.${k}.open`) : t("path.startFree")}</Link>
+                {/* 21 Nov 2026 (Elena): the web button lands on exactly this path, signed in or not (src/pages/PathStart.tsx). */}
+                <Link to={r.web ?? `/path/${k}`} className={`${btn} bg-primary text-primary-foreground hover:bg-primary/90`}>{r.web ? t(`path.${k}.open`) : t("path.startFree")}</Link>
                 <a href={WA + encodeURIComponent(r.wa)} target="_blank" rel="noopener noreferrer"
                    className={`${btn} border border-green-600/40 text-green-700 hover:bg-green-50`}>{t("path.wa")}</a>
                 <a href={r.tg} target="_blank" rel="noopener noreferrer"

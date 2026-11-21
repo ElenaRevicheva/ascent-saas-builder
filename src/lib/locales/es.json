@@ -1496,6 +1496,7 @@
     "learnLabel": "Practicas:",
     "getLabel": "Primero recibes:",
     "startFree": "Empieza gratis: 14 días, sin tarjeta",
+    "on": "Tu camino está activado: {{path}}",
     "wa": "WhatsApp",
     "tg": "Telegram",
     "expat": {
@@ -1534,6 +1535,6 @@
       "open": "Abrir el coach de inglés",
       "note": "Distinto de \"Ya hablas español\": allí EspaLuz responde en los dos idiomas para el día a día; aquí el coach te habla en inglés, para el trabajo. WhatsApp y Telegram abren el coach directamente."
     },
-    "note": "WhatsApp y Telegram se abren con este camino ya activado. En la web: el mapa de la familia → «Sobre tu nueva vida» → «¿Qué quieres aprender?» → «{{option}}»."
+    "note": "WhatsApp y Telegram se abren con este camino ya activado. En la web, este botón lo activa por ti al registrarte («{{option}}»); cámbialo cuando quieras en «Sobre tu nueva vida»."
   }
 }
