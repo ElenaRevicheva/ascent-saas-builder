@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mic, Square, Send, Loader2, Video, PenLine, MessagesSquare, AudioLines, TrendingUp, Volume2, ArrowLeft, LogOut } from 'lucide-react';
+import { Mic, Square, Send, Loader2, Video, PenLine, MessagesSquare, AudioLines, TrendingUp, Volume2, ArrowLeft, LogOut, PlayCircle, X } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -64,6 +64,14 @@ export default function ProEnglish() {
   const [clip, setClip] = useState<string | null>(null);
   const [clipBusy, setClipBusy] = useState(false);
   const [drills, setDrills] = useState<Record<string, Drill>>({});
+  // 21 Nov 2026 (Elena): on the FIRST visit EspaLuz herself greets the person - lip-synced, natural speech, like the other
+  // paths - and names the premium live session. ONE pre-rendered clip for everyone (Runway Characters, the live EspaLuz
+  // avatar, coach voice Ava; 2 credits once) in public/pro-english/. She is a valued guest: open on the first visit only,
+  // then a small "watch again" link. Source + text: ascent creatives/pro-english-welcome/.
+  const [welcomeOpen, setWelcomeOpen] = useState<boolean>(() => {
+    try { return localStorage.getItem('espaluz_proen_welcome_seen') !== '1'; } catch { return true; }
+  });
+  const closeWelcome = () => { setWelcomeOpen(false); try { localStorage.setItem('espaluz_proen_welcome_seen', '1'); } catch { /* private mode */ } };
 
   // 21 Nov 2026: the practice loop (Loora / Elsa style) for each weak word the coach names: hear it, say it, see the score move.
   // Same mic + WAV code as a voice turn; the try is scored by the same Azure assessment (espaluz-chat proEnglish.drill).
@@ -272,6 +280,22 @@ export default function ProEnglish() {
           <p className="text-sm text-muted-foreground">Professional English for clients, remote jobs and business trips. Speak or write in English - or in Spanish when you're stuck - and your coach answers in English.</p>
           <p className="text-xs text-muted-foreground">Para hispanohablantes: inglés de inmersión, el español solo cuando te trabas.</p>
         </header>
+
+        {welcomeOpen ? (
+          <section className="space-y-2 rounded-2xl border border-border p-3">
+            <video src="/pro-english/welcome.mp4" poster="/pro-english/welcome-poster.jpg" controls playsInline preload="metadata"
+              onPlay={() => { player.current?.pause(); speechSynthesis.cancel(); }} onEnded={closeWelcome}
+              className="w-full rounded-xl" aria-label="EspaLuz welcomes you to Pro English" />
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span className="inline-flex items-center gap-1"><PlayCircle className="h-3.5 w-3.5" aria-hidden />Meet your coach - 19 s</span>
+              <button type="button" onClick={closeWelcome} className="inline-flex items-center gap-1 underline"><X className="h-3.5 w-3.5" aria-hidden />Close</button>
+            </div>
+          </section>
+        ) : (
+          <button type="button" onClick={() => setWelcomeOpen(true)} className="mx-auto flex items-center gap-1 text-xs text-muted-foreground underline">
+            <PlayCircle className="h-3.5 w-3.5" aria-hidden />Watch EspaLuz's welcome again
+          </button>
+        )}
 
         {!loading && !user && (
           <section className="space-y-3 rounded-2xl border border-border p-5 text-sm">
