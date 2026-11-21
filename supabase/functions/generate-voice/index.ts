@@ -114,7 +114,7 @@ serve(async (req) => {
     const heroLine = !!(hero && (AZURE_VOICES[hero] || GEMINI_HEROES[hero]));
     // 21 Nov 2026: the Pro English coach has no Gemini voice of her own (Gemini would read her lines as EspaLuz), so
     // her Azure voice always answers first, whatever FREE_HERO_VOICE_ORDER says for the heroes.
-    const freeOrder = (hero === 'coach' ? 'azure,gemini'
+    const freeOrder = (['coach', 'film_es', 'film_ru'].includes(hero) ? 'azure,gemini'
       : heroLine ? (Deno.env.get('FREE_HERO_VOICE_ORDER') || 'azure,gemini') : 'gemini,azure')
       .split(',').map((x) => x.trim());
     for (const step of freeOrder) {
@@ -278,7 +278,12 @@ function pcmToWav(pcm: Uint8Array, rate: number): Uint8Array {
 // 8 Nov 2026: Elena chose these by ear from 9 samples (cto-aipa docs/espaluz/voice-samples/az2_*.mp3) - Phoebe
 // (EspaLuz, ~30, an older friend for kids), Jelly (Titi, a playful child voice), Jorge (Pere, Mexican Spanish, slowed).
 // Round 1 (Emma / Brian / Andrew) was rejected: "old man", "not joyful", "a woman working in a local shop".
-const AZURE_VOICES: Record<string, { voice: string; pitch: string; rate: string }> = {
+const AZURE_VOICES: Record<string, { voice: string; pitch: string; rate: string; lang?: string }> = {
+  // 21 Nov 2026 (Elena on promo film 02: "Russian pronunciation is very bad, Spanish far from perfect"): Phoebe is an
+  // American voice reading other languages. Promo films now speak each language with a NATIVE voice. Only callers that
+  // name these heroes get them - the families' EspaLuz voice (usual) is unchanged.
+  film_es: { voice: Deno.env.get('AZURE_FILM_ES_VOICE') ?? 'es-MX-DaliaNeural', pitch: '+0%', rate: '+0%', lang: 'es-MX' },
+  film_ru: { voice: Deno.env.get('AZURE_FILM_RU_VOICE') ?? 'ru-RU-SvetlanaNeural', pitch: '+0%', rate: '+0%', lang: 'ru-RU' },
   usual: { voice: Deno.env.get('AZURE_USUAL_VOICE') ?? 'en-US-PhoebeMultilingualNeural', pitch: '+0%', rate: '+0%' },
   // 21 Nov 2026 (Elena: "voice here should be woman of more or less 35 years old - coach style, not man"): /pro-english
   // spoke with the browser's own voice (a man on Windows Chrome). The Pro English coach now has her own grown-up voice.
@@ -295,7 +300,7 @@ async function generateAzureVoice(who: string, text: string): Promise<string> {
   const region = Deno.env.get('AZURE_SPEECH_REGION') || 'eastus';
   const spoken = text.replace(/\s*\/\s*/g, '. ').slice(0, 900)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  const ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='es-MX'>` +
+  const ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='${v.lang ?? 'es-MX'}'>` +
     `<voice name='${v.voice}'><prosody pitch='${v.pitch}' rate='${v.rate}'>${spoken}</prosody></voice></speak>`;
   const r = await fetch(`https://${region}.tts.speech.microsoft.com/cognitiveservices/v1`, {
     method: 'POST',
