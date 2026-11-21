@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Mic, Square, Send, Loader2, Video, PenLine, MessagesSquare, AudioLines, TrendingUp, Volume2 } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Mic, Square, Send, Loader2, Video, PenLine, MessagesSquare, AudioLines, TrendingUp, Volume2, ArrowLeft, LogOut } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -55,6 +55,7 @@ async function toWav16k(blob: Blob): Promise<string> {
 
 export default function ProEnglish() {
   const { user, loading } = useAuth();
+  const navigate = useNavigate();
   const [lines, setLines] = useState<Line[]>([]);
   const [typed, setTyped] = useState('');
   const [busy, setBusy] = useState(false);
@@ -156,7 +157,44 @@ export default function ProEnglish() {
     }
   };
 
-  useEffect(() => { if (user && !lines.length) turn({ start: true }); }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+  // 21 Nov 2026 (Elena: "I exit and come back - the dashboard is empty"): the coach always remembered (one brain, one state),
+  // but the page started blank. Now it first shows the recent practice from EVERY channel - read straight from the same
+  // learning_sessions rows the brain writes (turns + word drills; WhatsApp/Telegram lines are marked) - then the welcome.
+  const loadRecent = async (uid: string): Promise<Line[]> => {
+    const { data } = await supabase.from('learning_sessions').select('content, created_at').eq('user_id', uid)
+      .eq('session_type', 'analytics').in('content->>event', ['pro_english_turn', 'pro_english_drill'])
+      .order('created_at', { ascending: false }).limit(12);
+    const via = (p?: string) => (p === 'whatsapp' ? ' (WhatsApp)' : p === 'telegram' ? ' (Telegram)' : '');
+    const out: Line[] = [];
+    for (const r of [...(data ?? [])].reverse()) {
+      const c = (r.content ?? {}) as Record<string, any>;
+      if (c.event === 'pro_english_drill' && c.platform !== 'web') continue; // a chat drill is already shown by its turn row
+      if (c.event === 'pro_english_drill' && c.word) { out.push({ who: 'coach', text: `*${c.word}*: ${c.score}/100${via(c.platform)}` }); continue; }
+      if (c.drill?.word) { out.push({ who: 'coach', text: `*${c.drill.word}*: ${c.drill.before} → ${c.drill.after}${via(c.platform)}` }); continue; }
+      if (!c.said || !c.reply) continue;
+      out.push({ who: 'me', text: `${c.said}${via(c.platform)}` });
+      out.push({ who: 'coach', text: [c.better ? `Better: ${c.better}` : '', c.reply, c.pron?.score ? `Pronunciation *${c.pron.score}/100*` : ''].filter(Boolean).join('\n\n'),
+        worst: Array.isArray(c.pron?.worst) ? c.pron.worst : [] });
+    }
+    return out;
+  };
+  useEffect(() => {
+    if (!user || lines.length) return;
+    (async () => {
+      const recent = await loadRecent(user.id).catch(() => []);
+      if (!alive.current) return;
+      if (recent.length) setLines([...recent, { who: 'coach', text: '— Earlier practice above · today below —' }]);
+      turn({ start: true });
+    })();
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // A door you can close and open again: Exit tells the coach you are leaving (the same "exit" the chat uses), then back to the dashboard.
+  const leave = async () => {
+    player.current?.pause();
+    speechSynthesis.cancel();
+    try { await supabase.functions.invoke('espaluz-chat', { body: { proEnglish: { said: 'exit' } } }); } catch { /* leaving anyway */ }
+    navigate('/dashboard');
+  };
 
   const send = () => { const t = typed.trim(); if (!t || busy) return; setTyped(''); turn({ said: t }, t); };
 
@@ -219,6 +257,16 @@ export default function ProEnglish() {
   return (
     <main className="min-h-screen bg-background px-4 py-6">
       <div className="mx-auto max-w-xl space-y-4">
+        {user && (
+          <nav className="flex items-center justify-between text-sm">
+            <Link to="/dashboard" className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 font-medium">
+              <ArrowLeft className="h-4 w-4" aria-hidden />Dashboard
+            </Link>
+            <button type="button" onClick={leave} className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 font-medium">
+              <LogOut className="h-4 w-4" aria-hidden />Exit coach
+            </button>
+          </nav>
+        )}
         <header className="space-y-1 text-center">
           <h1 className="text-2xl font-bold text-foreground">EspaLuz Pro English</h1>
           <p className="text-sm text-muted-foreground">Professional English for clients, remote jobs and business trips. Speak or write in English - or in Spanish when you're stuck - and your coach answers in English.</p>
