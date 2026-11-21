@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Menu, Info, Shield, FileText, LogOut } from 'lucide-react';
+import { Sparkles, Menu, Info, Shield, FileText, LogOut, Briefcase } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
@@ -90,6 +90,8 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56">
                     <DropdownMenuItem asChild><Link to="/"><Info className="mr-2 h-4 w-4" />{t('hdr.about')}</Link></DropdownMenuItem>
+                    {/* 21 Nov 2026 (Elena: signed in, "I do not see any Pro English path"): the 5th path is reachable from here. */}
+                    <DropdownMenuItem asChild><Link to="/pro-english"><Briefcase className="mr-2 h-4 w-4" />Pro English</Link></DropdownMenuItem>
                     <DropdownMenuItem asChild><Link to="/privacy-policy"><Shield className="mr-2 h-4 w-4" />{t('hdr.privacy')}</Link></DropdownMenuItem>
                     <DropdownMenuItem asChild><Link to="/terms-of-service"><FileText className="mr-2 h-4 w-4" />{t('hdr.terms')}</Link></DropdownMenuItem>
                     <DropdownMenuSeparator />

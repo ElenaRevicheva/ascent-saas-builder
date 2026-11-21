@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { EmailOtpType } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { AFTER_AUTH_PAGES } from '@/lib/afterAuth';
 import { Button } from '@/components/ui/button';
 
 /**
@@ -23,7 +24,16 @@ const AuthConfirm = () => {
     }
     supabase.auth.verifyOtp({ token_hash, type }).then(({ error }) => {
       if (error) setState('failed');
-      else navigate('/dashboard', { replace: true });
+      else {
+        // 21 Nov 2026: back to the page that sent them to sign up (Pro English, a classroom), not always the dashboard.
+        let back = '/dashboard';
+        try {
+          const saved = localStorage.getItem('espaluz_after_auth') ?? '';
+          if (AFTER_AUTH_PAGES.includes(saved)) back = saved;
+          localStorage.removeItem('espaluz_after_auth');
+        } catch { /* private mode */ }
+        navigate(back, { replace: true });
+      }
     });
   }, [navigate]);
 

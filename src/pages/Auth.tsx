@@ -14,6 +14,7 @@ import { signupErrorKind, track } from '@/lib/track';
 import { Eye, EyeOff, ArrowLeft, Sparkles } from 'lucide-react';
 import { useTranslation, Trans } from 'react-i18next';
 import SubscriptionRecovery from '@/components/SubscriptionRecovery';
+import { AFTER_AUTH_PAGES } from '@/lib/afterAuth';
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -38,8 +39,14 @@ const Auth = () => {
   const { signIn, signUp, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
-  // The classroom sends parents here with ?next=/classroom (22 Oct 2026); only that page is allowed back.
-  const afterSignIn = new URLSearchParams(window.location.search).get('next') === '/classroom' ? '/classroom' : '/dashboard';
+  // The classroom sends parents here with ?next=/classroom (22 Oct 2026). 21 Nov 2026 (Elena: "I click try it on Pro English,
+  // sign in, and land on the general dashboard - stuck"): every page that sends people to sign in gets them back. Only the
+  // AFTER_AUTH_PAGES are allowed (no open redirect). Remembered for the e-mail confirmation link too (AuthConfirm).
+  const askedNext = new URLSearchParams(window.location.search).get('next') ?? '';
+  const afterSignIn = AFTER_AUTH_PAGES.includes(askedNext) ? askedNext : '/dashboard';
+  useEffect(() => {
+    try { if (afterSignIn !== '/dashboard') localStorage.setItem('espaluz_after_auth', afterSignIn); } catch { /* private mode */ }
+  }, [afterSignIn]);
 
   // Function to handle pending subscription activation with improved error handling and retry
   const handlePendingSubscriptionActivation = async (user: any) => {

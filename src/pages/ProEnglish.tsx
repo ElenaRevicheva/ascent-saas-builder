@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Mic, Square, Send, Loader2, Video } from 'lucide-react';
+import { Mic, Square, Send, Loader2, Video, PenLine, MessagesSquare, AudioLines, TrendingUp } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -17,7 +17,10 @@ const WA = 'https://wa.me/50766623757?text=Pro%20English%20(proen-web)';
 const TG = 'https://t.me/EspaLuzFamily_bot?start=proen-web';
 
 // *bold* and _italic_ as the bots write them; everything else is plain text.
-const rich = (t: string) => t.split('\n').map((line, i) => (
+// 21 Nov 2026 (Elena): the coach's emojis belong in WhatsApp/Telegram chats; on the web they look generic and toyish, so the
+// page shows the same brain text without them (the bots keep theirs).
+const noEmoji = (t: string) => t.replace(/[\p{Extended_Pictographic}\u{1F1E6}-\u{1F1FF}]️?‍?/gu, '').replace(/^[ \t]+/gm, '');
+const rich = (t: string) => noEmoji(t).split('\n').map((line, i) => (
   <p key={i} className="min-h-[0.5rem]">
     {line.split(/(\*[^*]+\*|_[^_]+_)/g).map((part, j) => part.startsWith('*') && part.endsWith('*') && part.length > 2
       ? <strong key={j}>{part.slice(1, -1)}</strong>
@@ -154,10 +157,10 @@ export default function ProEnglish() {
       const { data, error } = await supabase.functions.invoke('generate-video', { body: { mode: 'pro_english' } });
       if (error || !data?.real) {
         const r = String(data?.reason ?? '');
-        setNote(r === 'not_paid' ? '🎬 Los clips en video son parte del plan pagado: 2 al mes incluidos. / Video clips come with the paid plan: 2 a month included.'
-          : r === 'monthly_cap' ? '🎬 Ya usaste tus 2 clips de este mes. / You used your 2 clips this month.'
-          : r === 'wallet_floor' ? '🎬 Los clips están descansando hoy; vuelve mañana. / Clips are resting today; try tomorrow.'
-          : '🎬 No pude hacer el clip esta vez. / I could not make the clip this time.');
+        setNote(r === 'not_paid' ? 'Los clips en video son parte del plan pagado: 2 al mes incluidos. / Video clips come with the paid plan: 2 a month included.'
+          : r === 'monthly_cap' ? 'Ya usaste tus 2 clips de este mes. / You used your 2 clips this month.'
+          : r === 'wallet_floor' ? 'Los clips están descansando hoy; vuelve mañana. / Clips are resting today; try tomorrow.'
+          : 'No pude hacer el clip esta vez. / I could not make the clip this time.');
         return;
       }
       for (let i = 0; i < 40 && alive.current; i++) {
@@ -167,7 +170,7 @@ export default function ProEnglish() {
         if (s.data?.status === 'done' && s.data?.url) { setClip(String(s.data.url)); return; }
         if (!s.data?.real) break;
       }
-      setNote('🎬 No pude hacer el clip esta vez. / I could not make the clip this time.');
+      setNote('No pude hacer el clip esta vez. / I could not make the clip this time.');
     } finally {
       if (alive.current) setClipBusy(false);
     }
@@ -177,17 +180,24 @@ export default function ProEnglish() {
     <main className="min-h-screen bg-background px-4 py-6">
       <div className="mx-auto max-w-xl space-y-4">
         <header className="space-y-1 text-center">
-          <h1 className="text-2xl font-bold text-foreground">🇺🇸 EspaLuz Pro English</h1>
+          <h1 className="text-2xl font-bold text-foreground">EspaLuz Pro English</h1>
           <p className="text-sm text-muted-foreground">Professional English for clients, remote jobs and business trips. Speak or write in English - or in Spanish when you're stuck - and your coach answers in English.</p>
           <p className="text-xs text-muted-foreground">Para hispanohablantes: inglés de inmersión, el español solo cuando te trabas.</p>
         </header>
 
         {!loading && !user && (
           <section className="space-y-3 rounded-2xl border border-border p-5 text-sm">
-            <p className="text-foreground">✍️ Your sentence, corrected · 💬 real conversations in English · 🎙️ pronunciation score · 📈 weekly progress</p>
+            <ul className="grid grid-cols-2 gap-2 text-foreground">
+              {([[PenLine, 'Your sentence, corrected'], [MessagesSquare, 'Real conversations in English'],
+                 [AudioLines, 'Pronunciation score'], [TrendingUp, 'Weekly progress']] as const).map(([Icon, label]) => (
+                <li key={label} className="flex items-center gap-2">
+                  <Icon className="h-4 w-4 shrink-0" style={{ color: 'hsl(var(--espaluz-purple))' }} aria-hidden />{label}
+                </li>
+              ))}
+            </ul>
             <p className="font-medium text-foreground">Included in the 14 free days and in the $11 EspaLuz plan - no separate plan. / Incluido en los 14 días gratis y en el plan de $11.</p>
             <p className="text-muted-foreground">Real work scenes: a call with a new client, quoting a price, customer service, a remote job interview, small talk with investors, a business trip, a professional email.</p>
-            <Link to="/auth" className="block w-full rounded-xl px-5 py-3 text-center font-semibold text-white" style={{ background: 'hsl(var(--espaluz-purple))' }}>
+            <Link to="/auth?mode=signup&next=/pro-english" className="block w-full rounded-xl px-5 py-3 text-center font-semibold text-white" style={{ background: 'hsl(var(--espaluz-purple))' }}>
               Start free · 14 days, no card
             </Link>
             <div className="flex gap-2">
@@ -231,7 +241,7 @@ export default function ProEnglish() {
                 request, to the address the site already publishes. Competitors include animated tutors in a ~$10-15/month plan;
                 live lip-synced avatars cost us roughly $0.35-3 a minute (cto-aipa docs/espaluz/PRO_ENGLISH_COACH_PLAN_2026-11-20.md). */}
             <p className="rounded-xl bg-muted/50 px-3 py-2 text-center text-xs text-muted-foreground">
-              🎥 Premium: a full live session with EspaLuz on video, her lips moving with every word - by request.{' '}
+              Premium: a full live session with EspaLuz on video, her lips moving with every word - by request.{' '}
               <a href="mailto:aipa@aideazz.xyz?subject=EspaLuz%20Pro%20English%20-%20premium%20video%20session" className="font-medium underline">Write to us</a>
             </p>
           </>
