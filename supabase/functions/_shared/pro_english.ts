@@ -92,11 +92,22 @@ function json(text: string): Record<string, string> {
   try { return Object.fromEntries(Object.entries(JSON.parse(m[0])).map(([k, v]) => [k, String(v ?? '').replace(/\*/g, '').trim()])); } catch { return {}; }
 }
 
+// 21 Nov 2026 (Elena, tested from the app on WhatsApp + Telegram: "the user should be given a full explanation with clear
+// steps - what he can do in this regime and how to exit to the normal regime"): every way IN to Pro English says how it
+// works and how to get OUT. Same rule as the bots' other modes (each command's first reply explains itself and the exit).
+const HOWTO = `ℹ️ *How Pro English works*\n` +
+  `1. A quick level check (3 questions), then choose a scene by its number - or bring your own work topic.\n` +
+  `2. Write or send a voice note 🎙️, in English or Spanish. I answer in correct English and correct you gently.\n` +
+  `3. A voice note also gets a pronunciation score and one word to practise.\n` +
+  `• *menu* - the scenes · *progress* - your week · *level* - a new level check\n` +
+  `• 🚪 *exit* - back to normal EspaLuz (your Pro English history stays; send *pro english* to come back)\n` +
+  `_Para salir: escribe *exit* y vuelves a EspaLuz normal._`;
+
 function menuText(level?: string): string {
   return `${level ? `📊 Your level: *${level}*\n\n` : ''}🎯 *Choose a scene* (send the number):\n` +
     PRO_SCENES.map((s, i) => `${i + 1}. ${s.en}`).join('\n') +
     `\n\n💼 Or bring your own work topic - your job, a client, a meeting, an email - in English or Spanish, by text or voice note 🎙️. I always answer in English.` +
-    `\n📈 *progress* · 🚪 *exit*`;
+    `\n📈 *progress* · 🚪 *exit* - back to normal EspaLuz`;
 }
 
 // Azure Pronunciation Assessment, short-audio REST (max ~60 s). The reference text is the transcript the client already
@@ -201,10 +212,12 @@ export async function proEnglish(inp: ProInput): Promise<ProOutput> {
 
   // The door: a level check the first time, the scene menu after.
   if (inp.start || LEVEL.test(said)) {
-    if (state.level && !LEVEL.test(said)) { state = { ...state, phase: 'menu' }; console.log(`[pro-english] start ${platform} returning level=${state.level}`); return out(`👋 Welcome back!\n\n${menuText(state.level)}`, 'Welcome back! Choose a scene.'); }
+    // The web page has its own buttons (Exit coach, Dashboard) and help box, so the how-to goes to the chat channels.
+    const howto = platform === 'web' ? '' : `\n\n${HOWTO}`;
+    if (state.level && !LEVEL.test(said)) { state = { ...state, phase: 'menu' }; console.log(`[pro-english] start ${platform} returning level=${state.level}`); return out(`👋 Welcome back to *EspaLuz Pro English*!\n\n${menuText(state.level)}${howto}`, 'Welcome back! Choose a scene.'); }
     state = { phase: 'check', step: 0 };
     console.log(`[pro-english] start ${platform} level-check`);
-    return out(`🇺🇸 *EspaLuz Pro English*\n\n💬 ${CHECK_QUESTIONS[0].en}\n\n_${CHECK_QUESTIONS[0].es}_`, CHECK_QUESTIONS[0].en, { reply: CHECK_QUESTIONS[0].en });
+    return out(`🇺🇸 *EspaLuz Pro English*${howto}\n\n💬 ${CHECK_QUESTIONS[0].en}\n\n_${CHECK_QUESTIONS[0].es}_`, CHECK_QUESTIONS[0].en, { reply: CHECK_QUESTIONS[0].en });
   }
   if (OFF.test(said)) { console.log(`[pro-english] off ${platform}`); return out('👋 See you soon! Send *pro english* any time to continue.', 'See you soon!', {}, { off: true }); }
   if (PROGRESS.test(said)) return out(await progressText(db, userId), 'Here is your week.');
