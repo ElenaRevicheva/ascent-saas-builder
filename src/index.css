@@ -277,7 +277,12 @@ All colors MUST be HSL.
 .brand-wordmark {
   font-family: "Newsreader", "Iowan Old Style", Georgia, serif;
   font-weight: 400; font-size: 1.6rem; letter-spacing: -0.015em; line-height: 1; font-optical-sizing: auto;
+  /* 21 Nov 2026 (Elena: "Espa should turn to dark violet in brand"): "Espa" was the body-text near-black, so the logo read as
+     half text. Deep brand violet (violet-900, ~11:1 on the cream header) + the gold "Luz" = the icon's two colours.
+     All three places (nav, footer, dashboard header) sit on light backgrounds; dark mode gets a light violet. */
+  color: #4c1d95;
 }
+.dark .brand-wordmark { color: hsl(263 90% 85%); }
 .brand-wordmark b, .luz-gold { /* .luz-gold (20 Nov 2026): the same golden "Luz" wherever EspaLuz is written in a heading */
   font-weight: 600; letter-spacing: -0.02em;
   /* 5 Nov (Elena): "Luz" in the golden colour of sun rays, not dark. Top = the brand sun (--espaluz-yellow),
