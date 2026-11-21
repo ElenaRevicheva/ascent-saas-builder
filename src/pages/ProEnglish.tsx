@@ -12,7 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
  * reads or changes this page. A paid family can see the coach say the last answer as a lip-synced clip (generate-video
  * 'pro_english', 2 a month included). Plan: cto-aipa docs/espaluz/PRO_ENGLISH_COACH_PLAN_2026-11-20.md
  */
-type Line = { who: 'coach' | 'me'; text: string; worst?: { word: string; score: number }[] };
+type Line = { who: 'coach' | 'me'; text: string; worst?: { word: string; score: number; hint?: string }[] };
 // The practice loop's state per weak word: the first score (from the turn) and the latest try.
 type Drill = { first: number; last?: number; busy?: 'listening' | 'scoring'; miss?: boolean };
 const WA = 'https://wa.me/50766623757?text=Pro%20English%20(proen-web)';
@@ -146,7 +146,7 @@ export default function ProEnglish() {
       const { data, error } = await supabase.functions.invoke('espaluz-chat', { body: { proEnglish: body } });
       if (error || !data?.text) throw new Error(String(error?.message ?? 'no answer'));
       if (!alive.current) return;
-      const worst = Array.isArray(data.pron?.worst) ? data.pron.worst as { word: string; score: number }[] : [];
+      const worst = Array.isArray(data.pron?.worst) ? data.pron.worst as { word: string; score: number; hint?: string }[] : [];
       setLines((l) => [...l, { who: 'coach', text: String(data.text), worst }]);
       if (data.speak) speak(String(data.speak));
     } catch {
@@ -256,7 +256,7 @@ export default function ProEnglish() {
                   {l.who === 'coach' && !!l.worst?.length && (
                     <div className="mt-2 space-y-2 rounded-xl border border-border bg-muted/40 p-3">
                       <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Practise these words</p>
-                      {l.worst.map(({ word, score }) => {
+                      {l.worst.map(({ word, score, hint }) => {
                         const d = drills[word];
                         const now = d?.last;
                         return (
@@ -278,6 +278,7 @@ export default function ProEnglish() {
                               {score}{now !== undefined && <> → <strong className={now > score ? 'text-emerald-700' : 'text-foreground'}>{now}</strong>{now >= 80 ? ' ✓' : ''}</>}
                               {d?.miss && ' · I could not hear it, try again'}
                             </span>
+                            {hint && <p className="w-full pl-1 text-xs text-muted-foreground">Focus on {hint}.</p>}
                           </div>
                         );
                       })}

@@ -11,14 +11,32 @@
 // the classroom never read this file; this layer never reads their rules. The door is its own (`start`).
 
 type Msg = { role: 'user' | 'assistant'; content: string };
-export type ProState = { phase?: 'check' | 'menu' | 'scene' | 'free'; step?: number; level?: string; goal?: string; work?: string; scene?: string; history?: Msg[] };
+export type ProState = { phase?: 'check' | 'menu' | 'scene' | 'free'; step?: number; level?: string; goal?: string; work?: string; scene?: string; history?: Msg[];
+  // 21 Nov 2026: the weak words of the last scored voice note - a voice note saying just one of them is a drill (any channel).
+  drill?: { word: string; score: number; hint?: string }[] };
 export type ProAsk = (system: string, messages: Msg[], maxTokens: number) => Promise<string>;
 export type ProInput = {
   db: any; userId: string | null; platform: 'web' | 'whatsapp' | 'telegram'; ask: ProAsk;
   said?: string; start?: boolean; state?: ProState; audio?: { b64: string; mime: string } | null;
 };
 export type ProOutput = { text: string; speak: string; state: ProState; off?: boolean; pron?: Pron | null; saved: boolean };
-type Pron = { score: number; accuracy: number; fluency: number; worst: { word: string; score: number }[] };
+type Pron = { score: number; accuracy: number; fluency: number; worst: { word: string; score: number; hint?: string }[] };
+
+// 21 Nov 2026 (ELSA-style sound hint): Azure's en-US phoneme names -> a sound a Spanish speaker can find. The same assessment
+// call returns per-sound scores when Granularity = 'Phoneme'; the weakest sound of a weak word becomes ONE hint.
+const SOUNDS: Record<string, string> = {
+  aa: "the 'ah' sound, as in hot", ae: "the short 'a', as in cat", ah: "the short 'u', as in cup", ao: "the 'aw' sound, as in call",
+  aw: "the 'ow' sound, as in now", ax: "the soft 'uh', as in about", ay: "the 'eye' sound, as in time", eh: "the short 'e', as in bed",
+  er: "the American 'er', as in work", ey: "the 'ay' sound, as in day", ih: "the short 'i', as in sit (not 'ee')", iy: "the long 'ee', as in see",
+  ow: "the 'oh' sound, as in go", oy: "the 'oy' sound, as in boy", uh: "the short 'u', as in book", uw: "the long 'oo', as in food",
+  b: "the 'b', lips closed", ch: "the 'ch', as in check", d: "the 'd', tongue behind the teeth", dh: "the soft 'th', as in this",
+  f: "the 'f', top teeth on the lip", g: "the hard 'g', as in go", h: "the breathy 'h', as in hello (not silent)", jh: "the 'j' sound, as in job",
+  k: "the 'k', as in client", l: "the 'l', tongue up", m: "the 'm'", n: "the 'n'", ng: "the 'ng', as in meeting (no hard g)",
+  p: "the 'p', with a puff of air", r: "the American 'r', tongue curled back", s: "the 's', as in sales (no 'e' before it)",
+  sh: "the 'sh', as in share", t: "the 't', with a puff of air", th: "the 'th', tongue between the teeth, as in think",
+  v: "the 'v', top teeth on the lip (not 'b')", w: "the 'w', as in work", y: "the 'y', as in yes", z: "the buzzing 'z', as in business",
+  zh: "the 'zh', as in usually",
+};
 
 export const PRO_SCENES: { key: string; en: string; es: string; role: string }[] = [
   { key: 'client_call', en: 'Call with a new client', es: 'Llamada con un cliente nuevo', role: 'a new English-speaking client calling about their service; you want to understand what they do and what they need' },
@@ -88,7 +106,7 @@ export async function pronounce(audio: { b64: string; mime: string }, reference:
   if (!key || !region || !audio?.b64 || !reference.trim()) return null;
   const mime = /ogg|opus/i.test(audio.mime) ? 'audio/ogg; codecs=opus' : /wav/i.test(audio.mime) ? 'audio/wav; codecs=audio/pcm; samplerate=16000' : '';
   if (!mime) return null; // the browser's webm is not accepted by this endpoint; the web sends wav
-  const cfg = btoa(JSON.stringify({ ReferenceText: reference.slice(0, 500), GradingSystem: 'HundredMark', Granularity: 'Word', Dimension: 'Comprehensive', EnableMiscue: false }));
+  const cfg = btoa(JSON.stringify({ ReferenceText: reference.slice(0, 500), GradingSystem: 'HundredMark', Granularity: 'Phoneme', Dimension: 'Comprehensive', EnableMiscue: false }));
   try {
     const bytes = Uint8Array.from(atob(audio.b64), (c) => c.charCodeAt(0));
     const r = await fetch(`https://${region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=en-US&format=detailed`, {
@@ -98,7 +116,12 @@ export async function pronounce(audio: { b64: string; mime: string }, reference:
     const best = (await r.json())?.NBest?.[0];
     const pa = best?.PronunciationAssessment ?? best;
     if (!pa || typeof pa.PronScore !== 'number') return null;
-    const worst = (best.Words ?? []).map((w: any) => ({ word: String(w.Word ?? ''), score: Math.round(Number(w.PronunciationAssessment?.AccuracyScore ?? w.AccuracyScore ?? 100)) }))
+    const hintOf = (w: any): string | undefined => {
+      const ph = (w.Phonemes ?? []).map((p: any) => ({ p: String(p.Phoneme ?? '').toLowerCase(), s: Number(p.PronunciationAssessment?.AccuracyScore ?? p.AccuracyScore ?? 100) }))
+        .filter((p: any) => SOUNDS[p.p] && p.s < 70).sort((a: any, b: any) => a.s - b.s)[0];
+      return ph ? SOUNDS[ph.p] : undefined;
+    };
+    const worst = (best.Words ?? []).map((w: any) => ({ word: String(w.Word ?? ''), score: Math.round(Number(w.PronunciationAssessment?.AccuracyScore ?? w.AccuracyScore ?? 100)), hint: hintOf(w) }))
       .filter((w: any) => w.word.length > 2 && w.score < 75).sort((a: any, b: any) => a.score - b.score).slice(0, 2);
     return { score: Math.round(pa.PronScore), accuracy: Math.round(pa.AccuracyScore ?? 0), fluency: Math.round(pa.FluencyScore ?? 0), worst };
   } catch (e) { console.log(`[pro-english] azure pronunciation failed: ${(e as Error).message}`); return null; }
@@ -146,7 +169,7 @@ async function progressText(db: any, userId: string | null): Promise<string> {
 // word itself as the reference text; the page plays the word in the coach's voice (generate-voice hero 'coach') and records
 // the try with its existing mic code. Each try is saved (event 'pro_english_drill') so progress can show it.
 export async function drillWord(db: any, userId: string | null, platform: string, word: string, audio: { b64: string; mime: string }):
-  Promise<{ word: string; score: number | null }> {
+  Promise<{ word: string; score: number | null; hint?: string }> {
   const w = String(word ?? '').replace(/[^\p{L}'\- ]/gu, '').trim().slice(0, 40);
   if (!w) return { word: '', score: null };
   const p = await pronounce(audio, w);
@@ -157,7 +180,7 @@ export async function drillWord(db: any, userId: string | null, platform: string
     if (error) console.log(`[pro-english] drill save failed: ${error.message}`);
   }
   console.log(`[pro-english] drill ${platform} word="${w}" score=${score ?? '-'}`);
-  return { word: w, score };
+  return { word: w, score, hint: p?.worst?.[0]?.hint };
 }
 
 export async function proEnglish(inp: ProInput): Promise<ProOutput> {
@@ -217,6 +240,26 @@ export async function proEnglish(inp: ProInput): Promise<ProOutput> {
       `Thank you! Your level is ${level}. Choose a scene.`, { said, level, reply: `Level ${level}` });
   }
 
+  // 21 Nov 2026: the practice loop in ANY channel. After a scored voice note the brain keeps its weak words (state.drill); a
+  // voice note that says just one of them (WhatsApp/Telegram have no buttons - this is their "Say it") is scored as a drill
+  // with the same drillWord() the web uses, and saved, so the web progress sees practice done in WhatsApp.
+  const norm = (x: string) => x.toLowerCase().replace(/[^\p{L}'\- ]/gu, '').trim();
+  const target = inp.audio && state.drill?.length && said.split(/\s+/).length <= 3
+    ? state.drill.find((d) => norm(said).split(/\s+/).includes(norm(d.word))) : undefined;
+  if (target) {
+    const d = await drillWord(db, userId, platform, target.word, inp.audio!);
+    if (d.score === null) return out("🎙️ I couldn't score that one - say just the word again, close to the phone.", 'Say it again.', { said });
+    const done = d.score >= 80;
+    state = { ...state, drill: done ? state.drill!.filter((w) => w.word !== target.word) : state.drill };
+    const next = state.drill?.[0];
+    const text = `🎯 *${target.word}*: ${target.score} → *${d.score}*${done ? ' ✅' : ''}` +
+      (done ? '' : target.hint ? `\n💡 Focus on ${target.hint}. Try once more.` : '\nTry once more.') +
+      (done && next ? `\n\nNext: say just *${next.word}*${next.hint ? ` - ${next.hint}` : ''}.` : '') +
+      (done && !next ? '\n\nAll your words are practised. Back to the conversation whenever you like.' : '');
+    const speak = done ? (next ? `Great. Now: ${next.word}.` : 'Great job.') : `Listen: ${target.word}. ${target.word}.`;
+    return out(text, speak, { said, drill: { word: target.word, before: target.score, after: d.score } });
+  }
+
   // A coaching turn: in a scene, or free talk.
   const sc = PRO_SCENES.find((s) => s.key === state.scene);
   if (!state.phase || state.phase === 'menu') state = { ...state, phase: 'free' };
@@ -231,7 +274,14 @@ export async function proEnglish(inp: ProInput): Promise<ProOutput> {
     `💬 ${reply}`,
     j.es_help ? `🇪🇸 ${j.es_help}` : '',
     pron ? `🎙️ Pronunciation *${pron.score}/100*${pron.worst.length ? ` · practise: ${pron.worst.map((w) => `*${w.word}* (${w.score})`).join(', ')}` : ''}` : '',
+    // 21 Nov 2026: ELSA-style - which sound, and (chat channels) how to practise it right here with a voice note.
+    ...(platform === 'web' ? [] : (pron?.worst ?? []).filter((w) => w.hint).map((w) => `💡 *${w.word}*: ${w.hint}`)), // web: in its practice box
+    pron?.worst.length && platform !== 'web' ? `🎯 Send a voice note saying just *${pron.worst[0].word}* and I'll score it again.` : '',
   ].filter(Boolean);
+  // The weak words become the drill (any channel); a clean voice note clears it. The spoken reply ends with the words, so
+  // the bots' voice answer is also the model to copy.
+  if (pron) state = { ...state, drill: pron.worst.length ? pron.worst : undefined };
   console.log(`[pro-english] turn ${platform} scene=${state.scene ?? 'free'} better=${j.better ? 1 : 0} pron=${pron?.score ?? '-'}`);
-  return out(lines.join('\n\n'), `${j.better ? `Better: ${j.better.replace(/[.!?\s]+$/, '')}. ` : ''}${reply}`, { said, better: j.better ?? '', reply, pron }, { pron });
+  return out(lines.join('\n\n'), `${j.better ? `Better: ${j.better.replace(/[.!?\s]+$/, '')}. ` : ''}${reply}` +
+    (pron?.worst.length ? ` Practise: ${pron.worst.map((w) => w.word).join('. ')}.` : ''), { said, better: j.better ?? '', reply, pron }, { pron });
 }
