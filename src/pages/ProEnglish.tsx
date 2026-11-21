@@ -63,16 +63,37 @@ export default function ProEnglish() {
   const alive = useRef(true);
   const coached = lines.some((l) => l.who === 'me');
 
-  useEffect(() => () => { alive.current = false; rec.current?.stream.getTracks().forEach((x) => x.stop()); speechSynthesis.cancel(); }, []);
+  useEffect(() => () => { alive.current = false; rec.current?.stream.getTracks().forEach((x) => x.stop()); speechSynthesis.cancel(); player.current?.pause(); }, []);
   useEffect(() => { end.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }); }, [lines, busy]);
 
-  const speak = (text: string) => {
+  // 21 Nov 2026 (Elena: "woman of more or less 35 years old - coach style, not man"): the coach spoke with the browser's
+  // default voice - a man on Windows Chrome. Now she speaks in her own Azure coach voice (generate-voice hero 'coach');
+  // the device voice is only the last fallback, and then a woman's voice is chosen when the device has one.
+  const player = useRef<HTMLAudioElement | null>(null);
+  const deviceVoice = (text: string) => {
     try {
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
       u.lang = 'en-US';
+      const en = speechSynthesis.getVoices().filter((v) => v.lang.toLowerCase().startsWith('en'));
+      const woman = en.find((v) => /ava|jenny|aria|zira|samantha|female|woman|google us english/i.test(v.name));
+      if (woman) u.voice = woman;
       speechSynthesis.speak(u);
     } catch { /* the text is on screen */ }
+  };
+  const speak = async (text: string) => {
+    try {
+      player.current?.pause();
+      speechSynthesis.cancel();
+      const { data, error } = await supabase.functions.invoke('generate-voice', { body: { text, voice: 'en', hero: 'coach' } });
+      if (error || !data?.audioContent) throw new Error('no voice');
+      if (!alive.current) return;
+      const a = new Audio(`data:${data.mimeType || 'audio/mpeg'};base64,${data.audioContent}`);
+      player.current = a;
+      await a.play();
+    } catch {
+      if (alive.current) deviceVoice(text);
+    }
   };
 
   const turn = async (body: Record<string, unknown>, shown?: string) => {

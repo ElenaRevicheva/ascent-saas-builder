@@ -277,6 +277,10 @@ function pcmToWav(pcm: Uint8Array, rate: number): Uint8Array {
 // Round 1 (Emma / Brian / Andrew) was rejected: "old man", "not joyful", "a woman working in a local shop".
 const AZURE_VOICES: Record<string, { voice: string; pitch: string; rate: string }> = {
   usual: { voice: Deno.env.get('AZURE_USUAL_VOICE') ?? 'en-US-PhoebeMultilingualNeural', pitch: '+0%', rate: '+0%' },
+  // 21 Nov 2026 (Elena: "voice here should be woman of more or less 35 years old - coach style, not man"): /pro-english
+  // spoke with the browser's own voice (a man on Windows Chrome). The Pro English coach now has her own grown-up voice.
+  coach: { voice: Deno.env.get('AZURE_COACH_VOICE') ?? 'en-US-AvaMultilingualNeural',
+           pitch: Deno.env.get('AZURE_COACH_PITCH') ?? '+0%', rate: Deno.env.get('AZURE_COACH_RATE') ?? '+0%' },
   pere: { voice: Deno.env.get('AZURE_PERE_VOICE') ?? 'es-MX-JorgeMultilingualNeural',
           pitch: Deno.env.get('AZURE_PERE_PITCH') ?? '+0%', rate: Deno.env.get('AZURE_PERE_RATE') ?? '-10%' },
   titi: { voice: Deno.env.get('AZURE_TITI_VOICE') ?? 'en-us-jelly:DragonHDOmniLatestNeural',
@@ -309,6 +313,7 @@ async function generateAzureVoice(who: string, text: string): Promise<string> {
 // a bright, quicker one - so a child still hears two different friends when the other providers are out.
 const OPENAI_VOICES: Record<string, { voice: string; speed: number }> = {
   usual: { voice: 'nova', speed: 0.9 },
+  coach: { voice: 'shimmer', speed: 1.0 },
   pere: { voice: 'onyx', speed: 0.85 },
   titi: { voice: 'fable', speed: 1.05 },
 };
