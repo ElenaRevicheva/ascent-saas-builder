@@ -850,6 +850,18 @@
     "step3Body": "You both get 1 month free when they subscribe",
     "fold": "Invite a friend: you both get a month free"
   },
+  "whatsappFloat": {
+    "header": "EspaLuz support",
+    "online": "Online",
+    "away": "Away",
+    "greetingOnline": "Hi! A real person from the EspaLuz team here. Questions, help, or the premium live video session - message me.",
+    "greetingAway": "We're offline right now. Leave a message and we'll reply as soon as we're back - or book a time below.",
+    "openChat": "Open chat",
+    "sendMessage": "Send a message",
+    "bookCall": "Book a call",
+    "prefill": "Hi! I'm writing from EspaLuz - I'd like help with: ",
+    "support": "Contact support"
+  },
   "hdr": {
     "kidsClassroom": "Kids classroom",
     "addFamily": "Add your family",

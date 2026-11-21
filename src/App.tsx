@@ -22,7 +22,8 @@ import Classroom from "./pages/Classroom";
 import ClassroomRu from "./pages/ClassroomRu";
 import OnTheRoad from "./pages/OnTheRoad";
 import ProEnglish from "./pages/ProEnglish";
-import PathStart from "./pages/PathStart"; // 21 Nov 2026: each landing path delivers the person to exactly that path // 20 Nov 2026: Pro English, a separate layer
+import PathStart from "./pages/PathStart";
+import SupportDoors from "./components/SupportDoors"; // 21 Nov 2026: each landing path delivers the person to exactly that path // 20 Nov 2026: Pro English, a separate layer
 import { useOnline } from "@/lib/carMode";
 
 // 13 Nov 2026 - car mode: an app that STARTS with no signal goes to "On the road"; if the signal drops mid-use, a small
@@ -96,6 +97,7 @@ const App = () => (
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <SupportDoors />{/* 21 Nov 2026: WhatsApp (a person) + HubSpot chat - the help and premium door on every page */}
     </TooltipProvider>
   </QueryClientProvider>
 );

@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mic, Square, Send, Loader2, Video, PenLine, MessagesSquare, AudioLines, TrendingUp, Volume2, ArrowLeft, LogOut, PlayCircle, X } from 'lucide-react';
+import { Mic, Square, Send, Loader2, Video, PenLine, MessagesSquare, AudioLines, TrendingUp, Volume2, ArrowLeft, LogOut, PlayCircle, X, LifeBuoy } from 'lucide-react';
+import { SUPPORT_WHATSAPP, SUPPORT_EMAIL } from '@/components/WhatsAppFloat';
+// 21 Nov 2026: the premium / help door is a PERSON (Elena's WhatsApp Business), not @espaluz (the AI); e-mail as the second door.
+const PREMIUM_WA = `https://wa.me/${SUPPORT_WHATSAPP}?text=${encodeURIComponent('Hi! I would like the EspaLuz Pro English premium live video session.')}`;
+const PREMIUM_MAIL = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent('EspaLuz Pro English - premium live video session')}`;
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -287,7 +291,11 @@ export default function ProEnglish() {
               onPlay={() => { player.current?.pause(); speechSynthesis.cancel(); }} onEnded={closeWelcome}
               className="w-full rounded-xl" aria-label="EspaLuz welcomes you to Pro English" />
             <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span className="inline-flex items-center gap-1"><PlayCircle className="h-3.5 w-3.5" aria-hidden />Meet your coach - 19 s</span>
+              <span className="inline-flex items-center gap-1"><PlayCircle className="h-3.5 w-3.5" aria-hidden />Meet your coach - 20 s</span>
+              {/* She ends "To book it, just contact our support team below" - this is that door (a person, not the AI). */}
+              <a href={PREMIUM_WA} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-full bg-green-600 px-3 py-1 font-medium text-white">
+                <LifeBuoy className="h-3.5 w-3.5" aria-hidden />Contact support
+              </a>
               <button type="button" onClick={closeWelcome} className="inline-flex items-center gap-1 underline"><X className="h-3.5 w-3.5" aria-hidden />Close</button>
             </div>
           </section>
@@ -385,7 +393,8 @@ export default function ProEnglish() {
                 live lip-synced avatars cost us roughly $0.35-3 a minute (cto-aipa docs/espaluz/PRO_ENGLISH_COACH_PLAN_2026-11-20.md). */}
             <p className="rounded-xl bg-muted/50 px-3 py-2 text-center text-xs text-muted-foreground">
               Premium: a full live session with EspaLuz on video, her lips moving with every word - by request.{' '}
-              <a href="mailto:aipa@aideazz.xyz?subject=EspaLuz%20Pro%20English%20-%20premium%20video%20session" className="font-medium underline">Write to us</a>
+              Contact support: <a href={PREMIUM_WA} target="_blank" rel="noreferrer" className="font-medium underline">WhatsApp</a>
+              {' · '}<a href={PREMIUM_MAIL} className="font-medium underline">e-mail</a>
             </p>
           </>
         )}

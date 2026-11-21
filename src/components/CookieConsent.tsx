@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { replayRoute } from '@/lib/posthogReplay';
+import { loadHubSpotChat } from '@/lib/hubspotChat';
 
 export const CookieConsent = () => {
   const { t } = useTranslation();
@@ -21,6 +22,7 @@ export const CookieConsent = () => {
     setShowBanner(false);
     // 16 Nov 2026: PostHog starts only now (front page / sign-in page only), never before this click.
     void replayRoute(window.location.pathname).catch(() => undefined);
+    loadHubSpotChat(); // 21 Nov 2026: HubSpot's chat (support door) also waits for this click
   };
 
   const declineCookies = () => {

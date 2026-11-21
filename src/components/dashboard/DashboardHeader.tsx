@@ -1,6 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Menu, Info, Shield, FileText, LogOut, Briefcase } from 'lucide-react';
+import { Sparkles, Menu, Info, Shield, FileText, LogOut, Briefcase, LifeBuoy, Mail } from 'lucide-react';
+import { SUPPORT_WHATSAPP, SUPPORT_EMAIL } from '@/components/WhatsAppFloat';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
@@ -92,6 +93,9 @@ export const DashboardHeader = ({ user, getStatusBadge, signOut }: DashboardHead
                     <DropdownMenuItem asChild><Link to="/"><Info className="mr-2 h-4 w-4" />{t('hdr.about')}</Link></DropdownMenuItem>
                     {/* 21 Nov 2026 (Elena: signed in, "I do not see any Pro English path"): the 5th path is reachable from here. */}
                     <DropdownMenuItem asChild><Link to="/pro-english"><Briefcase className="mr-2 h-4 w-4" />Pro English</Link></DropdownMenuItem>
+                    {/* 21 Nov 2026 (Elena: families need a visible door for help and premium requests): a PERSON on WhatsApp, and e-mail. */}
+                    <DropdownMenuItem asChild><a href={`https://wa.me/${SUPPORT_WHATSAPP}?text=${encodeURIComponent(t('whatsappFloat.prefill'))}`} target="_blank" rel="noreferrer"><LifeBuoy className="mr-2 h-4 w-4" />{t('whatsappFloat.support')}</a></DropdownMenuItem>
+                    <DropdownMenuItem asChild><a href={`mailto:${SUPPORT_EMAIL}?subject=EspaLuz%20support`}><Mail className="mr-2 h-4 w-4" />{SUPPORT_EMAIL}</a></DropdownMenuItem>
                     <DropdownMenuItem asChild><Link to="/privacy-policy"><Shield className="mr-2 h-4 w-4" />{t('hdr.privacy')}</Link></DropdownMenuItem>
                     <DropdownMenuItem asChild><Link to="/terms-of-service"><FileText className="mr-2 h-4 w-4" />{t('hdr.terms')}</Link></DropdownMenuItem>
                     <DropdownMenuSeparator />

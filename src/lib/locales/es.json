@@ -741,6 +741,18 @@
     "step3Body": "Cuando se suscribe, los dos reciben 1 mes gratis",
     "fold": "Invita a un amigo: los dos reciben un mes gratis"
   },
+  "whatsappFloat": {
+    "header": "Soporte EspaLuz",
+    "online": "En línea",
+    "away": "Fuera de línea",
+    "greetingOnline": "¡Hola! Te escribe una persona del equipo EspaLuz. Preguntas, ayuda o la sesión premium en video en vivo: escríbeme.",
+    "greetingAway": "Ahora no estamos en línea. Déjanos un mensaje y te respondemos al volver, o reserva un horario abajo.",
+    "openChat": "Abrir chat",
+    "sendMessage": "Enviar mensaje",
+    "bookCall": "Reservar llamada",
+    "prefill": "¡Hola! Te escribo desde EspaLuz, necesito ayuda con: ",
+    "support": "Contactar soporte"
+  },
   "hdr": {
     "kidsClassroom": "Aula infantil",
     "addFamily": "Agrega a tu familia",
