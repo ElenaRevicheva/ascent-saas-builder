@@ -196,7 +196,7 @@ export default function ProEnglish() {
               ))}
             </ul>
             <p className="font-medium text-foreground">Included in the 14 free days and in the $11 EspaLuz plan - no separate plan. / Incluido en los 14 días gratis y en el plan de $11.</p>
-            <p className="text-muted-foreground">Real work scenes: a call with a new client, quoting a price, customer service, a remote job interview, small talk with investors, a business trip, a professional email. Or bring any topic that matters to you professionally - your own job, your field, a meeting you have tomorrow - or just talk about anything: the coach follows you. / O trae cualquier tema que te importe en tu trabajo, o habla de lo que quieras.</p>
+            <p className="text-muted-foreground">Real work scenes: a call with a new client, quoting a price, customer service, a remote job interview, small talk with investors, a business trip, a professional email. Or bring any topic that matters to you professionally - your own job, your field, a client, a meeting you have tomorrow - and the coach works on it with you. / O trae cualquier tema importante para tu trabajo.</p>
             <Link to="/auth?mode=signup&next=/pro-english" className="block w-full rounded-xl px-5 py-3 text-center font-semibold text-white" style={{ background: 'hsl(var(--espaluz-purple))' }}>
               Start free · 14 days, no card
             </Link>
@@ -229,7 +229,7 @@ export default function ProEnglish() {
                 <Send className="h-5 w-5" />
               </button>
             </div>
-            <p className="text-center text-xs text-muted-foreground">Talk about anything · menu · progress · level · exit</p>
+            <p className="text-center text-xs text-muted-foreground">Your own work topic · menu · progress · level · exit</p>
             {coached && (
               <button type="button" onClick={seeIt} disabled={clipBusy} className="flex w-full items-center justify-center gap-2 rounded-xl border border-border px-4 py-2 text-sm disabled:opacity-50">
                 {clipBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Video className="h-4 w-4" />}

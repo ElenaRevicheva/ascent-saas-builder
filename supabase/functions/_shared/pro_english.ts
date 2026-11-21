@@ -40,9 +40,12 @@ const COACH = `You are EspaLuz Pro English, a professional English coach for NAT
 money: English-speaking clients, remote jobs, business travel. Warm, direct, encouraging, never childish.
 LEVEL: {LEVEL}. GOAL: {GOAL}. THEIR WORK: {WORK}. {SCENE}
 Adapt every scene to THEIR real work (a client of a tour agency asks about tours, not websites).
-YOU ARE A CONVERSATION PARTNER, NOT A SCRIPT (Elena, 20 Nov): they may talk about or ask ANYTHING - life, news, a word, grammar,
-a plan, a worry. If they change topic or ask you something, even in the middle of a scene, follow them: answer it truly and
-helpfully in English, then keep the conversation going. Scenes are only suggestions.
+YOU ARE A CONVERSATION PARTNER, NOT A SCRIPT (Elena, 20 Nov): scenes are only suggestions. They may bring ANY PROFESSIONAL topic
+(Elena, 21 Nov: "this path is professional English - any topic meaningful professionally, not 'the sky is blue'"): their own
+job and field, a client, a meeting, a negotiation, an email, an interview, a work worry, a word or grammar they need for work.
+If they change to such a topic, even in the middle of a scene, follow them: answer it truly and helpfully in English, then keep
+the conversation going. If they drift into everyday small talk unrelated to work, answer it in one kind sentence and steer back
+to their work English (for everyday life there is EspaLuz's other path).
 Length: A2 = 1-2 short sentences with simple words; B1 = up to 2; B2/C1 = up to 3.
 For THEIR LAST MESSAGE return ONLY JSON {"better":"","why":"","reply":"","es_help":""}:
 - "better": if their message has a mistake, sounds unnatural or is a word-for-word Spanish construction, the natural professional
@@ -74,7 +77,7 @@ function json(text: string): Record<string, string> {
 function menuText(level?: string): string {
   return `${level ? `📊 Your level: *${level}*\n\n` : ''}🎯 *Choose a scene* (send the number):\n` +
     PRO_SCENES.map((s, i) => `${i + 1}. ${s.en}`).join('\n') +
-    `\n\n💬 Or just talk to me about anything - in English or Spanish, by text or voice note 🎙️. I always answer in English.` +
+    `\n\n💼 Or bring your own work topic - your job, a client, a meeting, an email - in English or Spanish, by text or voice note 🎙️. I always answer in English.` +
     `\n📈 *progress* · 🚪 *exit*`;
 }
 
@@ -159,7 +162,7 @@ export async function proEnglish(inp: ProInput): Promise<ProOutput> {
   if (OFF.test(said)) { console.log(`[pro-english] off ${platform}`); return out('👋 See you soon! Send *pro english* any time to continue.', 'See you soon!', {}, { off: true }); }
   if (PROGRESS.test(said)) return out(await progressText(db, userId), 'Here is your week.');
   if (MENU.test(said)) { state = { ...state, phase: 'menu' }; return out(menuText(state.level), 'Choose a scene.'); }
-  if (FREE.test(said)) { state = { ...state, phase: 'free', scene: undefined }; return out("💬 Free talk - anything you like. What's on your mind today?", "Free talk. Anything you like. What's on your mind today?", { reply: "Free talk - anything you like. What's on your mind today?" }); }
+  if (FREE.test(said)) { state = { ...state, phase: 'free', scene: undefined }; return out("💼 Your own work topic - a client, a meeting, an email, your field. What do you need English for today?", "Your own work topic. What do you need English for today?", { reply: "Your own work topic - a client, a meeting, an email, your field. What do you need English for today?" }); }
   const n = Number(said.replace(/[^\d]/g, ''));
   if (state.phase !== 'check' && /^\s*\d\s*[.)]?\s*$/.test(said) && n >= 1 && n <= PRO_SCENES.length) {
     const sc = PRO_SCENES[n - 1];
@@ -195,7 +198,7 @@ export async function proEnglish(inp: ProInput): Promise<ProOutput> {
   if (!state.phase || state.phase === 'menu') state = { ...state, phase: 'free' };
   const pronP = inp.audio ? pronounce(inp.audio, said) : Promise.resolve(null);
   const j = json(await ask(COACH.replace('{LEVEL}', state.level ?? 'B1').replace('{GOAL}', state.goal ?? 'other').replace('{WORK}', state.work || 'not given')
-    .replace('{SCENE}', sc ? `SCENE - you play: ${sc.role}.` : 'FREE CONVERSATION about whatever they bring - any topic, any question.'),
+    .replace('{SCENE}', sc ? `SCENE - you play: ${sc.role}.` : 'FREE CONVERSATION about the professional topic they bring - their job, field, clients, meetings, emails.'),
     [...history.slice(-12), { role: 'user', content: said }], 500));
   const pron = await pronP;
   const reply = j.reply || "Sorry, could you say that again in another way?";
