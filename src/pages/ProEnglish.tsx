@@ -196,7 +196,7 @@ export default function ProEnglish() {
               ))}
             </ul>
             <p className="font-medium text-foreground">Included in the 14 free days and in the $11 EspaLuz plan - no separate plan. / Incluido en los 14 días gratis y en el plan de $11.</p>
-            <p className="text-muted-foreground">Real work scenes: a call with a new client, quoting a price, customer service, a remote job interview, small talk with investors, a business trip, a professional email. Or talk about anything you like - your day, your plans, any topic - the coach follows you. / O habla de lo que quieras: tu día, tus planes, cualquier tema.</p>
+            <p className="text-muted-foreground">Real work scenes: a call with a new client, quoting a price, customer service, a remote job interview, small talk with investors, a business trip, a professional email. Or bring any topic that matters to you professionally - your own job, your field, a meeting you have tomorrow - or just talk about anything: the coach follows you. / O trae cualquier tema que te importe en tu trabajo, o habla de lo que quieras.</p>
             <Link to="/auth?mode=signup&next=/pro-english" className="block w-full rounded-xl px-5 py-3 text-center font-semibold text-white" style={{ background: 'hsl(var(--espaluz-purple))' }}>
               Start free · 14 days, no card
             </Link>
