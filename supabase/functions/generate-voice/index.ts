@@ -112,7 +112,10 @@ serve(async (req) => {
     // the heroes, so each hero keeps ONE free voice all day; Gemini stays right behind it as the backup. The grown-up
     // voice keeps the old order. Env FREE_HERO_VOICE_ORDER="gemini,azure" restores the old order with no deploy of code.
     const heroLine = !!(hero && (AZURE_VOICES[hero] || GEMINI_HEROES[hero]));
-    const freeOrder = (heroLine ? (Deno.env.get('FREE_HERO_VOICE_ORDER') || 'azure,gemini') : 'gemini,azure')
+    // 21 Nov 2026: the Pro English coach has no Gemini voice of her own (Gemini would read her lines as EspaLuz), so
+    // her Azure voice always answers first, whatever FREE_HERO_VOICE_ORDER says for the heroes.
+    const freeOrder = (hero === 'coach' ? 'azure,gemini'
+      : heroLine ? (Deno.env.get('FREE_HERO_VOICE_ORDER') || 'azure,gemini') : 'gemini,azure')
       .split(',').map((x) => x.trim());
     for (const step of freeOrder) {
       if (base64Audio) break;
