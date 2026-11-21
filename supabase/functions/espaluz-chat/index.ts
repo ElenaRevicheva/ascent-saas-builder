@@ -5,7 +5,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
 import { kidsTidyReply, kidsClassDaysDone, kidsGreetedRecently } from './kids_tidy.ts';
 import { brainShare, brainShareText } from '../_shared/brain_share.ts';
 import { weekPlan } from '../_shared/week_plan.ts';
-import { proEnglish } from '../_shared/pro_english.ts'; // 20 Nov 2026: Pro English, a separate layer (see that file)
+import { proEnglish, drillWord } from '../_shared/pro_english.ts'; // 20 Nov 2026: Pro English, a separate layer (see that file)
 // 8 Nov 2026 (Elena: "what lasts is your new life"): the checked belonging pack, one file for web + WhatsApp + Telegram.
 import argentinaPack from '../_shared/belonging/argentina.json' with { type: 'json' };
 import boliviaPack from '../_shared/belonging/bolivia.json' with { type: 'json' };
@@ -2323,6 +2323,12 @@ serve(async (req) => {
     if (body.proEnglish) {
       if (!fromBot && !userId) throw new Error('Unauthorized');
       const p = body.proEnglish ?? {};
+      // 21 Nov 2026: one weak word, said again -> scored again (the practice loop; _shared/pro_english.ts drillWord).
+      if (p.drill?.word && p.drill?.audio) {
+        const d = await drillWord(createClient(supabaseUrl, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!), userId,
+          botPlatform ?? 'web', String(p.drill.word), p.drill.audio);
+        return new Response(JSON.stringify(d), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
       const ask = async (system: string, messages: any[], maxTokens: number) => String((await callChain({ model: CLAUDE_MODELS[0],
         max_tokens: maxTokens, temperature: 0.5, system, messages })).result?.content?.[0]?.text ?? '');
       const r = await proEnglish({ db: createClient(supabaseUrl, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!), userId,

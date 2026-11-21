@@ -120,9 +120,13 @@ async function progressText(db: any, userId: string | null): Promise<string> {
   if (!userId) return '📈 To keep your progress on the web, WhatsApp and Telegram together, connect your EspaLuz account (app.espaluz.lat → Dashboard → Connect).';
   const since = new Date(Date.now() - 14 * 86400000).toISOString();
   const { data } = await db.from('learning_sessions').select('content, created_at').eq('user_id', userId).eq('session_type', 'analytics')
-    .eq('content->>event', 'pro_english_turn').gte('created_at', since).limit(1000);
+    .in('content->>event', ['pro_english_turn', 'pro_english_drill']).gte('created_at', since).limit(1000);
   const weekAgo = Date.now() - 7 * 86400000;
-  const pick = (recent: boolean) => (data ?? []).filter((r: any) => (new Date(r.created_at).getTime() >= weekAgo) === recent).map((r: any) => r.content ?? {});
+  const pick = (recent: boolean, event = 'pro_english_turn') => (data ?? []).filter((r: any) => r.content?.event === event
+    && (new Date(r.created_at).getTime() >= weekAgo) === recent).map((r: any) => r.content ?? {});
+  // 21 Nov 2026: the word drills (practice loop) count too - words practised, and how many reached 80+.
+  const drills = pick(true, 'pro_english_drill'), drilled = new Set(drills.map((c: any) => c.word)),
+    mastered = new Set(drills.filter((c: any) => c.score >= 80).map((c: any) => c.word));
   const sum = (rows: any[]) => {
     const said = rows.filter((c) => c.said), scores = rows.map((c) => c.pron?.score).filter((n) => typeof n === 'number');
     return { turns: said.length, clean: said.filter((c) => !c.better).length, scenes: new Set(rows.map((c) => c.state?.scene).filter(Boolean)).size,
@@ -133,7 +137,27 @@ async function progressText(db: any, userId: string | null): Promise<string> {
   const pct = (s: any) => Math.round((100 * s.clean) / Math.max(1, s.turns));
   return `📈 *Your week*\n• Messages in English: ${now.turns}${before.turns ? ` (week before: ${before.turns})` : ''}\n` +
     `• No correction needed: ${pct(now)}%${before.turns ? ` (week before: ${pct(before)}%)` : ''}\n• Scenes practised: ${now.scenes}\n` +
-    (now.pron !== null ? `• Average pronunciation: ${now.pron}/100${before.pron !== null ? ` (week before: ${before.pron})` : ''}\n` : '');
+    (now.pron !== null ? `• Average pronunciation: ${now.pron}/100${before.pron !== null ? ` (week before: ${before.pron})` : ''}\n` : '') +
+    (drilled.size ? `• Words practised: ${drilled.size} (${mastered.size} now at 80+)\n` : '');
+}
+
+// 21 Nov 2026 (Elena: "make the pronunciation truly work the way Loora and other coaches practise - connect what we have,
+// no new bicycle"): the practice LOOP for one weak word. The scoring is the same pronounce() as a coaching turn, with the
+// word itself as the reference text; the page plays the word in the coach's voice (generate-voice hero 'coach') and records
+// the try with its existing mic code. Each try is saved (event 'pro_english_drill') so progress can show it.
+export async function drillWord(db: any, userId: string | null, platform: string, word: string, audio: { b64: string; mime: string }):
+  Promise<{ word: string; score: number | null }> {
+  const w = String(word ?? '').replace(/[^\p{L}'\- ]/gu, '').trim().slice(0, 40);
+  if (!w) return { word: '', score: null };
+  const p = await pronounce(audio, w);
+  const score = p ? (p.accuracy || p.score) : null;
+  if (userId && score !== null) {
+    const { error } = await db.from('learning_sessions').insert({ user_id: userId, session_type: 'analytics', source: platform,
+      content: { event: 'pro_english_drill', platform, word: w, score } });
+    if (error) console.log(`[pro-english] drill save failed: ${error.message}`);
+  }
+  console.log(`[pro-english] drill ${platform} word="${w}" score=${score ?? '-'}`);
+  return { word: w, score };
 }
 
 export async function proEnglish(inp: ProInput): Promise<ProOutput> {

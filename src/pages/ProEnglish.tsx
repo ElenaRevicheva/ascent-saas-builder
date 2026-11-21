@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Mic, Square, Send, Loader2, Video, PenLine, MessagesSquare, AudioLines, TrendingUp } from 'lucide-react';
+import { Mic, Square, Send, Loader2, Video, PenLine, MessagesSquare, AudioLines, TrendingUp, Volume2 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -12,7 +12,9 @@ import { supabase } from '@/integrations/supabase/client';
  * reads or changes this page. A paid family can see the coach say the last answer as a lip-synced clip (generate-video
  * 'pro_english', 2 a month included). Plan: cto-aipa docs/espaluz/PRO_ENGLISH_COACH_PLAN_2026-11-20.md
  */
-type Line = { who: 'coach' | 'me'; text: string };
+type Line = { who: 'coach' | 'me'; text: string; worst?: { word: string; score: number }[] };
+// The practice loop's state per weak word: the first score (from the turn) and the latest try.
+type Drill = { first: number; last?: number; busy?: 'listening' | 'scoring'; miss?: boolean };
 const WA = 'https://wa.me/50766623757?text=Pro%20English%20(proen-web)';
 const TG = 'https://t.me/EspaLuzFamily_bot?start=proen-web';
 
@@ -60,6 +62,35 @@ export default function ProEnglish() {
   const [note, setNote] = useState('');
   const [clip, setClip] = useState<string | null>(null);
   const [clipBusy, setClipBusy] = useState(false);
+  const [drills, setDrills] = useState<Record<string, Drill>>({});
+
+  // 21 Nov 2026: the practice loop (Loora / Elsa style) for each weak word the coach names: hear it, say it, see the score move.
+  // Same mic + WAV code as a voice turn; the try is scored by the same Azure assessment (espaluz-chat proEnglish.drill).
+  const sayIt = async (word: string, first: number) => {
+    const put = (d: Partial<Drill>) => setDrills((all) => ({ ...all, [word]: { first, ...all[word], ...d } }));
+    player.current?.pause();
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const r = new MediaRecorder(stream);
+      const parts: Blob[] = [];
+      r.ondataavailable = (e) => parts.push(e.data);
+      r.onstop = async () => {
+        stream.getTracks().forEach((x) => x.stop());
+        put({ busy: 'scoring', miss: false });
+        try {
+          const wav = await toWav16k(new Blob(parts, { type: r.mimeType || 'audio/webm' }));
+          const { data } = await supabase.functions.invoke('espaluz-chat', { body: { proEnglish: { drill: { word, audio: { b64: wav, mime: 'audio/wav' } } } } });
+          const score = typeof data?.score === 'number' ? data.score : null;
+          put(score === null ? { busy: undefined, miss: true } : { busy: undefined, last: score });
+        } catch { put({ busy: undefined, miss: true }); }
+      };
+      put({ busy: 'listening', miss: false });
+      r.start();
+      setTimeout(() => { if (r.state === 'recording') r.stop(); }, 2500);
+    } catch {
+      setNote('Allow the microphone to practise. / Permite el micrófono para practicar.');
+    }
+  };
   const rec = useRef<MediaRecorder | null>(null);
   const chunks = useRef<Blob[]>([]);
   const end = useRef<HTMLDivElement>(null);
@@ -84,14 +115,22 @@ export default function ProEnglish() {
       speechSynthesis.speak(u);
     } catch { /* the text is on screen */ }
   };
-  const speak = async (text: string) => {
+  // rate < 1 = the practice loop's "slowly" (the browser keeps the pitch). Each word's voice is fetched once, then replayed.
+  const voiceCache = useRef<Record<string, string>>({});
+  const speak = async (text: string, rate = 1) => {
     try {
       player.current?.pause();
       speechSynthesis.cancel();
-      const { data, error } = await supabase.functions.invoke('generate-voice', { body: { text, voice: 'en', hero: 'coach' } });
-      if (error || !data?.audioContent) throw new Error('no voice');
+      let src = voiceCache.current[text];
+      if (!src) {
+        const { data, error } = await supabase.functions.invoke('generate-voice', { body: { text, voice: 'en', hero: 'coach' } });
+        if (error || !data?.audioContent) throw new Error('no voice');
+        src = `data:${data.mimeType || 'audio/mpeg'};base64,${data.audioContent}`;
+        if (text.length < 60) voiceCache.current[text] = src;
+      }
       if (!alive.current) return;
-      const a = new Audio(`data:${data.mimeType || 'audio/mpeg'};base64,${data.audioContent}`);
+      const a = new Audio(src);
+      a.playbackRate = rate;
       player.current = a;
       await a.play();
     } catch {
@@ -107,7 +146,8 @@ export default function ProEnglish() {
       const { data, error } = await supabase.functions.invoke('espaluz-chat', { body: { proEnglish: body } });
       if (error || !data?.text) throw new Error(String(error?.message ?? 'no answer'));
       if (!alive.current) return;
-      setLines((l) => [...l, { who: 'coach', text: String(data.text) }]);
+      const worst = Array.isArray(data.pron?.worst) ? data.pron.worst as { word: string; score: number }[] : [];
+      setLines((l) => [...l, { who: 'coach', text: String(data.text), worst }]);
       if (data.speak) speak(String(data.speak));
     } catch {
       setNote('Sorry, I missed that - try again. / No te escuché, inténtalo otra vez.');
@@ -213,6 +253,36 @@ export default function ProEnglish() {
               {lines.map((l, i) => (
                 <div key={i} className={l.who === 'me' ? 'ml-8 rounded-xl bg-muted px-3 py-2 text-right' : 'mr-4 space-y-1 text-foreground'}>
                   {rich(l.text)}
+                  {l.who === 'coach' && !!l.worst?.length && (
+                    <div className="mt-2 space-y-2 rounded-xl border border-border bg-muted/40 p-3">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Practise these words</p>
+                      {l.worst.map(({ word, score }) => {
+                        const d = drills[word];
+                        const now = d?.last;
+                        return (
+                          <div key={word} className="flex flex-wrap items-center gap-2">
+                            <span className="min-w-[6rem] font-semibold">{word}</span>
+                            <button type="button" onClick={() => speak(word)} className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs">
+                              <Volume2 className="h-3.5 w-3.5" aria-hidden />Listen
+                            </button>
+                            <button type="button" onClick={() => speak(word, 0.7)} className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs">
+                              <Volume2 className="h-3.5 w-3.5" aria-hidden />Slowly
+                            </button>
+                            <button type="button" onClick={() => sayIt(word, score)} disabled={!!d?.busy}
+                              className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium text-white disabled:opacity-60"
+                              style={{ background: d?.busy === 'listening' ? '#dc2626' : 'hsl(var(--espaluz-purple))' }}>
+                              {d?.busy === 'scoring' ? <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden /> : <Mic className="h-3.5 w-3.5" aria-hidden />}
+                              {d?.busy === 'listening' ? 'Listening…' : now === undefined ? 'Say it' : 'Again'}
+                            </button>
+                            <span className="text-xs text-muted-foreground">
+                              {score}{now !== undefined && <> → <strong className={now > score ? 'text-emerald-700' : 'text-foreground'}>{now}</strong>{now >= 80 ? ' ✓' : ''}</>}
+                              {d?.miss && ' · I could not hear it, try again'}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               ))}
               {busy && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
