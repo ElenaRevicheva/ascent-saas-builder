@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import WhatsAppFloat from '@/components/WhatsAppFloat';
-import { loadHubSpotChat } from '@/lib/hubspotChat';
+import { loadHubSpotChat, HUBSPOT_CHAT_ON } from '@/lib/hubspotChat';
 
 /*
  * 21 Nov 2026 (Elena: families need a visible door for help and premium requests - landing, dashboard, everywhere):
@@ -13,7 +13,9 @@ const HIDDEN = ['/classroom', '/classroom-ru', '/admin'];
 
 export default function SupportDoors() {
   const { pathname } = useLocation();
-  useEffect(() => { loadHubSpotChat(); }, []);
+  // 21 Nov 2026 (Elena): "for now, wire the WhatsApp bubble" - HubSpot chat is OFF on EspaLuz until its own EspaLuz chatflow
+  // is live and she wants a second inbox. To switch it on: set HUBSPOT_CHAT_ON = true (hubspotChat.ts keeps consent + live-site + no-Play rules).
+  useEffect(() => { if (HUBSPOT_CHAT_ON) loadHubSpotChat(); }, []);
   if (HIDDEN.includes(pathname)) return null;
   return <WhatsAppFloat />;
 }

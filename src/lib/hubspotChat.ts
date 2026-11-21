@@ -7,6 +7,9 @@ import { insidePlayApp } from '@/lib/playBilling';
  * the Google Play app. The WhatsApp bubble (no cookies) covers the Play app.
  */
 const SRC = '//js-na1.hs-scripts.com/51409153.js?v=20260726';
+// 21 Nov 2026 (Elena): OFF for now - EspaLuz support = the WhatsApp bubble. Turn on once the EspaLuz chatflow (HubSpot,
+// targeting app.espaluz.lat) is ready and a second inbox is wanted.
+export const HUBSPOT_CHAT_ON = false;
 
 export function loadHubSpotChat(): void {
   try {
